@@ -1,6 +1,4 @@
-package org.firstinspires.ftc.teamcode.Config;
-
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.opMode;
+package org.firstinspires.ftc.teamcode.RobotStuff.individual_components;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -11,11 +9,11 @@ import com.rowanmcalpin.nextftc.ftc.hardware.controllables.MotorEx;
 
 /* A Class to store motors in the config. pull motors from this class when making drives or subsystems. */
 
-public class Motors {
+public class DriveBase {
 
     OpMode opMode;
 
-    public Motors(OpMode opMode) {
+    public DriveBase(OpMode opMode) {
         this.opMode = opMode;
     }
 
