@@ -7,14 +7,20 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.rowanmcalpin.nextftc.ftc.hardware.controllables.Controllable;
 import com.rowanmcalpin.nextftc.ftc.hardware.controllables.MotorEx;
 
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
+
 /* A Class to store motors in the config. pull motors from this class when making drives or subsystems. */
 
-public class DriveBase {
+public abstract class DriveMotors {
 
     OpMode opMode;
+    RobotConfig config;
 
-    public DriveBase(OpMode opMode) {
+    public DriveMotors(OpMode opMode, RobotConfig config) {
         this.opMode = opMode;
+        this.config = config;
+
+        initDrive();
     }
 
     public DcMotorEx frontLeftDrive;
@@ -43,4 +49,6 @@ public class DriveBase {
 
         driveMotors = new Controllable[] {new MotorEx(frontLeftDrive), new MotorEx(frontRightDrive), new MotorEx(backLeftDrive), new MotorEx(backRightDrive)};
     }
+
+    public abstract void updateDrive(double deltaTime);
 }
