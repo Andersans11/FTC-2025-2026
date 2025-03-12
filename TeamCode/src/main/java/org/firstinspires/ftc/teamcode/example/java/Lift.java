@@ -1,9 +1,12 @@
 package org.firstinspires.ftc.teamcode.example.java;
 
+import androidx.annotation.NonNull;
+
 import com.rowanmcalpin.nextftc.core.Subsystem;
 import com.rowanmcalpin.nextftc.core.command.Command;
 import com.rowanmcalpin.nextftc.core.control.coefficients.PIDCoefficients;
 import com.rowanmcalpin.nextftc.core.control.controllers.PIDFController;
+import com.rowanmcalpin.nextftc.ftc.hardware.controllables.HoldPosition;
 import com.rowanmcalpin.nextftc.ftc.hardware.controllables.MotorEx;
 import com.rowanmcalpin.nextftc.ftc.hardware.controllables.RunToPosition;
 
@@ -12,6 +15,8 @@ public class Lift extends Subsystem {
     public static final Lift INSTANCE = new Lift();
     private Lift() { }
 
+
+
     // USER CODE
     public MotorEx motor;
 
@@ -19,57 +24,107 @@ public class Lift extends Subsystem {
 
     public String name = "liftR";
 
+    public enum liftStates {
+        min,
+        mid,
+        max,
+    }
+
+    private liftStates liftState = liftStates.min;
+
     /*
-    for yellow jacket motors:
-    27 inches of extension for 4300 encoder ticks
-    0.00627906976 inches per encoder
-    let y equal desired extension
-    let x equal the encoder count to solve for
-    or 27x/4300 = y
+    both rev and gobilda 6000rpm motors have 28 counts per revolution
+    28:360
+    pitch diameter of gt2 mount is 38.2
+    circumference is 38.2π
+    38.2π:360
 
-    27x/4300 = 13.625 (max extension)
-    *4300
-    27x=58587.5
-    x=2169.90740741
+    checks out according to the gobilda website:
+    "A 60 Tooth GT2 Pulley drives this kit 120mm per rotation."
+    38.2 * π = ~120
 
-    yeah this might not work but hey why not
+    28 encoder counts per 38.2π mm of extension
 
-    for rev hd hex motors
-    28 encoder counts per revolution
-    gobilda pulley has od of 40mm -> 1.575 in
-    circumference = π x 1.575
-    encoder counts per in = 28/1.575π
-    */
-    //aka:
-    double c = 1.575 * (Math.PI);
-    double encoderCountPerInchRev = 28/c;
-    int EncoderCountPerInchGobilda = 27/4300;
-    // i highly doubt that this is right
+    for reference
+    rpm  | ppr
+    6000 | 28
+    1620 | 103.8
+    1150 | 145.1
+    435  | 384.5
+    312  | 537.7
+    223  | 751.8
+    117  | 1,425.1
+    84   | 1,993.6
+    60   | 2,786.2
+    43   | 3895.9
+    30   | 5,281.1
+
+    435 rpm is the fastest recommended motor, can extend full 240mm viper slide kit in just under a second
+
+     */
+    public Command liftUp() {
+        switch (liftState) {
+            case min:
+                liftState = liftStates.mid;
+                return toMiddle();
+            case mid:
+                liftState = liftStates.max;
+                return toHigh();
+            default:
+                return toHigh();
+        }
+    }
+
+    public Command liftDown() {
+        switch (liftState) {
+            case max:
+                liftState = liftStates.mid;
+                return toMiddle();
+            case mid:
+                liftState = liftStates.min;
+                return toLow();
+            default:
+                return toLow();
+        }
+    }
+
+    public double mmToTicks(double mm, double motorPPR) { // no one should let me name anything
+        return mm * (motorPPR / (38.2 * Math.PI));
+    }
 
 
     public Command toLow() {
         return new RunToPosition(motor, // MOTOR TO MOVE
-                0.0, // TARGET POSITION, IN TICKS
+                mmToTicks(0, 537.7), // TARGET POSITION, IN TICKS
                 controller, // CONTROLLER TO IMPLEMENT
                 this); // IMPLEMENTED SUBSYSTEM
     }
-    /*
+
     public Command toMiddle() {
         return new RunToPosition(motor, // MOTOR TO MOVE
-                500.0, // TARGET POSITION, IN TICKS
+                mmToTicks(172.975, 537.7), // TARGET POSITION, IN TICKS
                 controller, // CONTROLLER TO IMPLEMENT
                 this); // IMPLEMENTED SUBSYSTEM
     }
-    */
+
     public Command toHigh() {
         return new RunToPosition(motor, // MOTOR TO MOVE
-                2169.90740741, // TARGET POSITION, IN TICKS
+                mmToTicks(345.95, 537.7), // TARGET POSITION, IN TICKS
                 controller, // CONTROLLER TO IMPLEMENT
                 this); // IMPLEMENTED SUBSYSTEM
     }
-    
+
     @Override
     public void initialize() {
         motor = new MotorEx(name);
+    }
+
+    @NonNull
+    @Override
+    public Command getDefaultCommand() {
+        return new HoldPosition(
+                motor,
+                controller,
+                this);
     }
 }
