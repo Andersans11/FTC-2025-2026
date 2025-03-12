@@ -39,7 +39,7 @@ public class Test_NFTCTeleOp extends NextFTCOpMode {
         mecanumDrive = new MecanumDriverControlled(motors.driveMotors, gamepadManager.getGamepad1());
         mecanumDrive.invoke();
 
-        gamepadManager.getGamepad1().getDpadUp().setPressedCommand(Lift.INSTANCE::toHigh);
-        gamepadManager.getGamepad1().getDpadDown().setPressedCommand(Lift.INSTANCE::toLow);
+        gamepadManager.getGamepad1().getDpadUp().setPressedCommand(Lift.INSTANCE::liftUp);
+        gamepadManager.getGamepad1().getDpadDown().setPressedCommand(Lift.INSTANCE::liftDown);
     }
 }
