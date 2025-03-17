@@ -33,7 +33,7 @@ public class CustomPID {
     }
 
     public double lockYaw(double targetPos, double currentPos, double deltaTime) {
-        double error = angleWrap(targetPos - currentPos);
+        double error = angleFix(targetPos - currentPos);
         integralSum += error * deltaTime;
         double derivative = (error - lastError) / deltaTime;
         lastError = error;
@@ -44,7 +44,7 @@ public class CustomPID {
         return P + I + D;
     }
 
-    public double angleWrap(double radians) { // so robot doesn't rotate 350deg to get from 5deg to 355deg
+    public double angleFix(double radians) { // so robot doesn't rotate 350deg to get from 5deg to 355deg
 
         while (radians > Math.PI) {
             radians -= 2 * Math.PI;

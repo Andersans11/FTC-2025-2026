@@ -26,15 +26,15 @@ public class ReadyPlayerOne {
     Function0<Boolean> getY = () -> gamepad.y;
 
     public Button a = new Button(getA);
-    public Button grabberCollect = new Button(getB);
-    public Button grabberScore = new Button(getX);
-    public Button grabberRest = new Button(getY);
+    public Button b = new Button(getB);
+    public Button x = new Button(getX);
+    public Button y = new Button(getY);
 
     public void update_buttons() {
         a.update();
-        grabberCollect.update();
-        grabberScore.update();
-        grabberRest.update();
+        b.update();
+        x.update();
+        y.update();
     }
 
     ///////////////////////////////////////--- BUMPERS ---/////////////////////////////////////////
@@ -56,16 +56,16 @@ public class ReadyPlayerOne {
     Function0<Boolean> getDpadLeft = () -> gamepad.dpad_left;
     Function0<Boolean> getDpadRight = () -> gamepad.dpad_right;
 
-    public Button driveModeUp = new Button(getDpadUp);
-    public Button driveModeDown = new Button(getDpadDown);
-    public Button abortButton = new Button(getDpadLeft);
-    public Button unabortButton = new Button(getDpadRight);
+    public Button dpad_up = new Button(getDpadUp);
+    public Button dpad_down = new Button(getDpadDown);
+    public Button dpad_left = new Button(getDpadLeft);
+    public Button dpad_right = new Button(getDpadRight);
 
     public void update_dpad() {
-        driveModeUp.update();
-        driveModeDown.update();
-        abortButton.update();
-        unabortButton.update();
+        dpad_up.update();
+        dpad_down.update();
+        dpad_left.update();
+        dpad_right.update();
     }
 
 

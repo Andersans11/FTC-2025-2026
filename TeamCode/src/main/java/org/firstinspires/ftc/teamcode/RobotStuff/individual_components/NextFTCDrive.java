@@ -3,8 +3,6 @@ package org.firstinspires.ftc.teamcode.RobotStuff.individual_components;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.rowanmcalpin.nextftc.ftc.driving.MecanumDriverControlled;
-import com.rowanmcalpin.nextftc.ftc.hardware.controllables.Controllable;
-import com.rowanmcalpin.nextftc.ftc.hardware.controllables.MotorEx;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 
