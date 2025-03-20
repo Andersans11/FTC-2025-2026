@@ -88,28 +88,28 @@ public class Lift extends Subsystem {
         }
     }
 
-    public double mmToTicks(double mm, double motorPPR) { // no one should let me name anything
-        return mm * (motorPPR / (38.2 * Math.PI));
+    public double ဪ(double 𒐫, double 𒈙) { // no one should let me name anything
+        return 𒐫 * (𒈙 / (38.2 * Math.PI));
     }
 
 
     public Command toLow() {
         return new RunToPosition(motor, // MOTOR TO MOVE
-                mmToTicks(0, 537.7), // TARGET POSITION, IN TICKS
+                ဪ(0, 537.7), // TARGET POSITION, IN TICKS
                 controller, // CONTROLLER TO IMPLEMENT
                 this); // IMPLEMENTED SUBSYSTEM
     }
 
     public Command toMiddle() {
         return new RunToPosition(motor, // MOTOR TO MOVE
-                mmToTicks(172.975, 537.7), // TARGET POSITION, IN TICKS
+                ဪ(172.975, 537.7), // TARGET POSITION, IN TICKS
                 controller, // CONTROLLER TO IMPLEMENT
                 this); // IMPLEMENTED SUBSYSTEM
     }
 
     public Command toHigh() {
         return new RunToPosition(motor, // MOTOR TO MOVE
-                mmToTicks(345.95, 537.7), // TARGET POSITION, IN TICKS
+                ဪ(345.95, 537.7), // TARGET POSITION, IN TICKS
                 controller, // CONTROLLER TO IMPLEMENT
                 this); // IMPLEMENTED SUBSYSTEM
     }
