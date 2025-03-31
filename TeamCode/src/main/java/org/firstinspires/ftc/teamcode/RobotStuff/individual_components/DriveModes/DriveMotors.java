@@ -8,6 +8,7 @@ import com.rowanmcalpin.nextftc.ftc.hardware.controllables.Controllable;
 import com.rowanmcalpin.nextftc.ftc.hardware.controllables.MotorEx;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.NFTCRobotConfig;
 
 /* A Class to store motors in the config. pull motors from this class when making drives or subsystems. */
 
@@ -15,6 +16,7 @@ public abstract class DriveMotors {
 
     OpMode opMode;
     RobotConfig config;
+    NFTCRobotConfig nftcConfig;
 
     public DriveMotors(OpMode opMode, RobotConfig config) {
         this.opMode = opMode;
@@ -22,6 +24,14 @@ public abstract class DriveMotors {
 
         initDrive();
     }
+
+    public DriveMotors(OpMode opMode, NFTCRobotConfig config) {
+        this.opMode = opMode;
+        this.nftcConfig = config;
+
+        initDrive();
+    }
+
 
     public DcMotorEx frontLeftDrive;
     public DcMotorEx backLeftDrive;

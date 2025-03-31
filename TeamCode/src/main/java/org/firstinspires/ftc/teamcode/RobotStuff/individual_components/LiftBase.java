@@ -33,7 +33,7 @@ public class LiftBase extends Subsystem {
         max,
     }
 
-    private liftStates liftState = liftStates.min;
+    public liftStates liftState = liftStates.min;
 
     /*
     using rev 6000 rpm motors - 28 ppr
@@ -67,28 +67,28 @@ public class LiftBase extends Subsystem {
         }
     }
 
-    public double mmToTicks(double desiredExtension, double encoderPPR) { // no one should let me name anything
-        return desiredExtension * (encoderPPR / (38.2 * Math.PI));
+    public double mmToTicks(double desiredExtension, double encoderPPR) {
+        return (-1 * desiredExtension) * (encoderPPR / (38.2 * Math.PI)); // encoders are backwards
     }
 
 
     public Command toLow() {
         return new RunToPosition(motor, // MOTOR TO MOVE
-                mmToTicks(0, 336), // TARGET POSITION, IN TICKS
+                mmToTicks(0, 751.8), // TARGET POSITION, IN TICKS
                 controller, // CONTROLLER TO IMPLEMENT
                 this); // IMPLEMENTED SUBSYSTEM
     }
 
     public Command toMiddle() {
         return new RunToPosition(motor, // MOTOR TO MOVE
-                mmToTicks(172.975, 336), // TARGET POSITION, IN TICKS
+                mmToTicks(172.975, 751.8), // TARGET POSITION, IN TICKS
                 controller, // CONTROLLER TO IMPLEMENT
                 this); // IMPLEMENTED SUBSYSTEM
     }
 
     public Command toHigh() {
         return new RunToPosition(motor, // MOTOR TO MOVE
-                mmToTicks(345.95, 336), // TARGET POSITION, IN TICKS
+                mmToTicks(345.95, 751.8 ), // TARGET POSITION, IN TICKS
                 controller, // CONTROLLER TO IMPLEMENT
                 this); // IMPLEMENTED SUBSYSTEM
     }

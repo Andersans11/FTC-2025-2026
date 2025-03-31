@@ -53,7 +53,7 @@ public class HoldHeading extends DriveMotors {
     }
 
     @Override
-    public void updateDrive(double deltaTime) { //TODO: USE NEXTFTC MECANUMDRIVERCONTROLLED WHEN THIS WORKS
+    public void updateDrive(double deltaTime) {
 
         telemetryAngleVelocity();
 
