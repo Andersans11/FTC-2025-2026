@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.example.java;
+package org.firstinspires.ftc.teamcode.RobotStuff.individual_components;
 
 import androidx.annotation.NonNull;
 
@@ -9,11 +9,14 @@ import com.rowanmcalpin.nextftc.core.control.controllers.PIDFController;
 import com.rowanmcalpin.nextftc.ftc.hardware.controllables.HoldPosition;
 import com.rowanmcalpin.nextftc.ftc.hardware.controllables.MotorEx;
 import com.rowanmcalpin.nextftc.ftc.hardware.controllables.RunToPosition;
+import com.rowanmcalpin.nextftc.ftc.hardware.controllables.SetPower;
 
-public class Lift extends Subsystem {
+import kotlin.Pair;
+
+public class LiftBase extends Subsystem {
     // BOILERPLATE
-    public static final Lift INSTANCE = new Lift();
-    private Lift() { }
+    public static final LiftBase INSTANCE = new LiftBase();
+    private LiftBase() { }
 
 
 
@@ -33,35 +36,11 @@ public class Lift extends Subsystem {
     private liftStates liftState = liftStates.min;
 
     /*
-    both rev and gobilda 6000rpm motors have 28 counts per revolution
-    28:360
-    pitch diameter of gt2 mount is 38.2
-    circumference is 38.2π
-    38.2π:360
+    using rev 6000 rpm motors - 28 ppr
 
-    checks out according to the gobilda website:
-    "A 60 Tooth GT2 Pulley drives this kit 120mm per rotation."
-    38.2 * π = ~120
-
-    28 encoder counts per 38.2π mm of extension
-
-    for reference
-    rpm  | ppr
-    6000 | 28
-    1620 | 103.8
-    1150 | 145.1
-    435  | 384.5
-    312  | 537.7
-    223  | 751.8
-    117  | 1,425.1
-    84   | 1,993.6
-    60   | 2,786.2
-    43   | 3895.9
-    30   | 5,281.1
-
-    435 rpm is the fastest recommended motor, can extend full 240mm viper slide kit in just under a second
-
+    12:1 gear ratio > 336 ppr
      */
+
     public Command liftUp() {
         switch (liftState) {
             case min:
@@ -95,23 +74,34 @@ public class Lift extends Subsystem {
 
     public Command toLow() {
         return new RunToPosition(motor, // MOTOR TO MOVE
-                mmToTicks(0, 537.7), // TARGET POSITION, IN TICKS
+                mmToTicks(0, 336), // TARGET POSITION, IN TICKS
                 controller, // CONTROLLER TO IMPLEMENT
                 this); // IMPLEMENTED SUBSYSTEM
     }
 
     public Command toMiddle() {
         return new RunToPosition(motor, // MOTOR TO MOVE
-                mmToTicks(172.975, 537.7), // TARGET POSITION, IN TICKS
+                mmToTicks(172.975, 336), // TARGET POSITION, IN TICKS
                 controller, // CONTROLLER TO IMPLEMENT
                 this); // IMPLEMENTED SUBSYSTEM
     }
 
     public Command toHigh() {
         return new RunToPosition(motor, // MOTOR TO MOVE
-                mmToTicks(345.95, 537.7), // TARGET POSITION, IN TICKS
+                mmToTicks(345.95, 336), // TARGET POSITION, IN TICKS
                 controller, // CONTROLLER TO IMPLEMENT
                 this); // IMPLEMENTED SUBSYSTEM
+    }
+
+    public Command moveLift(Pair<Float, Float> JoystickValues) {
+
+        double joystickX = (double) (JoystickValues.getFirst());
+
+        return new SetPower(
+                motor,
+                joystickX,
+                this
+        );
     }
 
     @Override

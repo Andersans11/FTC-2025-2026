@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.RobotStuff.individual_components;
+package org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;

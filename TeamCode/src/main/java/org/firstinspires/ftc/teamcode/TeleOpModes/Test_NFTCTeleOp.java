@@ -6,9 +6,11 @@ import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
 import com.rowanmcalpin.nextftc.ftc.driving.MecanumDriverControlled;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveMotors;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Test_NFTC;
-import org.firstinspires.ftc.teamcode.example.java.Lift;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.DriveMotors;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.Test_NFTC;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LiftBase;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.TandemLift;
+
 
 /*
 A simple OpMode to test NFTC drive controls.
@@ -19,7 +21,7 @@ It pulls motors from the Motors Class and assigns them to a mecanum drive comman
 public class Test_NFTCTeleOp extends NextFTCOpMode {
 
     public Test_NFTCTeleOp() {
-        super(Lift.INSTANCE);
+        super(LiftBase.INSTANCE);
     }
 
     Command mecanumDrive;
@@ -31,7 +33,7 @@ public class Test_NFTCTeleOp extends NextFTCOpMode {
     @Override
     public void onInit() {
         motors = new Test_NFTC(this, cfg);
-        Lift.INSTANCE.initialize();
+        LiftBase.INSTANCE.initialize();
     }
 
     @Override
@@ -39,7 +41,14 @@ public class Test_NFTCTeleOp extends NextFTCOpMode {
         mecanumDrive = new MecanumDriverControlled(motors.driveMotors, gamepadManager.getGamepad1());
         mecanumDrive.invoke();
 
-        gamepadManager.getGamepad1().getDpadUp().setPressedCommand(Lift.INSTANCE::liftUp);
-        gamepadManager.getGamepad1().getDpadDown().setPressedCommand(Lift.INSTANCE::liftDown);
+        /*
+        gamepadManager.getGamepad1().getDpadUp().setPressedCommand(LiftBase.INSTANCE::liftUp);
+        gamepadManager.getGamepad1().getDpadDown().setPressedCommand(LiftBase.INSTANCE::liftDown);
+        gamepadManager.getGamepad1().getLeftStick().setHeldCommand(LiftBase.INSTANCE::moveLift);
+        */
+
+        gamepadManager.getGamepad1().getDpadUp().setPressedCommand(TandemLift.INSTANCE::liftUp);
+        gamepadManager.getGamepad1().getDpadDown().setPressedCommand(TandemLift.INSTANCE::liftDown);
+        gamepadManager.getGamepad1().getLeftStick().setHeldCommand(TandemLift.INSTANCE::moveLift);
     }
 }

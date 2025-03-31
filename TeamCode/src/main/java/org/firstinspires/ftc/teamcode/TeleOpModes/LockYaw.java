@@ -10,8 +10,8 @@ import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveMotors;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.HoldHeading;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.DriveMotors;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.HoldHeading;
 import org.firstinspires.ftc.teamcode.RobotStuff.misc.Stopwatch;
 
 import java.util.List;
@@ -68,10 +68,7 @@ public class LockYaw extends LinearOpMode {
                 hub.clearBulkCache();
             }
 
-            stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop beginning Time -------------------------------");
             activeDriveMode.updateDrive(deltaTime);
-            stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop drive update Time ----------------------------");
-
             activeConfig.playerOne.update_all();
             activeConfig.playerTwo.update_all();
 
