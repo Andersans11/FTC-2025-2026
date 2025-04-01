@@ -8,6 +8,7 @@ import com.rowanmcalpin.nextftc.core.control.coefficients.PIDCoefficients;
 import com.rowanmcalpin.nextftc.core.control.controllers.PIDFController;
 import com.rowanmcalpin.nextftc.ftc.hardware.controllables.HoldPosition;
 import com.rowanmcalpin.nextftc.ftc.hardware.controllables.MotorEx;
+import com.rowanmcalpin.nextftc.ftc.hardware.controllables.ResetEncoder;
 import com.rowanmcalpin.nextftc.ftc.hardware.controllables.RunToPosition;
 import com.rowanmcalpin.nextftc.ftc.hardware.controllables.SetPower;
 
@@ -27,13 +28,6 @@ public class LiftBase extends Subsystem {
 
     public String name = "liftR";
 
-    public enum liftStates {
-        min,
-        mid,
-        max,
-    }
-
-    public liftStates liftState = liftStates.min;
 
     /*
     using rev 6000 rpm motors - 28 ppr
@@ -41,34 +35,12 @@ public class LiftBase extends Subsystem {
     12:1 gear ratio > 336 ppr
      */
 
-    public Command liftUp() {
-        switch (liftState) {
-            case min:
-                liftState = liftStates.mid;
-                return toMiddle();
-            case mid:
-                liftState = liftStates.max;
-                return toHigh();
-            default:
-                return toHigh();
-        }
-    }
-
-    public Command liftDown() {
-        switch (liftState) {
-            case max:
-                liftState = liftStates.mid;
-                return toMiddle();
-            case mid:
-                liftState = liftStates.min;
-                return toLow();
-            default:
-                return toLow();
-        }
-    }
-
     public double mmToTicks(double desiredExtension, double encoderPPR) {
         return (-1 * desiredExtension) * (encoderPPR / (38.2 * Math.PI)); // encoders are backwards
+    }
+
+    public double ticksToMM(double ticks, double encoderPPR) {
+        return (-1 * ticks) / (encoderPPR / (38.2 * Math.PI));
     }
 
 
@@ -95,11 +67,18 @@ public class LiftBase extends Subsystem {
 
     public Command moveLift(Pair<Float, Float> JoystickValues) {
 
-        double joystickX = (double) (JoystickValues.getFirst());
+        double joystickY = (double) (JoystickValues.getSecond());
 
         return new SetPower(
                 motor,
-                joystickX,
+                joystickY,
+                this
+        );
+    }
+
+    public Command resetEncoders() {
+        return new ResetEncoder(
+                motor,
                 this
         );
     }

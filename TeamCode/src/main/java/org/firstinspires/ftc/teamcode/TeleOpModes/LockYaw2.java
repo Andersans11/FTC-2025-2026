@@ -33,8 +33,6 @@ public class LockYaw2 extends NextFTCOpMode {
 
     @Override
     public void onInit() {
-        super.onInit();
-
         setUseBulkReading(true);
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -60,8 +58,6 @@ public class LockYaw2 extends NextFTCOpMode {
 
     @Override
     public void onStartButtonPressed() {
-        super.onStartButtonPressed();
-
         frameTimer.reset();
 
         deltaTime = 0;
@@ -69,8 +65,6 @@ public class LockYaw2 extends NextFTCOpMode {
 
     @Override
     public void onUpdate() {
-        super.onUpdate();
-
         stopWatch.reset();
 
         deltaTime = frameTimer.seconds();

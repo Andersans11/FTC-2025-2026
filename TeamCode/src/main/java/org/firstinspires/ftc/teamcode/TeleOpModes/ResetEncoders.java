@@ -1,19 +1,25 @@
 package org.firstinspires.ftc.teamcode.TeleOpModes;
 
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
+
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.NFTCRobotConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LiftBase;
 
 @TeleOp(name = "Reset Encoders", group = "aaaaaaaaaaaaaaa - Utility")
 //@Disabled
-public class ResetEncoders extends LinearOpMode {
+public class ResetEncoders extends NextFTCOpMode {
 
     IMU imu;
 
+    NFTCRobotConfig cfg = new NFTCRobotConfig(this);
+
     @Override
     public void runOpMode() {
+
         for (DcMotor motor: hardwareMap.dcMotor){
             motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
