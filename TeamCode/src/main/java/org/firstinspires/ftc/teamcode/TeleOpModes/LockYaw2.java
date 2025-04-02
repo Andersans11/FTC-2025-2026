@@ -14,8 +14,6 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveMode
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.HoldHeading;
 import org.firstinspires.ftc.teamcode.RobotStuff.misc.Stopwatch;
 
-import java.util.List;
-
 @TeleOp(name = "LockYaw", group = "idfk") // pid go brrr
 //@Disabled
 public class LockYaw2 extends NextFTCOpMode {
