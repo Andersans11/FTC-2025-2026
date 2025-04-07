@@ -12,7 +12,9 @@ import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
 import com.rowanmcalpin.nextftc.ftc.driving.MecanumDriverControlled;
 import com.rowanmcalpin.nextftc.pedro.FollowPath;
 
-import org.firstinspires.ftc.teamcode.Config.Motors;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.DriveMotors;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.Test_NFTC;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LiftBase;
 import org.firstinspires.ftc.teamcode.example.java.Lift;
 
 /*
@@ -24,10 +26,15 @@ It pulls motors from the Motors Class and assigns them to a mecanum drive comman
 public class Test_NFTCAuto extends NextFTCOpMode {
 
     public Test_NFTCAuto() {
-        super(Lift.INSTANCE);
+        super(LiftBase.INSTANCE);
     }
 
     Path path = new Path(new BezierCurve(new Point(0, 0, Point.CARTESIAN), new Point(10, 0, Point.CARTESIAN)));
+
+    @Override
+    public void onInit() {
+        LiftBase.INSTANCE.initialize();
+    }
 
     public Command firstRoutine() {
         return new SequentialGroup(
