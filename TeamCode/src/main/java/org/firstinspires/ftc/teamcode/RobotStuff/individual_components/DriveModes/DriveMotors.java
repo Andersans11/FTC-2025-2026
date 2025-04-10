@@ -40,10 +40,10 @@ public abstract class DriveMotors {
         frontRightDrive.setDirection(config.FRDrive.direction);
         backRightDrive.setDirection(config.BRDrive.direction);
 
-        frontLeftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backLeftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        frontRightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backRightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontLeftDrive.setZeroPowerBehavior(config.zeroPowerBehavior);
+        backLeftDrive.setZeroPowerBehavior(config.zeroPowerBehavior);
+        frontRightDrive.setZeroPowerBehavior(config.zeroPowerBehavior);
+        backRightDrive.setZeroPowerBehavior(config.zeroPowerBehavior);
 
         driveMotors = new Controllable[] {new MotorEx(frontLeftDrive), new MotorEx(frontRightDrive), new MotorEx(backLeftDrive), new MotorEx(backRightDrive)};
     }
