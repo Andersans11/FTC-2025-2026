@@ -5,16 +5,11 @@ import com.rowanmcalpin.nextftc.core.command.Command;
 import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
 import com.rowanmcalpin.nextftc.ftc.driving.MecanumDriverControlled;
 
+import org.firstinspires.ftc.teamcode.R;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.DriveMotors;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.NextFTCDrive;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.RobotCentricDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LiftBase;
 
-
-/*
-A simple OpMode to test NFTC drive controls.
-It pulls motors from the Motors Class and assigns them to a mecanum drive command.
-*/
 
 @TeleOp(name = "NFTC TeleOp", group = "ab working opmode")
 public class Test_NFTCTeleOp extends NextFTCOpMode {
@@ -25,27 +20,15 @@ public class Test_NFTCTeleOp extends NextFTCOpMode {
 
 
 
-    Command mecanumDrive;
-
-    DriveMotors motors;
-
-    RobotConfig cfg = new RobotConfig(this);
+    RobotConfig robotConfig = new RobotConfig(this);
+    RobotCentricDrive robotCentricDrive = new RobotCentricDrive(this, robotConfig);
 
     @Override
-    public void onInit() {
-        motors = new NextFTCDrive(this, cfg);
-        LiftBase.INSTANCE.initialize();
-    }
-
-    @Override
-    public void waitForStart() {
-        super.waitForStart();
-    }
+    public void onInit() {LiftBase.INSTANCE.initialize();}
 
     @Override
     public void onStartButtonPressed() {
-        mecanumDrive = new MecanumDriverControlled(motors.driveMotors, gamepadManager.getGamepad1());
-        mecanumDrive.invoke();
+        robotCentricDrive.Start();
 
         gamepadManager.getGamepad1().getDpadUp().setPressedCommand(LiftBase.INSTANCE::toHigh);
         gamepadManager.getGamepad1().getDpadLeft().setPressedCommand(LiftBase.INSTANCE::toMiddle);

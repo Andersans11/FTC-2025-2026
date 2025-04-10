@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
 //@Disabled
 public class ResetEncoders extends NextFTCOpMode {
 
+    public ResetEncoders() {super();}
     IMU imu;
 
     RobotConfig cfg = new RobotConfig(this);

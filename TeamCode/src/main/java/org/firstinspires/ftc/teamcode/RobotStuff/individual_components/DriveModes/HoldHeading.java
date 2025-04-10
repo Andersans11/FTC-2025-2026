@@ -104,5 +104,8 @@ public class HoldHeading extends DriveMotors {
         if (useNormTurn) {yaw = normTurn; updateHeading();} else {yaw = PIDturn;}
         return () -> (float) (yaw);
     }
+
+    @Override
+    public void Start() {vroom.invoke();}
 }
 

@@ -17,15 +17,16 @@ import org.firstinspires.ftc.teamcode.RobotStuff.misc.Stopwatch;
 //@Disabled
 public class LockYaw extends NextFTCOpMode {
 
-    private final ElapsedTime frameTimer = new ElapsedTime();
+    public LockYaw() {super();}
 
+    private final ElapsedTime frameTimer = new ElapsedTime();
     Stopwatch stopWatch = new Stopwatch();
 
-    RobotConfig activeConfig;
-    DriveMotors activeDriveMode;
+    RobotConfig robotConfig = new RobotConfig(this);
+    DriveMotors holdHeading = new HoldHeading(this, robotConfig);
+
 
     double deltaTime;
-
     IMU imu;
 
     @Override
@@ -36,27 +37,16 @@ public class LockYaw extends NextFTCOpMode {
 
         imu = hardwareMap.get(IMU.class, "imu");
 
-        activeConfig = new RobotConfig(this);
-
-        activeDriveMode = new HoldHeading(this, activeConfig);
-
         RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
         RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection. RIGHT;
-
         RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
 
         imu.initialize(new IMU.Parameters(orientationOnRobot));
     }
-
-    @Override
-    public void waitForStart() {
-        super.waitForStart();
-    }
-
     @Override
     public void onStartButtonPressed() {
+        holdHeading.Start();
         frameTimer.reset();
-
         deltaTime = 0;
     }
 
@@ -68,9 +58,9 @@ public class LockYaw extends NextFTCOpMode {
         telemetry.addData("deltaTime", deltaTime);
         frameTimer.reset();
 
-        activeDriveMode.updateDrive(deltaTime);
-        activeConfig.playerOne.update_all();
-        activeConfig.playerTwo.update_all();
+        holdHeading.updateDrive(deltaTime);
+        robotConfig.playerOne.update_all();
+        robotConfig.playerTwo.update_all();
 
         telemetry.update();
     }
