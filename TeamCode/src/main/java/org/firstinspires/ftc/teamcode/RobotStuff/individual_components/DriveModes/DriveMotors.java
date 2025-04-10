@@ -42,15 +42,15 @@ public abstract class DriveMotors {
 
     //Drive motors
     public void initDrive() {
-        frontLeftDrive = opMode.hardwareMap.get(DcMotorEx.class, "Front Left Drive");
-        backLeftDrive = opMode.hardwareMap.get(DcMotorEx.class, "Back Left Drive");
-        frontRightDrive = opMode.hardwareMap.get(DcMotorEx.class, "Front Right Drive");
-        backRightDrive = opMode.hardwareMap.get(DcMotorEx.class, "Back Right Drive");
+        frontLeftDrive = opMode.hardwareMap.get(DcMotorEx.class, config.FLDrive.name);
+        backLeftDrive = opMode.hardwareMap.get(DcMotorEx.class, config.BLDrive.name);
+        frontRightDrive = opMode.hardwareMap.get(DcMotorEx.class, config.FRDrive.name);
+        backRightDrive = opMode.hardwareMap.get(DcMotorEx.class, config.BRDrive.name);
 
-        frontLeftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-        backLeftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-        frontRightDrive.setDirection(DcMotorSimple.Direction.FORWARD);
-        backRightDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontLeftDrive.setDirection(config.FLDrive.direction);
+        backLeftDrive.setDirection(config.BLDrive.direction);
+        frontRightDrive.setDirection(config.FRDrive.direction);
+        backRightDrive.setDirection(config.BRDrive.direction);
 
         frontLeftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

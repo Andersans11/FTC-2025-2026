@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Testing_OpModes;
 import com.pedropathing.pathgen.BezierCurve;
 import com.pedropathing.pathgen.Path;
 import com.pedropathing.pathgen.Point;
+import com.pedropathing.util.Constants;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.rowanmcalpin.nextftc.core.command.Command;
 import com.rowanmcalpin.nextftc.core.command.groups.ParallelGroup;
@@ -12,6 +13,8 @@ import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
 import com.rowanmcalpin.nextftc.ftc.driving.MecanumDriverControlled;
 import com.rowanmcalpin.nextftc.pedro.FollowPath;
 
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.FConstants;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.LConstants;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.DriveMotors;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.Test_NFTC;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LiftBase;
@@ -34,6 +37,7 @@ public class Test_NFTCAuto extends NextFTCOpMode {
     @Override
     public void onInit() {
         LiftBase.INSTANCE.initialize();
+        Constants.setConstants(FConstants.class, LConstants.class);
     }
 
     public Command firstRoutine() {
