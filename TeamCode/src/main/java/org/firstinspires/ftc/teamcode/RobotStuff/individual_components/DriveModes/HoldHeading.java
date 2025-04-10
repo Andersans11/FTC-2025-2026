@@ -7,7 +7,7 @@ import com.rowanmcalpin.nextftc.ftc.driving.MecanumDriverControlled;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.pidStuff.CustomPID;
 
 import kotlin.jvm.functions.Function0;
@@ -32,12 +32,13 @@ public class HoldHeading extends DriveMotors {
     boolean hasExcessVelocity;
     boolean hasVelocity;
 
-    MecanumDriverControlled vroom = new MecanumDriverControlled(driveMotors, forwardBackward(), strafe(), yaw(), true, imu);
+    MecanumDriverControlled vroom;
 
     public HoldHeading(OpMode opMode, RobotConfig config) {
         super(opMode, config);
         HeadingPID = new CustomPID(opMode.telemetry, config, "HeadingPID");
-        imu = opMode.hardwareMap.get(IMU.class, "imu");
+        imu = opMode.hardwareMap.get(IMU.class, "imu"); // ASSIGN IMU BEFORE RUNNING THIS CODE
+        this.vroom = new MecanumDriverControlled(driveMotors, forwardBackward(), strafe(), yaw(), true, imu);
     }
 
     double getHeadingDeg() {
@@ -61,13 +62,15 @@ public class HoldHeading extends DriveMotors {
 
         extDT = deltaTime;
         yawVelocity = angularVelocity.zRotationRate;
+        //funny boolean shit
         hasExcessVelocity = (!config.playerOne.turnAxis.getState() && useNormTurn);
         hasVelocity = (yawVelocity > 0.1 || yawVelocity < -0.1);
         targetRad = Math.toRadians(targetHeading);
 
         HeadingPID.setCoefficients(kP, kI, kD);
 
-        opMode.telemetry.addData("using raw turn values:", useNormTurn);
+        if (useNormTurn) {opMode.telemetry.addLine("Mode: Using raw turn values");}
+        else {opMode.telemetry.addLine("Mode: Holding heading using IMU");}
 
         vroom.update();
     }
@@ -90,7 +93,7 @@ public class HoldHeading extends DriveMotors {
         return () -> (float) (config.playerOne.strafeAxis.getValue() * config.sensitivities.getStrafingSensitivity() * getSensitivityMod());
     }
 
-    public Function0<Float> yaw() {
+    public Function0<Float> yaw() { // aaaaaaaaaaaaaaaaaaaaaaaa
         double normTurn = config.playerOne.turnAxis.getValue() * config.sensitivities.getTurningSensitivity() * getSensitivityMod();
         double PIDturn = HeadingPID.lockYaw(targetRad, imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS), extDT);
         double yaw;

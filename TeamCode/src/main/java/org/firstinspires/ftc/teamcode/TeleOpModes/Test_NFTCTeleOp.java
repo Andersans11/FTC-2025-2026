@@ -5,9 +5,9 @@ import com.rowanmcalpin.nextftc.core.command.Command;
 import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
 import com.rowanmcalpin.nextftc.ftc.driving.MecanumDriverControlled;
 
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.NFTCRobotConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.DriveMotors;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.Test_NFTC;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.NextFTCDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LiftBase;
 
 
@@ -16,7 +16,7 @@ A simple OpMode to test NFTC drive controls.
 It pulls motors from the Motors Class and assigns them to a mecanum drive command.
 */
 
-@TeleOp(name = "Test: NFTC TeleOp", group = "ab working opmode")
+@TeleOp(name = "NFTC TeleOp", group = "ab working opmode")
 public class Test_NFTCTeleOp extends NextFTCOpMode {
 
     public Test_NFTCTeleOp() {
@@ -29,11 +29,11 @@ public class Test_NFTCTeleOp extends NextFTCOpMode {
 
     DriveMotors motors;
 
-    NFTCRobotConfig cfg = new NFTCRobotConfig(this);
+    RobotConfig cfg = new RobotConfig(this);
 
     @Override
     public void onInit() {
-        motors = new Test_NFTC(this, cfg);
+        motors = new NextFTCDrive(this, cfg);
         LiftBase.INSTANCE.initialize();
     }
 

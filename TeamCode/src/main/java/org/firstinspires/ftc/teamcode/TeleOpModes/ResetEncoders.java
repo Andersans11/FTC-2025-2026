@@ -6,8 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
 
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.NFTCRobotConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LiftBase;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
 
 @TeleOp(name = "Reset Encoders", group = "aaaaaaaaaaaaaaa - Utility")
 //@Disabled
@@ -15,7 +14,7 @@ public class ResetEncoders extends NextFTCOpMode {
 
     IMU imu;
 
-    NFTCRobotConfig cfg = new NFTCRobotConfig(this);
+    RobotConfig cfg = new RobotConfig(this);
 
     @Override
     public void runOpMode() {

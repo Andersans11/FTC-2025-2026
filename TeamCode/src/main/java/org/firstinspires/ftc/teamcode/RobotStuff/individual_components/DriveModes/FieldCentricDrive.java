@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
 
 import kotlin.jvm.functions.Function0;
 
-public class NextFTCDrive extends DriveMotors {
+public class FieldCentricDrive extends DriveMotors {
 
     IMU imu;
 
@@ -19,10 +19,10 @@ public class NextFTCDrive extends DriveMotors {
     MecanumDriverControlled vroom;
 
 
-    public NextFTCDrive(OpMode opMode, RobotConfig config) { // idk the name could be better
+    public FieldCentricDrive(OpMode opMode, RobotConfig config) { // idk the name could be better
         super(opMode, config);
         imu = opMode.hardwareMap.get(IMU.class, "imu");
-        this.vroom = new MecanumDriverControlled(driveMotors, forwardBackward, strafe, yaw, true, imu);
+        this.vroom = new MecanumDriverControlled(driveMotors, forwardBackward, strafe, yaw, false, imu);
     }
 
 

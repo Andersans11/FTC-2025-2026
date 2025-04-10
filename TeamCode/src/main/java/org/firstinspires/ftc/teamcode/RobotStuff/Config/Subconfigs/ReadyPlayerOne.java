@@ -11,7 +11,6 @@ import kotlin.jvm.functions.Function0;
 public class ReadyPlayerOne {
 
     Gamepad gamepad;
-
     public ReadyPlayerOne(Gamepad gamepad) {
         if (gamepad == null) {
             throw new NullPointerException("you can't drive without the inputs you goober");

@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.pidStuff;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
 
 public class CustomPID {
     double kP;

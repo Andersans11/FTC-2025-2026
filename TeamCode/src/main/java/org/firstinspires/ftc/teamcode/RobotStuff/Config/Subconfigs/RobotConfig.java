@@ -1,13 +1,8 @@
-package org.firstinspires.ftc.teamcode.RobotStuff.Config;
+package org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.ReadyPlayerOne;
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.Sensitivities;
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.ReadyPlayerTwo;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.MotorConfig;
+import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
 
 @Config
 public class RobotConfig {
@@ -16,9 +11,9 @@ public class RobotConfig {
     public final ReadyPlayerTwo playerTwo;
     public final Sensitivities sensitivities = new Sensitivities();
 
-    OpMode opMode;
+    NextFTCOpMode opMode;
 
-    public RobotConfig(OpMode opMode) {
+    public RobotConfig(NextFTCOpMode opMode) {
         this.opMode = opMode;
         playerOne = new ReadyPlayerOne(opMode.gamepad1);
         playerTwo = new ReadyPlayerTwo(opMode.gamepad2);

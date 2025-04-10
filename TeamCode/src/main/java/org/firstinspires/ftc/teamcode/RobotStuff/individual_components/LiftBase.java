@@ -62,7 +62,7 @@ public class LiftBase extends Subsystem {
         lowerLimit = lower;
     }
 
-
+    //TODO: boolean values work but they are inverted in some way // if i remove it from telemetry then i can pretend it doesn't exist
     public boolean goingPastMaxExtension(double joystickY) {return (motor.getCurrentPosition() >= inchesToTicks(upperLimit, 751.8) && ((joystickY * -1) > 0));}
 
     public boolean goingPastMinExtension(double joystickY) {return (motor.getCurrentPosition() <= inchesToTicks(lowerLimit, 751.8) && ((joystickY * -1) < 0));}
@@ -93,17 +93,6 @@ public class LiftBase extends Subsystem {
                 inchesToTicks(12, 751.8 ), // TARGET POSITION, IN TICKS
                 controller, // CONTROLLER TO IMPLEMENT
                 this); // IMPLEMENTED SUBSYSTEM
-    }
-
-    public Command moveLift(Pair<Float, Float> JoystickValues) {
-
-        double joystickY = (double) (JoystickValues.getSecond());
-
-        return new SetPower(
-                motor,
-                joystickY,
-                this
-        );
     }
 
     public Command resetEncoders() {

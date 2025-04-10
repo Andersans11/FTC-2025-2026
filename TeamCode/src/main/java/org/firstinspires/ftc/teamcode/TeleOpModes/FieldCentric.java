@@ -7,17 +7,17 @@ import com.rowanmcalpin.nextftc.ftc.driving.MecanumDriverControlled;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.DriveMotors;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.NextFTCDrive;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.FieldCentricDrive;
 
 @TeleOp(name = "it go", group = "aaaaaaaaaaaaaaaaaaaaa it go")
-public class SpeedyBoi extends NextFTCOpMode {
+public class FieldCentric extends NextFTCOpMode {
     Command vroom;
     DriveMotors motors;
     RobotConfig cfg = new RobotConfig(this);
 
     @Override
     public void onInit() {
-        motors = new NextFTCDrive(this, cfg);
+        motors = new FieldCentricDrive(this, cfg);
     }
 
     @Override
