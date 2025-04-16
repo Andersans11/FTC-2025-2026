@@ -9,21 +9,22 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.DriveMotors;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.HoldHeading;
 import org.firstinspires.ftc.teamcode.RobotStuff.misc.Stopwatch;
 
-@TeleOp(name = "LockYaw", group = "idfk") // pid go brrr
+@TeleOp(name = "LockYaw", group = "bb test") // pid go brrr
 //@Disabled
 public class LockYaw extends NextFTCOpMode {
 
-    public LockYaw() {super();}
+    public LockYaw() {
+        super();
+    }
 
     private final ElapsedTime frameTimer = new ElapsedTime();
-    Stopwatch stopWatch = new Stopwatch();
+    Stopwatch StopWatch = new Stopwatch();
 
-    RobotConfig robotConfig = new RobotConfig(this);
-    DriveMotors holdHeading = new HoldHeading(this, robotConfig);
+    RobotConfig RobotConfig = new RobotConfig(this);
+    HoldHeading HoldHeading = new HoldHeading(this, RobotConfig);
 
 
     double deltaTime;
@@ -37,30 +38,30 @@ public class LockYaw extends NextFTCOpMode {
 
         imu = hardwareMap.get(IMU.class, "imu");
 
-        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
-        RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection. RIGHT;
+        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.LEFT; // TODO: THIS MIGHT BE WRONG
+        RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection. BACKWARD;
         RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
 
         imu.initialize(new IMU.Parameters(orientationOnRobot));
     }
     @Override
     public void onStartButtonPressed() {
-        holdHeading.Start();
+        HoldHeading.Start();
         frameTimer.reset();
         deltaTime = 0;
     }
 
     @Override
     public void onUpdate() {
-        stopWatch.reset();
+        StopWatch.reset();
 
         deltaTime = frameTimer.seconds();
         telemetry.addData("deltaTime", deltaTime);
         frameTimer.reset();
 
-        holdHeading.updateDrive(deltaTime);
-        robotConfig.playerOne.update_all();
-        robotConfig.playerTwo.update_all();
+        HoldHeading.updateDrive(deltaTime);
+        RobotConfig.playerOne.update_all();
+        RobotConfig.playerTwo.update_all();
 
         telemetry.update();
     }

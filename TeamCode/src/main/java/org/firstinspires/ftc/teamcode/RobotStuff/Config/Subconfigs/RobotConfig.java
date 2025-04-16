@@ -17,8 +17,13 @@ public class RobotConfig {
 
     public RobotConfig(NextFTCOpMode opMode) {
         this.opMode = opMode;
-        playerOne = new ReadyPlayerOne(opMode.gamepad1);
-        playerTwo = new ReadyPlayerTwo(opMode.gamepad2);
+        playerOne = new ReadyPlayerOne(opMode.gamepadManager.getGamepad1());
+        playerTwo = new ReadyPlayerTwo(opMode.gamepadManager.getGamepad2());
+    }
+
+    public void gamepadUpdates() {
+        playerOne.update_all();
+        playerTwo.update_all();
     }
 
     public static MotorConfig FLDrive = new MotorConfig(

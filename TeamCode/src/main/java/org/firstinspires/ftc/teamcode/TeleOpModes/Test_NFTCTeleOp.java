@@ -11,20 +11,20 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveMode
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LiftBase;
 
 
-@TeleOp(name = "NFTC TeleOp", group = "ab working opmode")
+@TeleOp(name = "NFTC TeleOp", group = "aa it go")
 public class Test_NFTCTeleOp extends NextFTCOpMode {
 
     public Test_NFTCTeleOp() {
         super(LiftBase.INSTANCE);
     }
 
-
-
     RobotConfig robotConfig = new RobotConfig(this);
     RobotCentricDrive robotCentricDrive = new RobotCentricDrive(this, robotConfig);
 
     @Override
-    public void onInit() {LiftBase.INSTANCE.initialize();}
+    public void onInit() {
+        LiftBase.INSTANCE.initialize();
+    }
 
     @Override
     public void onStartButtonPressed() {

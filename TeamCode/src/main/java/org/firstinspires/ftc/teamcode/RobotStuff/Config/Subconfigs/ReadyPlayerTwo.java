@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs;
 
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.rowanmcalpin.nextftc.ftc.gamepad.Button;
+import com.rowanmcalpin.nextftc.ftc.gamepad.GamepadEx;
 import com.rowanmcalpin.nextftc.ftc.gamepad.Joystick;
 import com.rowanmcalpin.nextftc.ftc.gamepad.JoystickAxis;
 import com.rowanmcalpin.nextftc.ftc.gamepad.Trigger;
@@ -10,147 +10,146 @@ import kotlin.jvm.functions.Function0;
 
 public class ReadyPlayerTwo {
 
-    Gamepad gamepad;
+    GamepadEx gamepadEx;
 
-    public ReadyPlayerTwo(Gamepad gamepad) {
-        if (gamepad == null) {
+    public ReadyPlayerTwo(GamepadEx gamepadEx) {
+        if (gamepadEx == null) {
             throw new NullPointerException("you can't drive without the inputs you goober");
         }
-        this.gamepad = gamepad;
+        this.gamepadEx = gamepadEx;
     }
     ///////////////////////////////////////--- X/Y/A/B BUTTONS ---/////////////////////////////////////////
-    Function0<Boolean> getA = () -> gamepad.a;
-    Function0<Boolean> getB = () -> gamepad.b;
-    Function0<Boolean> getX = () -> gamepad.x;
-    Function0<Boolean> getY = () -> gamepad.y;
+    Function0<Boolean> getA = () -> gamepadEx.getA().getState();
+    Function0<Boolean> getB = () -> gamepadEx.getB().getState();
+    Function0<Boolean> getX = () -> gamepadEx.getX().getState();
+    Function0<Boolean> getY = () -> gamepadEx.getY().getState();
 
-    public Button a = new Button(getA);
-    public Button b = new Button(getB);
-    public Button x = new Button(getX);
-    public Button y = new Button(getY);
+    public Button A = new Button(getA);
+    public Button B = new Button(getB);
+    public Button X = new Button(getX);
+    public Button Y = new Button(getY);
 
     public void update_buttons() {
-        a.update();
-        b.update();
-        x.update();
-        y.update();
+        A.update();
+        B.update();
+        X.update();
+        Y.update();
     }
-
 
     ///////////////////////////////////////--- BUMPERS ---/////////////////////////////////////////
-    Function0<Boolean> getLBumper = () -> gamepad.left_bumper;
-    Function0<Boolean> getRBumper = () -> gamepad.right_bumper;
+    Function0<Boolean> getLBumper = () -> gamepadEx.getLeftBumper().getState();
+    Function0<Boolean> getRBumper = () -> gamepadEx.getRightBumper().getState();
 
-    public Button left_bumper = new Button(getLBumper);
-    public Button right_bumper = new Button(getRBumper);
+    public Button LeftBumper = new Button(getLBumper);
+    public Button RightBumper = new Button(getRBumper);
 
     public void update_bumpers() {
-        left_bumper.update();
-        right_bumper.update();
+        LeftBumper.update();
+        RightBumper.update();
     }
 
-    ///////////////////////////////////////--- DPAD ---/////////////////////////////////////////
-    Function0<Boolean> getDpadUp = () -> gamepad.dpad_up;
-    Function0<Boolean> getDpadDown = () -> gamepad.dpad_down;
-    Function0<Boolean> getDpadLeft = () -> gamepad.dpad_left;
-    Function0<Boolean> getDpadRight = () -> gamepad.dpad_right;
 
-    public Button dpad_up = new Button(getDpadUp);
-    public Button dpad_down = new Button(getDpadDown);
-    public Button dpad_left = new Button(getDpadLeft);
-    public Button dpad_right = new Button(getDpadRight);
+    ///////////////////////////////////////--- DPAD ---/////////////////////////////////////////
+    Function0<Boolean> getDpadUp = () -> gamepadEx.getDpadUp().getState();
+    Function0<Boolean> getDpadDown = () -> gamepadEx.getDpadDown().getState();
+    Function0<Boolean> getDpadLeft = () -> gamepadEx.getDpadLeft().getState();
+    Function0<Boolean> getDpadRight = () -> gamepadEx.getDpadRight().getState();
+
+    public Button DpadUp = new Button(getDpadUp);
+    public Button DpadDown = new Button(getDpadDown);
+    public Button DpadLeft = new Button(getDpadLeft);
+    public Button DpadRight = new Button(getDpadRight);
 
     public void update_dpad() {
-        dpad_up.update();
-        dpad_down.update();
-        dpad_left.update();
-        dpad_right.update();
+        DpadUp.update();
+        DpadDown.update();
+        DpadLeft.update();
+        DpadRight.update();
     }
 
 
     ///////////////////////////////////////--- LEFT JOYSTICK ---/////////////////////////////////////////
-    Function0<Float> getLeftX = () -> gamepad.left_stick_x;
-    Function0<Float> getLeftY = () -> gamepad.left_stick_y;
-    Function0<Boolean> getLeftButton = () -> gamepad.left_stick_button;
+    Function0<Float> getLeftX = () -> gamepadEx.getLeftStick().getX();
+    Function0<Float> getLeftY = () -> gamepadEx.getLeftStick().getY();
+    Function0<Boolean> getLeftButton = () -> gamepadEx.getLeftStick().getButton().getState();
 
-    public Joystick left_stick = new Joystick(
+    public Joystick LeftStick = new Joystick(
             getLeftX,
             getLeftY,
             getLeftButton,
-            Sensitivities.playerTwoLeftXAxisThreshold,
-            Sensitivities.playerTwoLeftYAxisThreshold,
-            Sensitivities.isPlayerTwoLeftYInverted //NextFTC only does vertical inversion for the Joystick object
+            Sensitivities.playerOneLeftXAxisThreshold,
+            Sensitivities.playerOneLeftYAxisThreshold,
+            Sensitivities.isPlayerOneLeftYInverted //NextFTC only does vertical inversion for the Joystick object
     );
 
-    public JoystickAxis leftX = new JoystickAxis(
-            getLeftX,
-            Sensitivities.playerTwoLeftXAxisThreshold,
-            Sensitivities.isPlayerTwoLeftXInverted
-    );
-
-    public JoystickAxis leftY = new JoystickAxis(
+    public JoystickAxis LeftY = new JoystickAxis(
             getLeftY,
-            Sensitivities.playerTwoLeftYAxisThreshold,
-            Sensitivities.isPlayerTwoLeftYInverted
+            Sensitivities.playerOneLeftYAxisThreshold,
+            Sensitivities.isPlayerOneLeftYInverted
     );
 
-    public Button left_button = new Button(getLeftButton);
+    public JoystickAxis LeftX = new JoystickAxis(
+            getLeftX,
+            Sensitivities.playerOneLeftXAxisThreshold,
+            Sensitivities.isPlayerOneLeftXInverted
+    );
+
+    public Button LeftButton = new Button(getLeftButton);
 
     public void update_left() {
-        left_stick.update();
-        leftX.update();
-        leftY.update();
-        left_button.update();
+        LeftStick.update();
+        LeftY.update();
+        LeftX.update();
+        LeftButton.update();
     }
 
 
     ///////////////////////////////////////--- RIGHT JOYSTICK ---/////////////////////////////////////////
-    Function0<Float> getRightX = () -> gamepad.right_stick_x;
-    Function0<Float> getRightY = () -> gamepad.right_stick_y;
-    Function0<Boolean> getRightButton = () -> gamepad.right_stick_button;
+    Function0<Float> getRightX = () -> gamepadEx.getRightStick().getX();
+    Function0<Float> getRightY = () -> gamepadEx.getRightStick().getY();
+    Function0<Boolean> getRightButton = () -> gamepadEx.getRightStick().getButton().getState();
 
-    public Joystick right_stick = new Joystick(
+    public Joystick RightStick = new Joystick(
             getRightX,
             getRightY,
             getRightButton,
-            Sensitivities.playerTwoRightXAxisThreshold,
-            Sensitivities.playerTwoRightYAxisThreshold,
-            Sensitivities.isPlayerTwoRightYInverted //NextFTC only does vertical inversion for the Joystick object
+            Sensitivities.playerOneRightXAxisThreshold,
+            Sensitivities.playerOneRightYAxisThreshold,
+            Sensitivities.isPlayerOneRightYInverted //NextFTC only does vertical, not horizontal inversion for the Joystick object
     );
 
-    public JoystickAxis rightX = new JoystickAxis(
+    public JoystickAxis RightX = new JoystickAxis(
             getRightX,
-            Sensitivities.playerTwoRightXAxisThreshold,
-            Sensitivities.isPlayerTwoRightXInverted
+            Sensitivities.playerOneRightXAxisThreshold,
+            Sensitivities.isPlayerOneRightXInverted
     );
 
-    public JoystickAxis rightY = new JoystickAxis(
+    public JoystickAxis RightY = new JoystickAxis(
             getRightY,
-            Sensitivities.playerTwoRightYAxisThreshold,
-            Sensitivities.isPlayerTwoRightYInverted
+            Sensitivities.playerOneRightYAxisThreshold,
+            Sensitivities.isPlayerOneRightYInverted
     );
 
-    public Button right_button = new Button(getRightButton);
-
+    public Button RightButton = new Button(getRightButton);
 
     public void update_right() {
-        right_stick.update();
-        rightX.update();
-        rightY.update();
-        right_button.update();
+        RightStick.update();
+        RightX.update();
+        RightY.update();
+        RightButton.update();
     }
 
 
     ///////////////////////////////////////--- TRIGGERS ---/////////////////////////////////////////
-    Function0<Float> getLTrigger = () -> gamepad.left_trigger;
-    Function0<Float> getRTrigger = () -> gamepad.right_trigger;
+    Function0<Float> getLTrigger = () -> gamepadEx.getLeftTrigger().getValue();
+    Function0<Float> getRTrigger = () -> gamepadEx.getRightTrigger().getValue();
 
-    public Trigger left_trigger = new Trigger(getLTrigger, Sensitivities.playerTwoLeftTriggerThreshold);
-    public Trigger right_trigger = new Trigger(getRTrigger, Sensitivities.playerTwoRightTriggerThreshold);
+    public Trigger LeftTrigger = new Trigger(getLTrigger, Sensitivities.playerOneLeftTriggerThreshold);
+    public Trigger RightTrigger = new Trigger(getRTrigger, Sensitivities.playerOneRightTriggerThreshold);
 
     public void update_triggers() {
-        left_trigger.update();
-        right_trigger.update();
+        LeftTrigger.update();
+        RightTrigger.update();
     }
 
     public void update_all() {
@@ -161,5 +160,6 @@ public class ReadyPlayerTwo {
         update_right();
         update_triggers();
     }
+
 
 }

@@ -12,9 +12,9 @@ public class RobotCentricDrive extends DriveMotors {
 
     IMU imu;
 
-    Function0<Float> forwardBackward = () -> (float) (config.playerOne.forwardAxis.getValue() * config.sensitivities.getForwardSensitivity() * getSensitivityMod());
-    Function0<Float> strafe = () -> (float) (config.playerOne.strafeAxis.getValue() * config.sensitivities.getStrafingSensitivity() * getSensitivityMod());
-    Function0<Float> yaw = () -> (float) (config.playerOne.turnAxis.getValue() * config.sensitivities.getTurningSensitivity() * getSensitivityMod());
+    Function0<Float> forwardBackward = () -> (float) (config.playerOne.ForwardAxis.getValue() * config.sensitivities.getForwardSensitivity() * getSensitivityMod());
+    Function0<Float> strafe = () -> (float) (config.playerOne.StrafeAxis.getValue() * config.sensitivities.getStrafingSensitivity() * getSensitivityMod());
+    Function0<Float> yaw = () -> (float) (config.playerOne.TurnAxis.getValue() * config.sensitivities.getTurningSensitivity() * getSensitivityMod());
 
     MecanumDriverControlled vroom;
 
@@ -28,7 +28,7 @@ public class RobotCentricDrive extends DriveMotors {
 
     public float getSensitivityMod() {
         float SensitivityModifier = config.sensitivities.getDriveSensitivity();
-        if (config.playerOne.slowDown.getState()){SensitivityModifier = config.sensitivities.getSlowDownModifier();}
+        if (config.playerOne.SlowDown.getState()){SensitivityModifier = config.sensitivities.getSlowDownModifier();}
         return SensitivityModifier;
     }
 

@@ -63,7 +63,7 @@ public class HoldHeading extends DriveMotors {
         extDT = deltaTime;
         yawVelocity = angularVelocity.zRotationRate;
         //funny boolean shit
-        hasExcessVelocity = (!config.playerOne.turnAxis.getState() && useNormTurn);
+        hasExcessVelocity = (!config.playerOne.TurnAxis.getState() && useNormTurn);
         hasVelocity = (yawVelocity > 0.1 || yawVelocity < -0.1);
         targetRad = Math.toRadians(targetHeading);
 
@@ -81,24 +81,24 @@ public class HoldHeading extends DriveMotors {
 
     public float getSensitivityMod() {
         float SensitivityModifier = config.sensitivities.getDriveSensitivity();
-        if (config.playerOne.slowDown.getState()){SensitivityModifier = config.sensitivities.getSlowDownModifier();}
+        if (config.playerOne.SlowDown.getState()){SensitivityModifier = config.sensitivities.getSlowDownModifier();}
         return SensitivityModifier;
     }
 
     public Function0<Float> forwardBackward() {
-        return () -> (float) (config.playerOne.forwardAxis.getValue() * config.sensitivities.getForwardSensitivity() * getSensitivityMod());
+        return () -> (float) (config.playerOne.ForwardAxis.getValue() * config.sensitivities.getForwardSensitivity() * getSensitivityMod());
     }
 
     public Function0<Float> strafe() {
-        return () -> (float) (config.playerOne.strafeAxis.getValue() * config.sensitivities.getStrafingSensitivity() * getSensitivityMod());
+        return () -> (float) (config.playerOne.StrafeAxis.getValue() * config.sensitivities.getStrafingSensitivity() * getSensitivityMod());
     }
 
     public Function0<Float> yaw() { // aaaaaaaaaaaaaaaaaaaaaaaa
-        double normTurn = config.playerOne.turnAxis.getValue() * config.sensitivities.getTurningSensitivity() * getSensitivityMod();
+        double normTurn = config.playerOne.TurnAxis.getValue() * config.sensitivities.getTurningSensitivity() * getSensitivityMod();
         double PIDturn = HeadingPID.lockYaw(targetRad, imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS), extDT);
         double yaw;
 
-        if (config.playerOne.turnAxis.getState()) {useNormTurn = true;}
+        if (config.playerOne.TurnAxis.getState()) {useNormTurn = true;}
         if (hasExcessVelocity && !hasVelocity) {useNormTurn = false;}
 
         if (useNormTurn) {yaw = normTurn; updateHeading();} else {yaw = PIDturn;}

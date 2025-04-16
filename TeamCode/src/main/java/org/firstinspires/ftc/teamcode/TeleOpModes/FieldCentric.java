@@ -7,19 +7,24 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.DriveMotors;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.FieldCentricDrive;
 
-@TeleOp(name = "it go", group = "aaaaaaaaaaaaaaaaaaaaa it go")
+@TeleOp(name = "Field Centric Drive", group = "bb test")
 public class FieldCentric extends NextFTCOpMode {
 
-    public FieldCentric() {super();}
+    public FieldCentric() {
+        super();
+    }
+
     RobotConfig robotConfig = new RobotConfig(this);
+
     DriveMotors fieldCentricDrive = new FieldCentricDrive(this, robotConfig);
 
     @Override
     public void onStartButtonPressed() {
         fieldCentricDrive.Start();
     }
+
     @Override
     public void onUpdate() {
-        gamepadManager.updateGamepads();
+        robotConfig.gamepadUpdates();
     }
 }

@@ -6,11 +6,11 @@ import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.RobotCentricDrive;
 
-@TeleOp(name = "Basic Bitch OpMode", group = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+@TeleOp(name = "Basic Bitch OpMode", group = "aa it go")
 public class BasicBitchOpMode extends NextFTCOpMode {
     public BasicBitchOpMode() {super();}
-    RobotConfig activeConfig = new RobotConfig(this);
-    RobotCentricDrive robotCentricDrive = new RobotCentricDrive(this, activeConfig);
+    RobotConfig robotConfig = new RobotConfig(this);
+    RobotCentricDrive robotCentricDrive = new RobotCentricDrive(this, robotConfig);
     @Override public void onStartButtonPressed() {robotCentricDrive.Start();}
-    @Override public void onUpdate() {gamepadManager.updateGamepads();}
+    @Override public void onUpdate() {robotConfig.gamepadUpdates();}
 }
