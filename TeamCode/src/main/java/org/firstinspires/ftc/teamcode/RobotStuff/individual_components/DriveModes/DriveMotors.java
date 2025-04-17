@@ -35,7 +35,7 @@ public abstract class DriveMotors {
         frontRightDrive = opMode.hardwareMap.get(DcMotorEx.class, config.FRDrive.name);
         backRightDrive = opMode.hardwareMap.get(DcMotorEx.class, config.BRDrive.name);
 
-        frontLeftDrive.setDirection(config.FLDrive.direction);
+        frontLeftDrive.setDirection(config.FLDrive.direction); // no it won't, ignore the error
         backLeftDrive.setDirection(config.BLDrive.direction);
         frontRightDrive.setDirection(config.FRDrive.direction);
         backRightDrive.setDirection(config.BRDrive.direction);
