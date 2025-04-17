@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Testing_OpModes;
+package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.pedropathing.pathgen.BezierCurve;
 import com.pedropathing.pathgen.Path;
@@ -6,7 +6,6 @@ import com.pedropathing.pathgen.Point;
 import com.pedropathing.util.Constants;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.rowanmcalpin.nextftc.core.command.Command;
 import com.rowanmcalpin.nextftc.core.command.groups.ParallelGroup;
 import com.rowanmcalpin.nextftc.core.command.groups.SequentialGroup;
