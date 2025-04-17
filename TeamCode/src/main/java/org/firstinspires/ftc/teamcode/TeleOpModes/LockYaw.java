@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.TeleOpModes;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -13,7 +14,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveMode
 import org.firstinspires.ftc.teamcode.RobotStuff.misc.Stopwatch;
 
 @TeleOp(name = "LockYaw", group = "bb test") // pid go brrr
-//@Disabled
+@Disabled
 public class LockYaw extends NextFTCOpMode {
 
     public LockYaw() {
@@ -23,8 +24,8 @@ public class LockYaw extends NextFTCOpMode {
     private final ElapsedTime frameTimer = new ElapsedTime();
     Stopwatch StopWatch = new Stopwatch();
 
-    RobotConfig RobotConfig = new RobotConfig(this);
-    HoldHeading HoldHeading = new HoldHeading(this, RobotConfig);
+    RobotConfig robotConfig;
+    HoldHeading holdHeading;
 
 
     double deltaTime;
@@ -32,6 +33,9 @@ public class LockYaw extends NextFTCOpMode {
 
     @Override
     public void onInit() {
+        robotConfig = new RobotConfig(this);
+        holdHeading = new HoldHeading(this, robotConfig);
+
         setUseBulkReading(true);
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -46,7 +50,7 @@ public class LockYaw extends NextFTCOpMode {
     }
     @Override
     public void onStartButtonPressed() {
-        HoldHeading.Start();
+        holdHeading.Start();
         frameTimer.reset();
         deltaTime = 0;
     }
@@ -59,9 +63,9 @@ public class LockYaw extends NextFTCOpMode {
         telemetry.addData("deltaTime", deltaTime);
         frameTimer.reset();
 
-        HoldHeading.updateDrive(deltaTime);
-        RobotConfig.playerOne.update_all();
-        RobotConfig.playerTwo.update_all();
+        holdHeading.updateDrive(deltaTime);
+        robotConfig.playerOne.update_all();
+        robotConfig.playerTwo.update_all();
 
         telemetry.update();
     }

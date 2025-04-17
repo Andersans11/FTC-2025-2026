@@ -4,6 +4,8 @@ import com.pedropathing.pathgen.BezierCurve;
 import com.pedropathing.pathgen.Path;
 import com.pedropathing.pathgen.Point;
 import com.pedropathing.util.Constants;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.rowanmcalpin.nextftc.core.command.Command;
 import com.rowanmcalpin.nextftc.core.command.groups.ParallelGroup;
@@ -22,7 +24,8 @@ A simple OpMode to test NFTC drive controls.
 It pulls motors from the Motors Class and assigns them to a mecanum drive command.
 */
 
-@TeleOp(name = "Test: NFTC TeleOp")
+@Autonomous(name="ye")
+@Disabled
 public class Test_NFTCAuto extends NextFTCOpMode {
 
     public Test_NFTCAuto() {

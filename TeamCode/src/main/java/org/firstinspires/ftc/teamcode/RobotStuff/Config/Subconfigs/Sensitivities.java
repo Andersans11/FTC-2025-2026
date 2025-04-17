@@ -60,7 +60,7 @@ public class Sensitivities {
 
     public static boolean isPlayerOneLeftYInverted = true;
 
-    public static boolean isPlayerOneRightXInverted = false;
+    public static boolean isPlayerOneRightXInverted = true;
 
     public static boolean isPlayerOneRightYInverted = false;
 

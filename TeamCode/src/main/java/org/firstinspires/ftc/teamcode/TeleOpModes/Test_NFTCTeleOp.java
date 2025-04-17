@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.TeleOpModes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
 
@@ -8,18 +9,21 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveMode
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.VerticalLift;
 
 
-@TeleOp(name = "NFTC TeleOp", group = "aa it go")
+@TeleOp(name = "NFTC Tele", group = "aa it go")
+@Disabled
 public class Test_NFTCTeleOp extends NextFTCOpMode {
 
     public Test_NFTCTeleOp() {
         super(VerticalLift.INSTANCE);
     }
 
-    RobotConfig robotConfig = new RobotConfig(this);
-    RobotCentricDrive robotCentricDrive = new RobotCentricDrive(this, robotConfig);
+    RobotConfig robotConfig;
+    RobotCentricDrive robotCentricDrive;
 
     @Override
     public void onInit() {
+        robotConfig = new RobotConfig(this);
+        robotCentricDrive = new RobotCentricDrive(this, robotConfig);
         VerticalLift.INSTANCE.initialize();
         VerticalLift.INSTANCE.configure(robotConfig);
     }

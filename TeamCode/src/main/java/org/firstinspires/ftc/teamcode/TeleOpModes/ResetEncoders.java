@@ -15,8 +15,6 @@ public class ResetEncoders extends NextFTCOpMode {
     public ResetEncoders() {super();}
     IMU imu;
 
-    RobotConfig robotConfig = new RobotConfig(this);
-
     @Override
     public void runOpMode() {
 

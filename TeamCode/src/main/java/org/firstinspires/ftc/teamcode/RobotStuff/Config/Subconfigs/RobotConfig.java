@@ -55,7 +55,7 @@ public class RobotConfig {
     public static LiftMotorConfig LeftHorizontal = new LiftMotorConfig(
             "Left Horizontal Lift",
             DcMotorSimple.Direction.FORWARD,
-            336 // rev 6000 rpm with 12:1 gearbox
+            336 // rev 6000 rpm with 12:1 gearboxd
     );
     public static LiftMotorConfig RightHorizontal = new LiftMotorConfig(
             "Right Horizontal Lift",
