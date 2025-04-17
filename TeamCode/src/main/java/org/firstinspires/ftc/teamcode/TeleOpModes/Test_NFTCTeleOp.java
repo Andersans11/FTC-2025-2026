@@ -1,21 +1,18 @@
 package org.firstinspires.ftc.teamcode.TeleOpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.rowanmcalpin.nextftc.core.command.Command;
 import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
-import com.rowanmcalpin.nextftc.ftc.driving.MecanumDriverControlled;
 
-import org.firstinspires.ftc.teamcode.R;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.RobotCentricDrive;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LiftBase;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.VerticalLift;
 
 
 @TeleOp(name = "NFTC TeleOp", group = "aa it go")
 public class Test_NFTCTeleOp extends NextFTCOpMode {
 
     public Test_NFTCTeleOp() {
-        super(LiftBase.INSTANCE);
+        super(VerticalLift.INSTANCE);
     }
 
     RobotConfig robotConfig = new RobotConfig(this);
@@ -23,27 +20,24 @@ public class Test_NFTCTeleOp extends NextFTCOpMode {
 
     @Override
     public void onInit() {
-        LiftBase.INSTANCE.initialize();
+        VerticalLift.INSTANCE.initialize();
+        VerticalLift.INSTANCE.configure(robotConfig);
     }
 
     @Override
     public void onStartButtonPressed() {
         robotCentricDrive.Start();
 
-        gamepadManager.getGamepad1().getDpadUp().setPressedCommand(LiftBase.INSTANCE::toHigh);
-        gamepadManager.getGamepad1().getDpadLeft().setPressedCommand(LiftBase.INSTANCE::toMiddle);
-        gamepadManager.getGamepad1().getDpadDown().setPressedCommand(LiftBase.INSTANCE::toLow);
-        gamepadManager.getGamepad2().getLeftStick().setHeldCommand(LiftBase.INSTANCE::moveLiftBetter);
-        gamepadManager.getGamepad2().getX().setPressedCommand(LiftBase.INSTANCE::resetEncoders);
-
-        LiftBase.INSTANCE.setLimits(13, 0.015);
+        robotConfig.playerOne.DpadUp.setPressedCommand(VerticalLift.INSTANCE::toHigh);
+        robotConfig.playerOne.DpadDown.setPressedCommand(VerticalLift.INSTANCE::toLow);
+        robotConfig.playerOne.DpadLeft.setPressedCommand(VerticalLift.INSTANCE::toMiddle);
+        robotConfig.playerOne.Y.setPressedCommand(VerticalLift.INSTANCE::resetEncoders);
     }
 
     @Override
     public void onUpdate() {
 
-        telemetry.addData("Lift current pos:", LiftBase.INSTANCE.ticksToInches(LiftBase.INSTANCE.motor.getCurrentPosition(), 751.8));
-        telemetry.addData("At limits: ", LiftBase.INSTANCE.overLimits);
+        telemetry.addData("Lift current pos:", VerticalLift.INSTANCE.ticksToInches(VerticalLift.INSTANCE.motors.getLeader().getCurrentPosition(), 751.8));
 
         telemetry.update();
 

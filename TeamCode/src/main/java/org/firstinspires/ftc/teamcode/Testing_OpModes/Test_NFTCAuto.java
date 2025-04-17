@@ -14,8 +14,8 @@ import com.rowanmcalpin.nextftc.pedro.FollowPath;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.FConstants;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.LConstants;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LiftBase;
-import org.firstinspires.ftc.teamcode.example.java.Lift;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.VerticalLift;
 
 /*
 A simple OpMode to test NFTC drive controls.
@@ -26,25 +26,29 @@ It pulls motors from the Motors Class and assigns them to a mecanum drive comman
 public class Test_NFTCAuto extends NextFTCOpMode {
 
     public Test_NFTCAuto() {
-        super(LiftBase.INSTANCE);
+        super(VerticalLift.INSTANCE);
     }
+
+    RobotConfig robotConfig = new RobotConfig(this);
+
 
     Path path = new Path(new BezierCurve(new Point(0, 0, Point.CARTESIAN), new Point(10, 0, Point.CARTESIAN)));
 
     @Override
     public void onInit() {
-        LiftBase.INSTANCE.initialize();
+        VerticalLift.INSTANCE.initialize();
+        VerticalLift.INSTANCE.configure(robotConfig);
         Constants.setConstants(FConstants.class, LConstants.class);
     }
 
     public Command firstRoutine() {
         return new SequentialGroup(
-                Lift.INSTANCE.toHigh(),
+                VerticalLift.INSTANCE.toHigh(),
                 new ParallelGroup(
                         new FollowPath(path),
                         new SequentialGroup(
                                 new Delay(0.5),
-                                Lift.INSTANCE.toLow()
+                                VerticalLift.INSTANCE.toLow()
                         )
                 )
         );

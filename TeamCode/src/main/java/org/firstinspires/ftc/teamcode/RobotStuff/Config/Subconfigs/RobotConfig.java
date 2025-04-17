@@ -26,21 +26,41 @@ public class RobotConfig {
         playerTwo.update_all();
     }
 
-    public static MotorConfig FLDrive = new MotorConfig(
+    public static DriveMotorConfig FLDrive = new DriveMotorConfig(
             "Front Left Drive",
             DcMotorSimple.Direction.REVERSE
     );
-    public static MotorConfig BLDrive = new MotorConfig(
+    public static DriveMotorConfig BLDrive = new DriveMotorConfig(
             "Back Left Drive",
             DcMotorSimple.Direction.REVERSE
     );
-    public static MotorConfig FRDrive = new MotorConfig(
+    public static DriveMotorConfig FRDrive = new DriveMotorConfig(
             "Front Right Drive",
             DcMotorSimple.Direction.FORWARD
     );
-    public static MotorConfig BRDrive = new MotorConfig(
+    public static DriveMotorConfig BRDrive = new DriveMotorConfig(
             "Back Right Drive",
             DcMotorSimple.Direction.FORWARD
+    );
+    public static LiftMotorConfig LeftVertical = new LiftMotorConfig(
+            "Left Vertical Lift",
+            DcMotorSimple.Direction.FORWARD,
+            336 // rev 6000 rpm with 12:1 gearbox
+    );
+    public static LiftMotorConfig RightVertical = new LiftMotorConfig( // one lift motor will always be the inverted direction of its counterpart
+            "Right Vertical Lift",
+            DcMotorSimple.Direction.REVERSE,
+            336 // rev 6000 rpm with 12:1 gearbox
+    );
+    public static LiftMotorConfig LeftHorizontal = new LiftMotorConfig(
+            "Left Horizontal Lift",
+            DcMotorSimple.Direction.FORWARD,
+            336 // rev 6000 rpm with 12:1 gearbox
+    );
+    public static LiftMotorConfig RightHorizontal = new LiftMotorConfig(
+            "Right Horizontal Lift",
+            DcMotorSimple.Direction.REVERSE,
+            336 // rev 6000 rpm with 12:1 gearbox
     );
 
 

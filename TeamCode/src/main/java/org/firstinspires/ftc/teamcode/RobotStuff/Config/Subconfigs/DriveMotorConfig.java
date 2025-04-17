@@ -2,13 +2,13 @@ package org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs;
 
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-public class MotorConfig {
+public class DriveMotorConfig {
 
     public String name;
     public DcMotorSimple.Direction direction;
 
-    public MotorConfig (String motorName, DcMotorSimple.Direction direction) {
-        name = motorName;
+    public DriveMotorConfig(String motorName, DcMotorSimple.Direction direction) {
+        this.name = motorName;
         this.direction = direction;
     }
 }
