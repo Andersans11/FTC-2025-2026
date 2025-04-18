@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Autonomous;
+package org.firstinspires.ftc.teamcode.AutomousOpModes;
 
 import com.pedropathing.pathgen.BezierCurve;
 import com.pedropathing.pathgen.Path;
