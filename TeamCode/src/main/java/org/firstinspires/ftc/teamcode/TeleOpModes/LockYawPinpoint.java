@@ -10,14 +10,14 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.HoldHeading;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.HoldHeadingPinpoint;
 import org.firstinspires.ftc.teamcode.RobotStuff.misc.Stopwatch;
 
-@TeleOp(name = "LockYaw", group = "ab it go") // pid go brrr
-//@Disabled
-public class LockYaw extends NextFTCOpMode {
+@TeleOp(name = "LockYaw Pinpoint", group = "bb testing") // pid go brrr
+@Disabled
+public class LockYawPinpoint extends NextFTCOpMode {
 
-    public LockYaw() {
+    public LockYawPinpoint() {
         super();
     }
 
@@ -25,7 +25,7 @@ public class LockYaw extends NextFTCOpMode {
     Stopwatch StopWatch = new Stopwatch();
 
     RobotConfig robotConfig;
-    HoldHeading holdHeading;
+    HoldHeadingPinpoint holdHeadingPinpoint;
 
 
     double deltaTime;
@@ -34,7 +34,7 @@ public class LockYaw extends NextFTCOpMode {
     @Override
     public void onInit() {
         robotConfig = new RobotConfig(this);
-        holdHeading = new HoldHeading(this, robotConfig);
+        holdHeadingPinpoint = new HoldHeadingPinpoint(this, robotConfig);
 
         setUseBulkReading(true);
 
@@ -42,7 +42,7 @@ public class LockYaw extends NextFTCOpMode {
 
         imu = hardwareMap.get(IMU.class, "imu");
 
-        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.LEFT; // TODO: THIS MIGHT BE WRONG
+        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.LEFT;
         RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection. BACKWARD;
         RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
 
@@ -50,7 +50,7 @@ public class LockYaw extends NextFTCOpMode {
     }
     @Override
     public void onStartButtonPressed() {
-        holdHeading.Start();
+        holdHeadingPinpoint.Start();
         frameTimer.reset();
         deltaTime = 0;
     }
@@ -63,7 +63,7 @@ public class LockYaw extends NextFTCOpMode {
         telemetry.addData("deltaTime", deltaTime);
         frameTimer.reset();
 
-        holdHeading.updateDrive(deltaTime);
+        holdHeadingPinpoint.updateDrive(deltaTime);
         robotConfig.playerOne.update_all();
         robotConfig.playerTwo.update_all();
 

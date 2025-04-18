@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.RobotCentricDrive;
 
-@TeleOp(name = "Basic Bitch OpMode", group = "aa it go")
+@TeleOp(name = "Basic Bitch OpMode", group = "ab it go")
 //@Disabled
 public class BasicBitchOpMode extends NextFTCOpMode {
     public BasicBitchOpMode() {super();}

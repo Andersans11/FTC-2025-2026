@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveMode
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.VerticalLift;
 
 
-@TeleOp(name = "NFTC Tele", group = "aa it go")
+@TeleOp(name = "Lift Teleop", group = "cc don't fucking use this")
 @Disabled
 public class Test_NFTCTeleOp extends NextFTCOpMode {
 
