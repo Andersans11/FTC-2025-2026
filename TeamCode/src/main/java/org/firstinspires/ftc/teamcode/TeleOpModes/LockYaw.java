@@ -21,7 +21,7 @@ public class LockYaw extends NextFTCOpMode {
         super();
     }
 
-    private final ElapsedTime frameTimer = new ElapsedTime();
+    private final ElapsedTime deltaTimer = new ElapsedTime();
     Stopwatch StopWatch = new Stopwatch();
 
     RobotConfig robotConfig;
@@ -51,7 +51,7 @@ public class LockYaw extends NextFTCOpMode {
     @Override
     public void onStartButtonPressed() {
         holdHeading.Start();
-        frameTimer.reset();
+        deltaTimer.reset();
         deltaTime = 0;
     }
 
@@ -59,9 +59,9 @@ public class LockYaw extends NextFTCOpMode {
     public void onUpdate() {
         StopWatch.reset();
 
-        deltaTime = frameTimer.seconds();
+        deltaTime = deltaTimer.seconds();
         telemetry.addData("deltaTime", deltaTime);
-        frameTimer.reset();
+        deltaTimer.reset();
 
         holdHeading.updateDrive(deltaTime);
         robotConfig.playerOne.update_all();

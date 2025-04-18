@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.HoldHeadingPinpoint;
 import org.firstinspires.ftc.teamcode.RobotStuff.misc.Stopwatch;
 
-@TeleOp(name = "LockYaw Pinpoint", group = "bb testing") // pid go brrr
+@TeleOp(name = "LockYaw Pinpoint", group = "bb testing") // pinpoint go brrr
 @Disabled
 public class LockYawPinpoint extends NextFTCOpMode {
 
@@ -21,7 +21,7 @@ public class LockYawPinpoint extends NextFTCOpMode {
         super();
     }
 
-    private final ElapsedTime frameTimer = new ElapsedTime();
+    private final ElapsedTime deltaTimer = new ElapsedTime();
     Stopwatch StopWatch = new Stopwatch();
 
     RobotConfig robotConfig;
@@ -51,7 +51,7 @@ public class LockYawPinpoint extends NextFTCOpMode {
     @Override
     public void onStartButtonPressed() {
         holdHeadingPinpoint.Start();
-        frameTimer.reset();
+        deltaTimer.reset();
         deltaTime = 0;
     }
 
@@ -59,9 +59,9 @@ public class LockYawPinpoint extends NextFTCOpMode {
     public void onUpdate() {
         StopWatch.reset();
 
-        deltaTime = frameTimer.seconds();
+        deltaTime = deltaTimer.seconds();
         telemetry.addData("deltaTime", deltaTime);
-        frameTimer.reset();
+        deltaTimer.reset();
 
         holdHeadingPinpoint.updateDrive(deltaTime);
         robotConfig.playerOne.update_all();
