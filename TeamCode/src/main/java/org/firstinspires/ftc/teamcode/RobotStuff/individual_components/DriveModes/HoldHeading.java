@@ -62,6 +62,7 @@ public class HoldHeading extends DriveMotors {
 
     public void telemetryAngleVelocity() {
         opMode.telemetry.addData("Heading", getHeadingDeg());
+        opMode.telemetry.addData("Turning?", config.playerOne.TurnAxis.getState());
         opMode.telemetry.addData("TargetHeading", targetHeading);
         opMode.telemetry.addData("angleVelX", imu.getRobotAngularVelocity(AngleUnit.DEGREES).xRotationRate);
         opMode.telemetry.addData("angleVelY", imu.getRobotAngularVelocity(AngleUnit.DEGREES).yRotationRate);
