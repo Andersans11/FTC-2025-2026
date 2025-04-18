@@ -55,7 +55,7 @@ public class HoldHeadingPinpoint extends DriveMotors {
         super(opMode, config);
         HeadingPID = new CustomPID(opMode.telemetry, config, "HeadingPID");
         pinpoint = opMode.hardwareMap.get(GoBildaPinpointDriver.class, "sensor");
-        pinpoint.setOffsets(20000000, 20000000, DistanceUnit.MM); // TODO: FIX THIS
+        pinpoint.setOffsets(25, -125, DistanceUnit.MM); // TODO: TEST
         pinpoint.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
 
         this.vroom = new MecanumDriverControlled(driveMotors, forwardBackward(), strafe(), yaw(), true);
