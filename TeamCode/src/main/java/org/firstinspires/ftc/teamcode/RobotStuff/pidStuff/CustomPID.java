@@ -8,6 +8,11 @@ public class CustomPID {
     double kI;
     double kD;
 
+    double secondarykP;
+    double secondarykI;
+    double secondarykD;
+    double threshold;
+
     double P;
     double I;
     double D;
@@ -31,6 +36,15 @@ public class CustomPID {
         this.kI = kI;
         this.kD = kD;
     }
+    public void setSecondaryCoefficients(double kP, double kI, double kD) {
+        this.secondarykP = kP;
+        this.secondarykI = kI;
+        this.secondarykD = kD;
+    }
+
+    public void setThreshold(double threshold) {
+        this.threshold = threshold;
+    }
 
     public double lockYaw(double targetPos, double currentPos, double deltaTime) {
         double error = angleFix(targetPos - currentPos);
@@ -40,6 +54,12 @@ public class CustomPID {
         P = (error * kP);
         I = (integralSum * kI);
         D = (derivative * kD);
+        if (P < threshold){
+            P = (error * secondarykP);
+            I = (integralSum * secondarykI);
+            D = (derivative * secondarykD);
+            telemetry.addLine("Using secondary PID");
+        } else {telemetry.addLine("Using primary PID");}
         yawTelemetry(error, derivative, targetPos, currentPos, lastError);
         return P + I + D;
     }

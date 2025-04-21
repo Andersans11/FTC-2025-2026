@@ -14,8 +14,8 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.HoldHeadingPinpoint;
 import org.firstinspires.ftc.teamcode.RobotStuff.misc.Stopwatch;
 
-@TeleOp(name = "LockYaw Pinpoint", group = "abb tune") // pid go brrr
-//@Disabled
+@TeleOp(name = "LockYaw Pinpoint", group = "cc no") // pid go brrr
+@Disabled
 public class LockYawPinpoint extends NextFTCOpMode {
 
     public LockYawPinpoint() {

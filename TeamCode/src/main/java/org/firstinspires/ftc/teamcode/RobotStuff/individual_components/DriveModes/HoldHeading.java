@@ -15,9 +15,14 @@ import kotlin.jvm.functions.Function0;
 @Config
 public class HoldHeading extends DriveMotors {
 
-    public static double kP = 0; //TODO: TUNE
+    public static double kP = 2; //TODO: TUNE
     public static double kI = 0;
-    public static double kD = 0;
+    public static double kD = 0.1;
+
+    public static double secondarykP = 2.5; // TODO: TUNE
+    public static double secondarykI = 0;
+    public static double secondarykD = 0.05;
+    public static double threshold = 0.075;
 
     double targetRad;
 
@@ -102,6 +107,8 @@ public class HoldHeading extends DriveMotors {
         if (hasExcessVelocity && !hasVelocity) {useNormTurn = false;}
 
         HeadingPID.setCoefficients(kP, kI, kD);
+        HeadingPID.setSecondaryCoefficients(secondarykP, secondarykI, secondarykD);
+        HeadingPID.setThreshold(threshold);
 
         vroom.update();
     }
