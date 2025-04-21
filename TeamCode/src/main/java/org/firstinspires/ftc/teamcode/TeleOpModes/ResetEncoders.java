@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.IMU;
 
 import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
 
-@TeleOp(name = "Reset Encoders", group = "aa utility")
+@TeleOp(name = "Reset Encoders", group = "aaa utility")
 //@Disabled
 public class ResetEncoders extends NextFTCOpMode {
 

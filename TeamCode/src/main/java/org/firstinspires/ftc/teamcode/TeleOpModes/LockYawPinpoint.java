@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.TeleOpModes;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -13,7 +12,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.HoldHeadingPinpoint;
 import org.firstinspires.ftc.teamcode.RobotStuff.misc.Stopwatch;
 
-@TeleOp(name = "LockYaw Pinpoint", group = "bb testing") // pinpoint go brrr
+@TeleOp(name = "LockYaw Pinpoint", group = "abb tune") // pid go brrr
 //@Disabled
 public class LockYawPinpoint extends NextFTCOpMode {
 
