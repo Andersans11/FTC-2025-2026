@@ -33,8 +33,7 @@ public class HoldHeadingPinpoint extends DriveMotors {
     double targetHeading;
     boolean hasExcessVelocity;
     boolean hasVelocity;
-    double fullRun = 0;
-    double headingUpdate = 0;
+
 
     Function0<Float> forwardBackward = () -> (float) (config.playerOne.ForwardAxis.getValue() * config.sensitivities.getForwardSensitivity() * getSensitivityMod());
     Function0<Float> strafe = () -> (float) (config.playerOne.StrafeAxis.getValue() * config.sensitivities.getStrafingSensitivity() * getSensitivityMod());
@@ -82,19 +81,9 @@ public class HoldHeadingPinpoint extends DriveMotors {
     public void telemetryAngleVelocity() {
         if (useNormTurn) {opMode.telemetry.addLine("Mode: Using raw turn values");}
         else {opMode.telemetry.addLine("Mode: Holding heading using IMU");}
-
-        opMode.telemetry.addData("Heading", getHeadingDeg());
-        opMode.telemetry.addData("Turning?", config.playerOne.TurnAxis.getState());
-        opMode.telemetry.addData("TargetHeading", targetHeading);
-        opMode.telemetry.addData("targetRad", targetRad);
-        opMode.telemetry.addData("usenormturn", useNormTurn);
-        opMode.telemetry.addData("hasvelocity", hasVelocity);
-        opMode.telemetry.addData("hasExcessVel", hasExcessVelocity);
-        opMode.telemetry.addData("updateDrive runs", fullRun);
-        opMode.telemetry.addData("headingUpdates", headingUpdate);
-        opMode.telemetry.addData("angleVelX", pinpoint.getVelX(DistanceUnit.MM));
-        opMode.telemetry.addData("angleVelY", pinpoint.getVelY(DistanceUnit.MM));
-        opMode.telemetry.addData("angleVelZ", pinpoint.getHeadingVelocity(UnnormalizedAngleUnit.DEGREES));
+        opMode.telemetry.addLine("================================");
+        opMode.telemetry.addData("current heading", getHeadingDeg());
+        opMode.telemetry.addData("target heading", targetHeading);
     }
 
     @Override
@@ -117,8 +106,6 @@ public class HoldHeadingPinpoint extends DriveMotors {
         HeadingPID.setCoefficients(kP, kI, kD);
 
         vroom.update();
-
-        fullRun += 1;
     }
 
     public void updateHeading() {
