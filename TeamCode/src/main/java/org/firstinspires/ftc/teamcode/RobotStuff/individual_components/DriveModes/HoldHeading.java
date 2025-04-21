@@ -31,6 +31,23 @@ public class HoldHeading extends DriveMotors {
     double yawVelocity;
     boolean hasExcessVelocity;
     boolean hasVelocity;
+    double fullRun = 0;
+    double headingUpdate = 0;
+
+    Function0<Float> forwardBackward = () -> (float) (config.playerOne.ForwardAxis.getValue() * config.sensitivities.getForwardSensitivity() * getSensitivityMod());
+    Function0<Float> strafe = () -> (float) (config.playerOne.StrafeAxis.getValue() * config.sensitivities.getStrafingSensitivity() * getSensitivityMod());
+    Function0<Float> yaw = () -> { // funny lambda
+        if (useNormTurn) {
+            updateHeading();
+            return (float) (config.playerOne.TurnAxis.getValue() * config.sensitivities.getTurningSensitivity());
+        } else {
+            return (float) HeadingPID.lockYaw(
+                    targetRad,
+                    imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS),
+                    extDT
+            );
+        }
+    };
     /*
     for new coders:
     useNormTurn acts as a switch that turns on when the turn stick is moved,
@@ -53,7 +70,7 @@ public class HoldHeading extends DriveMotors {
         super(opMode, config);
         HeadingPID = new CustomPID(opMode.telemetry, config, "HeadingPID");
         imu = opMode.hardwareMap.get(IMU.class, "imu"); // ASSIGN IMU BEFORE RUNNING THIS CODE
-        this.vroom = new MecanumDriverControlled(driveMotors, forwardBackward(), strafe(), yaw(), true, imu);
+        this.vroom = new MecanumDriverControlled(driveMotors, forwardBackward, strafe, yaw, true);
     }
 
     double getHeadingDeg() {
@@ -61,9 +78,18 @@ public class HoldHeading extends DriveMotors {
     }
 
     public void telemetryAngleVelocity() {
+        if (useNormTurn) {opMode.telemetry.addLine("Mode: Using raw turn values");}
+        else {opMode.telemetry.addLine("Mode: Holding heading using IMU");}
+
         opMode.telemetry.addData("Heading", getHeadingDeg());
         opMode.telemetry.addData("Turning?", config.playerOne.TurnAxis.getState());
         opMode.telemetry.addData("TargetHeading", targetHeading);
+        opMode.telemetry.addData("targetRad", targetRad);
+        opMode.telemetry.addData("usenormturn", useNormTurn);
+        opMode.telemetry.addData("hasvelocity", hasVelocity);
+        opMode.telemetry.addData("hasExcessVel", hasExcessVelocity);
+        opMode.telemetry.addData("fullrun", fullRun);
+        opMode.telemetry.addData("headingUpdate", headingUpdate);
         opMode.telemetry.addData("angleVelX", imu.getRobotAngularVelocity(AngleUnit.DEGREES).xRotationRate);
         opMode.telemetry.addData("angleVelY", imu.getRobotAngularVelocity(AngleUnit.DEGREES).yRotationRate);
         opMode.telemetry.addData("angleVelZ", imu.getRobotAngularVelocity(AngleUnit.DEGREES).zRotationRate);
@@ -84,12 +110,14 @@ public class HoldHeading extends DriveMotors {
         hasVelocity = (yawVelocity > 0.1 || yawVelocity < -0.1); // if the robot is turning at all
         targetRad = Math.toRadians(targetHeading); // passed into the pid so the robot turns 5 degrees instead of 355 to get to 360
 
+        if (config.playerOne.TurnAxis.getState()) {useNormTurn = true;} // always use normTurn if turn stick is not zero
+        if (hasExcessVelocity && !hasVelocity) {useNormTurn = false;}
+
         HeadingPID.setCoefficients(kP, kI, kD);
 
-        if (useNormTurn) {opMode.telemetry.addLine("Mode: Using raw turn values");}
-        else {opMode.telemetry.addLine("Mode: Holding heading using IMU");}
-
         vroom.update();
+
+        fullRun += 1;
     }
 
     public void updateHeading() {
@@ -102,28 +130,6 @@ public class HoldHeading extends DriveMotors {
         return SensitivityModifier;
     }
 
-    public Function0<Float> forwardBackward() {
-        return () -> (float) (config.playerOne.ForwardAxis.getValue() * config.sensitivities.getForwardSensitivity() * getSensitivityMod());
-    }
-
-    public Function0<Float> strafe() {
-        return () -> (float) (config.playerOne.StrafeAxis.getValue() * config.sensitivities.getStrafingSensitivity() * getSensitivityMod());
-    }
-
-    public Function0<Float> yaw() {
-        double normTurn = config.playerOne.TurnAxis.getValue() * config.sensitivities.getTurningSensitivity() * getSensitivityMod();
-        double PIDturn = HeadingPID.lockYaw(targetRad, imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS), extDT);
-        double turn;
-
-        if (config.playerOne.TurnAxis.getState()) {useNormTurn = true;} // always use normTurn if turn stick is not zero
-        if (hasExcessVelocity && !hasVelocity) {useNormTurn = false;}
-
-        if (useNormTurn) {turn = normTurn; updateHeading();} else {turn = PIDturn;}
-        // turn and update
-        // or
-        // keep past heading and use pid to turn to that heading every update
-        return () -> (float) (turn);
-    }
 
     @Override
     public void Start() {vroom.invoke();}
