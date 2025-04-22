@@ -2,26 +2,22 @@ package org.firstinspires.ftc.teamcode.TeleOpModes;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-
-
 import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.HoldHeading;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.HoldHeadingTEST;
 import org.firstinspires.ftc.teamcode.RobotStuff.misc.Stopwatch;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.OpModeGroups;
 
-@TeleOp(name = "LockYaw", group = OpModeGroups.TUNE) // pid go brrr
+@TeleOp(name = "LockYaw TEST", group = OpModeGroups.TESTING) // pid go brrr
 //@Disabled
-public class LockYaw extends NextFTCOpMode {
+public class LockYawTEST extends NextFTCOpMode {
 
-    public LockYaw() {
+    public LockYawTEST() {
         super();
     }
 
@@ -29,7 +25,7 @@ public class LockYaw extends NextFTCOpMode {
     Stopwatch StopWatch = new Stopwatch();
 
     RobotConfig robotConfig;
-    HoldHeading holdHeading;
+    HoldHeadingTEST holdHeadingTEST;
 
 
     double deltaTime;
@@ -38,7 +34,7 @@ public class LockYaw extends NextFTCOpMode {
     @Override
     public void onInit() {
         robotConfig = new RobotConfig(this);
-        holdHeading = new HoldHeading(this, robotConfig);
+        holdHeadingTEST = new HoldHeadingTEST(this, robotConfig);
 
         setUseBulkReading(true);
 
@@ -54,7 +50,7 @@ public class LockYaw extends NextFTCOpMode {
     }
     @Override
     public void onStartButtonPressed() {
-        holdHeading.Start();
+        holdHeadingTEST.Start();
         deltaTimer.reset();
         deltaTime = 0;
     }
@@ -67,7 +63,7 @@ public class LockYaw extends NextFTCOpMode {
         telemetry.addData("deltaTime", deltaTime);
         deltaTimer.reset();
 
-        holdHeading.updateDrive(deltaTime);
+        holdHeadingTEST.updateDrive(deltaTime);
         robotConfig.playerOne.update_all();
         robotConfig.playerTwo.update_all();
 

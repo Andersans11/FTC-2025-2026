@@ -13,8 +13,10 @@ import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.HoldHeadingPinpoint;
 import org.firstinspires.ftc.teamcode.RobotStuff.misc.Stopwatch;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.OpModeGroups;
 
-@TeleOp(name = "LockYaw Pinpoint", group = "cc no") // pid go brrr
+
+@TeleOp(name = "LockYaw Pinpoint", group = OpModeGroups.DONOTUSE) // pid go brrr
 @Disabled
 public class LockYawPinpoint extends NextFTCOpMode {
 

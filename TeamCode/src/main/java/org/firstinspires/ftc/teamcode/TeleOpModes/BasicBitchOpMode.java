@@ -9,8 +9,9 @@ import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.RobotCentricDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.misc.Stopwatch;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.OpModeGroups;
 
-@TeleOp(name = "Basic Bitch OpMode", group = "aba it go")
+@TeleOp(name = "Basic Bitch OpMode", group = OpModeGroups.WORKING)
 //@Disabled
 public class BasicBitchOpMode extends NextFTCOpMode {
     public BasicBitchOpMode() {super();}

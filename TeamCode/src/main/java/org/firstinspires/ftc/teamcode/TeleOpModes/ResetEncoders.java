@@ -6,10 +6,11 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.OpModeGroups;
 
 import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
 
-@TeleOp(name = "Reset Encoders", group = "aaa utility")
+@TeleOp(name = "Reset Encoders", group = OpModeGroups.UTILITY)
 //@Disabled
 public class ResetEncoders extends NextFTCOpMode {
 

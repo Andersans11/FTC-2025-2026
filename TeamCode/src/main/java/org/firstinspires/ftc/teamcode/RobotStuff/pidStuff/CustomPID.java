@@ -13,12 +13,17 @@ public class CustomPID {
     double secondarykD;
     double threshold;
 
+    boolean useSecondPID;
+
     double P;
     double I;
     double D;
 
     double lastError;
-    double integralSum;
+    double error;
+    double integral;
+    double deltaTimeNano;
+    double previousDeltaTimeNano;
 
     Telemetry telemetry;
     RobotConfig config;
@@ -41,25 +46,57 @@ public class CustomPID {
         this.secondarykI = kI;
         this.secondarykD = kD;
     }
-
     public void setThreshold(double threshold) {
         this.threshold = threshold;
     }
+    public void setSecondary(boolean useSecondPID) {
+        this.useSecondPID = useSecondPID;
+    }
 
     public double lockYaw(double targetPos, double currentPos, double deltaTime) {
-        double error = angleFix(targetPos - currentPos);
-        integralSum += error * deltaTime;
-        double derivative = (error - lastError) / deltaTime;
         lastError = error;
+        error = angleFix(targetPos - currentPos);
+        integral += error * deltaTime;
+        double derivative = (error - lastError) / deltaTime;
+
+
         P = (error * kP);
-        I = (integralSum * kI);
-        D = (derivative * kD);
-        if (P < threshold){
+        if (useSecondPID && P < threshold) {
             P = (error * secondarykP);
-            I = (integralSum * secondarykI);
+            I = (integral * secondarykI);
             D = (derivative * secondarykD);
             telemetry.addLine("Using secondary PID");
-        } else {telemetry.addLine("Using primary PID");}
+        } else {
+            I = (integral * kI);
+            D = (derivative * kD);
+            telemetry.addLine("Using primary PID");
+        }
+        yawTelemetry(error, derivative, targetPos, currentPos, lastError);
+        return P + I + D;
+    }
+
+    public double lockYawPedro(double targetPos, double currentPos) {
+        lastError = error;
+        error = angleFix(targetPos - currentPos);
+
+        deltaTimeNano = System.nanoTime() - previousDeltaTimeNano;
+        previousDeltaTimeNano = System.nanoTime();
+
+        integral += error * (deltaTimeNano / Math.pow(10.0, 9));
+        double derivative = (error - lastError) / (deltaTimeNano / Math.pow(10.0, 9));
+
+        if (useSecondPID && (error * kP) < threshold) {
+            P = (error * secondarykP);
+            I = (integral * secondarykI);
+            D = (derivative * secondarykD);
+            telemetry.addLine("Using secondary PID");
+        }
+        else {
+            P = (error * kP);
+            I = (integral * kI);
+            D = (derivative * kD);
+            telemetry.addLine("Using primary PID");
+        }
         yawTelemetry(error, derivative, targetPos, currentPos, lastError);
         return P + I + D;
     }

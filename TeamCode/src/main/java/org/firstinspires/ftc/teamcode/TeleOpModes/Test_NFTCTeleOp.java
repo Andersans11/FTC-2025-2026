@@ -10,9 +10,9 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.RobotCentricDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.VerticalLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.misc.Stopwatch;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.OpModeGroups;
 
-
-@TeleOp(name = "Lift Teleop", group = "cc don't fucking use this")
+@TeleOp(name = "Lift Teleop", group = OpModeGroups.DONOTUSE)
 @Disabled
 public class Test_NFTCTeleOp extends NextFTCOpMode {
 
