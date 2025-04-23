@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.HoldHeadingPID;
 import org.firstinspires.ftc.teamcode.RobotStuff.misc.Stopwatch;
 
-@TeleOp(name = "LockYaw TEST", group = OpModeGroups.TESTING) // pid go brrr
+@TeleOp(name = "LockYaw PID", group = OpModeGroups.TESTING) // pid go brrr
 //@Disabled
 public class LockYawPID extends NextFTCOpMode {
 
