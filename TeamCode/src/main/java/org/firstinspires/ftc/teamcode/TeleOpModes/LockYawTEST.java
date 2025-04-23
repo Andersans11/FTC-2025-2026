@@ -5,11 +5,10 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.IMU;
-import com.qualcomm.robotcore.util.ElapsedTime;
 import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.HoldHeadingTEST;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.HoldHeading;
 import org.firstinspires.ftc.teamcode.RobotStuff.misc.DeltaTimer;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.OpModeGroups;
 
@@ -26,7 +25,7 @@ public class LockYawTEST extends NextFTCOpMode {
     DeltaTimer deltaTimer = new DeltaTimer();
 
     RobotConfig robotConfig;
-    HoldHeadingTEST holdHeadingTEST;
+    HoldHeading holdHeading;
 
 
     long deltaTimeNano;
@@ -35,7 +34,7 @@ public class LockYawTEST extends NextFTCOpMode {
     @Override
     public void onInit() {
         robotConfig = new RobotConfig(this);
-        holdHeadingTEST = new HoldHeadingTEST(this, robotConfig);
+        holdHeading = new HoldHeading(this, robotConfig);
 
         setUseBulkReading(true);
 
@@ -51,7 +50,7 @@ public class LockYawTEST extends NextFTCOpMode {
     }
     @Override
     public void onStartButtonPressed() {
-        holdHeadingTEST.Start();
+        holdHeading.Start();
     }
 
     @Override
@@ -60,7 +59,7 @@ public class LockYawTEST extends NextFTCOpMode {
         deltaTimeNano = deltaTimer.getDelta();
         telemetry.addData("deltaTime", TimeUnit.SECONDS.convert(deltaTimeNano, TimeUnit.NANOSECONDS));
 
-        holdHeadingTEST.updateDrive(deltaTimeNano);
+        holdHeading.updateDrive(deltaTimeNano);
         robotConfig.gamepadUpdates();
 
         telemetry.update();

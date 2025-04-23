@@ -51,29 +51,7 @@ public class CustomPID {
         this.useSecondPID = useSecondPID;
     }
 
-    public double lockYaw(double targetPos, double currentPos, double deltaTime) {
-        lastError = error;
-        error = angleFix(targetPos - currentPos);
-        integral += error * deltaTime;
-        double derivative = (error - lastError) / deltaTime;
-
-
-        P = (error * kP);
-        if (useSecondPID && P < threshold) {
-            P = (error * secondarykP);
-            I = (integral * secondarykI);
-            D = (derivative * secondarykD);
-            telemetry.addLine("Using secondary PID");
-        } else {
-            I = (integral * kI);
-            D = (derivative * kD);
-            telemetry.addLine("Using primary PID");
-        }
-        yawTelemetry(error, derivative, targetPos, currentPos, lastError);
-        return P + I + D;
-    }
-
-    public double lockYawPedro(double targetPos, double currentPos, long deltaTimeNano) {
+    public double lockYaw(double targetPos, double currentPos, long deltaTimeNano) {
         lastError = error;
         error = angleFix(targetPos - currentPos);
 

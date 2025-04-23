@@ -21,7 +21,7 @@ public class HoldHeadingPID extends DriveMotors {
     public static double secondarykP = 2.5; // TODO: TUNE
     public static double secondarykI = 0;
     public static double secondarykD = 0.05;
-    public static double threshold = 0.075;
+    public static double threshold = Math.PI / 20;
 
     public static double turnSpeed = 1;
 
@@ -39,7 +39,7 @@ public class HoldHeadingPID extends DriveMotors {
     Function0<Float> strafe = () -> (float) (config.playerOne.StrafeAxis.getValue() * config.sensitivities.getStrafingSensitivity() * getSensitivityMod());
     Function0<Float> yaw = () -> {
         updateHeading(config.playerOne.TurnAxis.getValue() * turnSpeed);
-        return (float) HeadingPID.lockYawPedro(targetRad, imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS), extDTN);
+        return (float) HeadingPID.lockYaw(targetRad, imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS), extDTN);
     };
     /*
     for new coders:
@@ -62,7 +62,7 @@ public class HoldHeadingPID extends DriveMotors {
     public HoldHeadingPID(OpMode opMode, RobotConfig config) {
         super(opMode, config);
         HeadingPID = new CustomPID(opMode.telemetry, config, "HeadingPID");
-        HeadingPID.setSecondary(false);
+        HeadingPID.setSecondary(true);
         imu = opMode.hardwareMap.get(IMU.class, "imu"); // ASSIGN IMU BEFORE RUNNING THIS CODE
         setHeading(imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
         this.vroom = new MecanumDriverControlled(driveMotors, forwardBackward, strafe, yaw, true);
@@ -89,8 +89,8 @@ public class HoldHeadingPID extends DriveMotors {
         telemetryAngleVelocity();
 
         HeadingPID.setCoefficients(kP, kI, kD);
-//        HeadingPID.setSecondaryCoefficients(secondarykP, secondarykI, secondarykD);
-//        HeadingPID.setThreshold(threshold);
+        HeadingPID.setSecondaryCoefficients(secondarykP, secondarykI, secondarykD);
+        HeadingPID.setThreshold(threshold);
 
         vroom.update();
     }

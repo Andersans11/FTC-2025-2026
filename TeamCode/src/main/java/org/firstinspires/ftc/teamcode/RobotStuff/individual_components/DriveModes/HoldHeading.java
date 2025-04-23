@@ -26,8 +26,6 @@ public class HoldHeading extends DriveMotors {
 
     double targetRad;
 
-    long extDTN;
-
     CustomPID HeadingPID;
     IMU imu;
 
@@ -36,6 +34,8 @@ public class HoldHeading extends DriveMotors {
     double yawVelocity;
     boolean hasExcessVelocity;
     boolean hasVelocity;
+
+    long extDTN;
 
     Function0<Float> forwardBackward = () -> (float) (config.playerOne.ForwardAxis.getValue() * config.sensitivities.getForwardSensitivity() * getSensitivityMod());
     Function0<Float> strafe = () -> (float) (config.playerOne.StrafeAxis.getValue() * config.sensitivities.getStrafingSensitivity() * getSensitivityMod());
@@ -92,11 +92,12 @@ public class HoldHeading extends DriveMotors {
     @Override
     public void updateDrive(long deltaTimeNano) {
 
+        extDTN = deltaTimeNano;
+
         telemetryAngleVelocity();
 
         AngularVelocity angularVelocity = imu.getRobotAngularVelocity(AngleUnit.RADIANS);
 
-        extDTN = deltaTimeNano; // to be passed into yaw()
         yawVelocity = angularVelocity.zRotationRate; // speed at which the robot is turning
 
         //funny boolean shit

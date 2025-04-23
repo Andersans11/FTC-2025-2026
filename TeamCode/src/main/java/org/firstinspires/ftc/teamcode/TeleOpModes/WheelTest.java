@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.misc.DeltaTimer;
 
 import java.util.concurrent.TimeUnit;
 
-@TeleOp(name = "Wheel Test", group = OpModeGroups.UTILITY)
+@TeleOp(name = "Wheel Test", group = OpModeGroups.UTILITY) // this is for making sure there is no resistance with the sides of the robot
 //@Disabled
 public class WheelTest extends NextFTCOpMode {
     public WheelTest() {super();}
