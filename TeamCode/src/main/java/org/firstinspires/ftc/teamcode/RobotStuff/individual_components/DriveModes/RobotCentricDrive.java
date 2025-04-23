@@ -34,7 +34,7 @@ public class RobotCentricDrive extends DriveMotors {
 
 
     @Override
-    public void updateDrive(double deltaTime) {
+    public void updateDrive(long deltaTimeNano) {
         vroom.update();
     } // only actually needed for holdHeading because of pid stuff, doesn't need to be called here
 

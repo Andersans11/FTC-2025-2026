@@ -5,7 +5,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.rowanmcalpin.nextftc.ftc.driving.MecanumDriverControlled;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.UnnormalizedAngleUnit;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
@@ -23,7 +22,7 @@ public class HoldHeadingPinpoint extends DriveMotors {
 
     double targetRad;
 
-    double extDT;
+    long extDTN;
 
     GoBildaPinpointDriver pinpoint;
 
@@ -45,7 +44,7 @@ public class HoldHeadingPinpoint extends DriveMotors {
             return (float) HeadingPID.lockYaw(
                     targetRad,
                     pinpoint.getHeading(AngleUnit.RADIANS),
-                    extDT
+                    extDTN
             );
         }
     };
@@ -87,13 +86,13 @@ public class HoldHeadingPinpoint extends DriveMotors {
     }
 
     @Override
-    public void updateDrive(double deltaTime) {
+    public void updateDrive(long deltaTimeNano) {
 
         telemetryAngleVelocity();
 
         double yawVelocity = pinpoint.getHeadingVelocity(UnnormalizedAngleUnit.RADIANS);
 
-        extDT = deltaTime; // don't delete this
+        extDTN = deltaTimeNano; // don't delete this
 
         //funny boolean shit
         hasExcessVelocity = (!config.playerOne.TurnAxis.getState() && useNormTurn); // if the stick is not pressed but is still using normTurn (excess velocity after done turning)

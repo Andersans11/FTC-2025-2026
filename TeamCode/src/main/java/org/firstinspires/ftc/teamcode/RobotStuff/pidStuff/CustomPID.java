@@ -22,8 +22,6 @@ public class CustomPID {
     double lastError;
     double error;
     double integral;
-    double deltaTimeNano;
-    double previousDeltaTimeNano;
 
     Telemetry telemetry;
     RobotConfig config;
@@ -75,12 +73,9 @@ public class CustomPID {
         return P + I + D;
     }
 
-    public double lockYawPedro(double targetPos, double currentPos) {
+    public double lockYawPedro(double targetPos, double currentPos, long deltaTimeNano) {
         lastError = error;
         error = angleFix(targetPos - currentPos);
-
-        deltaTimeNano = System.nanoTime() - previousDeltaTimeNano;
-        previousDeltaTimeNano = System.nanoTime();
 
         integral += error * (deltaTimeNano / Math.pow(10.0, 9));
         double derivative = (error - lastError) / (deltaTimeNano / Math.pow(10.0, 9));

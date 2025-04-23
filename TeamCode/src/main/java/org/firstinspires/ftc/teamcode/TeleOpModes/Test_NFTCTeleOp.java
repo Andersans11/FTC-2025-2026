@@ -9,8 +9,10 @@ import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.RobotCentricDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.VerticalLift;
-import org.firstinspires.ftc.teamcode.RobotStuff.misc.Stopwatch;
+import org.firstinspires.ftc.teamcode.RobotStuff.misc.DeltaTimer;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.OpModeGroups;
+
+import java.util.concurrent.TimeUnit;
 
 @TeleOp(name = "Lift Teleop", group = OpModeGroups.DONOTUSE)
 @Disabled
@@ -19,9 +21,8 @@ public class Test_NFTCTeleOp extends NextFTCOpMode {
     public Test_NFTCTeleOp() {
         super(VerticalLift.INSTANCE);
     }
-    private final ElapsedTime deltaTimer = new ElapsedTime();
-    Stopwatch StopWatch = new Stopwatch();
-    double deltaTime;
+    DeltaTimer deltaTimer = new DeltaTimer();
+    long deltaTimeNano;
     RobotConfig robotConfig;
     RobotCentricDrive robotCentricDrive;
 
@@ -35,8 +36,6 @@ public class Test_NFTCTeleOp extends NextFTCOpMode {
 
     @Override
     public void onStartButtonPressed() {
-        deltaTime = 0;
-
         robotCentricDrive.Start();
 
         robotConfig.playerOne.DpadUp.setPressedCommand(VerticalLift.INSTANCE::toHigh);
@@ -47,11 +46,10 @@ public class Test_NFTCTeleOp extends NextFTCOpMode {
 
     @Override
     public void onUpdate() {
-        StopWatch.reset();
 
-        deltaTime = deltaTimer.seconds();
-        telemetry.addData("deltaTime", deltaTime);
-        deltaTimer.reset();
+        deltaTimeNano = deltaTimer.getDelta();
+        telemetry.addData("deltaTime", TimeUnit.SECONDS.convert(deltaTimeNano, TimeUnit.NANOSECONDS));
+        robotCentricDrive.updateDrive(deltaTimeNano);
 
         telemetry.addData("Lift current pos:", VerticalLift.INSTANCE.ticksToInches(VerticalLift.INSTANCE.motors.getLeader().getCurrentPosition(), 751.8));
 

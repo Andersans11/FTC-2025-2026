@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.rowanmcalpin.nextftc.ftc.hardware.controllables.Controllable;
 import com.rowanmcalpin.nextftc.ftc.hardware.controllables.MotorEx;
@@ -48,7 +47,7 @@ public abstract class DriveMotors {
         driveMotors = new Controllable[] {new MotorEx(frontLeftDrive), new MotorEx(frontRightDrive), new MotorEx(backLeftDrive), new MotorEx(backRightDrive)};
     }
 
-    public abstract void updateDrive(double deltaTime);
+    public abstract void updateDrive(long deltaTimeNano);
 
     public abstract void Start();
 }

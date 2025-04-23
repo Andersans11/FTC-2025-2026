@@ -32,15 +32,14 @@ public class HoldHeadingPID extends DriveMotors {
 
     boolean useNormTurn;
     double targetHeading;
-    double yawVelocity;
-    boolean hasExcessVelocity;
-    boolean hasVelocity;
+
+    long extDTN;
 
     Function0<Float> forwardBackward = () -> (float) (config.playerOne.ForwardAxis.getValue() * config.sensitivities.getForwardSensitivity() * getSensitivityMod());
     Function0<Float> strafe = () -> (float) (config.playerOne.StrafeAxis.getValue() * config.sensitivities.getStrafingSensitivity() * getSensitivityMod());
     Function0<Float> yaw = () -> {
         updateHeading(config.playerOne.TurnAxis.getValue() * turnSpeed);
-        return (float) HeadingPID.lockYawPedro(targetRad, imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS));
+        return (float) HeadingPID.lockYawPedro(targetRad, imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS), extDTN);
     };
     /*
     for new coders:
@@ -83,7 +82,9 @@ public class HoldHeadingPID extends DriveMotors {
     }
 
     @Override
-    public void updateDrive(double deltaTime) {
+    public void updateDrive(long deltaTimeNano) {
+
+        extDTN = deltaTimeNano; // for pid
 
         telemetryAngleVelocity();
 
@@ -92,11 +93,6 @@ public class HoldHeadingPID extends DriveMotors {
 //        HeadingPID.setThreshold(threshold);
 
         vroom.update();
-    }
-
-    public void updateHeading() {
-        targetHeading = getHeadingDeg();
-        targetRad = Math.toRadians(targetHeading);
     }
 
     public void updateHeading(double modifier) {

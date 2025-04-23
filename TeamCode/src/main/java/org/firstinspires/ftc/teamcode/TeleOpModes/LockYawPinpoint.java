@@ -12,8 +12,10 @@ import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.HoldHeadingPinpoint;
-import org.firstinspires.ftc.teamcode.RobotStuff.misc.Stopwatch;
+import org.firstinspires.ftc.teamcode.RobotStuff.misc.DeltaTimer;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.OpModeGroups;
+
+import java.util.concurrent.TimeUnit;
 
 
 @TeleOp(name = "LockYaw Pinpoint", group = OpModeGroups.DONOTUSE) // pid go brrr
@@ -24,13 +26,12 @@ public class LockYawPinpoint extends NextFTCOpMode {
         super();
     }
 
-    private final ElapsedTime deltaTimer = new ElapsedTime();
-    Stopwatch StopWatch = new Stopwatch();
+    DeltaTimer deltaTimer = new DeltaTimer();
 
     RobotConfig robotConfig;
     HoldHeadingPinpoint holdHeadingPinpoint;
 
-    double deltaTime;
+    long deltaTimeNano;
 
     @Override
     public void onInit() {
@@ -44,21 +45,16 @@ public class LockYawPinpoint extends NextFTCOpMode {
     @Override
     public void onStartButtonPressed() {
         holdHeadingPinpoint.Start();
-        deltaTimer.reset();
-        deltaTime = 0;
     }
 
     @Override
     public void onUpdate() {
-        StopWatch.reset();
 
-        deltaTime = deltaTimer.seconds();
-        telemetry.addData("deltaTime", deltaTime);
-        deltaTimer.reset();
+        deltaTimeNano = deltaTimer.getDelta();
+        telemetry.addData("deltaTime", TimeUnit.SECONDS.convert(deltaTimeNano, TimeUnit.NANOSECONDS));
 
-        holdHeadingPinpoint.updateDrive(deltaTime);
-        robotConfig.playerOne.update_all();
-        robotConfig.playerTwo.update_all();
+        holdHeadingPinpoint.updateDrive(deltaTimeNano);
+        robotConfig.gamepadUpdates();
 
         telemetry.update();
     }

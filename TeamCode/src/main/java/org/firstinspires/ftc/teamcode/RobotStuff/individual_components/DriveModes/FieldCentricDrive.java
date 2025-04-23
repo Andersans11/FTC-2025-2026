@@ -34,7 +34,7 @@ public class FieldCentricDrive extends DriveMotors {
 
 
     @Override
-    public void updateDrive(double deltaTime) {
+    public void updateDrive(long deltaTimeNano) {
         vroom.update();
     }
 

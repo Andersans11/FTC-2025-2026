@@ -22,11 +22,11 @@ public class HoldHeading extends DriveMotors {
     public static double secondarykP = 2.5; // TODO: TUNE
     public static double secondarykI = 0;
     public static double secondarykD = 0.05;
-    public static double threshold = 0.075;
+    public static double threshold = Math.PI / 20;
 
     double targetRad;
 
-    double extDT;
+    long extDTN;
 
     CustomPID HeadingPID;
     IMU imu;
@@ -47,7 +47,7 @@ public class HoldHeading extends DriveMotors {
             return (float) HeadingPID.lockYaw(
                     targetRad,
                     imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS),
-                    extDT
+                    extDTN
             );
         }
     };
@@ -72,6 +72,7 @@ public class HoldHeading extends DriveMotors {
     public HoldHeading(OpMode opMode, RobotConfig config) {
         super(opMode, config);
         HeadingPID = new CustomPID(opMode.telemetry, config, "HeadingPID");
+        HeadingPID.setSecondary(true);
         imu = opMode.hardwareMap.get(IMU.class, "imu"); // ASSIGN IMU BEFORE RUNNING THIS CODE
         this.vroom = new MecanumDriverControlled(driveMotors, forwardBackward, strafe, yaw, true);
     }
@@ -89,13 +90,13 @@ public class HoldHeading extends DriveMotors {
     }
 
     @Override
-    public void updateDrive(double deltaTime) {
+    public void updateDrive(long deltaTimeNano) {
 
         telemetryAngleVelocity();
 
         AngularVelocity angularVelocity = imu.getRobotAngularVelocity(AngleUnit.RADIANS);
 
-        extDT = deltaTime; // to be passed into yaw()
+        extDTN = deltaTimeNano; // to be passed into yaw()
         yawVelocity = angularVelocity.zRotationRate; // speed at which the robot is turning
 
         //funny boolean shit

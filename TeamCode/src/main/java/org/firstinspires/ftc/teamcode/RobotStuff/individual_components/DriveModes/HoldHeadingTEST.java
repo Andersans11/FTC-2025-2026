@@ -35,6 +35,8 @@ public class HoldHeadingTEST extends DriveMotors {
     boolean hasExcessVelocity;
     boolean hasVelocity;
 
+    long extDTN;
+
     Function0<Float> forwardBackward = () -> (float) (config.playerOne.ForwardAxis.getValue() * config.sensitivities.getForwardSensitivity() * getSensitivityMod());
     Function0<Float> strafe = () -> (float) (config.playerOne.StrafeAxis.getValue() * config.sensitivities.getStrafingSensitivity() * getSensitivityMod());
     Function0<Float> yaw = () -> { // funny lambda
@@ -44,7 +46,8 @@ public class HoldHeadingTEST extends DriveMotors {
         } else {
             return (float) HeadingPID.lockYawPedro(
                     targetRad,
-                    imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS)
+                    imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS),
+                    extDTN
             );
         }
     };
@@ -87,7 +90,9 @@ public class HoldHeadingTEST extends DriveMotors {
     }
 
     @Override
-    public void updateDrive(double deltaTime) {
+    public void updateDrive(long deltaTimeNano) {
+
+        extDTN = deltaTimeNano;
 
         telemetryAngleVelocity();
 
