@@ -4,20 +4,12 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
 
 public class CustomPID {
-    double kP;
-    double kI;
-    double kD;
+    double kP;  double secondarykP;  double P; // trust me it saves space
+    double kI;  double secondarykI;  double I;
+    double kD;  double secondarykD;  double D;
 
-    double secondarykP;
-    double secondarykI;
-    double secondarykD;
     double threshold;
-
     boolean useSecondPID;
-
-    double P;
-    double I;
-    double D;
 
     double lastError;
     double error;
@@ -39,10 +31,10 @@ public class CustomPID {
         this.kI = kI;
         this.kD = kD;
     }
-    public void setSecondaryCoefficients(double kP, double kI, double kD) {
-        this.secondarykP = kP;
-        this.secondarykI = kI;
-        this.secondarykD = kD;
+    public void setSecondaryCoefficients(double secondarykP, double secondarykI, double secondarykD) {
+        this.secondarykP = secondarykP;
+        this.secondarykI = secondarykI;
+        this.secondarykD = secondarykD;
     }
     public void setThreshold(double threshold) {
         this.threshold = threshold;
