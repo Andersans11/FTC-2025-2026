@@ -37,7 +37,9 @@ public class Sensitivities {
 
     public static float slowDownModifier = 0.4f;
 
-    public float getSlowDownModifier(){return slowDownModifier;}
+    public float getSlowDownModifier() {
+        return slowDownModifier;
+    }
 
     // ----------- PLAYER ONE --------- //
     public static float playerOneLeftXAxisThreshold = 0.0f;

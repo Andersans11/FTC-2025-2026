@@ -14,6 +14,7 @@ public class CustomPID {
     double lastError;
     double error;
     double integral;
+    double derivative;
 
     Telemetry telemetry;
     RobotConfig config;
@@ -48,7 +49,7 @@ public class CustomPID {
         error = angleFix(targetPos - currentPos);
 
         integral += error * (deltaTimeNano / Math.pow(10.0, 9));
-        double derivative = (error - lastError) / (deltaTimeNano / Math.pow(10.0, 9));
+        derivative = (error - lastError) / (deltaTimeNano / Math.pow(10.0, 9));
 
         if (useSecondPID && (error * kP) < threshold) {
             P = (error * secondarykP);
