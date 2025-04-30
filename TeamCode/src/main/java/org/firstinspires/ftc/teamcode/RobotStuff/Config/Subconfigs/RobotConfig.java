@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
 @Config
 public class RobotConfig {
 
@@ -63,5 +65,17 @@ public class RobotConfig {
             336 // rev 6000 rpm with 12:1 gearbox
     );
 
+    public static FullPreset RestingPos = new FullPreset(
+            new HorizontalSystemPreset(0, new PickupClawPreset(0, 0, 0)),
+            new VerticalSystemPreset(0, new DepositArmPreset(0, 0, 0))
+    );
+
+    public static PickupClawPreset PickupFromSub = new PickupClawPreset(0.5, 0, 0.25);
+    public static PickupClawPreset PickupFromWall = new PickupClawPreset(0.25, 0, 0.25);
+    // ALWAYS IN MM: MORE EXACT
+    public static VerticalSystemPreset DepositToHighBar = new VerticalSystemPreset(107, new DepositArmPreset(0.5, 0.5, 0));
+    public static VerticalSystemPreset DepositToLowBar = new VerticalSystemPreset(0, new DepositArmPreset(0.5, 0.55, 0));
+//    public static VerticalSystemPreset DepositToHighBasket = new VerticalSystemPreset();
+//    public static VerticalSystemPreset DepositToLowBasket = new VerticalSystemPreset();
 
 }
