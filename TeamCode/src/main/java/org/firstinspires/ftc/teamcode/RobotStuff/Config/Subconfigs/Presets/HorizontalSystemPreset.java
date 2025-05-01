@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs;
+package org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.Presets;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 

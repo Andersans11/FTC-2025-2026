@@ -5,7 +5,11 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.Presets.DepositArmPreset;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.Presets.FullPreset;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.Presets.HorizontalSystemPreset;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.Presets.PickupClawPreset;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.Presets.VerticalSystemPreset;
 
 @Config
 public class RobotConfig {

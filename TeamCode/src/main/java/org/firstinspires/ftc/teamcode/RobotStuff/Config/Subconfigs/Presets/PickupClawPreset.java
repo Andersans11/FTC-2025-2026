@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs;
+package org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.Presets;
 
 public class PickupClawPreset {
     public double PickupClawPivot;

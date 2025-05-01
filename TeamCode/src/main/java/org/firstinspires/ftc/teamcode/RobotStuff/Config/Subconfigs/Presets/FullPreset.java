@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs;
+package org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.Presets;
 
 public class FullPreset {
     public double HLiftExt;
