@@ -27,6 +27,7 @@ public class HorizontalLift extends HorizontalLiftInternal {
         this.leftAxon = robotConfig.LeftHorizontal.servo;
         this.rightAxon = robotConfig.RightHorizontal.servo;
         this.servos = Arrays.asList(leftAxon, rightAxon);
+        initialize();
     }
 
     public Command moveLift(Pair<Float, Float> joystickValues) {

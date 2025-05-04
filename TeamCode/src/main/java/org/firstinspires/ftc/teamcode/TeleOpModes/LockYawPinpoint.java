@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.OpModeGroups;
 import java.util.concurrent.TimeUnit;
 
 
-@TeleOp(name = "LockYaw Pinpoint", group = OpModeGroups.DONOTUSE) // pid go brrr
+@TeleOp(name = "LockYaw Pinpoint", group = OpModeGroups.BORKEN) // pid go brrr
 @Disabled
 public class LockYawPinpoint extends NextFTCOpMode {
 

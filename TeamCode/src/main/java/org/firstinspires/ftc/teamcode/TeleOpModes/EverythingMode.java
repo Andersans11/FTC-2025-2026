@@ -2,23 +2,23 @@ package org.firstinspires.ftc.teamcode.TeleOpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-
 import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
 
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.OpModeGroups;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.DriveModes.RobotCentricDrive;
+import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.HorizontalLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.VerticalLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.DeltaTimer;
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.OpModeGroups;
 
 import java.util.concurrent.TimeUnit;
 
-@TeleOp(name = "Lift Teleop", group = OpModeGroups.DONOTUSE)
+@TeleOp(name = "Full Test", group = OpModeGroups.UNUSABLE_DUETOHARDWARE)
 @Disabled
-public class Test_NFTCTeleOp extends NextFTCOpMode {
+public class EverythingMode extends NextFTCOpMode {
 
-    public Test_NFTCTeleOp() {
-        super(VerticalLift.INSTANCE);
+    public EverythingMode() {
+        super(VerticalLift.INSTANCE, HorizontalLift.INSTANCE);
     }
     DeltaTimer deltaTimer = new DeltaTimer();
     long deltaTimeNano;
@@ -29,18 +29,21 @@ public class Test_NFTCTeleOp extends NextFTCOpMode {
     public void onInit() {
         robotConfig = new RobotConfig(this);
         robotCentricDrive = new RobotCentricDrive(this, robotConfig);
-        VerticalLift.INSTANCE.initialize();
-        VerticalLift.INSTANCE.configure(robotConfig);
+        VerticalLift.INSTANCE.initLift(robotConfig);
+        HorizontalLift.INSTANCE.initLift(robotConfig);
     }
 
     @Override
     public void onStartButtonPressed() {
         robotCentricDrive.Start();
 
-        robotConfig.playerOne.DpadUp.setPressedCommand(VerticalLift.INSTANCE::toHigh);
-        robotConfig.playerOne.DpadDown.setPressedCommand(VerticalLift.INSTANCE::toLow);
-        robotConfig.playerOne.DpadLeft.setPressedCommand(VerticalLift.INSTANCE::toMiddle);
-        robotConfig.playerOne.Y.setPressedCommand(VerticalLift.INSTANCE::resetEncoders);
+        VerticalLift.INSTANCE.map(robotConfig.playerTwo.DpadUp, VerticalLift.Mappings.TO_HIGH);
+        VerticalLift.INSTANCE.map(robotConfig.playerTwo.DpadDown, VerticalLift.Mappings.TO_LOW);
+        VerticalLift.INSTANCE.map(robotConfig.playerTwo.DpadLeft, VerticalLift.Mappings.TO_MID);
+        VerticalLift.INSTANCE.map(robotConfig.playerTwo.Square, VerticalLift.Mappings.RESET);
+
+        HorizontalLift.INSTANCE.map(robotConfig.playerTwo.LeftStick, HorizontalLift.Mappings.MOVE);
+        HorizontalLift.INSTANCE.map(robotConfig.playerTwo.Triangle, HorizontalLift.Mappings.TO_ZERO);
     }
 
     @Override
@@ -50,7 +53,7 @@ public class Test_NFTCTeleOp extends NextFTCOpMode {
         telemetry.addData("deltaTime", TimeUnit.SECONDS.convert(deltaTimeNano, TimeUnit.NANOSECONDS));
         robotCentricDrive.updateDrive(deltaTimeNano);
 
-        telemetry.addData("Lift current pos:", VerticalLift.INSTANCE.ticksToInches(VerticalLift.INSTANCE.motors.getLeader().getCurrentPosition(), 751.8));
+        telemetry.addData("Lift current pos:", VerticalLift.INSTANCE.ticksToInches(VerticalLift.INSTANCE.motors.getLeader().getCurrentPosition(), 336));
 
         telemetry.update();
 

@@ -15,6 +15,7 @@ import com.rowanmcalpin.nextftc.ftc.hardware.controllables.MotorGroup;
 import com.rowanmcalpin.nextftc.ftc.hardware.controllables.ResetEncoder;
 import com.rowanmcalpin.nextftc.ftc.hardware.controllables.RunToPosition;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
 
 public class VerticalLift extends VerticalLiftInternal {
@@ -25,12 +26,13 @@ public class VerticalLift extends VerticalLiftInternal {
     private VerticalLift() { } // nftc boilerplate
 
     @Override
-    public void configure(RobotConfig robotConfig) {
-        setLimits(0 ,13.6);
+    public void initLift(RobotConfig robotConfig) {
+        setLimits(0 , DistanceUnit.INCH.fromMm(206));
         this.robotConfig = robotConfig;
         this.leftMotor = robotConfig.LeftVertical.motor;
         this.rightMotor = robotConfig.RightVertical.motor;
         this.motors = new MotorGroup(leftMotor, rightMotor);
+        initialize();
     }
 
     public Command toLow() {
@@ -38,22 +40,24 @@ public class VerticalLift extends VerticalLiftInternal {
     }
 
     public Command toMiddle() {
-        return setTargetPosition(6);
+        return setTargetPosition(DistanceUnit.INCH.fromMm(100));
     }
 
     public Command toHigh() {
-        return setTargetPosition(12);
-    }
+        return setTargetPosition(DistanceUnit.INCH.fromMm(200));
+    } // i work in millimeters and nobody can stop me
 
     public enum Mappings {
         TO_HIGH,
         TO_MID,
-        TO_LOW
+        TO_LOW,
+        RESET
     }
 
     Button TO_HIGH;
     Button TO_MID;
     Button TO_LOW;
+    Button RESET;
 
     public void map(Control control, Mappings mapping) {
         switch (mapping) {
@@ -79,6 +83,14 @@ public class VerticalLift extends VerticalLiftInternal {
                     TO_LOW.setPressedCommand(INSTANCE::toMiddle);
                 } else {
                     throw new IllegalArgumentException("TO_ZERO requires a " + TO_LOW.getClass().getSimpleName() + ", but received a " + control.getClass().getSimpleName());
+                }
+                break;
+            case RESET:
+                if (control instanceof Button) {
+                    this.RESET = RESET.getClass().cast(control);
+                    RESET.setPressedCommand(INSTANCE::resetEncoders);
+                } else {
+                    throw new IllegalArgumentException("RESET requires a " + RESET.getClass().getSimpleName() + ", but received a " + control.getClass().getSimpleName());
                 }
                 break;
         }
@@ -146,7 +158,7 @@ abstract class VerticalLiftInternal extends Subsystem {
                 this
         );
     }
-    public abstract void configure(RobotConfig robotConfig);
+    public abstract void initLift(RobotConfig robotConfig);
 
     @NonNull
     @Override

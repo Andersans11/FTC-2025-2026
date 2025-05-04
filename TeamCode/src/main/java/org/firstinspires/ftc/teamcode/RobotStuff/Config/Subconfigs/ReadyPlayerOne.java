@@ -9,7 +9,7 @@ import com.rowanmcalpin.nextftc.ftc.gamepad.Trigger;
 import kotlin.jvm.functions.Function0;
 
 public class ReadyPlayerOne { // just a wrapper so that we can have custom names and some advanced management
-
+// yes we are wrapping a wrapper but don't pay attention to that
     GamepadEx gamepadEx;
     public ReadyPlayerOne(GamepadEx gamepadEx) {
         if (gamepadEx == null) {
@@ -23,17 +23,29 @@ public class ReadyPlayerOne { // just a wrapper so that we can have custom names
     Function0<Boolean> getB = () -> gamepadEx.getB().getState();
     Function0<Boolean> getX = () -> gamepadEx.getX().getState();
     Function0<Boolean> getY = () -> gamepadEx.getY().getState();
+    Function0<Boolean> getTriangle = () -> gamepadEx.getY().getState();
+    Function0<Boolean> getSquare = () -> gamepadEx.getX().getState();
+    Function0<Boolean> getCross = () -> gamepadEx.getA().getState();
+    Function0<Boolean> getCircle = () -> gamepadEx.getB().getState();
 
     public Button A = new Button(getA);
     public Button B = new Button(getB);
     public Button X = new Button(getX);
     public Button Y = new Button(getY);
+    public Button Cross = new Button(getCross);
+    public Button Circle = new Button(getCircle);
+    public Button Square = new Button(getSquare);
+    public Button Triangle = new Button(getTriangle);
 
     public void update_buttons() {
         A.update();
         B.update();
         X.update();
         Y.update();
+        Cross.update();
+        Circle.update();
+        Square.update();
+        Triangle.update();
     }
 
     ///////////////////////////////////////--- BUMPERS ---/////////////////////////////////////////
