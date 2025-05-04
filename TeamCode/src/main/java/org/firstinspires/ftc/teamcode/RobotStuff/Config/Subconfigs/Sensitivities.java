@@ -11,22 +11,22 @@ public class Sensitivities {
         return driveSensitivity;
     }
 
-    public static float forwardSensitivity = 1; // basic driving sensitivities only relative to each other
+    public static float forwardSensitivity = 1;
 
     public float getForwardSensitivity() {
         return forwardSensitivity;
     }
 
-    public static float turningSensitivity = .69f;
+    public static float turningSensitivity = 1;
 
     public float getTurningSensitivity() {
         return turningSensitivity;
     }
 
-    public static float turningRateDPS = 130;
+    public static float PIDturningSensitivity = 1;
 
-    public float getTurningRateDPS() {
-        return turningRateDPS;
+    public float getPIDturningSensitivity() {
+        return PIDturningSensitivity;
     }
 
     public static float strafingSensitivity = 1;

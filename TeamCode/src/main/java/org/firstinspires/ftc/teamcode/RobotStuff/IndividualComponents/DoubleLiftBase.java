@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.RobotStuff.individual_components;
+package org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents;
 
 import androidx.annotation.NonNull;
 

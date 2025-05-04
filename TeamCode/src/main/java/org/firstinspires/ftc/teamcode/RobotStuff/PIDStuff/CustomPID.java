@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.RobotStuff.pidStuff;
+package org.firstinspires.ftc.teamcode.RobotStuff.PIDStuff;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;

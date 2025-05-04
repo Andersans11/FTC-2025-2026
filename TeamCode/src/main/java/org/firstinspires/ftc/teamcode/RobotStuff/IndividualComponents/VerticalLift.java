@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.RobotStuff.individual_components;
+package org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents;
 
 import androidx.annotation.NonNull;
 
@@ -6,6 +6,9 @@ import com.rowanmcalpin.nextftc.core.Subsystem;
 import com.rowanmcalpin.nextftc.core.command.Command;
 import com.rowanmcalpin.nextftc.core.control.coefficients.PIDCoefficients;
 import com.rowanmcalpin.nextftc.core.control.controllers.PIDFController;
+import com.rowanmcalpin.nextftc.ftc.gamepad.Button;
+import com.rowanmcalpin.nextftc.ftc.gamepad.Control;
+import com.rowanmcalpin.nextftc.ftc.gamepad.Joystick;
 import com.rowanmcalpin.nextftc.ftc.hardware.controllables.HoldPosition;
 import com.rowanmcalpin.nextftc.ftc.hardware.controllables.MotorEx;
 import com.rowanmcalpin.nextftc.ftc.hardware.controllables.MotorGroup;
@@ -14,24 +17,19 @@ import com.rowanmcalpin.nextftc.ftc.hardware.controllables.RunToPosition;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
 
-public class NewVerticalLift extends VerticalLiftInternal {
+public class VerticalLift extends VerticalLiftInternal {
 
 
 
-    public static final NewVerticalLift INSTANCE = new NewVerticalLift();
-    private NewVerticalLift() { } // nftc boilerplate
-
-
-    @Override
-    public void initialize() {
-        setLimits(0 ,13.6);
-    }
+    public static final VerticalLift INSTANCE = new VerticalLift();
+    private VerticalLift() { } // nftc boilerplate
 
     @Override
     public void configure(RobotConfig robotConfig) {
+        setLimits(0 ,13.6);
         this.robotConfig = robotConfig;
-        this.leftMotor = new MotorEx(robotConfig.LeftVertical.name);
-        this.rightMotor = new MotorEx(robotConfig.RightVertical.name);
+        this.leftMotor = robotConfig.LeftVertical.motor;
+        this.rightMotor = robotConfig.RightVertical.motor;
         this.motors = new MotorGroup(leftMotor, rightMotor);
     }
 
@@ -47,13 +45,51 @@ public class NewVerticalLift extends VerticalLiftInternal {
         return setTargetPosition(12);
     }
 
+    public enum Mappings {
+        TO_HIGH,
+        TO_MID,
+        TO_LOW
+    }
+
+    Button TO_HIGH;
+    Button TO_MID;
+    Button TO_LOW;
+
+    public void map(Control control, Mappings mapping) {
+        switch (mapping) {
+            case TO_HIGH:
+                if (control instanceof Button) {
+                    this.TO_HIGH = TO_HIGH.getClass().cast(control);
+                    TO_HIGH.setPressedCommand(INSTANCE::toHigh);
+                } else {
+                    throw new IllegalArgumentException("MOVE requires a " + TO_HIGH.getClass().getSimpleName() + ", but received a " + control.getClass().getSimpleName());
+                }
+                break;
+            case TO_MID:
+                if (control instanceof Button) {
+                    this.TO_MID = TO_MID.getClass().cast(control);
+                    TO_MID.setPressedCommand(INSTANCE::toMiddle);
+                } else {
+                    throw new IllegalArgumentException("TO_ZERO requires a " + TO_MID.getClass().getSimpleName() + ", but received a " + control.getClass().getSimpleName());
+                }
+                break;
+            case TO_LOW:
+                if (control instanceof Button) {
+                    this.TO_LOW = TO_LOW.getClass().cast(control);
+                    TO_LOW.setPressedCommand(INSTANCE::toMiddle);
+                } else {
+                    throw new IllegalArgumentException("TO_ZERO requires a " + TO_LOW.getClass().getSimpleName() + ", but received a " + control.getClass().getSimpleName());
+                }
+                break;
+        }
+    }
 
 }
 
 abstract class VerticalLiftInternal extends Subsystem {
 
 
-
+    public double spoolDiamater = 38.2;
     public MotorEx leftMotor;
     public MotorEx rightMotor;
 
@@ -69,11 +105,11 @@ abstract class VerticalLiftInternal extends Subsystem {
     public double oldPos;
 
     public double inchesToTicks(double desiredExtension, double encoderPPR) {
-        return (-25.4 * desiredExtension) * (encoderPPR / (38.2 * Math.PI));
+        return (-25.4 * desiredExtension) * (encoderPPR / (spoolDiamater * Math.PI));
     }
 
     public double ticksToInches(double ticks, double encoderPPR) { // for telemetry, do not delete
-        return (ticks / -25.4) / (encoderPPR / (38.2 * Math.PI));
+        return (ticks / -25.4) / (encoderPPR / (spoolDiamater * Math.PI));
     }
 
     public void setLimits(double lower, double upper) { // use in initialize
@@ -102,7 +138,7 @@ abstract class VerticalLiftInternal extends Subsystem {
         fixTargetPos();
 
         oldPos = targetPos;
-        targetPos = inchesToTicks(requestedPos, 336);
+        targetPos = inchesToTicks(requestedPos, robotConfig.LeftVertical.encoderPPR);
         return new RunToPosition(
                 motors,
                 targetPos,
@@ -111,8 +147,6 @@ abstract class VerticalLiftInternal extends Subsystem {
         );
     }
     public abstract void configure(RobotConfig robotConfig);
-    @Override
-    public abstract void initialize();
 
     @NonNull
     @Override

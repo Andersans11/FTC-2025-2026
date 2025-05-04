@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.RobotStuff.misc;
+package org.firstinspires.ftc.teamcode.RobotStuff.Misc;
 
 public class DeltaTimer {
 

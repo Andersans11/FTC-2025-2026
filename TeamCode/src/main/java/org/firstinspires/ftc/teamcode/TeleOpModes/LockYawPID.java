@@ -5,13 +5,12 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.IMU;
-import com.qualcomm.robotcore.util.ElapsedTime;
 import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.OpModeGroups;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.HoldHeadingPID;
-import org.firstinspires.ftc.teamcode.RobotStuff.misc.DeltaTimer;
+import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.DriveModes.HoldHeadingPID;
+import org.firstinspires.ftc.teamcode.RobotStuff.Misc.DeltaTimer;
 
 import java.util.concurrent.TimeUnit;
 

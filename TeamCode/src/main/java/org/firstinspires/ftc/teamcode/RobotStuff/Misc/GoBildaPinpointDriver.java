@@ -21,7 +21,7 @@
  *   SOFTWARE.
  */
 
-package org.firstinspires.ftc.teamcode.RobotStuff.misc;
+package org.firstinspires.ftc.teamcode.RobotStuff.Misc;
 
 import static com.qualcomm.robotcore.util.TypeConversion.byteArrayToInt;
 

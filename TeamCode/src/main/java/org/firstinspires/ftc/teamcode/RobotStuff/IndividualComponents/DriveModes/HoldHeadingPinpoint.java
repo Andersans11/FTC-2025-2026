@@ -1,41 +1,38 @@
-package org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes;
+package org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.DriveModes;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.IMU;
 import com.rowanmcalpin.nextftc.ftc.driving.MecanumDriverControlled;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
+import org.firstinspires.ftc.robotcore.external.navigation.UnnormalizedAngleUnit;
+
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.pidStuff.CustomPID;
+import org.firstinspires.ftc.teamcode.RobotStuff.Misc.GoBildaPinpointDriver;
+import org.firstinspires.ftc.teamcode.RobotStuff.PIDStuff.CustomPID;
 
 import kotlin.jvm.functions.Function0;
 
 @Config
-public class HoldHeading extends DriveMotors {
+public class HoldHeadingPinpoint extends DriveMotors {
 
-    public static double kP = 2; //TODO: TUNE
+    public static double kP = 0; //TODO: TUNE
     public static double kI = 0;
-    public static double kD = 0.1;
-
-    public static double secondarykP = 2.5; // TODO: TUNE
-    public static double secondarykI = 0;
-    public static double secondarykD = 0.05;
-    public static double threshold = Math.PI / 20;
+    public static double kD = 0;
 
     double targetRad;
 
+    long extDTN;
+
+    GoBildaPinpointDriver pinpoint;
+
     CustomPID HeadingPID;
-    IMU imu;
 
     boolean useNormTurn;
     double targetHeading;
-    double yawVelocity;
     boolean hasExcessVelocity;
     boolean hasVelocity;
 
-    long extDTN;
 
     Function0<Float> forwardBackward = () -> (float) (config.playerOne.ForwardAxis.getValue() * config.sensitivities.getForwardSensitivity() * getSensitivityMod());
     Function0<Float> strafe = () -> (float) (config.playerOne.StrafeAxis.getValue() * config.sensitivities.getStrafingSensitivity() * getSensitivityMod());
@@ -46,7 +43,7 @@ public class HoldHeading extends DriveMotors {
         } else {
             return (float) HeadingPID.lockYaw(
                     targetRad,
-                    imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS),
+                    pinpoint.getHeading(AngleUnit.RADIANS),
                     extDTN
             );
         }
@@ -56,11 +53,11 @@ public class HoldHeading extends DriveMotors {
     useNormTurn acts as a switch that turns on when the turn stick is moved,
     but only turns off after the robot stop turn to account for excess velocity
 
-    otherwise the robot stop turning
+    otherwise the robot stops turning,
     then go back to the position it was at after the turn stick went back to zero
 
-    it doesn't sound like much but in practice
-    it will keep turning about 20ish degree and then
+    it doesn't sound like much but in practice,
+    it will keep turning about 20ish degrees and then
     go back to where it was after the turn stick went back to zero
 
     basically useNormTurn tells the robot whether to update the heading or not
@@ -69,16 +66,15 @@ public class HoldHeading extends DriveMotors {
 
     MecanumDriverControlled vroom;
 
-    public HoldHeading(OpMode opMode, RobotConfig config) {
+    public HoldHeadingPinpoint(OpMode opMode, RobotConfig config) {
         super(opMode, config);
         HeadingPID = new CustomPID(opMode.telemetry, config, "HeadingPID");
-        HeadingPID.setSecondary(true);
-        imu = opMode.hardwareMap.get(IMU.class, "imu"); // ASSIGN IMU BEFORE RUNNING THIS CODE
+        pinpoint = opMode.hardwareMap.get(GoBildaPinpointDriver.class, "sensor");
         this.vroom = new MecanumDriverControlled(driveMotors, forwardBackward, strafe, yaw, true);
     }
 
     double getHeadingDeg() {
-        return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+        return pinpoint.getHeading(AngleUnit.DEGREES);
     }
 
     public void telemetryAngleVelocity() {
@@ -92,25 +88,21 @@ public class HoldHeading extends DriveMotors {
     @Override
     public void updateDrive(long deltaTimeNano) {
 
-        extDTN = deltaTimeNano;
-
         telemetryAngleVelocity();
 
-        AngularVelocity angularVelocity = imu.getRobotAngularVelocity(AngleUnit.RADIANS);
+        double yawVelocity = pinpoint.getHeadingVelocity(UnnormalizedAngleUnit.RADIANS);
 
-        yawVelocity = angularVelocity.zRotationRate; // speed at which the robot is turning
+        extDTN = deltaTimeNano; // don't delete this
 
         //funny boolean shit
         hasExcessVelocity = (!config.playerOne.TurnAxis.getState() && useNormTurn); // if the stick is not pressed but is still using normTurn (excess velocity after done turning)
         hasVelocity = (yawVelocity > 0.1 || yawVelocity < -0.1); // if the robot is turning at all
         targetRad = Math.toRadians(targetHeading); // passed into the pid so the robot turns 5 degrees instead of 355 to get to 360
 
-        if (config.playerOne.TurnAxis.getState()) {useNormTurn = true;} // always use normTurn if turn stick is not zero
-        if (hasExcessVelocity && !hasVelocity) {useNormTurn = false;}
+        if (config.playerOne.TurnAxis.getState()) {useNormTurn = true;} // always use normTurn if turn stick is being moved
+        if (hasExcessVelocity && !hasVelocity) {useNormTurn = false;} // basically normTurn is true until the robot stops moving (hasVelocity is false)
 
         HeadingPID.setCoefficients(kP, kI, kD);
-        HeadingPID.setSecondaryCoefficients(secondarykP, secondarykI, secondarykD);
-        HeadingPID.setThreshold(threshold);
 
         vroom.update();
     }
@@ -127,6 +119,6 @@ public class HoldHeading extends DriveMotors {
 
 
     @Override
-    public void Start() {vroom.invoke();} // use in onStartButtonPressed()
+    public void Start() {vroom.invoke();}
 }
 

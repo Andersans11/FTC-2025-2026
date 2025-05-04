@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes;
+package org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.DriveModes;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -7,7 +7,7 @@ import com.rowanmcalpin.nextftc.ftc.driving.MecanumDriverControlled;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.pidStuff.CustomPID;
+import org.firstinspires.ftc.teamcode.RobotStuff.PIDStuff.CustomPID;
 
 import kotlin.jvm.functions.Function0;
 
@@ -23,8 +23,6 @@ public class HoldHeadingPID extends DriveMotors {
     public static double secondarykD = 0.05;
     public static double threshold = Math.PI / 20;
 
-    public static double turnSpeed = 1;
-
     double targetRad;
 
     CustomPID HeadingPID;
@@ -38,7 +36,7 @@ public class HoldHeadingPID extends DriveMotors {
     Function0<Float> forwardBackward = () -> (float) (config.playerOne.ForwardAxis.getValue() * config.sensitivities.getForwardSensitivity() * getSensitivityMod());
     Function0<Float> strafe = () -> (float) (config.playerOne.StrafeAxis.getValue() * config.sensitivities.getStrafingSensitivity() * getSensitivityMod());
     Function0<Float> yaw = () -> {
-        updateHeading(config.playerOne.TurnAxis.getValue() * turnSpeed);
+        updateHeading(config.playerOne.TurnAxis.getValue() * config.sensitivities.getPIDturningSensitivity());
         return (float) HeadingPID.lockYaw(targetRad, imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS), extDTN);
     };
     /*
@@ -97,6 +95,11 @@ public class HoldHeadingPID extends DriveMotors {
 
     public void updateHeading(double modifier) {
         targetHeading = getHeadingDeg() + modifier;
+        targetRad = Math.toRadians(targetHeading);
+    }
+
+    public void updateHeading() {
+        targetHeading = getHeadingDeg();
         targetRad = Math.toRadians(targetHeading);
     }
 

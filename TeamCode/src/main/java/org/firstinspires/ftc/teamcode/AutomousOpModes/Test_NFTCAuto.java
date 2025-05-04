@@ -16,7 +16,7 @@ import com.rowanmcalpin.nextftc.pedro.FollowPath;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.FConstants;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.LConstants;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.VerticalLift;
+import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.VerticalLift;
 
 /*
 A simple OpMode to test NFTC drive controls.

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes;
+package org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.DriveModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;

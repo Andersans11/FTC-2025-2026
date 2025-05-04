@@ -8,13 +8,13 @@ import com.qualcomm.robotcore.hardware.IMU;
 import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.HoldHeading;
-import org.firstinspires.ftc.teamcode.RobotStuff.misc.DeltaTimer;
+import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.DriveModes.HoldHeading;
+import org.firstinspires.ftc.teamcode.RobotStuff.Misc.DeltaTimer;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.OpModeGroups;
 
 import java.util.concurrent.TimeUnit;
 
-@TeleOp(name = "LockYaw TEST", group = OpModeGroups.TESTING) // pid go brrr
+@TeleOp(name = "LockYaw", group = OpModeGroups.TUNE) // pid go brrr
 //@Disabled
 public class LockYawTEST extends NextFTCOpMode {
 

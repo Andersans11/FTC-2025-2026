@@ -5,9 +5,8 @@ import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.OpModeGroups;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.RobotCentricDrive;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.WheelTestMode;
-import org.firstinspires.ftc.teamcode.RobotStuff.misc.DeltaTimer;
+import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.DriveModes.WheelTestMode;
+import org.firstinspires.ftc.teamcode.RobotStuff.Misc.DeltaTimer;
 
 import java.util.concurrent.TimeUnit;
 
