@@ -21,7 +21,7 @@ public class HorizontalLift extends HorizontalLiftInternal {
     public static final HorizontalLift INSTANCE = new HorizontalLift();
     private HorizontalLift() { } // nftc boilerplate
 
-    public void initLift(RobotConfig robotConfig) {
+    public void initSystem(RobotConfig robotConfig) {
         setLimits(0.0 ,1.0);
         this.robotConfig = robotConfig;
         this.leftAxon = robotConfig.LeftHorizontal.servo;

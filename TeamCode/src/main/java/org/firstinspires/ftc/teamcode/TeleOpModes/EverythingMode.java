@@ -29,8 +29,8 @@ public class EverythingMode extends NextFTCOpMode {
     public void onInit() {
         robotConfig = new RobotConfig(this);
         robotCentricDrive = new RobotCentricDrive(this, robotConfig);
-        VerticalLift.INSTANCE.initLift(robotConfig);
-        HorizontalLift.INSTANCE.initLift(robotConfig);
+        VerticalLift.INSTANCE.initSystem(robotConfig);
+        HorizontalLift.INSTANCE.initSystem(robotConfig);
     }
 
     @Override

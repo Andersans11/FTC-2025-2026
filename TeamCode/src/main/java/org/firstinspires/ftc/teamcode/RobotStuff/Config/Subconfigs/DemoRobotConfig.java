@@ -4,9 +4,11 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.HardwareConfigs.MotorConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.HardwareConfigs.ServoConfig;
 
 @Config
 public class DemoRobotConfig {
@@ -21,10 +23,10 @@ public class DemoRobotConfig {
     public static MotorConfig LeftWheel;
     public static MotorConfig RightWheel;
     public static MotorConfig LauncherMotor;
-    public static MotorConfig TurretRotationMotor;
 
-    public DcMotor.ZeroPowerBehavior zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE;
-
+    public static ServoConfig PivotServo;
+    public static ServoConfig LifterServoLeft;
+    public static ServoConfig LifterServoRight;
 
     public DemoRobotConfig(NextFTCOpMode opMode) {
         this.opMode = opMode;
@@ -60,11 +62,20 @@ public class DemoRobotConfig {
                 Direction.FORWARD,
                 DcMotor.ZeroPowerBehavior.FLOAT
         );
-        TurretRotationMotor = new MotorConfig(
+        PivotServo = new ServoConfig(
                 hardwareMap,
-                "Turret",
-                Direction.FORWARD,
-                DcMotor.ZeroPowerBehavior.BRAKE
+                "Pivot",
+                Servo.Direction.FORWARD
+        );
+        LifterServoLeft = new ServoConfig(
+                hardwareMap,
+                "LifterL",
+                Servo.Direction.FORWARD
+        );
+        LifterServoRight = new ServoConfig(
+                hardwareMap,
+                "LifterR",
+                Servo.Direction.REVERSE
         );
     }
 }

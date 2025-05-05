@@ -25,8 +25,7 @@ public class VerticalLift extends VerticalLiftInternal {
     public static final VerticalLift INSTANCE = new VerticalLift();
     private VerticalLift() { } // nftc boilerplate
 
-    @Override
-    public void initLift(RobotConfig robotConfig) {
+    public void initSystem(RobotConfig robotConfig) {
         setLimits(0 , DistanceUnit.INCH.fromMm(206));
         this.robotConfig = robotConfig;
         this.leftMotor = robotConfig.LeftVertical.motor;
@@ -158,8 +157,6 @@ abstract class VerticalLiftInternal extends Subsystem {
                 this
         );
     }
-    public abstract void initLift(RobotConfig robotConfig);
-
     @NonNull
     @Override
     public Command getDefaultCommand() {

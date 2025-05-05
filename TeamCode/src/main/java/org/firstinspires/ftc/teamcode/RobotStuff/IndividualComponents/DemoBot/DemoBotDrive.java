@@ -22,5 +22,9 @@ public class DemoBotDrive {
     public void Start() {
         vroom.invoke();
     }
+
+    public void updateDrive(long deltaTimeNano) {
+        vroom.update();
+    }
 }
 
