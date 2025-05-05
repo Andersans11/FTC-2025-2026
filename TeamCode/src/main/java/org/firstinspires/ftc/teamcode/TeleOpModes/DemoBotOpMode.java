@@ -43,6 +43,7 @@ public class DemoBotOpMode extends NextFTCOpMode {
 
         DemoBotLifter.INSTANCE.map(demoRobotConfig.playerOne.Triangle, DemoBotLifter.Mappings.COLLECT);
         DemoBotLifter.INSTANCE.map(demoRobotConfig.playerOne.Square, DemoBotLifter.Mappings.DEPOSIT);
+        DemoBotLifter.INSTANCE.map(demoRobotConfig.playerOne.Circle, DemoBotLifter.Mappings.HOLD);
 
         demoBotDrive.Start();
     }

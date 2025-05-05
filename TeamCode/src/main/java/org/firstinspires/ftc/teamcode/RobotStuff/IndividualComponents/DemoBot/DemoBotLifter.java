@@ -32,11 +32,13 @@ public class DemoBotLifter extends Subsystem {
 
     public enum Mappings {
         COLLECT,
-        DEPOSIT
+        DEPOSIT,
+        HOLD
     }
 
     Button COLLECT;
     Button DEPOSIT;
+    Button HOLD;
 
     public void map(Control control, Mappings mapping) {
         switch (mapping) {
@@ -56,6 +58,13 @@ public class DemoBotLifter extends Subsystem {
                     throw new IllegalArgumentException("DEPOSIT requires a " + DEPOSIT.getClass().getSimpleName() + ", but received a " + control.getClass().getSimpleName());
                 }
                 break;
+            case HOLD:
+                if (control instanceof Button) {
+                    this.HOLD = HOLD.getClass().cast(control);
+                    HOLD.setPressedCommand(INSTANCE::hold);
+                } else {
+                    throw new IllegalArgumentException("HOLD requires a " + HOLD.getClass().getSimpleName() + ", but received a " + control.getClass().getSimpleName());
+                }
         }
     }
 
@@ -71,6 +80,14 @@ public class DemoBotLifter extends Subsystem {
         return new MultipleServosToPosition(
                 servos,
                 0.91,
+                this
+        );
+    }
+
+    public Command hold() {
+        return new MultipleServosToPosition(
+                servos,
+                0.15,
                 this
         );
     }
