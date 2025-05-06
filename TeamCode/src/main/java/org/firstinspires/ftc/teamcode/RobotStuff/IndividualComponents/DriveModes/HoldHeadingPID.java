@@ -7,7 +7,7 @@ import com.rowanmcalpin.nextftc.ftc.driving.MecanumDriverControlled;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.PIDStuff.CustomPID;
+import org.firstinspires.ftc.teamcode.RobotStuff.PIDStuff.YawPID;
 
 import kotlin.jvm.functions.Function0;
 
@@ -25,7 +25,7 @@ public class HoldHeadingPID extends DriveMotors {
 
     double targetRad;
 
-    CustomPID HeadingPID;
+    YawPID HeadingPID;
     IMU imu;
 
     boolean useNormTurn;
@@ -59,7 +59,7 @@ public class HoldHeadingPID extends DriveMotors {
 
     public HoldHeadingPID(OpMode opMode, RobotConfig config) {
         super(opMode, config);
-        HeadingPID = new CustomPID(opMode.telemetry, config, "HeadingPID");
+        HeadingPID = new YawPID(opMode.telemetry, config, "HeadingPID");
         HeadingPID.setSecondary(true);
         imu = opMode.hardwareMap.get(IMU.class, "imu"); // ASSIGN IMU BEFORE RUNNING THIS CODE
         setHeading(imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));

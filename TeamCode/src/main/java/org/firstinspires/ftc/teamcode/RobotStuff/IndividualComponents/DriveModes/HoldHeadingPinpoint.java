@@ -9,7 +9,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.UnnormalizedAngleUnit
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.GoBildaPinpointDriver;
-import org.firstinspires.ftc.teamcode.RobotStuff.PIDStuff.CustomPID;
+import org.firstinspires.ftc.teamcode.RobotStuff.PIDStuff.YawPID;
 
 import kotlin.jvm.functions.Function0;
 
@@ -26,7 +26,7 @@ public class HoldHeadingPinpoint extends DriveMotors {
 
     GoBildaPinpointDriver pinpoint;
 
-    CustomPID HeadingPID;
+    YawPID HeadingPID;
 
     boolean useNormTurn;
     double targetHeading;
@@ -68,7 +68,7 @@ public class HoldHeadingPinpoint extends DriveMotors {
 
     public HoldHeadingPinpoint(OpMode opMode, RobotConfig config) {
         super(opMode, config);
-        HeadingPID = new CustomPID(opMode.telemetry, config, "HeadingPID");
+        HeadingPID = new YawPID(opMode.telemetry, config, "HeadingPID");
         pinpoint = opMode.hardwareMap.get(GoBildaPinpointDriver.class, "sensor");
         this.vroom = new MecanumDriverControlled(driveMotors, forwardBackward, strafe, yaw, true);
     }

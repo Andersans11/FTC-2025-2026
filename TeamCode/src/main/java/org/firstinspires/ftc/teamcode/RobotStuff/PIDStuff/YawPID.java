@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.RobotStuff.PIDStuff;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
 
-public class CustomPID {
+public class YawPID {
     double kP;  double secondarykP;  double P; // trust me it saves space
     double kI;  double secondarykI;  double I;
     double kD;  double secondarykD;  double D;
@@ -21,7 +21,7 @@ public class CustomPID {
 
     public final String pidName;
 
-    public CustomPID(Telemetry telemetry, RobotConfig config, String pidName) {
+    public YawPID(Telemetry telemetry, RobotConfig config, String pidName) {
         this.config = config;
         this.telemetry = telemetry;
         this.pidName = pidName;

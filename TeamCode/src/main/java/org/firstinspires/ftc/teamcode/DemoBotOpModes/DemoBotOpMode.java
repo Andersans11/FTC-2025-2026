@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.DemoBotOpModes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
@@ -15,7 +16,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.OpModeGroups;
 import java.util.concurrent.TimeUnit;
 
 @TeleOp(name = "Demo Bot OpMode", group = OpModeGroups.TESTING)
-//@Disabled
+@Disabled
 public class DemoBotOpMode extends NextFTCOpMode {
     public DemoBotOpMode() {super(DemoBotPivot.INSTANCE, DemoBotLauncher.INSTANCE, DemoBotLifter.INSTANCE);}
 
