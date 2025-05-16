@@ -22,7 +22,7 @@ public class HorizontalLift extends HorizontalLiftInternal {
     private HorizontalLift() { } // nftc boilerplate
 
     public void initSystem(RobotConfig robotConfig) {
-        setLimits(0.0 ,1.0);
+        setLimits(0, 160);
         this.robotConfig = robotConfig;
         this.leftAxon = robotConfig.LeftHorizontal.servo;
         this.rightAxon = robotConfig.RightHorizontal.servo;
@@ -31,28 +31,35 @@ public class HorizontalLift extends HorizontalLiftInternal {
     }
 
     public Command moveLift(Pair<Float, Float> joystickValues) {
-        return setTargetPosition(joystickValues.component2());
+        return setTargetPosition(
+                extensionToServoPower(joystickValues.component2()) + targetPos
+        );
     }
 
     public Command zero() {
-        return setTargetPosition(0.0);
+        return setTargetPosition(0);
+    }
+    public Command max() {
+        return setTargetPosition(160);
     }
 
 
     public enum Mappings {
         MOVE,
-        TO_ZERO
+        TO_ZERO,
+        TO_MAX
     }
 
     Joystick MOVE;
     Button TO_ZERO;
+    Button TO_MAX;
 
     public void map(Control control, Mappings mapping) {
         switch (mapping) {
             case MOVE:
                 if (control instanceof Joystick) {
-                    this.MOVE = MOVE.getClass().cast(control);
-                    MOVE.setDisplacedCommand(INSTANCE::moveLift);
+                    this.MOVE = MOVE.getClass().cast(control); // button, joystick, etc classes extend control
+                    MOVE.setDisplacedCommand(INSTANCE::moveLift); // so it will only accept one of those classes, but it needs to be specifically cast to the right input type
                 } else {
                     throw new IllegalArgumentException("MOVE requires a " + MOVE.getClass().getSimpleName() + ", but received a " + control.getClass().getSimpleName());
                 }
@@ -63,6 +70,14 @@ public class HorizontalLift extends HorizontalLiftInternal {
                     TO_ZERO.setPressedCommand(INSTANCE::zero);
                 } else {
                     throw new IllegalArgumentException("TO_ZERO requires a " + TO_ZERO.getClass().getSimpleName() + ", but received a " + control.getClass().getSimpleName());
+                }
+                break;
+            case TO_MAX:
+                if (control instanceof Button) {
+                    this.TO_MAX = TO_MAX.getClass().cast(control);
+                    TO_MAX.setPressedCommand(INSTANCE::max);
+                } else {
+                    throw new IllegalArgumentException("TO_MAX requires a " + TO_MAX.getClass().getSimpleName() + ", but received a " + control.getClass().getSimpleName());
                 }
                 break;
         }
@@ -83,26 +98,55 @@ abstract class HorizontalLiftInternal extends Subsystem {
     public double targetPos;
     public double oldPos;
 
+    public final double PD = 40.08; // distance from top of slide stack to pivot point
+    public final double AD = 22; // distance from linkage attachment point on slide to top of slide stack
+    public final double LL = 320; // length of long linkage
+    public final double SL = 304.1898371; // length of short linkage
+    public final double DIFF = PD - AD; // we can get rid of the rectangle in the formed trapezoid
+
     public void setLimits(double lower, double upper) { // use in init
-        upperLimit = upper;
-        lowerLimit = lower;
+        upperLimit = extensionToServoPower(upper);
+        lowerLimit = extensionToServoPower(lower);
     }
 
-    public void fixTargetPos() {
-        if (targetPos < lowerLimit) {
-            targetPos = lowerLimit;
+    public double fixTarget(double target) {
+        if (target < lowerLimit) {
+            target = lowerLimit;
         }
-        if (targetPos > upperLimit) {
-            targetPos = upperLimit;
+        if (target > upperLimit) {
+            target = upperLimit;
         }
+
+        return target;
+    }
+    public double pythagoreanTheorem(double a, double b) {
+        a = Math.pow(a, 2);
+        b = Math.pow(b, 2);
+        return Math.sqrt(a + b);
+    }
+
+    public double extensionToServoPower(double extension) {
+        double servoPower = internalServoPowerConversion(extension); // extension to servo power
+        servoPower -= internalServoPowerConversion(0); // make the servo's zero position at minimum extension
+        return Math.abs(servoPower); // input of 160 (max) results in negative when subtracted, should have a value bigger than zero
+    }
+    private double internalServoPowerConversion(double requestedExtension) {
+        requestedExtension += 300; //account for slide length
+        double LA = pythagoreanTheorem(requestedExtension, DIFF);
+        double RA = Math.atan(requestedExtension / DIFF); //inv_cos_in = ((LA**2 + L**2 - S**2) / (2 * LA * L))
+        double arcCosInput = ((Math.pow(LA, 2) + Math.pow(LL, 2) - Math.pow(SL, 2)) / (2 * LA * LL));
+        double RL = Math.acos(arcCosInput);
+        double RT = RA + RL;
+        return Math.toDegrees(RT) / 180;
     }
 
     public Command setTargetPosition(double requestedPos) {
 
-        fixTargetPos();
+        requestedPos = extensionToServoPower(requestedPos);
 
         oldPos = targetPos;
-        targetPos = requestedPos;
+        targetPos = fixTarget(requestedPos);
+
         return new MultipleServosToPosition(
                 servos,
                 targetPos,
