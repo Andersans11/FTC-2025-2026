@@ -125,15 +125,21 @@ abstract class HorizontalLiftInternal extends Subsystem {
         return Math.sqrt(a + b);
     }
 
-    public double extensionToServoPower(double extension) {
-        double servoPower = internalServoPowerConversion(extension); // extension to servo power
-        servoPower -= internalServoPowerConversion(0); // make the servo's zero position at minimum extension
-        return Math.abs(servoPower); // input of 160 (max) results in negative when subtracted, should have a value bigger than zero
-    }
-    private double internalServoPowerConversion(double requestedExtension) {
+    public double extensionToServoPower(double requestedExtension) {
         requestedExtension += 300; //account for slide length
         double LA = pythagoreanTheorem(requestedExtension, DIFF);
         double RA = Math.atan(requestedExtension / DIFF); //inv_cos_in = ((LA**2 + L**2 - S**2) / (2 * LA * L))
+        double arcCosInput = ((Math.pow(LA, 2) + Math.pow(LL, 2) - Math.pow(SL, 2)) / (2 * LA * LL));
+        double RL = Math.acos(arcCosInput);
+        double RT = RA + RL;
+        RT = Math.toDegrees(RT) / 180;
+        RT -= extensionBuffer();
+        return Math.abs(RT);  // input of 160 (max) results in negative when subtracted, should have a value bigger than zero
+    }
+
+    private double extensionBuffer() { // make the servo's zero position at minimum extension (300 bc of slide length)
+        double LA = pythagoreanTheorem(300, DIFF);
+        double RA = Math.atan(300 / DIFF);
         double arcCosInput = ((Math.pow(LA, 2) + Math.pow(LL, 2) - Math.pow(SL, 2)) / (2 * LA * LL));
         double RL = Math.acos(arcCosInput);
         double RT = RA + RL;
