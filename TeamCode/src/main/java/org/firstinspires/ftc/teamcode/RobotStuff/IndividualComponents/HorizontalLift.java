@@ -132,18 +132,17 @@ abstract class HorizontalLiftInternal extends Subsystem {
         double arcCosInput = ((Math.pow(LA, 2) + Math.pow(LL, 2) - Math.pow(SL, 2)) / (2 * LA * LL));
         double RL = Math.acos(arcCosInput);
         double RT = RA + RL;
-        RT = Math.toDegrees(RT) / 180;
         RT -= extensionBuffer();
-        return Math.abs(RT);  // input of 160 (max) results in negative when subtracted, should have a value bigger than zero
-    }
+        RT = Math.abs(RT);
+        return Math.toDegrees(RT) / 180;  // input of 160 (max) results in negative when subtracted, should have a value bigger than zero
+    }// convert at return for accuracy
 
     private double extensionBuffer() { // make the servo's zero position at minimum extension (300 bc of slide length)
         double LA = pythagoreanTheorem(300, DIFF);
         double RA = Math.atan(300 / DIFF);
         double arcCosInput = ((Math.pow(LA, 2) + Math.pow(LL, 2) - Math.pow(SL, 2)) / (2 * LA * LL));
         double RL = Math.acos(arcCosInput);
-        double RT = RA + RL;
-        return Math.toDegrees(RT) / 180;
+        return RA + RL;
     }
 
     public Command setTargetPosition(double requestedPos) {
