@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.rowanmcalpin.nextftc.core.Subsystem;
 import com.rowanmcalpin.nextftc.core.command.Command;
+import com.rowanmcalpin.nextftc.core.command.utility.NullCommand;
 import com.rowanmcalpin.nextftc.ftc.gamepad.Button;
 import com.rowanmcalpin.nextftc.ftc.gamepad.Joystick;
 import com.rowanmcalpin.nextftc.ftc.hardware.MultipleServosToPosition;
@@ -22,7 +23,7 @@ public class HorizontalLift extends HorizontalLiftInternal {
     private HorizontalLift() { } // nftc boilerplate
 
     public void initSystem(RobotConfig robotConfig) {
-        setLimits(0, 160);
+        setLimits(0, 405);
         this.robotConfig = robotConfig;
         this.leftAxon = robotConfig.LeftHorizontal.servo;
         this.rightAxon = robotConfig.RightHorizontal.servo;
@@ -32,15 +33,15 @@ public class HorizontalLift extends HorizontalLiftInternal {
 
     public Command moveLift(Pair<Float, Float> joystickValues) {
         return setTargetPosition(
-                extensionToServoPower(joystickValues.component2()) + targetPos
+                extensionToServoPower((joystickValues.component2()*mult)+targetPosmm)
         );
     }
 
     public Command zero() {
-        return setTargetPosition(0);
+        return setTargetPosition(LiftPreset.MINIMUM);
     }
     public Command max() {
-        return setTargetPosition(160);
+        return setTargetPosition(LiftPreset.MAXIMUM);
     }
 
 
@@ -96,13 +97,11 @@ abstract class HorizontalLiftInternal extends Subsystem {
     public double upperLimit;
     public double lowerLimit;
     public double targetPos;
+
+    public double targetPosmm;
     public double oldPos;
 
-    public final double PD = 40.08; // distance from top of slide stack to pivot point
-    public final double AD = 22; // distance from linkage attachment point on slide to top of slide stack
-    public final double LL = 320; // length of long linkage
-    public final double SL = 304.1898371; // length of short linkage
-    public final double DIFF = PD - AD; // we can get rid of the rectangle in the formed trapezoid
+    public double mult = 1.0; //Speed at which the joystick changes the lift's position
 
     public void setLimits(double lower, double upper) { // use in init
         upperLimit = extensionToServoPower(upper);
@@ -119,53 +118,77 @@ abstract class HorizontalLiftInternal extends Subsystem {
 
         return target;
     }
-    public double pythagoreanTheorem(double a, double b) {
-        a = Math.pow(a, 2);
-        b = Math.pow(b, 2);
-        return Math.sqrt(a + b);
-    }
 
     public double extensionToServoPower(double requestedExtension) {
-        requestedExtension += 300; //account for slide length
-        double LA = pythagoreanTheorem(requestedExtension, DIFF);
-        double RA = Math.atan(requestedExtension / DIFF); //inv_cos_in = ((LA**2 + L**2 - S**2) / (2 * LA * L))
-        double arcCosInput = ((Math.pow(LA, 2) + Math.pow(LL, 2) - Math.pow(SL, 2)) / (2 * LA * LL));
-        double RL = Math.acos(arcCosInput);
-        double RT = RA + RL;
-        RT -= extensionBuffer();
-        RT = Math.abs(RT);
-        return Math.toDegrees(RT) / 180;  // input of 160 (max) results in negative when subtracted, should have a value bigger than zero
-    }// convert at return for accuracy
+        requestedExtension += 203.60435196;
+        return angleDifference(requestedExtension);
+    }
 
-    private double extensionBuffer() { // make the servo's zero position at minimum extension (300 bc of slide length)
-        double LA = pythagoreanTheorem(300, DIFF);
-        double RA = Math.atan(300 / DIFF);
-        double arcCosInput = ((Math.pow(LA, 2) + Math.pow(LL, 2) - Math.pow(SL, 2)) / (2 * LA * LL));
-        double RL = Math.acos(arcCosInput);
-        return RA + RL;
+    final double AB = 18.08;
+    final double AD = 325.0;
+    final double CD = 284.16890302;
+
+    double angleCAD;
+    double angleBCA;
+
+    public double angleDifference(double BC) {
+        // Compute AC Pythagorean Theorem
+        double AC = Math.sqrt(AB * AB + BC * BC); // AC is the Hypotenuse
+
+        // Use Law of Cosines to find angle CAD in triangle ACD
+        double cosCAD = (AD * AD + AC * AC - CD * CD) / (2 * AD * AC);
+        angleCAD = Math.toDegrees(Math.acos(cosCAD));
+
+        // Use Law of Cosines to find angle BCA in triangle ABC
+        double cosBCA = (BC * BC + AC * AC - AB * AB) / (2 * BC * AC);
+        angleBCA = Math.toDegrees(Math.acos(cosBCA));
+
+        // Return the difference
+        return angleCAD - angleBCA;
     }
 
     public Command setTargetPosition(double requestedPos) {
 
+        targetPosmm = requestedPos;
         requestedPos = extensionToServoPower(requestedPos);
-
-        oldPos = targetPos;
         targetPos = fixTarget(requestedPos);
 
-        return new MultipleServosToPosition(
-                servos,
-                targetPos,
-                this
-        );
+        return new NullCommand();
+    }
+
+    enum LiftPreset {
+        MINIMUM,
+        MAXIMUM
+    }
+    public Command setTargetPosition(LiftPreset Preset) {
+
+        switch (Preset) {
+            case MINIMUM:
+                targetPos = 54.8144;
+                targetPosmm = 0;
+                break;
+
+            case MAXIMUM:
+                targetPos = 0.0;
+                targetPosmm = 405;
+                break;
+        }
+        return new NullCommand();
     }
 
     @NonNull
     @Override
     public Command getDefaultCommand() {
-        return new MultipleServosToPosition(
-                servos,
-                targetPos,
-                this
-        );
+
+        if (targetPos != oldPos) { //Move servos if the target position has changed
+            oldPos = targetPos;
+            return new MultipleServosToPosition(
+                    servos,
+                    targetPos,
+                    this
+            );
+        } else {
+            return new NullCommand();
+        }
     }
 }
