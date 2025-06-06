@@ -121,7 +121,7 @@ abstract class HorizontalLiftInternal extends Subsystem {
 
     public double extensionToServoPower(double requestedExtension) {
         requestedExtension += 203.60435196;
-        return angleDifference(requestedExtension);
+        return angleDifference(requestedExtension) / Math.PI;
     }
 
     final double AB = 18.08;
@@ -141,18 +141,18 @@ abstract class HorizontalLiftInternal extends Subsystem {
     double angleBCA;
 
     public double angleDifference(double BC) {
-        // Compute AC Pythagorean Theorem
+        // find line AC via the Pythagorean Theorem
         double AC = Math.sqrt(AB * AB + BC * BC); // AC is the Hypotenuse
 
-        // Use Law of Cosines to find angle CAD in triangle ACD
+        // use the Law of Cosines to find the cosine of angle CAD in triangle ACD
         double cosCAD = (AD * AD + AC * AC - CD * CD) / (2 * AD * AC);
-        angleCAD = Math.toDegrees(Math.acos(cosCAD));
+        angleCAD = Math.acos(cosCAD); // find the measure of angle CAD through its arc cosine
 
-        // Use Law of Cosines to find angle BCA in triangle ABC
+        // use the Law of Cosines to find the cosine of angle BCA in triangle ABC
         double cosBCA = (BC * BC + AC * AC - AB * AB) / (2 * BC * AC);
-        angleBCA = Math.toDegrees(Math.acos(cosBCA));
+        angleBCA = Math.acos(cosBCA); // fine the measure of angle BCA through its arc cosine
 
-        // Return the difference
+        // Return the difference in radians
         return angleCAD - angleBCA;
     }
 
