@@ -125,8 +125,17 @@ abstract class HorizontalLiftInternal extends Subsystem {
     }
 
     final double AB = 18.08;
-    final double AD = 325.0;
+    final double AD = 325.0; 
     final double CD = 284.16890302;
+
+    /*
+    AB is the vertical difference between the servo rotation point and the
+    point where the linkage attaches the the slide
+
+    AD is the length of the long linkage
+
+    CD is the length of the short linkage
+    */
 
     double angleCAD;
     double angleBCA;
