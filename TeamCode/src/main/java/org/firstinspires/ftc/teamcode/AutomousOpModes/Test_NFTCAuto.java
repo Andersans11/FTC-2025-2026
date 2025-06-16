@@ -13,8 +13,8 @@ import com.rowanmcalpin.nextftc.core.command.utility.delays.Delay;
 import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
 import com.rowanmcalpin.nextftc.pedro.FollowPath;
 
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.FConstants;
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.LConstants;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants.FConstants;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants.LConstants;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.VerticalLift;
 
@@ -28,7 +28,7 @@ It pulls motors from the Motors Class and assigns them to a mecanum drive comman
 public class Test_NFTCAuto extends NextFTCOpMode {
 
     public Test_NFTCAuto() {
-        super(VerticalLift.INSTANCE);
+        super();
     }
 
     RobotConfig robotConfig = new RobotConfig(this);
@@ -38,22 +38,11 @@ public class Test_NFTCAuto extends NextFTCOpMode {
 
     @Override
     public void onInit() {
-        VerticalLift.INSTANCE.initialize();
-        VerticalLift.INSTANCE.configure(robotConfig);
         Constants.setConstants(FConstants.class, LConstants.class);
     }
 
     public Command firstRoutine() {
-        return new SequentialGroup(
-                VerticalLift.INSTANCE.toHigh(),
-                new ParallelGroup(
-                        new FollowPath(path),
-                        new SequentialGroup(
-                                new Delay(0.5),
-                                VerticalLift.INSTANCE.toLow()
-                        )
-                )
-        );
+        return new FollowPath(path);
     }
 
     @Override
