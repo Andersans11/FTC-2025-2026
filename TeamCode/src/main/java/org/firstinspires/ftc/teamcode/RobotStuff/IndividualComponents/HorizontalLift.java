@@ -33,7 +33,7 @@ public class HorizontalLift extends HorizontalLiftInternal {
 
     public Command moveLift(Pair<Float, Float> joystickValues) {
         return setTargetPosition(
-                extensionToServoPower((joystickValues.component2()*mult)+targetPosmm)
+                (joystickValues.component2()*mult)+targetPosmm
         );
     }
 
@@ -96,9 +96,9 @@ abstract class HorizontalLiftInternal extends Subsystem {
     public RobotConfig robotConfig;
     public double upperLimit;
     public double lowerLimit;
-    public double targetPos;
+    public double targetPos; // target pos in degrees or radians, whichever we end up using
 
-    public double targetPosmm;
+    public double targetPosmm; // target pos in milliemeters
     public double oldPos;
 
     public double mult = 1.0; //oh dear we're playing balatro again
@@ -156,7 +156,7 @@ abstract class HorizontalLiftInternal extends Subsystem {
         return angleCAD - angleBCA;
     }
 
-    public Command setTargetPosition(double requestedPos) {
+    public Command setTargetPosition(double requestedPos) { // set target pos via input value
 
         targetPosmm = requestedPos;
         requestedPos = extensionToServoPower(requestedPos);
@@ -169,11 +169,11 @@ abstract class HorizontalLiftInternal extends Subsystem {
         MINIMUM,
         MAXIMUM
     }
-    public Command setTargetPosition(LiftPreset Preset) {
+    public Command setTargetPosition(LiftPreset Preset) { // set target pos via preset value
 
         switch (Preset) {
             case MINIMUM:
-                targetPos = 54.8144;
+                targetPos = 0.3045222222 * Math.PI; // sorry not sorry
                 targetPosmm = 0;
                 break;
 
