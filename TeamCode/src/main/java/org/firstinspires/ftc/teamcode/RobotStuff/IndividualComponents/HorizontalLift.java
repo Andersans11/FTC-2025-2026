@@ -101,7 +101,7 @@ abstract class HorizontalLiftInternal extends Subsystem {
     public double targetPosmm;
     public double oldPos;
 
-    public double mult = 1.0; //Speed at which the joystick changes the lift's position
+    public double mult = 1.0; //oh dear we're playing balatro again
 
     public void setLimits(double lower, double upper) { // use in init
         upperLimit = extensionToServoPower(upper);
@@ -121,7 +121,7 @@ abstract class HorizontalLiftInternal extends Subsystem {
 
     public double extensionToServoPower(double requestedExtension) {
         requestedExtension += 203.60435196;
-        return angleDifference(requestedExtension);
+        return angleDifference(requestedExtension) / Math.PI;
     }
 
     final double AB = 18.08;
@@ -146,11 +146,11 @@ abstract class HorizontalLiftInternal extends Subsystem {
 
         // Use Law of Cosines to find angle CAD in triangle ACD
         double cosCAD = (AD * AD + AC * AC - CD * CD) / (2 * AD * AC);
-        angleCAD = Math.toDegrees(Math.acos(cosCAD));
+        angleCAD = Math.acos(cosCAD);
 
         // Use Law of Cosines to find angle BCA in triangle ABC
         double cosBCA = (BC * BC + AC * AC - AB * AB) / (2 * BC * AC);
-        angleBCA = Math.toDegrees(Math.acos(cosBCA));
+        angleBCA = Math.acos(cosBCA);
 
         // Return the difference
         return angleCAD - angleBCA;
