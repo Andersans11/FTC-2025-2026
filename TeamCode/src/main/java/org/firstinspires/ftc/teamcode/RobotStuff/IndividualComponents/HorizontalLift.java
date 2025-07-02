@@ -96,7 +96,7 @@ abstract class HorizontalLiftInternal extends Subsystem {
     public RobotConfig robotConfig;
     public double upperLimit;
     public double lowerLimit;
-    public double targetPos; // target pos in degrees or radians, whichever we end up using
+    public double targetPos; // target pos for servo, so servo power
 
     public double targetPosmm; // target pos in milliemeters
     public double oldPos;
@@ -173,7 +173,7 @@ abstract class HorizontalLiftInternal extends Subsystem {
 
         switch (Preset) {
             case MINIMUM:
-                targetPos = 0.3045222222 * Math.PI; // sorry not sorry
+                targetPos = 0.304524444 // servo power
                 targetPosmm = 0;
                 break;
 
