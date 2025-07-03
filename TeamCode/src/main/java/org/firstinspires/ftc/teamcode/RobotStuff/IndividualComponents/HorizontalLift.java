@@ -33,7 +33,7 @@ public class HorizontalLift extends HorizontalLiftInternal {
 
     public Command moveLift(Pair<Float, Float> joystickValues) {
         return setTargetPosition(
-                extensionToServoPower((joystickValues.component2()*mult)+targetPosmm)
+                (joystickValues.component2()*mult)+targetPosmm
         );
     }
 
@@ -96,12 +96,12 @@ abstract class HorizontalLiftInternal extends Subsystem {
     public RobotConfig robotConfig;
     public double upperLimit;
     public double lowerLimit;
-    public double targetPos;
+    public double targetPos; // target pos for servo, so servo power
 
-    public double targetPosmm;
+    public double targetPosmm; // target pos in milliemeters
     public double oldPos;
 
-    public double mult = 1.0; //Speed at which the joystick changes the lift's position
+    public double mult = 1.0; //oh dear we're playing balatro again
 
     public void setLimits(double lower, double upper) { // use in init
         upperLimit = extensionToServoPower(upper);
@@ -121,7 +121,7 @@ abstract class HorizontalLiftInternal extends Subsystem {
 
     public double extensionToServoPower(double requestedExtension) {
         requestedExtension += 203.60435196;
-        return angleDifference(requestedExtension);
+        return angleDifference(requestedExtension) / Math.PI;
     }
 
     final double AB = 18.08;
@@ -146,17 +146,17 @@ abstract class HorizontalLiftInternal extends Subsystem {
 
         // Use Law of Cosines to find angle CAD in triangle ACD
         double cosCAD = (AD * AD + AC * AC - CD * CD) / (2 * AD * AC);
-        angleCAD = Math.toDegrees(Math.acos(cosCAD));
+        angleCAD = Math.acos(cosCAD);
 
         // Use Law of Cosines to find angle BCA in triangle ABC
         double cosBCA = (BC * BC + AC * AC - AB * AB) / (2 * BC * AC);
-        angleBCA = Math.toDegrees(Math.acos(cosBCA));
+        angleBCA = Math.acos(cosBCA);
 
         // Return the difference
         return angleCAD - angleBCA;
     }
 
-    public Command setTargetPosition(double requestedPos) {
+    public Command setTargetPosition(double requestedPos) { // set target pos via input value
 
         targetPosmm = requestedPos;
         requestedPos = extensionToServoPower(requestedPos);
@@ -169,11 +169,11 @@ abstract class HorizontalLiftInternal extends Subsystem {
         MINIMUM,
         MAXIMUM
     }
-    public Command setTargetPosition(LiftPreset Preset) {
+    public Command setTargetPosition(LiftPreset Preset) { // set target pos via preset value
 
         switch (Preset) {
             case MINIMUM:
-                targetPos = 54.8144;
+                targetPos = 0.304524444 // servo power
                 targetPosmm = 0;
                 break;
 

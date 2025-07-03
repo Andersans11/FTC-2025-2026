@@ -30,7 +30,7 @@ public class VerticalLift extends VerticalLiftInternal {
         this.robotConfig = robotConfig;
         this.leftMotor = robotConfig.LeftVertical.motor;
         this.rightMotor = robotConfig.RightVertical.motor;
-        this.motors = new MotorGroup(leftMotor, rightMotor);
+        this.motors = new MotorGroup(leftMotor, rightMotor); // TODO: ADD OTHER MOTORS IF APPLICABLE
         initialize();
     }
 
@@ -100,7 +100,7 @@ public class VerticalLift extends VerticalLiftInternal {
 abstract class VerticalLiftInternal extends Subsystem {
 
 
-    public double spoolDiamater = 38.2;
+    public double spoolDiamater = 38.2;// TODO: UPDATE FOR NEW SPOOL
     public MotorEx leftMotor;
     public MotorEx rightMotor;
 
