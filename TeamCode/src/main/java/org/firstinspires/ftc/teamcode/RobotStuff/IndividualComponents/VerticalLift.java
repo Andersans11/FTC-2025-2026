@@ -6,6 +6,7 @@ import com.rowanmcalpin.nextftc.core.Subsystem;
 import com.rowanmcalpin.nextftc.core.command.Command;
 import com.rowanmcalpin.nextftc.core.control.coefficients.PIDCoefficients;
 import com.rowanmcalpin.nextftc.core.control.controllers.PIDFController;
+import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
 import com.rowanmcalpin.nextftc.ftc.gamepad.Button;
 import com.rowanmcalpin.nextftc.ftc.gamepad.Control;
 import com.rowanmcalpin.nextftc.ftc.gamepad.Joystick;
@@ -25,8 +26,9 @@ public class VerticalLift extends VerticalLiftInternal {
     public static final VerticalLift INSTANCE = new VerticalLift();
     private VerticalLift() { } // nftc boilerplate
 
-    public void initSystem(RobotConfig robotConfig) {
+    public void initSystem(RobotConfig robotConfig, NextFTCOpMode opMode) {
         setLimits(0 , DistanceUnit.INCH.fromMm(206));
+        this.opMode = opMode;
         this.robotConfig = robotConfig;
         this.leftMotor = robotConfig.LeftVertical.motor;
         this.rightMotor = robotConfig.RightVertical.motor;
@@ -35,14 +37,17 @@ public class VerticalLift extends VerticalLiftInternal {
     }
 
     public Command toLow() {
+        opMode.telemetry.addLine("vertical lift zero");
         return setTargetPosition(0);
     }
 
     public Command toMiddle() {
+        opMode.telemetry.addLine("vertical lift mid");
         return setTargetPosition(DistanceUnit.INCH.fromMm(100));
     }
 
     public Command toHigh() {
+        opMode.telemetry.addLine("vertical lift max");
         return setTargetPosition(DistanceUnit.INCH.fromMm(200));
     } // i work in millimeters and nobody can stop me
 
@@ -100,6 +105,7 @@ public class VerticalLift extends VerticalLiftInternal {
 abstract class VerticalLiftInternal extends Subsystem {
 
 
+    public NextFTCOpMode opMode;
     public double spoolDiamater = 38.2;// TODO: UPDATE FOR NEW SPOOL
     public MotorEx leftMotor;
     public MotorEx rightMotor;

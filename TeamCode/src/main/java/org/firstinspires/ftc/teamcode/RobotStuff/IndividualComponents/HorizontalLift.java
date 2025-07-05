@@ -6,12 +6,14 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.rowanmcalpin.nextftc.core.Subsystem;
 import com.rowanmcalpin.nextftc.core.command.Command;
 import com.rowanmcalpin.nextftc.core.command.utility.NullCommand;
+import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
 import com.rowanmcalpin.nextftc.ftc.gamepad.Button;
 import com.rowanmcalpin.nextftc.ftc.gamepad.Joystick;
 import com.rowanmcalpin.nextftc.ftc.hardware.MultipleServosToPosition;
 import com.rowanmcalpin.nextftc.ftc.gamepad.Control;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
+import org.firstinspires.ftc.teamcode.TeleOpModes.EverythingMode;
 
 import java.util.ArrayList;
 
@@ -21,8 +23,9 @@ public class HorizontalLift extends HorizontalLiftInternal {
     public static final HorizontalLift INSTANCE = new HorizontalLift();
     private HorizontalLift() { } // nftc boilerplate
 
-    public void initSystem(RobotConfig robotConfig) {
+    public void initSystem(RobotConfig robotConfig, NextFTCOpMode opMode) {
         setLimits(0, 405);
+        this.opMode = opMode;
         this.robotConfig = robotConfig;
         this.leftAxon = robotConfig.LeftHorizontal.servo;
         this.rightAxon = robotConfig.RightHorizontal.servo;
@@ -32,15 +35,18 @@ public class HorizontalLift extends HorizontalLiftInternal {
     }
 
     public Command moveLift(Pair<Float, Float> joystickValues) {
+        opMode.telemetry.addLine("horizontal lift move");
         return setTargetPosition(
                 (joystickValues.component2()*mult)+targetPosmm
         );
     }
 
     public Command zero() {
+        opMode.telemetry.addLine("horizontal lift zero");
         return setTargetPosition(LiftPreset.MINIMUM);
     }
     public Command max() {
+        opMode.telemetry.addLine("horizontal lift max");
         return setTargetPosition(LiftPreset.MAXIMUM);
     }
 
@@ -90,6 +96,8 @@ abstract class HorizontalLiftInternal extends Subsystem {
 
     public Servo leftAxon;
     public Servo rightAxon;
+
+    public NextFTCOpMode opMode;
 
     public ArrayList<Servo> servos = new ArrayList<>();
 
