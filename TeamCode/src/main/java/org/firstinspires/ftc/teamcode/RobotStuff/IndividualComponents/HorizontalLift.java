@@ -13,8 +13,7 @@ import com.rowanmcalpin.nextftc.ftc.gamepad.Control;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.ArrayList;
 
 import kotlin.Pair;
 
@@ -27,7 +26,8 @@ public class HorizontalLift extends HorizontalLiftInternal {
         this.robotConfig = robotConfig;
         this.leftAxon = robotConfig.LeftHorizontal.servo;
         this.rightAxon = robotConfig.RightHorizontal.servo;
-        this.servos = Arrays.asList(leftAxon, rightAxon);
+        this.servos.add(leftAxon);
+        this.servos.add(rightAxon);
         initialize();
     }
 
@@ -91,14 +91,15 @@ abstract class HorizontalLiftInternal extends Subsystem {
     public Servo leftAxon;
     public Servo rightAxon;
 
-    public List<Servo> servos;
+    public ArrayList<Servo> servos = new ArrayList<>();
+
 
     public RobotConfig robotConfig;
     public double upperLimit;
     public double lowerLimit;
-    public double targetPos; // target pos for servo, so servo power
 
-    public double targetPosmm; // target pos in milliemeters
+    public double targetPos; // target pos for servo, so servo power
+    public double targetPosmm; // target pos in millimeters
     public double oldPos;
 
     public double mult = 1.0; //oh dear we're playing balatro again
@@ -173,7 +174,7 @@ abstract class HorizontalLiftInternal extends Subsystem {
 
         switch (Preset) {
             case MINIMUM:
-                targetPos = 0.304524444 // servo power
+                targetPos = 0.304524444; // servo power
                 targetPosmm = 0;
                 break;
 
