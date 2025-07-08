@@ -37,4 +37,28 @@ public class Callbacks {
         return codeToRun;
     }
 
+    public Runnable GetCallback(String identifier, int value) {
+
+        Runnable codeToRun = () -> {
+            //Maybe add a default command idk
+        };
+
+        switch (identifier) {
+            case "verticalLiftMove": //Example case
+                codeToRun = () -> {
+                    // VerticalLift.move(value)
+                    // Code goes here
+                };
+                break;
+            case "horizontalLiftMove": //Example case
+                codeToRun = () -> {
+                    // HorizontalLift.move(value)
+                    // Code goes here
+                };
+                break;
+        }
+
+        return codeToRun;
+    }
+
 }
