@@ -35,19 +35,19 @@ public class PathLoaderText {
             System.out.println("Successfully loaded JSON file!");
 
 
-            System.out.println("Number of pathchains: " + rootNode.path("pathchains").size());
+            System.out.println("Number of pathchains: " + rootNode.path("pathChains").size());
                 
-            for (int chainNumber = 1; chainNumber <= rootNode.path("pathchains").size(); chainNumber++) {
+            for (int chainNumber = 1; chainNumber <= rootNode.path("pathChains").size(); chainNumber++) {
 
 
                 System.out.println("Pathchain " + chainNumber + ":");
                 
-                System.out.println("  Number of paths: " + rootNode.path("pathchains").get(chainNumber - 1).path("paths").size());
+                System.out.println("  Number of paths: " + rootNode.path("pathChains").get(chainNumber - 1).path("paths").size());
 
-                for (int pathNumber = 1; pathNumber <= rootNode.path("pathchains").get(chainNumber - 1).path("paths").size(); pathNumber++) {
+                for (int pathNumber = 1; pathNumber <= rootNode.path("pathChains").get(chainNumber - 1).path("paths").size(); pathNumber++) {
 
 
-                    JsonNode pathNode = rootNode.path("pathchains").get(chainNumber - 1).path("paths").get(pathNumber - 1);
+                    JsonNode pathNode = rootNode.path("pathChains").get(chainNumber - 1).path("paths").get(pathNumber - 1);
 
                     System.out.println("  Path " + pathNumber + ":");
                     System.out.println("    ID: " + pathNode.path("id").asText());

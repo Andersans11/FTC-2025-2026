@@ -173,7 +173,7 @@ abstract class HorizontalLiftInternal extends Subsystem {
 
         switch (Preset) {
             case MINIMUM:
-                targetPos = 0.304524444 // servo power
+                targetPos = 0.304524444; // servo power
                 targetPosmm = 0;
                 break;
 

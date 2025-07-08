@@ -1,0 +1,74 @@
+{
+  "pathChains": [],
+  "curves": [
+    {
+      "type": "line",
+      "points": [
+        {
+          "x": 12,
+          "y": 132
+        },
+        {
+          "x": 12,
+          "y": 108
+        }
+      ],
+      "color": "#007bff",
+      "lineWidth": 2,
+      "isComplete": true,
+      "actions": []
+    },
+    {
+      "type": "line",
+      "points": [
+        {
+          "x": 12,
+          "y": 108
+        },
+        {
+          "x": 36,
+          "y": 108
+        }
+      ],
+      "color": "#007bff",
+      "lineWidth": 2,
+      "isComplete": true,
+      "actions": []
+    },
+    {
+      "type": "line",
+      "points": [
+        {
+          "x": 36,
+          "y": 108
+        },
+        {
+          "x": 36,
+          "y": 132
+        }
+      ],
+      "color": "#007bff",
+      "lineWidth": 2,
+      "isComplete": true,
+      "actions": []
+    },
+    {
+      "type": "line",
+      "points": [
+        {
+          "x": 36,
+          "y": 132
+        },
+        {
+          "x": 12,
+          "y": 132
+        }
+      ],
+      "color": "#007bff",
+      "lineWidth": 2,
+      "isComplete": true,
+      "actions": []
+    }
+  ],
+  "groups": []
+}

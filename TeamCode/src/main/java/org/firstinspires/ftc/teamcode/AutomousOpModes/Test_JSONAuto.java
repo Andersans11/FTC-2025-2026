@@ -13,7 +13,7 @@ import java.io.File;
 
 @Autonomous(name = "Test: JSON Auto")
 public class Test_JSONAuto extends OpMode {
-    File routine = new File("TeamCode\\src\\main\\java\\org\\firstinspires\\ftc\\teamcode\\RobotStuff\\PedroJSON\\data\\path_ex.json");
+    File routine = new File("TeamCode\\src\\main\\java\\org\\firstinspires\\ftc\\teamcode\\RobotStuff\\PedroJSON\\data\\path_ex3.json");
     Follower follower;
     PathLoader pathLoader;
 

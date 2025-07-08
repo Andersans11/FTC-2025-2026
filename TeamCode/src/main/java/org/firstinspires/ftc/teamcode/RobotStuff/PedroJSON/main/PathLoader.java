@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.pedropathing.follower.Follower;
+import com.pedropathing.localization.Pose;
 import com.pedropathing.pathgen.BezierCurve;
 import com.pedropathing.pathgen.BezierLine;
 import com.pedropathing.pathgen.Path;
@@ -63,14 +64,19 @@ public class PathLoader {
             JsonNode rootNode = objectMapper.readTree(file);
 
 
-            for (int chainNumber = 1; chainNumber <= rootNode.path("pathchains").size(); chainNumber++) {
+            for (int chainNumber = 1; chainNumber <= rootNode.path("pathChains").size(); chainNumber++) {
 
 
-                for (int pathNumber = 1; pathNumber <= rootNode.path("pathchains").get(chainNumber - 1).path("paths").size(); pathNumber++) {
+                for (int pathNumber = 1; pathNumber <= rootNode.path("pathChains").get(chainNumber - 1).path("paths").size(); pathNumber++) {
+
 
                     Path path = null;
 
-                    JsonNode pathNode = rootNode.path("pathchains").get(chainNumber - 1).path("paths").get(pathNumber - 1);
+                    JsonNode pathNode = rootNode.path("pathChains").get(chainNumber - 1).path("paths").get(pathNumber - 1);
+
+                    if (chainNumber == 1 && pathNumber == 1) {
+                        follower.setStartingPose(new Pose(pathNode.path("start").path("x").asDouble(), pathNode.path("start").path("y").asDouble(), pathNode.path("interpolation").path("heading1").asDouble()));
+                    }
 
                     start = new Point(pathNode.path("start").path("x").asDouble(), pathNode.path("start").path("y").asDouble(), Point.CARTESIAN);
 

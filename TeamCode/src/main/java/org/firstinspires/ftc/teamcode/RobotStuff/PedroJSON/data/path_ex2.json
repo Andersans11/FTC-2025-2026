@@ -1,0 +1,138 @@
+{
+  "pathChains": [
+    {
+      "id": 1639078603.25849,
+      "paths": [
+        {
+          "id": 0,
+          "type": "LINEAR",
+          "start": {
+            "x": 9,
+            "y": 36
+          },
+          "end": {
+            "x": 83,
+            "y": 59
+          },
+          "control1": null,
+          "control2": null,
+          "interpolation": {
+            "type": "CONSTANT",
+            "heading1": {
+              "x": 74,
+              "y": 23
+            },
+            "heading2": null
+          },
+          "callbacks": []
+        },
+        {
+          "id": 1,
+          "type": "QUADRATIC",
+          "start": {
+            "x": 83,
+            "y": 59
+          },
+          "end": {
+            "x": 121,
+            "y": 44
+          },
+          "control1": {
+            "x": 103,
+            "y": 68
+          },
+          "control2": null,
+          "interpolation": {
+            "type": "LINEAR",
+            "heading1": {
+              "x": 20,
+              "y": 9
+            },
+            "heading2": null
+          },
+          "callbacks": []
+        }
+      ]
+    }
+  ],
+  "curves": [
+    {
+      "type": "line",
+      "points": [
+        {
+          "x": 9,
+          "y": 36
+        },
+        {
+          "x": 83,
+          "y": 59
+        }
+      ],
+      "color": "#007bff",
+      "lineWidth": 2,
+      "isComplete": true,
+      "actions": [],
+      "groupId": 1752003054985.8052
+    },
+    {
+      "type": "quadratic",
+      "points": [
+        {
+          "x": 83,
+          "y": 59
+        },
+        {
+          "x": 103,
+          "y": 68
+        },
+        {
+          "x": 121,
+          "y": 44
+        }
+      ],
+      "color": "#007bff",
+      "lineWidth": 2,
+      "isComplete": true,
+      "actions": [],
+      "groupId": 1752003054985.8052
+    },
+    {
+      "type": "cubic",
+      "points": [
+        {
+          "x": 121,
+          "y": 44
+        },
+        {
+          "x": 140,
+          "y": 19
+        },
+        {
+          "x": 74,
+          "y": 48
+        },
+        {
+          "x": 84,
+          "y": 24
+        }
+      ],
+      "color": "#007bff",
+      "lineWidth": 2,
+      "isComplete": true,
+      "actions": []
+    }
+  ],
+  "groups": [
+    {
+      "id": 1752003054985.8052,
+      "name": "Group 1",
+      "curves": [
+        0,
+        1
+      ],
+      "color": "#6f42c1",
+      "visible": true,
+      "collapsed": true
+    }
+  ]
+}

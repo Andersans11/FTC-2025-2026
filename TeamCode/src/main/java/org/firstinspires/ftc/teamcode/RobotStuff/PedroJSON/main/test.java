@@ -10,7 +10,7 @@ public class test {
     public static void main(String[] args) {
         // Try different possible paths for the JSON file
         String[] possiblePaths = {
-                "TeamCode\\src\\main\\java\\org\\firstinspires\\ftc\\teamcode\\RobotStuff\\PedroJSON\\data\\path_ex.json"
+                "TeamCode\\src\\main\\java\\org\\firstinspires\\ftc\\teamcode\\RobotStuff\\PedroJSON\\data\\path_ex2.json"
         };
         
         File file = null;
