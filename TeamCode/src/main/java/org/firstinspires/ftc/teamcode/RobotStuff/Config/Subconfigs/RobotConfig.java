@@ -9,11 +9,6 @@ import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.HardwareConfigs.MotorConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.HardwareConfigs.ServoConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.Presets.DepositArmPreset;
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.Presets.FullPreset;
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.Presets.HorizontalSystemPreset;
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.Presets.PickupClawPreset;
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.Presets.VerticalSystemPreset;
 
 @Config
 public class RobotConfig {
@@ -102,15 +97,4 @@ public class RobotConfig {
                 Servo.Direction.REVERSE
         );
     }
-        public static FullPreset RestingPos = new FullPreset(
-                new HorizontalSystemPreset(0, new PickupClawPreset(0, 0, 0)),
-                new VerticalSystemPreset(0, new DepositArmPreset(0, 0, 0))
-        );
-        public static PickupClawPreset PickupFromSub = new PickupClawPreset(0.5, 0, 0.25);
-        public static PickupClawPreset PickupFromWall = new PickupClawPreset(0.25, 0, 0.25);
-        // ALWAYS IN MM: MORE EXACT
-        public static VerticalSystemPreset DepositToHighBar = new VerticalSystemPreset(107, new DepositArmPreset(0.5, 0.5, 0));
-        public static VerticalSystemPreset DepositToLowBar = new VerticalSystemPreset(0, new DepositArmPreset(0.5, 0.55, 0));
-//    public static VerticalSystemPreset DepositToHighBasket = new VerticalSystemPreset();
-//    public static VerticalSystemPreset DepositToLowBasket = new VerticalSystemPreset();
 }

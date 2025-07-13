@@ -36,13 +36,6 @@ public class EverythingMode extends NextFTCOpMode {
         HorizontalLift.INSTANCE.initSystem(robotConfig, this);
     }
 
-    public Command allZero() {
-        CommandManager.INSTANCE.scheduleCommand(VerticalLift.INSTANCE.toLow());
-        CommandManager.INSTANCE.scheduleCommand(HorizontalLift.INSTANCE.zero());
-
-        return new NullCommand();
-    }
-
     @Override
     public void onStartButtonPressed() {
         robotCentricDrive.Start();
@@ -54,8 +47,6 @@ public class EverythingMode extends NextFTCOpMode {
 
         HorizontalLift.INSTANCE.map(robotConfig.playerTwo.LeftStick, HorizontalLift.Mappings.MOVE);
         HorizontalLift.INSTANCE.map(robotConfig.playerTwo.Triangle, HorizontalLift.Mappings.TO_ZERO);
-
-        robotConfig.playerTwo.Square.setPressedCommand(this::allZero);
     }
 
     @Override
