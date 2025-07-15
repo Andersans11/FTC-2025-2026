@@ -2,8 +2,10 @@ package org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs;
 
 public abstract class BaseRobotState {
 
-    public BaseRobotState(String name) {
+    public String name;
 
+    public BaseRobotState(String name) {
+        this.name = name;
     }
 
     public abstract void activate();
