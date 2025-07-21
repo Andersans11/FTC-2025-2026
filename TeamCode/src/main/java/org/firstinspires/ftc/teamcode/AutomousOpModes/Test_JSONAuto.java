@@ -7,9 +7,10 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants.FConstants;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants.LConstants;
-import org.firstinspires.ftc.teamcode.RobotStuff.PedroJSON.main.PathLoader;
 
 import java.io.File;
+
+import PedroJSON.main.PathLoader;
 
 @Autonomous(name = "Test: JSON Auto")
 public class Test_JSONAuto extends OpMode {
