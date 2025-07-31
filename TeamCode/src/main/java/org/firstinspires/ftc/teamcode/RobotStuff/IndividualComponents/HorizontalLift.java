@@ -24,13 +24,13 @@ public class HorizontalLift extends HorizontalLiftInternal {
     private HorizontalLift() { } // nftc boilerplate
 
     public void initSystem(RobotConfig robotConfig, NextFTCOpMode opMode) {
-        setLimits(0, 405);
+        setLimits(0, 352.43);
         this.opMode = opMode;
         this.robotConfig = robotConfig;
-        this.leftAxon = robotConfig.LeftHorizontal.servo;
-        this.rightAxon = robotConfig.RightHorizontal.servo;
-        this.servos.add(leftAxon);
-        this.servos.add(rightAxon);
+        this.leftServo = robotConfig.LeftHorizontal.servo;
+        this.rightServo = robotConfig.RightHorizontal.servo;
+        this.servos.add(leftServo);
+        this.servos.add(rightServo);
         initialize();
     }
 
@@ -52,28 +52,21 @@ public class HorizontalLift extends HorizontalLiftInternal {
 
 
     public enum Mappings {
-        MOVE,
         TO_ZERO,
         TO_MAX
     }
 
-    Joystick MOVE;
+    public static class maps {
+    }
+
     Button TO_ZERO;
     Button TO_MAX;
 
     public void map(Control control, Mappings mapping) {
         switch (mapping) {
-            case MOVE:
-                if (control instanceof Joystick) {
-                    this.MOVE = MOVE.getClass().cast(control); // button, joystick, etc classes extend control
-                    MOVE.setDisplacedCommand(INSTANCE::moveLift); // so it will only accept one of those classes, but it needs to be specifically cast to the right input type
-                } else {
-                    throw new IllegalArgumentException("MOVE requires a " + MOVE.getClass().getSimpleName() + ", but received a " + control.getClass().getSimpleName());
-                }
-                break;
             case TO_ZERO:
                 if (control instanceof Button) {
-                    this.TO_ZERO = TO_ZERO.getClass().cast(control);
+                    this.TO_ZERO = (Button) control;
                     TO_ZERO.setPressedCommand(INSTANCE::zero);
                 } else {
                     throw new IllegalArgumentException("TO_ZERO requires a " + TO_ZERO.getClass().getSimpleName() + ", but received a " + control.getClass().getSimpleName());
@@ -81,7 +74,7 @@ public class HorizontalLift extends HorizontalLiftInternal {
                 break;
             case TO_MAX:
                 if (control instanceof Button) {
-                    this.TO_MAX = TO_MAX.getClass().cast(control);
+                    this.TO_MAX = (Button) control;
                     TO_MAX.setPressedCommand(INSTANCE::max);
                 } else {
                     throw new IllegalArgumentException("TO_MAX requires a " + TO_MAX.getClass().getSimpleName() + ", but received a " + control.getClass().getSimpleName());
@@ -94,8 +87,8 @@ public class HorizontalLift extends HorizontalLiftInternal {
 
 abstract class HorizontalLiftInternal extends Subsystem {
 
-    public Servo leftAxon;
-    public Servo rightAxon;
+    public Servo leftServo;
+    public Servo rightServo;
 
     public NextFTCOpMode opMode;
 
@@ -110,7 +103,7 @@ abstract class HorizontalLiftInternal extends Subsystem {
     public double targetPosmm; // target pos in millimeters
     public double oldPos;
 
-    public double mult = 1.0; //oh dear we're playing balatro again
+    public static double mult = 0.1; //oh dear we're playing balatro again
 
     public void setLimits(double lower, double upper) { // use in init
         upperLimit = extensionToServoPower(upper);
@@ -182,7 +175,7 @@ abstract class HorizontalLiftInternal extends Subsystem {
 
         switch (Preset) {
             case MINIMUM:
-                targetPos = 0.304524444; // servo power
+                targetPos = 0.2375; // servo power
                 targetPosmm = 0;
                 break;
 
