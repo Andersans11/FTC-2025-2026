@@ -129,13 +129,13 @@ abstract class HorizontalLiftInternal extends Subsystem {
     }
 
     public double extensionToServoPower(double requestedExtension) {
-        requestedExtension += 203.60435196;
+        requestedExtension += 283.57774992;
         return angleDifference(requestedExtension) / Math.PI;
     }
 
-    final double AB = 18.08;
-    final double AD = 325.0;
-    final double CD = 284.16890302;
+    final double AB = 17.44280643;
+    final double AD = 340.26716033;
+    final double CD = 292.39386045;
 
     /*
     AB is the vertical difference between the servo rotation point and the
