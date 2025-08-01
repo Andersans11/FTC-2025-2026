@@ -3,6 +3,9 @@ package org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.Presets;
 import com.rowanmcalpin.nextftc.core.command.Command;
 import com.rowanmcalpin.nextftc.core.command.utility.NullCommand;
 
+// robot parts
+import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.HorizontalLift;
+
 public class Presets {
 
     public class HorizontalSystemPresets {
@@ -58,6 +61,21 @@ public class Presets {
         public Command pickupFromWall() {
 
             return new NullCommand();
+        }
+    }
+
+    public class HoriontalLiftPersets {
+
+        public Command minimum() {
+            return HorizontalLift.INSTANCE.setTargetPosition(HorizontalLift.LiftPreset.MINIMUM);
+        }
+
+        public Command maximum() {
+            return HorizontalLift.INSTANCE.setTargetPosition(HorizontalLift.LiftPreset.MAXIMUM);
+        }
+
+        public Command flush() {
+            return HorizontalLift.INSTANCE.setTargetPosition(HorizontalLift.LiftPreset.FLUSH);
         }
     }
 }
