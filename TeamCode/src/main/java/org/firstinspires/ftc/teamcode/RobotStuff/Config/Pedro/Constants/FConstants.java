@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
 
 import com.pedropathing.localization.Localizers;
 import com.pedropathing.follower.FollowerConstants;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
 
@@ -9,17 +10,17 @@ public class FConstants {
     static {
         FollowerConstants.localizers = Localizers.PINPOINT;
 
-        FollowerConstants.leftFrontMotorName = RobotConfig.FLDrive.name;
-        FollowerConstants.leftRearMotorName = RobotConfig.BLDrive.name;
-        FollowerConstants.rightFrontMotorName = RobotConfig.FRDrive.name;
-        FollowerConstants.rightRearMotorName = RobotConfig.BRDrive.name;
+        FollowerConstants.leftFrontMotorName = "Front Left Drive";
+        FollowerConstants.leftRearMotorName = "Back Left Drive";
+        FollowerConstants.rightFrontMotorName = "Front Right Drive";
+        FollowerConstants.rightRearMotorName = "Back Right Drive";
 
-        FollowerConstants.leftFrontMotorDirection = RobotConfig.FLDrive.direction;
-        FollowerConstants.leftRearMotorDirection = RobotConfig.BLDrive.direction;
-        FollowerConstants.rightFrontMotorDirection = RobotConfig.FRDrive.direction;
-        FollowerConstants.rightRearMotorDirection = RobotConfig.BRDrive.direction;
+        FollowerConstants.leftFrontMotorDirection = DcMotorSimple.Direction.REVERSE;
+        FollowerConstants.leftRearMotorDirection = DcMotorSimple.Direction.REVERSE;
+        FollowerConstants.rightFrontMotorDirection = DcMotorSimple.Direction.FORWARD;
+        FollowerConstants.rightRearMotorDirection = DcMotorSimple.Direction.FORWARD;
 
-        FollowerConstants.mass = 12.25;
+        FollowerConstants.mass = 6.577089;
 
         FollowerConstants.xMovement = 58.9265;
         FollowerConstants.yMovement = 48.8137;
