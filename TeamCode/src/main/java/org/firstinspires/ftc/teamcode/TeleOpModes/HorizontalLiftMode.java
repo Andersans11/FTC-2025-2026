@@ -1,14 +1,13 @@
 package org.firstinspires.ftc.teamcode.TeleOpModes;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
 
+import org.firstinspires.ftc.teamcode.RobotStuff.AllPresets.Presets.HorizontalLiftPresets;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.OpModeGroups;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.DriveModes.RobotCentricDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.HorizontalLift;
-import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.VerticalLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.DeltaTimer;
 
 import java.util.concurrent.TimeUnit;
@@ -18,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 public class HorizontalLiftMode extends NextFTCOpMode {
 
     public HorizontalLiftMode() {
-        super(HorizontalLift.INSTANCE);
+        super(HorizontalLift.INSTANCE, HorizontalLiftPresets.INSTANCE);
     }
     DeltaTimer deltaTimer = new DeltaTimer();
     long deltaTimeNano;
@@ -36,9 +35,9 @@ public class HorizontalLiftMode extends NextFTCOpMode {
     public void onStartButtonPressed() {
         robotCentricDrive.Start();
 
-        HorizontalLift.INSTANCE.map(robotConfig.playerTwo.DpadDown, HorizontalLift.Mappings.TO_ZERO);
-        HorizontalLift.INSTANCE.map(robotConfig.playerTwo.DpadUp, HorizontalLift.Mappings.TO_MAX);
-
+        robotConfig.playerTwo.DpadUp.setPressedCommand(HorizontalLiftPresets.INSTANCE::maximum);
+        robotConfig.playerTwo.DpadDown.setPressedCommand(HorizontalLiftPresets.INSTANCE::minimum);
+        robotConfig.playerTwo.DpadRight.setPressedCommand(HorizontalLiftPresets.INSTANCE::mid);
     }
 
 

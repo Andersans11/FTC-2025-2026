@@ -43,7 +43,7 @@ public class HorizontalLift extends HorizontalLiftInternal {
     public enum LiftPreset {
         MINIMUM,
         MAXIMUM,
-        FLUSH
+        MID
     }
     public Command setTargetPosition(LiftPreset Preset) { // set target pos via preset value
 
@@ -58,9 +58,9 @@ public class HorizontalLift extends HorizontalLiftInternal {
                 targetPosmm = 352.43;
                 break;
 
-            case FLUSH:
-                targetPos = 0.2; // temporary value
-                targetPosmm = 320; // also temporary
+            case MID:
+                targetPos = 0.11875;
+                targetPosmm = 176.215;
         }
         return new NullCommand();
     }

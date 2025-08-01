@@ -1,8 +1,6 @@
-package org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.Presets;
+package org.firstinspires.ftc.teamcode.RobotStuff.AllPresets;
 
-import com.rowanmcalpin.nextftc.core.command.Command;
 import com.rowanmcalpin.nextftc.core.command.CommandManager;
-import com.rowanmcalpin.nextftc.core.command.utility.NullCommand;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.HorizontalLift;
 
@@ -64,7 +62,7 @@ public class PedroPresets {
             }
 
             public void flush() {
-                CommandManager.INSTANCE.scheduleCommand(HorizontalLift.INSTANCE.setTargetPosition(HorizontalLift.LiftPreset.FLUSH));
+                CommandManager.INSTANCE.scheduleCommand(HorizontalLift.INSTANCE.setTargetPosition(HorizontalLift.LiftPreset.MID));
             }
         }
     }
