@@ -7,6 +7,7 @@ import com.rowanmcalpin.nextftc.core.command.CommandManager;
 import com.rowanmcalpin.nextftc.core.command.utility.NullCommand;
 import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
 
+import org.firstinspires.ftc.teamcode.RobotStuff.AllPresets.Presets.HorizontalLiftPresets;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.OpModeGroups;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.DriveModes.RobotCentricDrive;
@@ -40,13 +41,11 @@ public class EverythingMode extends NextFTCOpMode {
     public void onStartButtonPressed() {
         robotCentricDrive.Start();
 
-        VerticalLift.INSTANCE.map(robotConfig.playerTwo.DpadUp, VerticalLift.Mappings.TO_HIGH);
-        VerticalLift.INSTANCE.map(robotConfig.playerTwo.DpadDown, VerticalLift.Mappings.TO_LOW);
-        VerticalLift.INSTANCE.map(robotConfig.playerTwo.DpadLeft, VerticalLift.Mappings.TO_MID);
-        VerticalLift.INSTANCE.map(robotConfig.playerTwo.Square, VerticalLift.Mappings.RESET);
+        // more presets here
 
-        HorizontalLift.INSTANCE.map(robotConfig.playerTwo.LeftStick, HorizontalLift.Mappings.MOVE);
-        HorizontalLift.INSTANCE.map(robotConfig.playerTwo.Triangle, HorizontalLift.Mappings.TO_ZERO);
+        robotConfig.playerTwo.DpadUp.setPressedCommand(HorizontalLiftPresets.INSTANCE::maximum);
+        robotConfig.playerTwo.DpadDown.setPressedCommand(HorizontalLiftPresets.INSTANCE::minimum);
+        robotConfig.playerTwo.DpadRight.setPressedCommand(HorizontalLiftPresets.INSTANCE::mid);
     }
 
     @Override
