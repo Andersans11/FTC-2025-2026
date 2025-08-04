@@ -13,6 +13,8 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
 
 import java.util.ArrayList;
 
+import kotlin.Pair;
+
 
 public class HorizontalLift extends HorizontalLiftInternal {
     public static final HorizontalLift INSTANCE = new HorizontalLift();
@@ -34,6 +36,14 @@ public class HorizontalLift extends HorizontalLiftInternal {
         MAXIMUM,
         MID
     }
+
+    public Command moveLift(Pair<Float, Float> joystickValues) {
+        return setTargetPosition(
+                (joystickValues.component2() * 0.0001) + targetPosmm
+        );
+    }
+
+
     public Command setTargetPosition(LiftPreset Preset) { // set target pos via preset value
         switch (Preset) {
             case MINIMUM:
@@ -123,6 +133,15 @@ abstract class HorizontalLiftInternal extends Subsystem {
 
         // Return the difference
         return angleCAD - angleBCA;
+    }
+
+    public Command setTargetPosition(double requestedPos) { // set target pos via input value
+
+        targetPosmm = requestedPos;
+        requestedPos = extensionToServoPower(requestedPos);
+        targetPos = fixTarget(requestedPos);
+
+        return new NullCommand();
     }
 
     @NonNull

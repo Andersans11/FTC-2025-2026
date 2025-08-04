@@ -10,8 +10,6 @@ import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.DriveModes
 import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.HorizontalLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.DeltaTimer;
 
-import java.util.concurrent.TimeUnit;
-
 @TeleOp(name = "Horizontal", group = OpModeGroups.TESTING)
 //@Disabled
 public class HorizontalLiftMode extends NextFTCOpMode {
@@ -48,6 +46,8 @@ public class HorizontalLiftMode extends NextFTCOpMode {
 
         deltaTimeNano = deltaTimer.getDelta();
         telemetry.addData("deltaTime", deltaTimeNano / Math.pow(10.0, 9));
+        telemetry.addData("l servo pos", HorizontalLift.INSTANCE.leftServo.getPosition());
+        telemetry.addData("r servo pos", HorizontalLift.INSTANCE.rightServo.getPosition());
         robotCentricDrive.updateDrive(deltaTimeNano);
 
         telemetry.update();
