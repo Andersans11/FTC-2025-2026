@@ -21,6 +21,7 @@ public class HorizontalLiftMode extends NextFTCOpMode {
     }
     DeltaTimer deltaTimer = new DeltaTimer();
     long deltaTimeNano;
+
     RobotConfig robotConfig;
     RobotCentricDrive robotCentricDrive;
 
@@ -46,7 +47,7 @@ public class HorizontalLiftMode extends NextFTCOpMode {
     public void onUpdate() {
 
         deltaTimeNano = deltaTimer.getDelta();
-        telemetry.addData("deltaTime", TimeUnit.SECONDS.convert(deltaTimeNano, TimeUnit.NANOSECONDS));
+        telemetry.addData("deltaTime", deltaTimeNano / Math.pow(10.0, 9));
         robotCentricDrive.updateDrive(deltaTimeNano);
 
         telemetry.update();

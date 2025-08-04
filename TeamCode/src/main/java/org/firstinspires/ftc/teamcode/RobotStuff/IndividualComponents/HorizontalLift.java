@@ -7,17 +7,12 @@ import com.rowanmcalpin.nextftc.core.Subsystem;
 import com.rowanmcalpin.nextftc.core.command.Command;
 import com.rowanmcalpin.nextftc.core.command.utility.NullCommand;
 import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
-import com.rowanmcalpin.nextftc.ftc.gamepad.Button;
-import com.rowanmcalpin.nextftc.ftc.gamepad.Joystick;
 import com.rowanmcalpin.nextftc.ftc.hardware.MultipleServosToPosition;
-import com.rowanmcalpin.nextftc.ftc.gamepad.Control;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
-import org.firstinspires.ftc.teamcode.TeleOpModes.EverythingMode;
 
 import java.util.ArrayList;
 
-import kotlin.Pair;
 
 public class HorizontalLift extends HorizontalLiftInternal {
     public static final HorizontalLift INSTANCE = new HorizontalLift();
@@ -34,19 +29,12 @@ public class HorizontalLift extends HorizontalLiftInternal {
         initialize();
     }
 
-    public Command moveLift(Pair<Float, Float> joystickValues) {
-        return setTargetPosition(
-                (joystickValues.component2() * mult) + targetPosmm
-        );
-    }
-
     public enum LiftPreset {
         MINIMUM,
         MAXIMUM,
         MID
     }
     public Command setTargetPosition(LiftPreset Preset) { // set target pos via preset value
-
         switch (Preset) {
             case MINIMUM:
                 targetPos = 0.2375; // servo power
@@ -59,7 +47,7 @@ public class HorizontalLift extends HorizontalLiftInternal {
                 break;
 
             case MID:
-                targetPos = 0.11875;
+                targetPos = 0.162775;
                 targetPosmm = 176.215;
         }
         return new NullCommand();
@@ -83,8 +71,6 @@ abstract class HorizontalLiftInternal extends Subsystem {
     public double targetPos; // target pos for servo, so servo power
     public double targetPosmm; // target pos in millimeters
     public double oldPos;
-
-    public static double mult = 0.1; //oh dear we're playing balatro again
 
     public void setLimits(double lower, double upper) { // use in init
         upperLimit = extensionToServoPower(upper);
@@ -138,16 +124,6 @@ abstract class HorizontalLiftInternal extends Subsystem {
         // Return the difference
         return angleCAD - angleBCA;
     }
-
-    public Command setTargetPosition(double requestedPos) { // set target pos via input value
-
-        targetPosmm = requestedPos;
-        requestedPos = extensionToServoPower(requestedPos);
-        targetPos = fixTarget(requestedPos);
-
-        return new NullCommand();
-    }
-
 
     @NonNull
     @Override
