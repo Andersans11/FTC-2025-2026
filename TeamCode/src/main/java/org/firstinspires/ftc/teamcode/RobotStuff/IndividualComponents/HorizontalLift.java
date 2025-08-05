@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents;
 
 import androidx.annotation.NonNull;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.rowanmcalpin.nextftc.core.Subsystem;
 import com.rowanmcalpin.nextftc.core.command.Command;
@@ -13,15 +14,13 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
 
 import java.util.ArrayList;
 
-import kotlin.Pair;
-
-
+@Config
 public class HorizontalLift extends HorizontalLiftInternal {
     public static final HorizontalLift INSTANCE = new HorizontalLift();
     private HorizontalLift() { } // nftc boilerplate
 
     public void initSystem(RobotConfig robotConfig, NextFTCOpMode opMode) {
-        setLimits(0, 352.43);
+        // setLimits(0, 352.43);
         this.opMode = opMode;
         this.robotConfig = robotConfig;
         this.leftServo = robotConfig.LeftHorizontal.servo;
@@ -31,34 +30,26 @@ public class HorizontalLift extends HorizontalLiftInternal {
         initialize();
     }
 
+    public static double minPosition = 0.175;
+    public static double maxPosition = 0.0;
+    public static double midPosition = 0.1;
+
     public enum LiftPreset {
         MINIMUM,
         MAXIMUM,
         MID
     }
 
-    public Command moveLift(Pair<Float, Float> joystickValues) {
-        return setTargetPosition(
-                (joystickValues.component2() * 0.0001) + targetPosmm
-        );
-    }
-
-
     public Command setTargetPosition(LiftPreset Preset) { // set target pos via preset value
         switch (Preset) {
             case MINIMUM:
-                targetPos = 0.2375; // servo power
-                targetPosmm = 0;
-                break;
+                targetPos = minPosition;  break;
 
             case MAXIMUM:
-                targetPos = 0.0;
-                targetPosmm = 352.43;
-                break;
+                targetPos = maxPosition;  break;
 
             case MID:
-                targetPos = 0.162775;
-                targetPosmm = 176.215;
+                targetPos = midPosition;
         }
         return new NullCommand();
     }
@@ -73,15 +64,15 @@ abstract class HorizontalLiftInternal extends Subsystem {
 
     public ArrayList<Servo> servos = new ArrayList<>();
 
-
     public RobotConfig robotConfig;
-    public double upperLimit;
-    public double lowerLimit;
+    // public double upperLimit;
+    // public double lowerLimit;
 
     public double targetPos; // target pos for servo, so servo power
-    public double targetPosmm; // target pos in millimeters
+    // public double targetPosmm; // target pos in millimeters
     public double oldPos;
 
+    /*
     public void setLimits(double lower, double upper) { // use in init
         upperLimit = extensionToServoPower(upper);
         lowerLimit = extensionToServoPower(lower);
@@ -107,14 +98,13 @@ abstract class HorizontalLiftInternal extends Subsystem {
     final double AD = 340.26716033;
     final double CD = 292.39386045;
 
-    /*
     AB is the vertical difference between the servo rotation point and the
     point where the linkage attaches the the slide
 
     AD is the length of the long linkage
 
     CD is the length of the short linkage
-    */
+
 
     double angleCAD;
     double angleBCA;
@@ -134,15 +124,7 @@ abstract class HorizontalLiftInternal extends Subsystem {
         // Return the difference
         return angleCAD - angleBCA;
     }
-
-    public Command setTargetPosition(double requestedPos) { // set target pos via input value
-
-        targetPosmm = requestedPos;
-        requestedPos = extensionToServoPower(requestedPos);
-        targetPos = fixTarget(requestedPos);
-
-        return new NullCommand();
-    }
+    */
 
     @NonNull
     @Override
