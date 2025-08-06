@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Misc.DeltaTimer;
 public class HorizontalLiftMode extends NextFTCOpMode {
 
     public HorizontalLiftMode() {
-        super(HorizontalLift.INSTANCE, HorizontalLiftPresets.INSTANCE);
+        super(HorizontalLift.INSTANCE, HorizontalLiftPresets.INSTANCE, Intake.INSTANCE);
     }
     DeltaTimer deltaTimer = new DeltaTimer();
     long deltaTimeNano;
@@ -29,6 +29,7 @@ public class HorizontalLiftMode extends NextFTCOpMode {
         robotConfig = new RobotConfig(this);
         robotCentricDrive = new RobotCentricDrive(this, robotConfig);
         HorizontalLift.INSTANCE.initSystem(robotConfig, this);
+        Intake.INSTANCE.initialize();
     }
 
     @Override
