@@ -8,9 +8,10 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.OpModeGroups;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.DriveModes.RobotCentricDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.HorizontalLift;
+import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.Intake;
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.DeltaTimer;
 
-@TeleOp(name = "Horizontal", group = OpModeGroups.TESTING)
+@TeleOp(name = "Horizontal + Intake", group = OpModeGroups.TESTING)
 //@Disabled
 public class HorizontalLiftMode extends NextFTCOpMode {
 
@@ -34,9 +35,11 @@ public class HorizontalLiftMode extends NextFTCOpMode {
     public void onStartButtonPressed() {
         robotCentricDrive.Start();
 
-        robotConfig.playerTwo.DpadUp.setPressedCommand(HorizontalLiftPresets.INSTANCE::maximum);
-        robotConfig.playerTwo.DpadDown.setPressedCommand(HorizontalLiftPresets.INSTANCE::minimum);
-        robotConfig.playerTwo.DpadRight.setPressedCommand(HorizontalLiftPresets.INSTANCE::mid);
+        robotConfig.playerOne.DpadUp.setPressedCommand(HorizontalLiftPresets.INSTANCE::maximum);
+        robotConfig.playerOne.DpadDown.setPressedCommand(HorizontalLiftPresets.INSTANCE::minimum);
+        //robotConfig.playerOne.DpadRight.setPressedCommand(HorizontalLiftPresets.INSTANCE::mid);
+        gamepadManager.getGamepad1().getA().setPressedCommand(Intake.INSTANCE::intake);
+        gamepadManager.getGamepad1().getA().setReleasedCommand(Intake.INSTANCE::store);
     }
 
 
