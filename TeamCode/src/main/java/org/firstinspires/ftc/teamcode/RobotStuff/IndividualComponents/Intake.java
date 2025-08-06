@@ -22,7 +22,6 @@ public class Intake extends Subsystem {
 
     public Servo LeftI, RightI;
     public ArrayList<Servo> Servos;
-    RobotConfig robotConfig;
     public MotorEx intakeMotor;
 
     public Command store(){
@@ -39,12 +38,6 @@ public class Intake extends Subsystem {
     }
 
     public void initSystem(RobotConfig robotConfig) {
-        this.robotConfig = robotConfig;
-        initialize();
-    }
-
-    @Override
-    public void initialize() {
         LeftI = robotConfig.LeftIntake.servo;
         RightI = robotConfig.RightIntake.servo;
         intakeMotor = robotConfig.IntakeMotor.motor;
