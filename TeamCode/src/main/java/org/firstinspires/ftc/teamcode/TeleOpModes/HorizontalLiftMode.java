@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.Horizontal
 import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.Intake;
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.DeltaTimer;
 
-@TeleOp(name = "Horizontal + Intake", group = OpModeGroups.TESTING)
+@TeleOp(name = "Horizontal  Intake", group = OpModeGroups.TESTING)
 //@Disabled
 public class HorizontalLiftMode extends NextFTCOpMode {
 
@@ -28,8 +28,8 @@ public class HorizontalLiftMode extends NextFTCOpMode {
     public void onInit() {
         robotConfig = new RobotConfig(this);
         robotCentricDrive = new RobotCentricDrive(this, robotConfig);
-        HorizontalLift.INSTANCE.initSystem(robotConfig, this);
-        Intake.INSTANCE.initialize();
+        HorizontalLift.INSTANCE.initSystem(robotConfig);
+        Intake.INSTANCE.initSystem(robotConfig);
     }
 
     @Override
@@ -39,8 +39,8 @@ public class HorizontalLiftMode extends NextFTCOpMode {
         robotConfig.playerOne.DpadUp.setPressedCommand(HorizontalLiftPresets.INSTANCE::maximum);
         robotConfig.playerOne.DpadDown.setPressedCommand(HorizontalLiftPresets.INSTANCE::minimum);
         //robotConfig.playerOne.DpadRight.setPressedCommand(HorizontalLiftPresets.INSTANCE::mid);
-        gamepadManager.getGamepad1().getA().setPressedCommand(Intake.INSTANCE::intake);
-        gamepadManager.getGamepad1().getA().setReleasedCommand(Intake.INSTANCE::store);
+        robotConfig.playerOne.A.setPressedCommand(Intake.INSTANCE::intake);
+        robotConfig.playerOne.A.setReleasedCommand(Intake.INSTANCE::store);
     }
 
 
@@ -52,6 +52,7 @@ public class HorizontalLiftMode extends NextFTCOpMode {
         telemetry.addData("deltaTime", deltaTimeNano / Math.pow(10.0, 9));
         telemetry.addData("l servo pos", HorizontalLift.INSTANCE.leftServo.getPosition());
         telemetry.addData("r servo pos", HorizontalLift.INSTANCE.rightServo.getPosition());
+        telemetry.addData("intake Servo Pos: ", Intake.INSTANCE.LeftI.getPosition());
         robotCentricDrive.updateDrive(deltaTimeNano);
 
         telemetry.update();

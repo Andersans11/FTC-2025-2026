@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.rowanmcalpin.nextftc.core.Subsystem;
 import com.rowanmcalpin.nextftc.core.command.Command;
 import com.rowanmcalpin.nextftc.core.command.utility.NullCommand;
-import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
 import com.rowanmcalpin.nextftc.ftc.hardware.MultipleServosToPosition;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
@@ -19,9 +18,8 @@ public class HorizontalLift extends HorizontalLiftInternal {
     public static final HorizontalLift INSTANCE = new HorizontalLift();
     private HorizontalLift() { } // nftc boilerplate
 
-    public void initSystem(RobotConfig robotConfig, NextFTCOpMode opMode) {
+    public void initSystem(RobotConfig robotConfig) {
         // setLimits(0, 352.43);
-        this.opMode = opMode;
         this.robotConfig = robotConfig;
         this.leftServo = robotConfig.LeftHorizontal.servo;
         this.rightServo = robotConfig.RightHorizontal.servo;
@@ -60,7 +58,7 @@ abstract class HorizontalLiftInternal extends Subsystem {
     public Servo leftServo;
     public Servo rightServo;
 
-    public NextFTCOpMode opMode;
+
 
     public ArrayList<Servo> servos = new ArrayList<>();
 

@@ -2,9 +2,6 @@ package org.firstinspires.ftc.teamcode.TeleOpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.rowanmcalpin.nextftc.core.command.Command;
-import com.rowanmcalpin.nextftc.core.command.CommandManager;
-import com.rowanmcalpin.nextftc.core.command.utility.NullCommand;
 import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.AllPresets.Presets.HorizontalLiftPresets;
@@ -34,7 +31,7 @@ public class EverythingMode extends NextFTCOpMode {
         robotConfig = new RobotConfig(this);
         robotCentricDrive = new RobotCentricDrive(this, robotConfig);
         VerticalLift.INSTANCE.initSystem(robotConfig, this);
-        HorizontalLift.INSTANCE.initSystem(robotConfig, this);
+        HorizontalLift.INSTANCE.initSystem(robotConfig);
     }
 
     @Override

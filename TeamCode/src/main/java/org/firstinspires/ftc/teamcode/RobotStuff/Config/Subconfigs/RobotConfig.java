@@ -27,6 +27,9 @@ public class RobotConfig {
     public static MotorConfig RightVertical;
     public static ServoConfig LeftHorizontal;
     public static ServoConfig RightHorizontal;
+    public static ServoConfig LeftIntake;
+    public static ServoConfig RightIntake;
+    public static MotorConfig IntakeMotor;
     HardwareMap hardwareMap;
 
     NextFTCOpMode opMode;
@@ -95,6 +98,22 @@ public class RobotConfig {
                 hardwareMap,
                 "Right Horizontal Lift",
                 Servo.Direction.REVERSE
+        );
+        LeftIntake = new ServoConfig(
+                hardwareMap,
+                "Left Intake",
+                Servo.Direction.REVERSE
+        );
+        RightIntake = new ServoConfig(
+                hardwareMap,
+                "Right Intake",
+                Servo.Direction.FORWARD
+        );
+        IntakeMotor = new MotorConfig(
+                hardwareMap,
+                "Intake Motor",
+                DcMotorSimple.Direction.FORWARD,
+                DcMotor.ZeroPowerBehavior.BRAKE
         );
     }
 }
