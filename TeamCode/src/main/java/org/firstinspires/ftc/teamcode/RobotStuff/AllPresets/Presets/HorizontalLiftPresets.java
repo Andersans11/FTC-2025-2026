@@ -13,8 +13,14 @@ public class HorizontalLiftPresets extends Subsystem {
     public Command minimum() {
         return HorizontalLift.INSTANCE.setTargetPosition(HorizontalLift.LiftPreset.MINIMUM);
     }
+    public Command minimum(Float f) {
+        return HorizontalLift.INSTANCE.setTargetPosition(HorizontalLift.LiftPreset.MINIMUM);
+    }
 
     public Command maximum() {
+        return HorizontalLift.INSTANCE.setTargetPosition(HorizontalLift.LiftPreset.MAXIMUM);
+    }
+    public Command maximum(Float f) {
         return HorizontalLift.INSTANCE.setTargetPosition(HorizontalLift.LiftPreset.MAXIMUM);
     }
 

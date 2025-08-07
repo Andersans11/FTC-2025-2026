@@ -1,9 +1,10 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.AllPresets.Presets;
 
+import com.rowanmcalpin.nextftc.core.Subsystem;
 import com.rowanmcalpin.nextftc.core.command.Command;
 import com.rowanmcalpin.nextftc.core.command.utility.NullCommand;
 
-public class VerticalSystemPresets {
+public class VerticalSystemPresets extends Subsystem {
 
     public static final VerticalSystemPresets INSTANCE = new VerticalSystemPresets()    ;
     private VerticalSystemPresets() { } // nftc boilerplate

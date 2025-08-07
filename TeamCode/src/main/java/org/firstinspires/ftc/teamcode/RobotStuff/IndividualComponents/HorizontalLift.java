@@ -19,13 +19,11 @@ public class HorizontalLift extends HorizontalLiftInternal {
     private HorizontalLift() { } // nftc boilerplate
 
     public void initSystem(RobotConfig robotConfig) {
-        // setLimits(0, 352.43);
-        this.robotConfig = robotConfig;
+        // setLimits(0.0, 352.43);
         this.leftServo = robotConfig.LeftHorizontal.servo;
         this.rightServo = robotConfig.RightHorizontal.servo;
         this.servos.add(leftServo);
         this.servos.add(rightServo);
-        initialize();
     }
 
     public static double minPosition = 0.175;
@@ -55,20 +53,16 @@ public class HorizontalLift extends HorizontalLiftInternal {
 
 abstract class HorizontalLiftInternal extends Subsystem {
 
-    public Servo leftServo;
-    public Servo rightServo;
+    public Servo leftServo, rightServo;
 
+    ArrayList<Servo> servos = new ArrayList<>();
 
-
-    public ArrayList<Servo> servos = new ArrayList<>();
-
-    public RobotConfig robotConfig;
     // public double upperLimit;
     // public double lowerLimit;
 
-    public double targetPos; // target pos for servo, so servo power
+    double targetPos; // target pos for servo, so servo power
     // public double targetPosmm; // target pos in millimeters
-    public double oldPos;
+    double oldPos;
 
     /*
     public void setLimits(double lower, double upper) { // use in init

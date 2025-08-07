@@ -30,6 +30,8 @@ public class RobotConfig {
     public static ServoConfig LeftIntake;
     public static ServoConfig RightIntake;
     public static MotorConfig IntakeMotor;
+    public static ServoConfig DepositArm;
+    public static ServoConfig DepositWrist;
     HardwareMap hardwareMap;
 
     NextFTCOpMode opMode;
@@ -78,14 +80,14 @@ public class RobotConfig {
                 "Left Vertical Lift",
                 DcMotorSimple.Direction.FORWARD,
                 DcMotor.ZeroPowerBehavior.BRAKE,
-                336 // rev 6000 rpm with 12:1 gearbox
+                140 // rev 6000 rpm with 12:1 gearbox
         );
         RightVertical = new MotorConfig( // one lift motor will always be the inverted direction of its counterpart
                 hardwareMap,
                 "Right Vertical Lift",
                 DcMotorSimple.Direction.REVERSE,
                 DcMotor.ZeroPowerBehavior.BRAKE,
-                336 // rev 6000 rpm with 12:1 gearbox
+                140 // rev 6000 rpm with 12:1 gearbox
         );
 
         LeftHorizontal = new ServoConfig(
@@ -115,5 +117,15 @@ public class RobotConfig {
                 DcMotorSimple.Direction.FORWARD,
                 DcMotor.ZeroPowerBehavior.BRAKE
         );
+//        DepositArm = new ServoConfig(
+//                hardwareMap,
+//                "Deposit Arm",
+//                Servo.Direction.FORWARD
+//        );
+//        DepositWrist = new ServoConfig(
+//                hardwareMap,
+//                "Deposit Arm",
+//                Servo.Direction.FORWARD
+//        );
     }
 }
