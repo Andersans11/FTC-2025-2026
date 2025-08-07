@@ -113,7 +113,7 @@ public class HoldHeadingPinpoint extends DriveMotors {
 
     public float getSensitivityMod() {
         float SensitivityModifier = config.sensitivities.getDriveSensitivity();
-        if (config.playerOne.SlowDown.getState()){SensitivityModifier = config.sensitivities.getSlowDownModifier();}
+        if (config.playerOne.LeftTrigger.getState()){SensitivityModifier = config.sensitivities.getSlowDownModifier();}
         return SensitivityModifier;
     }
 

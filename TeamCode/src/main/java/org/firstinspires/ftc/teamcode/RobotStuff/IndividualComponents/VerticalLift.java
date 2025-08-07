@@ -30,7 +30,8 @@ public class VerticalLift extends VerticalLiftInternal {
     public void initSystem(RobotConfig robotConfig) {
         this.leftMotor = robotConfig.LeftVertical.motor;
         this.rightMotor = robotConfig.RightVertical.motor;
-        this.motors = new MotorGroup(leftMotor, rightMotor); // TODO: ADD OTHER MOTORS IF APPLICABLE
+        this.secondRightMotor = robotConfig.SecondRightVertical.motor;
+        this.motors = new MotorGroup(leftMotor, rightMotor, secondRightMotor); // TODO: ADD OTHER MOTORS IF APPLICABLE
     }
 
     public static double bucketPosition = 0.0;
@@ -71,7 +72,7 @@ public class VerticalLift extends VerticalLiftInternal {
 
 abstract class VerticalLiftInternal extends Subsystem {
 
-    public MotorEx leftMotor, rightMotor;
+    public MotorEx leftMotor, rightMotor, secondRightMotor;
 
     public MotorGroup motors;
 

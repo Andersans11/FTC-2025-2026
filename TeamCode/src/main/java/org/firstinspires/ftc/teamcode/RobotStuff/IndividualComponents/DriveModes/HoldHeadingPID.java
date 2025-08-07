@@ -11,7 +11,6 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Misc.GoBildaPinpointDriver;
 import org.firstinspires.ftc.teamcode.RobotStuff.PIDStuff.YawPID;
 
 import kotlin.jvm.functions.Function0;
-import java.util.ArrayList;
 
 @Config
 public class HoldHeadingPID extends DriveMotors {
@@ -126,7 +125,7 @@ public class HoldHeadingPID extends DriveMotors {
 
     public float getSensitivityMod() {
         float SensitivityModifier = config.sensitivities.getDriveSensitivity();
-        if (config.playerOne.SlowDown.getState()){SensitivityModifier = config.sensitivities.getSlowDownModifier();}
+        if (config.playerOne.LeftTrigger.getState()){SensitivityModifier = config.sensitivities.getSlowDownModifier();}
         return SensitivityModifier;
     }
 

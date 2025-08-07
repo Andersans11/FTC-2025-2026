@@ -156,11 +156,11 @@ public class ReadyPlayerOne { // just a wrapper so that we can have custom names
     Function0<Float> getLTrigger = () -> gamepadEx.getLeftTrigger().getValue();
     Function0<Float> getRTrigger = () -> gamepadEx.getRightTrigger().getValue();
 
-    public Trigger SlowDown = new Trigger(getLTrigger, Sensitivities.playerOneLeftTriggerThreshold);
+    public Trigger LeftTrigger = new Trigger(getLTrigger, Sensitivities.playerOneLeftTriggerThreshold);
     public Trigger RightTrigger = new Trigger(getRTrigger, Sensitivities.playerOneRightTriggerThreshold);
 
     public void update_triggers() {
-        SlowDown.update();
+        LeftTrigger.update();
         RightTrigger.update();
     }
 

@@ -25,6 +25,7 @@ public class RobotConfig {
     public static MotorConfig BRDrive;
     public static MotorConfig LeftVertical;
     public static MotorConfig RightVertical;
+    public static MotorConfig SecondRightVertical;
     public static ServoConfig LeftHorizontal;
     public static ServoConfig RightHorizontal;
     public static ServoConfig LeftIntake;
@@ -78,16 +79,23 @@ public class RobotConfig {
         LeftVertical = new MotorConfig(
                 hardwareMap,
                 "Left Vertical Lift",
-                DcMotorSimple.Direction.FORWARD,
+                DcMotorSimple.Direction.REVERSE,
                 DcMotor.ZeroPowerBehavior.BRAKE,
-                140 // rev 6000 rpm with 12:1 gearbox
+                140
         );
         RightVertical = new MotorConfig( // one lift motor will always be the inverted direction of its counterpart
                 hardwareMap,
                 "Right Vertical Lift",
                 DcMotorSimple.Direction.REVERSE,
                 DcMotor.ZeroPowerBehavior.BRAKE,
-                140 // rev 6000 rpm with 12:1 gearbox
+                140
+        );
+        SecondRightVertical = new MotorConfig( // one lift motor will always be the inverted direction of its counterpart
+                hardwareMap,
+                "2nd Right Vertical Lift",
+                DcMotorSimple.Direction.FORWARD,
+                DcMotor.ZeroPowerBehavior.BRAKE,
+                140
         );
 
         LeftHorizontal = new ServoConfig(

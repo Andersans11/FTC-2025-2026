@@ -22,10 +22,8 @@ public class HorizontalSystemPresets extends Subsystem {
 
     public void stuff() {
         advancingPressedCommand.add(HorizontalLiftPresets.INSTANCE.maximum());
-        advancingPressedCommand.add(IntakePresets.INSTANCE.store(0f));
         advancingPressedCommand.setState(() -> 0);
 
-        advancingReleasedCommand.add(IntakePresets.INSTANCE.dropAndIntake(0f));
         advancingReleasedCommand.add(HorizontalLiftPresets.INSTANCE.minimum());
         advancingReleasedCommand.setState(() -> 0);
     }
