@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.TeleOpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.rowanmcalpin.nextftc.core.command.Command;
 import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.AllPresets.Presets.HorizontalLiftPresets;
@@ -11,7 +12,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.Horizontal
 import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.Intake;
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.DeltaTimer;
 
-@TeleOp(name = "Horizontal  Intake", group = OpModeGroups.TESTING)
+@TeleOp(name = "Horizontal + Intake", group = OpModeGroups.TESTING)
 //@Disabled
 public class HorizontalLiftMode extends NextFTCOpMode {
 
@@ -39,8 +40,10 @@ public class HorizontalLiftMode extends NextFTCOpMode {
         robotConfig.playerOne.DpadUp.setPressedCommand(HorizontalLiftPresets.INSTANCE::maximum);
         robotConfig.playerOne.DpadDown.setPressedCommand(HorizontalLiftPresets.INSTANCE::minimum);
         //robotConfig.playerOne.DpadRight.setPressedCommand(HorizontalLiftPresets.INSTANCE::mid);
-        robotConfig.playerOne.A.setPressedCommand(Intake.INSTANCE::intake);
-        robotConfig.playerOne.A.setReleasedCommand(Intake.INSTANCE::store);
+        robotConfig.playerOne.RightTrigger.setPressedCommand(Intake.INSTANCE::intake);
+        robotConfig.playerOne.RightTrigger.setReleasedCommand(Intake.INSTANCE::store);
+        robotConfig.playerOne.RightBumper.setPressedCommand(Intake.INSTANCE::outtake);
+        robotConfig.playerOne.RightBumper.setPressedCommand(Intake.INSTANCE::store);
     }
 
 

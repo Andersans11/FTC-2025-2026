@@ -21,19 +21,41 @@ public class Intake extends Subsystem {
     private Intake() { }
 
     public Servo LeftI, RightI;
-    public ArrayList<Servo> Servos;
+    public ArrayList<Servo> Servos = new ArrayList<>();
     public MotorEx intakeMotor;
+
+    public Command store(float Float){
+        return new SequentialGroup(
+                new MultipleServosToPosition(Servos, 0, this),
+                new SetPower(intakeMotor, 0.4, this)
+        );
+    }
 
     public Command store(){
         return new SequentialGroup(
                 new MultipleServosToPosition(Servos, 0, this),
-                new SetPower(intakeMotor, 0.1, this)
+                new SetPower(intakeMotor, 0.4, this)
         );
     }
-    public Command intake(){
+
+    public Command intake(float Float){
         return new SequentialGroup(
                 new MultipleServosToPosition(Servos, (double) 1/6, this),
                 new SetPower(intakeMotor, 1, this)
+        );
+    }
+
+    public Command intake() {
+        return new SequentialGroup(
+                new MultipleServosToPosition(Servos, (double) 1/6, this),
+                new SetPower(intakeMotor, 1, this)
+        );
+    }
+
+    public Command outtake(){
+        return new SequentialGroup(
+                new MultipleServosToPosition(Servos, (double) 1/6, this),
+                new SetPower(intakeMotor, -1, this)
         );
     }
 
