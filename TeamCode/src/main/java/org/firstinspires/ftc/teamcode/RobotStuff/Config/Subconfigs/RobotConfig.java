@@ -9,7 +9,6 @@ import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.HardwareConfigs.MotorConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.HardwareConfigs.ServoConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.DepositClaw;
 
 @Config
 public class RobotConfig {
@@ -32,9 +31,9 @@ public class RobotConfig {
     public static ServoConfig LeftIntake;
     public static ServoConfig RightIntake;
     public static MotorConfig IntakeMotor;
+    public static ServoConfig Stopper;
     public static ServoConfig DepositArm;
     public static ServoConfig DepositWrist;
-
     public static ServoConfig DepositClaw;
     HardwareMap hardwareMap;
 
@@ -127,6 +126,11 @@ public class RobotConfig {
                 "Intake Motor",
                 DcMotorSimple.Direction.FORWARD,
                 DcMotor.ZeroPowerBehavior.BRAKE
+        );
+        Stopper = new ServoConfig(
+                hardwareMap,
+                "Stopper",
+                Servo.Direction.FORWARD
         );
         DepositArm = new ServoConfig(
                 hardwareMap,

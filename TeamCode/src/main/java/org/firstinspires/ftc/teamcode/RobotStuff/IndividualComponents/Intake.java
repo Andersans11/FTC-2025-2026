@@ -20,7 +20,7 @@ public class Intake extends Subsystem {
     public static final Intake INSTANCE = new Intake();
     private Intake() { }
 
-    public Servo LeftI, RightI;
+    public Servo LeftI, RightI, stopper;
     public ArrayList<Servo> Servos = new ArrayList<>();
     public MotorEx intakeMotor;
 
@@ -63,7 +63,24 @@ public class Intake extends Subsystem {
         LeftI = robotConfig.LeftIntake.servo;
         RightI = robotConfig.RightIntake.servo;
         intakeMotor = robotConfig.IntakeMotor.motor;
+        stopper = robotConfig.Stopper.servo;
         Servos.add(LeftI);
         Servos.add(RightI);
+    }
+
+    public Command OpenStopper() {
+        return new ServoToPosition(
+                stopper,
+                0,
+                this
+        );
+    }
+
+    public Command CloseStopper() {
+        return new ServoToPosition(
+                stopper,
+                0.5,
+                this
+        );
     }
 }

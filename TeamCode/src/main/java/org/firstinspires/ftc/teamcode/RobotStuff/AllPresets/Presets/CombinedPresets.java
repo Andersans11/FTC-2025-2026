@@ -7,6 +7,7 @@ import com.rowanmcalpin.nextftc.core.command.groups.ParallelGroup;
 import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.DepositClaw;
 import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.DepositClawManual;
 import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.HorizontalLift;
+import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.Intake;
 import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.VerticalLiftManual;
 
 public class CombinedPresets extends Subsystem {
@@ -75,10 +76,16 @@ public class CombinedPresets extends Subsystem {
     public Command Claw(float Float) {
         if (clawPos) {
             clawPos = false;
-            return DepositClawManual.INSTANCE.Claw(true);
+            return new ParallelGroup(
+                    DepositClawManual.INSTANCE.Claw(true),
+                    Intake.INSTANCE.OpenStopper()
+                );
         } else {
             clawPos = true;
-            return DepositClawManual.INSTANCE.Claw(false);
+            return new ParallelGroup(
+                    DepositClawManual.INSTANCE.Claw(false),
+                    Intake.INSTANCE.CloseStopper()
+            );
         }
     }
 }
