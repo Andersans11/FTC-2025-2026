@@ -3,9 +3,11 @@ package org.firstinspires.ftc.teamcode.TeleOpModes;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
 
+import org.firstinspires.ftc.teamcode.RobotStuff.AllPresets.Presets.CombinedPresets;
 import org.firstinspires.ftc.teamcode.RobotStuff.AllPresets.Presets.HorizontalLiftPresets;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.OpModeGroups;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.DepositClawManual;
 import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.DriveModes.RobotCentricDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.HorizontalLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.Intake;
@@ -17,7 +19,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Misc.DeltaTimer;
 public class HorizontalLiftMode extends NextFTCOpMode {
 
     public HorizontalLiftMode() {
-        super(HorizontalLift.INSTANCE, HorizontalLiftPresets.INSTANCE, Intake.INSTANCE, VerticalLiftManual.INSTANCE);
+        super(HorizontalLift.INSTANCE, CombinedPresets.INSTANCE, Intake.INSTANCE, VerticalLiftManual.INSTANCE, DepositClawManual.INSTANCE);
     }
     DeltaTimer deltaTimer = new DeltaTimer();
     long deltaTimeNano;
@@ -38,11 +40,18 @@ public class HorizontalLiftMode extends NextFTCOpMode {
     public void onStartButtonPressed() {
         robotCentricDrive.Start();
 
-        robotConfig.playerOne.DpadUp.setPressedCommand(HorizontalLiftPresets.INSTANCE::maximum);
-        robotConfig.playerOne.DpadDown.setPressedCommand(HorizontalLiftPresets.INSTANCE::minimum);
+        robotConfig.playerOne.DpadUp.setPressedCommand(CombinedPresets.INSTANCE::maximum);
+        robotConfig.playerOne.DpadDown.setPressedCommand(CombinedPresets.INSTANCE::minimum);
 
         robotConfig.playerOne.RightTrigger.setPressedCommand(Intake.INSTANCE::intake);
         robotConfig.playerOne.RightTrigger.setReleasedCommand(Intake.INSTANCE::store);
+
+        robotConfig.playerOne.A.setPressedCommand(CombinedPresets.INSTANCE::TransferPos);
+        robotConfig.playerOne.B.setPressedCommand(CombinedPresets.INSTANCE::SpecimenCollectPos);
+        robotConfig.playerOne.X.setPressedCommand(CombinedPresets.INSTANCE::SpecimenScorePos);
+        robotConfig.playerOne.Y.setPressedCommand(CombinedPresets.INSTANCE::SampleScorePos);
+
+        robotConfig.playerOne.LeftTrigger.setPressedCommand(CombinedPresets.INSTANCE::Claw);
 
         robotConfig.playerTwo.DpadUp.setPressedCommand(VerticalLiftManual.INSTANCE::MoveUp);
         robotConfig.playerTwo.DpadDown.setPressedCommand(VerticalLiftManual.INSTANCE::MoveDown);

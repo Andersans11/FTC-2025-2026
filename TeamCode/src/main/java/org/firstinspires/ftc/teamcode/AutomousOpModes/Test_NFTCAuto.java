@@ -1,22 +1,16 @@
 package org.firstinspires.ftc.teamcode.AutomousOpModes;
 
-import com.pedropathing.pathgen.BezierCurve;
-import com.pedropathing.pathgen.Path;
-import com.pedropathing.pathgen.Point;
-import com.pedropathing.util.Constants;
+import com.pedropathing.follower.Follower;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.rowanmcalpin.nextftc.core.command.Command;
-import com.rowanmcalpin.nextftc.core.command.groups.ParallelGroup;
-import com.rowanmcalpin.nextftc.core.command.groups.SequentialGroup;
-import com.rowanmcalpin.nextftc.core.command.utility.delays.Delay;
 import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
-import com.rowanmcalpin.nextftc.pedro.FollowPath;
 
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants.FConstants;
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants.LConstants;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.VerticalLift;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants.*;
+
+import java.io.File;
+
+import PedroJSON.main.PathLoader;
 
 /*
 A simple OpMode to test NFTC drive controls.
@@ -34,19 +28,27 @@ public class Test_NFTCAuto extends NextFTCOpMode {
     RobotConfig robotConfig = new RobotConfig(this);
 
 
-    Path path = new Path(new BezierCurve(new Point(0, 0, Point.CARTESIAN), new Point(10, 0, Point.CARTESIAN)));
+    File routine = new File("TeamCode\\src\\main\\java\\org\\firstinspires\\ftc\\teamcode\\RobotStuff\\PedroJSON\\data\\path_ex3.json");
+    Follower follower;
+    PathLoader pathLoader;
 
     @Override
     public void onInit() {
-        Constants.setConstants(FConstants.class, LConstants.class);
-    }
+        follower = new Follower(hardwareMap, FConstants.class, LConstants.class);
+        pathLoader = new PathLoader(routine, follower, this);
+        pathLoader.GatherSubsystems(); //Add any dependencies you need for callbacks here.
 
-    public Command firstRoutine() {
-        return new FollowPath(path);
+        pathLoader.Parse();
+        pathLoader.Init();
     }
 
     @Override
     public void onStartButtonPressed() {
-        firstRoutine().invoke();
+        pathLoader.Start();
+    }
+
+    @Override
+    public void onUpdate() {
+        pathLoader.Update();
     }
 }

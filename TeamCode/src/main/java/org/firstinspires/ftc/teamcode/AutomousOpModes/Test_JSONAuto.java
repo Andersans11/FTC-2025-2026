@@ -1,12 +1,10 @@
 package org.firstinspires.ftc.teamcode.AutomousOpModes;
 
 import com.pedropathing.follower.Follower;
-import com.pedropathing.follower.FollowerConstants;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants.FConstants;
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants.LConstants;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants.*;
 
 import java.io.File;
 
