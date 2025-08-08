@@ -27,7 +27,7 @@ public class HorizontalLift extends HorizontalLiftInternal {
     }
 
     public static double minPosition = 0.175;
-    public static double maxPosition = 0.05;
+    public static double maxPosition = 0.0;
     public static double midPosition = 0.1;
 
     public enum LiftPreset {

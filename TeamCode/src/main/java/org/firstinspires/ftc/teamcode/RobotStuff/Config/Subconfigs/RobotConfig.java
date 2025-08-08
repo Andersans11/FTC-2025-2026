@@ -81,21 +81,21 @@ public class RobotConfig {
         LeftVertical = new MotorConfig(
                 hardwareMap,
                 "Left Vertical Lift",
-                DcMotorSimple.Direction.REVERSE,
+                DcMotorSimple.Direction.FORWARD,
                 DcMotor.ZeroPowerBehavior.BRAKE,
                 140
         );
         RightVertical = new MotorConfig( // one lift motor will always be the inverted direction of its counterpart
                 hardwareMap,
                 "Right Vertical Lift",
-                DcMotorSimple.Direction.REVERSE,
+                DcMotorSimple.Direction.FORWARD,
                 DcMotor.ZeroPowerBehavior.BRAKE,
                 140
         );
         SecondRightVertical = new MotorConfig( // one lift motor will always be the inverted direction of its counterpart
                 hardwareMap,
                 "2nd Right Vertical Lift",
-                DcMotorSimple.Direction.FORWARD,
+                DcMotorSimple.Direction.REVERSE,
                 DcMotor.ZeroPowerBehavior.BRAKE,
                 140
         );
@@ -135,7 +135,7 @@ public class RobotConfig {
         DepositArm = new ServoConfig(
                 hardwareMap,
                 "Deposit Arm",
-                Servo.Direction.FORWARD
+                Servo.Direction.REVERSE
         );
         DepositWrist = new ServoConfig(
                 hardwareMap,

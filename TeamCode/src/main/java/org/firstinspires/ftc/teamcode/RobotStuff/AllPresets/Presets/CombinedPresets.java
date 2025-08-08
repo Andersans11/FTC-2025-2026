@@ -54,7 +54,7 @@ public class CombinedPresets extends Subsystem {
 
     public Command SampleScorePos() {
         return new ParallelGroup(
-                VerticalLiftPID.INSTANCE.SetPosition(61.8),
+                VerticalLiftPID.INSTANCE.SetPosition(76),
                 DepositClawManual.INSTANCE.SetPosition(215, 225)
         );
     }
@@ -94,7 +94,7 @@ public class CombinedPresets extends Subsystem {
         );
     }
 
-    public Command Claw(float Float) {
+    public Command Claw() {
         if (clawPos) {
             clawPos = false;
             return new ParallelGroup(

@@ -21,6 +21,8 @@ public class VerticalLiftPID extends Subsystem {
 
     public MotorGroup motors;
 
+    public double targetPosition;
+
     public static double kP = 0.005;
     public static double kI = 0;
     public static double kD = 0;
@@ -46,6 +48,7 @@ public class VerticalLiftPID extends Subsystem {
      * Position is in cm instead of mm
      **/
     public Command SetPosition(double positionCM) {
+        targetPosition = positionCM;
         return new RunToPosition(motors, mmToTicks(positionCM * 10), liftController);
     }
 
@@ -60,5 +63,13 @@ public class VerticalLiftPID extends Subsystem {
                 liftController,
                 this
         );
+    }
+
+    public boolean isAtPosition() {
+        return ticksToMm(secondRightMotor.getCurrentPosition()) == targetPosition * 10;
+    }
+
+    public double CurrentPosition() {
+        return ticksToMm(secondRightMotor.getCurrentPosition()) / 10;
     }
 }

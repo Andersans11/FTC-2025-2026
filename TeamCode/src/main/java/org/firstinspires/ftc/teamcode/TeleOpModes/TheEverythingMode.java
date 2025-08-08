@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.TeleOpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.rowanmcalpin.nextftc.core.command.Command;
 import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.AllPresets.Presets.CombinedPresets;
@@ -52,9 +53,19 @@ public class TheEverythingMode extends NextFTCOpMode {
         robotConfig.playerOne.X.setPressedCommand(CombinedPresets.INSTANCE::SpecimenScorePos);
         robotConfig.playerOne.Y.setPressedCommand(CombinedPresets.INSTANCE::SampleScorePos);
 
-        robotConfig.playerOne.LeftTrigger.setPressedCommand(CombinedPresets.INSTANCE::Claw);
+        robotConfig.playerOne.LeftBumper.setPressedCommand(CombinedPresets.INSTANCE::Claw);
+
+        robotConfig.playerTwo.DpadUp.setPressedCommand(this::LiftUp);
+        robotConfig.playerTwo.DpadDown.setPressedCommand(this::LiftDown);
     }
 
+    public Command LiftUp() {
+        return VerticalLiftPID.INSTANCE.SetPosition(50.0);
+    }
+
+    public Command LiftDown() {
+        return VerticalLiftPID.INSTANCE.SetPosition(0.0);
+    }
 
 
     @Override
@@ -65,6 +76,7 @@ public class TheEverythingMode extends NextFTCOpMode {
         telemetry.addLine("Use code royalrobotics at checkout for 22% off!");
         telemetry.addData("deltaTime", deltaTimeNano / Math.pow(10.0, 9));
         lockYaw.updateDrive(deltaTimeNano);
+        telemetry.addData("V-Lift Position:", VerticalLiftPID.INSTANCE.CurrentPosition());
 
         telemetry.update();
 
