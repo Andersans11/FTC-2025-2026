@@ -3,18 +3,24 @@ package org.firstinspires.ftc.teamcode.RobotStuff.AllPresets.Presets;
 import com.rowanmcalpin.nextftc.core.Subsystem;
 import com.rowanmcalpin.nextftc.core.command.Command;
 import com.rowanmcalpin.nextftc.core.command.groups.ParallelGroup;
+import com.acmerobotics.dashboard.config.Config;
+import com.rowanmcalpin.nextftc.core.command.groups.SequentialGroup;
+import com.rowanmcalpin.nextftc.core.command.utility.NullCommand;
 
-import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.DepositClaw;
 import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.DepositClawManual;
 import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.HorizontalLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.Intake;
 import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.VerticalLiftManual;
+import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.VerticalLiftPID;
 
+@Config
 public class CombinedPresets extends Subsystem {
     public static final CombinedPresets INSTANCE = new CombinedPresets();
     private CombinedPresets() { } // nftc boilerplate
 
     boolean isRetracted = true;
+    boolean intakeSeqPressedState = false;
+    boolean intakeSeqReleasedState = false;
 
     public boolean clawPos = true;
 
@@ -36,39 +42,54 @@ public class CombinedPresets extends Subsystem {
         return HorizontalLift.INSTANCE.setTargetPosition(HorizontalLift.LiftPreset.MAXIMUM);
     }
 
+    public Command HLiftChangePos() {
+        if (isRetracted) {
+            return maximum();
+        } else {
+            return minimum();
+        }
+    }
+
     //TODO: "0.0"s need to be changed
 
     public Command SampleScorePos() {
         return new ParallelGroup(
-                VerticalLiftManual.INSTANCE.SetPosition(61.8),
+                VerticalLiftPID.INSTANCE.SetPosition(61.8),
                 DepositClawManual.INSTANCE.SetPosition(215, 225)
         );
     }
 
+    public static double VLiftTransferRPos = 0.0;
+    public static double VLiftTransferPos = 0.0;
+    public static double DepoArmTransferRPos = 0.0;
+    public static double DepoArmTransferPos = 0.0;
+    public static double DepoWristTransferRPos = 0.0;
+    public static double DepoWristTransferPos = 0.0;
     public Command TransferPos() {
         if (isRetracted) {
             return new ParallelGroup( //True Transfer Position
-                    VerticalLiftManual.INSTANCE.SetPosition(0.0),
-                    DepositClawManual.INSTANCE.SetPosition(0.0, 0)
+                    VerticalLiftPID.INSTANCE.SetPosition(VLiftTransferRPos),
+                    DepositClawManual.INSTANCE.SetPosition(DepoArmTransferRPos, DepoWristTransferRPos)
             );
         } else {
             return new ParallelGroup( //Waiting Transfer Position; Make room for the intake
-                    VerticalLiftManual.INSTANCE.SetPosition(0.0),
-                    DepositClawManual.INSTANCE.SetPosition(0.0, 0)
+                    VerticalLiftPID.INSTANCE.SetPosition(VLiftTransferPos),
+                    DepositClawManual.INSTANCE.SetPosition(DepoArmTransferPos, DepoWristTransferPos)
             );
         }
     }
 
+    public static double VLiftSpecScore = 0.0;
     public Command SpecimenScorePos() {
         return new ParallelGroup(
-                VerticalLiftManual.INSTANCE.SetPosition(0.0),
+                VerticalLiftPID.INSTANCE.SetPosition(VLiftSpecScore),
                 DepositClawManual.INSTANCE.SetPosition(90, 35)
         );
     }
-
+    public static double VLiftSpecCollect = 0.0;
     public Command SpecimenCollectPos() {
         return new ParallelGroup(
-                VerticalLiftManual.INSTANCE.SetPosition(0),
+                VerticalLiftPID.INSTANCE.SetPosition(VLiftSpecCollect),
                 DepositClawManual.INSTANCE.SetPosition(270, 315)
         );
     }
@@ -86,6 +107,46 @@ public class CombinedPresets extends Subsystem {
                     DepositClawManual.INSTANCE.Claw(false),
                     Intake.INSTANCE.CloseStopper()
             );
+        }
+    }
+
+
+
+    public Command intakeSequencePressedCommand(Float f) {
+        if (!intakeSeqPressedState) {
+            intakeSeqPressedState = true;
+            isRetracted = false;
+            return HorizontalLift.INSTANCE.setTargetPosition(HorizontalLift.LiftPreset.MAXIMUM);
+        } else {
+            intakeSeqPressedState = false;
+            return Intake.INSTANCE.store();
+        }
+    }
+
+    public Command intakeSequenceReleasedCommand(Float f) {
+        if (!intakeSeqReleasedState) {
+            intakeSeqReleasedState = true;
+            return Intake.INSTANCE.intake();
+        } else {
+            intakeSeqReleasedState = false;
+            isRetracted = true;
+            return HorizontalLift.INSTANCE.setTargetPosition(HorizontalLift.LiftPreset.MINIMUM);
+        }
+    }
+
+    public Command intakeSequenceOuttakePressedCommand(Float f) {
+        if (intakeSeqReleasedState) {
+            return Intake.INSTANCE.outtake();
+        } else {
+            return new NullCommand();
+        }
+    }
+
+    public Command intakeSequenceOuttakeReleasedCommand(Float f) {
+        if (intakeSeqReleasedState) {
+            return Intake.INSTANCE.intake();
+        } else {
+            return new NullCommand();
         }
     }
 }

@@ -4,47 +4,48 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.AllPresets.Presets.CombinedPresets;
-import org.firstinspires.ftc.teamcode.RobotStuff.AllPresets.Presets.HorizontalLiftPresets;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.OpModeGroups;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.DepositClawManual;
-import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.DriveModes.RobotCentricDrive;
+import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.DriveModes.HoldHeading;
 import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.HorizontalLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.Intake;
-import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.VerticalLiftManual;
+import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.VerticalLiftPID;
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.DeltaTimer;
 
-@TeleOp(name = "Horizontal + Intake", group = OpModeGroups.TESTING)
+@TeleOp(name = "hehe active intake go brrr", group = OpModeGroups.WORKING)
 //@Disabled
-public class HorizontalLiftMode extends NextFTCOpMode {
+public class TheEverythingMode extends NextFTCOpMode {
 
-    public HorizontalLiftMode() {
-        super(HorizontalLift.INSTANCE, CombinedPresets.INSTANCE, Intake.INSTANCE, VerticalLiftManual.INSTANCE, DepositClawManual.INSTANCE);
+    public TheEverythingMode() {
+        super(HorizontalLift.INSTANCE, CombinedPresets.INSTANCE, Intake.INSTANCE, DepositClawManual.INSTANCE, VerticalLiftPID.INSTANCE);
     }
     DeltaTimer deltaTimer = new DeltaTimer();
     long deltaTimeNano;
 
     RobotConfig robotConfig;
-    RobotCentricDrive robotCentricDrive;
+    HoldHeading lockYaw;
 
     @Override
     public void onInit() {
         robotConfig = new RobotConfig(this);
-        robotCentricDrive = new RobotCentricDrive(this, robotConfig);
+        lockYaw = new HoldHeading(this, robotConfig);
         HorizontalLift.INSTANCE.initSystem(robotConfig);
         Intake.INSTANCE.initSystem(robotConfig);
-        VerticalLiftManual.INSTANCE.initSystem(robotConfig);
+        DepositClawManual.INSTANCE.initSystem(robotConfig);
+        VerticalLiftPID.INSTANCE.initSystem(robotConfig);
     }
 
     @Override
     public void onStartButtonPressed() {
-        robotCentricDrive.Start();
+        lockYaw.Start();
 
-        robotConfig.playerOne.DpadUp.setPressedCommand(CombinedPresets.INSTANCE::maximum);
-        robotConfig.playerOne.DpadDown.setPressedCommand(CombinedPresets.INSTANCE::minimum);
+        robotConfig.playerOne.RightBumper.setPressedCommand(CombinedPresets.INSTANCE::HLiftChangePos);
 
         robotConfig.playerOne.RightTrigger.setPressedCommand(Intake.INSTANCE::intake);
         robotConfig.playerOne.RightTrigger.setReleasedCommand(Intake.INSTANCE::store);
+
+        robotConfig.playerOne.DpadDown.setPressedCommand(Intake.INSTANCE::outtake);
 
         robotConfig.playerOne.A.setPressedCommand(CombinedPresets.INSTANCE::TransferPos);
         robotConfig.playerOne.B.setPressedCommand(CombinedPresets.INSTANCE::SpecimenCollectPos);
@@ -52,12 +53,6 @@ public class HorizontalLiftMode extends NextFTCOpMode {
         robotConfig.playerOne.Y.setPressedCommand(CombinedPresets.INSTANCE::SampleScorePos);
 
         robotConfig.playerOne.LeftTrigger.setPressedCommand(CombinedPresets.INSTANCE::Claw);
-
-        robotConfig.playerTwo.DpadUp.setPressedCommand(VerticalLiftManual.INSTANCE::MoveUp);
-        robotConfig.playerTwo.DpadDown.setPressedCommand(VerticalLiftManual.INSTANCE::MoveDown);
-
-        robotConfig.playerTwo.DpadUp.setReleasedCommand(VerticalLiftManual.INSTANCE::Stop);
-        robotConfig.playerTwo.DpadDown.setReleasedCommand(VerticalLiftManual.INSTANCE::Stop);
     }
 
 
@@ -66,11 +61,10 @@ public class HorizontalLiftMode extends NextFTCOpMode {
     public void onUpdate() {
 
         deltaTimeNano = deltaTimer.getDelta();
+        telemetry.addLine("This Royal Robotics OpMode was brought to you by Polymaker!");
+        telemetry.addLine("Use code royalrobotics at checkout for 22% off!");
         telemetry.addData("deltaTime", deltaTimeNano / Math.pow(10.0, 9));
-        telemetry.addData("l servo pos", HorizontalLift.INSTANCE.leftServo.getPosition());
-        telemetry.addData("r servo pos", HorizontalLift.INSTANCE.rightServo.getPosition());
-        telemetry.addData("intake Servo Pos: ", Intake.INSTANCE.LeftI.getPosition());
-        robotCentricDrive.updateDrive(deltaTimeNano);
+        lockYaw.updateDrive(deltaTimeNano);
 
         telemetry.update();
 

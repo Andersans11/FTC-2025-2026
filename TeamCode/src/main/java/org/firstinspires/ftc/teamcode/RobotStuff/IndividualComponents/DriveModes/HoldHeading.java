@@ -7,7 +7,9 @@ import com.rowanmcalpin.nextftc.ftc.driving.MecanumDriverControlled;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
+import org.firstinspires.ftc.robotcore.external.navigation.UnnormalizedAngleUnit;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.Misc.GoBildaPinpointDriver;
 import org.firstinspires.ftc.teamcode.RobotStuff.PIDStuff.YawPID;
 
 import kotlin.jvm.functions.Function0;
@@ -15,19 +17,20 @@ import kotlin.jvm.functions.Function0;
 @Config
 public class HoldHeading extends DriveMotors {
 
-    public static double kP = 2; //TODO: TUNE
+    public static double kP = 0; //TODO: TUNE
     public static double kI = 0;
-    public static double kD = 0.1;
+    public static double kD = 0;
 
-    public static double secondarykP = 2.5; // TODO: TUNE
+    public static double secondarykP = 0; // TODO: TUNE
     public static double secondarykI = 0;
-    public static double secondarykD = 0.05;
+    public static double secondarykD = 0;
     public static double threshold = Math.PI / 20;
 
     double targetRad;
 
     YawPID HeadingPID;
-    IMU imu;
+    GoBildaPinpointDriver pinpoint;
+
 
     boolean useNormTurn;
     double targetHeading;
@@ -46,7 +49,7 @@ public class HoldHeading extends DriveMotors {
         } else {
             return (float) HeadingPID.lockYaw(
                     targetRad,
-                    imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS),
+                    pinpoint.getHeading(AngleUnit.RADIANS),
                     extDTN
             );
         }
@@ -73,17 +76,17 @@ public class HoldHeading extends DriveMotors {
         super(opMode, config);
         HeadingPID = new YawPID(opMode.telemetry, config, "HeadingPID");
         HeadingPID.setSecondary(true);
-        imu = opMode.hardwareMap.get(IMU.class, "imu"); // ASSIGN IMU BEFORE RUNNING THIS CODE
+        pinpoint = opMode.hardwareMap.get(GoBildaPinpointDriver.class, "sensor");
         this.vroom = new MecanumDriverControlled(driveMotors, forwardBackward, strafe, yaw, true);
     }
 
     double getHeadingDeg() {
-        return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+        return pinpoint.getHeading(AngleUnit.DEGREES);
     }
 
     public void telemetryAngleVelocity() {
         if (useNormTurn) {opMode.telemetry.addLine("Mode: Using raw turn values");}
-        else {opMode.telemetry.addLine("Mode: Holding heading using IMU");}
+        else {opMode.telemetry.addLine("Mode: Holding heading using Pinpoint");}
         opMode.telemetry.addLine("================================");
         opMode.telemetry.addData("current heading", getHeadingDeg());
         opMode.telemetry.addData("target heading", targetHeading);
@@ -96,9 +99,9 @@ public class HoldHeading extends DriveMotors {
 
         telemetryAngleVelocity();
 
-        AngularVelocity angularVelocity = imu.getRobotAngularVelocity(AngleUnit.RADIANS);
+        yawVelocity = pinpoint.getHeadingVelocity(UnnormalizedAngleUnit.RADIANS);
 
-        yawVelocity = angularVelocity.zRotationRate; // speed at which the robot is turning
+        // speed at which the robot is turning
 
         //funny boolean shit
         hasExcessVelocity = (!config.playerOne.TurnAxis.getState() && useNormTurn); // if the stick is not pressed but is still using normTurn (excess velocity after done turning)

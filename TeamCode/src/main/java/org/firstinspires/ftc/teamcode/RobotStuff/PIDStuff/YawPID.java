@@ -1,8 +1,11 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.PIDStuff;
 
+import com.acmerobotics.dashboard.config.Config;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
 
+@Config
 public class YawPID {
     double kP;  double secondarykP;  double P; // trust me it saves space
     double kI;  double secondarykI;  double I;
@@ -20,6 +23,7 @@ public class YawPID {
     RobotConfig config;
 
     public final String pidName;
+    public static boolean DEBUG = false;
 
     public YawPID(Telemetry telemetry, RobotConfig config, String pidName) {
         this.config = config;
@@ -80,13 +84,15 @@ public class YawPID {
     }
 
     public void yawTelemetry(double error, double derivative, double targetPos, double currentPos, double lastError) {
-        telemetry.addData("error:", error);
         telemetry.addData("target radians:", targetPos);
         telemetry.addData("current radians:", currentPos);
-        telemetry.addData("derivative:", derivative);
-        telemetry.addData("last error:", lastError);
-        telemetry.addData("P:", P);
-        telemetry.addData("I:", I);
-        telemetry.addData("D:", D);
+        if (DEBUG) {
+            telemetry.addData("error:", error);
+            telemetry.addData("derivative:", derivative);
+            telemetry.addData("last error:", lastError);
+            telemetry.addData("P:", P);
+            telemetry.addData("I:", I);
+            telemetry.addData("D:", D);
+        }
     }
 }

@@ -31,6 +31,13 @@ public class Intake extends Subsystem {
         );
     }
 
+    public Command idle(float Float){
+        return new SequentialGroup(
+                new MultipleServosToPosition(Servos, 0, this),
+                new SetPower(intakeMotor, 0.0, this)
+        );
+    }
+
     public Command store(){
         return new SequentialGroup(
                 new MultipleServosToPosition(Servos, 0, this),
