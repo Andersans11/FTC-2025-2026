@@ -1,0 +1,95 @@
+{
+  "pathChains": [
+    {
+      "id": 1754706309141.0576,
+      "paths": [
+        {
+          "id": 0,
+          "type": "LINEAR",
+          "start": {
+            "x": 6,
+            "y": 66
+          },
+          "end": {
+            "x": 42,
+            "y": 66
+          },
+          "control1": null,
+          "control2": null,
+          "interpolation": {
+            "type": "CONSTANT",
+            "heading1": 0,
+            "heading2": 0
+          },
+          "callbacks": [
+            {
+              "type": "PARAMETRIC",
+              "t": 0.1,
+              "runnable": "DepoSpecScore"
+            },
+            {
+              "type": "PARAMETRIC",
+              "t": 1,
+              "runnable": "DepoClawOpen"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "curves": [
+    {
+      "type": "line",
+      "points": [
+        {
+          "x": 6,
+          "y": 66
+        },
+        {
+          "x": 42,
+          "y": 66
+        }
+      ],
+      "color": "#007bff",
+      "lineWidth": 2,
+      "isComplete": true,
+      "actions": [
+        {
+          "id": 1754706541529.6934,
+          "type": "PARAMETRIC",
+          "t": 0.1,
+          "runnable": "DepoSpecScore"
+        },
+        {
+          "id": 1754706984872.5796,
+          "type": "PARAMETRIC",
+          "t": 1,
+          "runnable": "DepoClawOpen"
+        }
+      ],
+      "startHeading": 0,
+      "endHeading": 0,
+      "headingInterpolation": "CONSTANT",
+      "groupId": 1754706309141.0576
+    }
+  ],
+  "groups": [
+    {
+      "id": 1754706309141.0576,
+      "name": "Group 1",
+      "curves": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "color": "#6f42c1",
+      "visible": true,
+      "collapsed": false
+    }
+  ]
+}
