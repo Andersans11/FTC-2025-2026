@@ -47,21 +47,21 @@ public class Intake extends Subsystem {
 
     public Command intake(float Float){
         return new SequentialGroup(
-                new MultipleServosToPosition(Servos, (double) 1/6, this),
+                new MultipleServosToPosition(Servos, (double) 1/7, this),
                 new SetPower(intakeMotor, 1, this)
         );
     }
 
     public Command intake() {
         return new SequentialGroup(
-                new MultipleServosToPosition(Servos, (double) 1/6, this),
+                new MultipleServosToPosition(Servos, (double) 1/7, this),
                 new SetPower(intakeMotor, 1, this)
         );
     }
 
     public Command outtake(){
         return new SequentialGroup(
-                new MultipleServosToPosition(Servos, (double) 1/6, this),
+                new MultipleServosToPosition(Servos, (double) 1/7, this),
                 new SetPower(intakeMotor, -1, this)
         );
     }

@@ -60,39 +60,39 @@ public class CombinedPresets extends Subsystem {
         switch (currentPosition) {
             case SPECSCORE:
                 a = new ParallelGroup(
-                        VerticalLiftPID.INSTANCE.SetPosition(76),
+                        VerticalLiftPID.INSTANCE.SetPosition(55),
                         new SequentialGroup(
                                 DepositClawManual.INSTANCE.SetPosition(125, 135),
                                 new Delay(0.2),
-                                DepositClawManual.INSTANCE.SetPosition(215, 225)
+                                DepositClawManual.INSTANCE.SetPosition(215, 255)
                         )
                 );
                 break;
             case SPECCOLLECT:
                 a = new ParallelGroup(
-                        VerticalLiftPID.INSTANCE.SetPosition(76),
+                        VerticalLiftPID.INSTANCE.SetPosition(55),
                         new SequentialGroup(
-                                DepositClawManual.INSTANCE.SetPosition(215, 225)
+                                DepositClawManual.INSTANCE.SetPosition(215, 255)
                         )
                 );
                 break;
             case TRANSFER:
                 a = new ParallelGroup(
-                    VerticalLiftPID.INSTANCE.SetPosition(76),
+                    VerticalLiftPID.INSTANCE.SetPosition(55),
                     new SequentialGroup(
                             DepositClawManual.INSTANCE.SetPosition(80, 90),
                             new Delay(0.2),
                             DepositClawManual.INSTANCE.SetPosition(170, 180),
                             new Delay(0.3),
-                            DepositClawManual.INSTANCE.SetPosition(215, 225)
+                            DepositClawManual.INSTANCE.SetPosition(215, 255)
                     )
                 );
                 break;
             case SAMPSCORE:
                 a = new ParallelGroup(
-                        VerticalLiftPID.INSTANCE.SetPosition(76),
+                        VerticalLiftPID.INSTANCE.SetPosition(55),
                         new SequentialGroup(
-                                DepositClawManual.INSTANCE.SetPosition(215, 225)
+                                DepositClawManual.INSTANCE.SetPosition(215, 255)
                         )
                 );
         }
@@ -100,8 +100,8 @@ public class CombinedPresets extends Subsystem {
         return a;
     }
 
-    public static double VLiftTransferRPos = 0.0;
-    public static double VLiftTransferPos = 0.0;
+    public static double VLiftTransferRPos = 6;
+    public static double VLiftTransferPos = 12;
     public static double DepoArmTransferRPos = 0.0;
     public static double DepoArmTransferPos = 0.0;
     public static double DepoWristTransferRPos = 0.0;
@@ -117,7 +117,9 @@ public class CombinedPresets extends Subsystem {
                             new SequentialGroup(
                                     DepositClawManual.INSTANCE.SetPosition(125, 135),
                                     new Delay(0.2),
-                                    DepositClawManual.INSTANCE.SetPosition(DepoArmTransferRPos, DepoWristTransferRPos)
+                                    DepositClawManual.INSTANCE.SetPosition(DepoArmTransferRPos, DepoWristTransferRPos),
+                                    new Delay(0.5),
+                                    this.Claw()
                             )
                     );
                 } else {
@@ -127,6 +129,7 @@ public class CombinedPresets extends Subsystem {
                                     DepositClawManual.INSTANCE.SetPosition(125, 135),
                                     new Delay(0.2),
                                     DepositClawManual.INSTANCE.SetPosition(DepoArmTransferPos, DepoWristTransferPos)
+
                             )
                     );
                 }
@@ -136,7 +139,9 @@ public class CombinedPresets extends Subsystem {
                     a = new ParallelGroup( //True Transfer Position
                             VerticalLiftPID.INSTANCE.SetPosition(VLiftTransferRPos),
                             new SequentialGroup(
-                                    DepositClawManual.INSTANCE.SetPosition(DepoArmTransferRPos, DepoWristTransferRPos)
+                                    DepositClawManual.INSTANCE.SetPosition(DepoArmTransferRPos, DepoWristTransferRPos),
+                                    new Delay(0.5),
+                                    this.Claw()
                             )
                     );
                 } else {
@@ -157,7 +162,9 @@ public class CombinedPresets extends Subsystem {
                                     new Delay(0.25),
                                     DepositClawManual.INSTANCE.SetPosition(80, 90),
                                     new Delay(0.25),
-                                    DepositClawManual.INSTANCE.SetPosition(DepoArmTransferRPos, DepoWristTransferRPos)
+                                    DepositClawManual.INSTANCE.SetPosition(DepoArmTransferRPos, DepoWristTransferRPos),
+                                    new Delay(0.5),
+                                    this.Claw()
                             )
                     );
                 } else {
@@ -178,8 +185,12 @@ public class CombinedPresets extends Subsystem {
                     a = new ParallelGroup( //True Transfer Position
                             VerticalLiftPID.INSTANCE.SetPosition(VLiftTransferRPos),
                             new SequentialGroup(
-                                    DepositClawManual.INSTANCE.SetPosition(DepoArmTransferRPos, DepoWristTransferRPos)
+                                    DepositClawManual.INSTANCE.SetPosition(DepoArmTransferRPos, DepoWristTransferRPos),
+                                    new Delay(0.5),
+                                    this.Claw()
                             )
+
+
                     );
                 } else {
                     a = new ParallelGroup( //Waiting Transfer Position; Make room for the intake
@@ -194,7 +205,7 @@ public class CombinedPresets extends Subsystem {
         return a;
     }
 
-    public static double VLiftSpecScore = 0.0;
+    public static double VLiftSpecScore = 32.0;
 
     public enum Position {
         SPECSCORE,
@@ -214,14 +225,14 @@ public class CombinedPresets extends Subsystem {
                         new SequentialGroup(
                                 DepositClawManual.INSTANCE.SetPosition(170, 180),
                                 new Delay(0.2),
-                                DepositClawManual.INSTANCE.SetPosition(90, 35)
+                                DepositClawManual.INSTANCE.SetPosition(80, 60)
                         )
                 );
                 break;
             case TRANSFER:
                 a = new ParallelGroup(
                         VerticalLiftPID.INSTANCE.SetPosition(VLiftSpecScore),
-                        DepositClawManual.INSTANCE.SetPosition(90, 35)
+                        DepositClawManual.INSTANCE.SetPosition(80, 60)
                 );
                 break;
             case SAMPSCORE:
@@ -230,20 +241,22 @@ public class CombinedPresets extends Subsystem {
                         new SequentialGroup(
                                 DepositClawManual.INSTANCE.SetPosition(170, 180),
                                 new Delay(0.2),
-                                DepositClawManual.INSTANCE.SetPosition(90, 35)
+                                DepositClawManual.INSTANCE.SetPosition(80, 60)
                         )
                 );
                 break;
             case SPECSCORE:
                 a = new ParallelGroup(
                         VerticalLiftPID.INSTANCE.SetPosition(VLiftSpecScore),
-                        DepositClawManual.INSTANCE.SetPosition(90, 35)
+                        DepositClawManual.INSTANCE.SetPosition(80, 60)
                 );
                 break;
         }
         currentPosition = Position.SPECSCORE;
         return a;
     }
+
+    public static double aa = 340;
     public static double VLiftSpecCollect = 0.0;
     public Command SpecimenCollectPos() {
         
@@ -258,14 +271,14 @@ public class CombinedPresets extends Subsystem {
                                 new Delay(0.3),
                                 DepositClawManual.INSTANCE.SetPosition(270, 280),
                                 new Delay(0.2),
-                                DepositClawManual.INSTANCE.SetPosition(270, 315)
+                                DepositClawManual.INSTANCE.SetPosition(270, aa)
                         )
                 );
                 break;
             case SAMPSCORE:
                 a = new ParallelGroup(
                         VerticalLiftPID.INSTANCE.SetPosition(VLiftSpecCollect),
-                        DepositClawManual.INSTANCE.SetPosition(270, 315)
+                        DepositClawManual.INSTANCE.SetPosition(270, aa)
                 );
                 break;
             case SPECSCORE:
@@ -276,14 +289,14 @@ public class CombinedPresets extends Subsystem {
                                 new Delay(0.2),
                                 DepositClawManual.INSTANCE.SetPosition(215, 225),
                                 new Delay(0.3),
-                                DepositClawManual.INSTANCE.SetPosition(270, 315)
+                                DepositClawManual.INSTANCE.SetPosition(270, aa)
                         )
                 );
                 break;
             case SPECCOLLECT:
                 a = new ParallelGroup(
                         VerticalLiftPID.INSTANCE.SetPosition(VLiftSpecCollect),
-                        DepositClawManual.INSTANCE.SetPosition(270, 315)
+                        DepositClawManual.INSTANCE.SetPosition(270, aa)
                 );
                 break;
         }

@@ -23,7 +23,7 @@ public class VerticalLiftPID extends Subsystem {
 
     public double targetPosition;
 
-    public static double kP = 0.005;
+    public static double kP = 0.00075;
     public static double kI = 0;
     public static double kD = 0;
 

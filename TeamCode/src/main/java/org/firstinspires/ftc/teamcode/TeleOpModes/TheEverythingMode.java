@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.DepositCla
 import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.DriveModes.HoldHeading;
 import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.HorizontalLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.Intake;
+import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.VerticalLiftManual;
 import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.VerticalLiftPID;
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.DeltaTimer;
 
@@ -19,7 +20,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Misc.DeltaTimer;
 public class TheEverythingMode extends NextFTCOpMode {
 
     public TheEverythingMode() {
-        super(HorizontalLift.INSTANCE, CombinedPresets.INSTANCE, Intake.INSTANCE, DepositClawManual.INSTANCE, VerticalLiftPID.INSTANCE);
+        super(HorizontalLift.INSTANCE, CombinedPresets.INSTANCE, Intake.INSTANCE, DepositClawManual.INSTANCE, VerticalLiftPID.INSTANCE, VerticalLiftManual.INSTANCE);
     }
     DeltaTimer deltaTimer = new DeltaTimer();
     long deltaTimeNano;
@@ -35,6 +36,7 @@ public class TheEverythingMode extends NextFTCOpMode {
         Intake.INSTANCE.initSystem(robotConfig);
         DepositClawManual.INSTANCE.initSystem(robotConfig);
         VerticalLiftPID.INSTANCE.initSystem(robotConfig);
+        VerticalLiftManual.INSTANCE.initSystem(robotConfig);
     }
 
     @Override
@@ -55,8 +57,8 @@ public class TheEverythingMode extends NextFTCOpMode {
 
         robotConfig.playerOne.LeftBumper.setPressedCommand(CombinedPresets.INSTANCE::Claw);
 
-        robotConfig.playerTwo.DpadUp.setPressedCommand(this::LiftUp);
-        robotConfig.playerTwo.DpadDown.setPressedCommand(this::LiftDown);
+        robotConfig.playerTwo.DpadUp.setPressedCommand(VerticalLiftManual.INSTANCE::MoveUp);
+        robotConfig.playerTwo.DpadDown.setPressedCommand(VerticalLiftManual.INSTANCE::MoveDown);
     }
 
     public Command LiftUp() {
