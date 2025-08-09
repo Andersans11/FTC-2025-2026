@@ -1,12 +1,20 @@
 package org.firstinspires.ftc.teamcode.AutomousOpModes;
 
+import android.telecom.Call;
+
 import com.pedropathing.follower.Follower;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
 
+import org.firstinspires.ftc.teamcode.RobotStuff.AllPresets.Presets.CombinedPresets;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants.*;
+import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.DepositClawManual;
+import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.HorizontalLift;
+import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.Intake;
+import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.VerticalLiftPID;
+import org.firstinspires.ftc.teamcode.RobotStuff.PedroJSON.Callbacks;
 
 import java.io.File;
 
@@ -18,11 +26,10 @@ It pulls motors from the Motors Class and assigns them to a mecanum drive comman
 */
 
 @Autonomous(name="ye")
-@Disabled
 public class Test_NFTCAuto extends NextFTCOpMode {
 
     public Test_NFTCAuto() {
-        super();
+        super(HorizontalLift.INSTANCE, CombinedPresets.INSTANCE, Intake.INSTANCE, DepositClawManual.INSTANCE, VerticalLiftPID.INSTANCE);
     }
 
     RobotConfig robotConfig = new RobotConfig(this);
@@ -34,12 +41,20 @@ public class Test_NFTCAuto extends NextFTCOpMode {
 
     @Override
     public void onInit() {
+        HorizontalLift.INSTANCE.initSystem(robotConfig);
+        Intake.INSTANCE.initSystem(robotConfig);
+        DepositClawManual.INSTANCE.initSystem(robotConfig);
+        VerticalLiftPID.INSTANCE.initSystem(robotConfig);
         follower = new Follower(hardwareMap, FConstants.class, LConstants.class);
-        pathLoader = new PathLoader(routine, follower, this);
-        pathLoader.GatherSubsystems(); //Add any dependencies you need for callbacks here.
+        Callbacks callbacks = new Callbacks();
+        pathLoader = new PathLoader(routine, follower, this, callbacks);
 
         pathLoader.Parse();
         pathLoader.Init();
+
+        CombinedPresets.INSTANCE.SpecimenCollectPos().invoke();
+        Intake.INSTANCE.store().invoke();
+        HorizontalLift.INSTANCE.setTargetPosition(HorizontalLift.LiftPreset.MINIMUM).invoke();
     }
 
     @Override

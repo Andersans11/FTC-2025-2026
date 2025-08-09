@@ -181,7 +181,7 @@ public class CombinedPresets extends Subsystem {
         TRANSFER
     }
 
-    public Position currentPosition;
+    public Position currentPosition = Position.TRANSFER;
     public Command SpecimenScorePos() {
         Command a = null;
 
