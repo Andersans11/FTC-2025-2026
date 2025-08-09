@@ -6,6 +6,7 @@ import com.rowanmcalpin.nextftc.core.command.groups.ParallelGroup;
 import com.acmerobotics.dashboard.config.Config;
 import com.rowanmcalpin.nextftc.core.command.groups.SequentialGroup;
 import com.rowanmcalpin.nextftc.core.command.utility.NullCommand;
+import com.rowanmcalpin.nextftc.core.command.utility.delays.Delay;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.DepositClawManual;
 import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.HorizontalLift;
@@ -53,10 +54,43 @@ public class CombinedPresets extends Subsystem {
     //TODO: "0.0"s need to be changed
 
     public Command SampleScorePos() {
-        return new ParallelGroup(
-                VerticalLiftPID.INSTANCE.SetPosition(76),
-                DepositClawManual.INSTANCE.SetPosition(215, 225)
-        );
+
+        Command a = null;
+
+        switch (currentPosition) {
+            case SPECSCORE:
+                a = new ParallelGroup(
+                        VerticalLiftPID.INSTANCE.SetPosition(76),
+                        new SequentialGroup(
+                                DepositClawManual.INSTANCE.SetPosition(125, 135),
+                                new Delay(0.2),
+                                DepositClawManual.INSTANCE.SetPosition(215, 225)
+                        )
+                );
+                break;
+            case SPECCOLLECT:
+                a = new ParallelGroup(
+                        VerticalLiftPID.INSTANCE.SetPosition(76),
+                        new SequentialGroup(
+                                DepositClawManual.INSTANCE.SetPosition(215, 225)
+                        )
+                );
+                break;
+            case TRANSFER:
+                a = new ParallelGroup(
+                    VerticalLiftPID.INSTANCE.SetPosition(76),
+                    new SequentialGroup(
+                            DepositClawManual.INSTANCE.SetPosition(80, 90),
+                            new Delay(0.2),
+                            DepositClawManual.INSTANCE.SetPosition(170, 180),
+                            new Delay(0.3),
+                            DepositClawManual.INSTANCE.SetPosition(215, 225)
+                    )
+                );
+                break;
+        }
+        currentPosition = Position.SAMPSCORE;
+        return a;
     }
 
     public static double VLiftTransferRPos = 0.0;
@@ -66,32 +100,161 @@ public class CombinedPresets extends Subsystem {
     public static double DepoWristTransferRPos = 0.0;
     public static double DepoWristTransferPos = 0.0;
     public Command TransferPos() {
-        if (isRetracted) {
-            return new ParallelGroup( //True Transfer Position
-                    VerticalLiftPID.INSTANCE.SetPosition(VLiftTransferRPos),
-                    DepositClawManual.INSTANCE.SetPosition(DepoArmTransferRPos, DepoWristTransferRPos)
-            );
-        } else {
-            return new ParallelGroup( //Waiting Transfer Position; Make room for the intake
-                    VerticalLiftPID.INSTANCE.SetPosition(VLiftTransferPos),
-                    DepositClawManual.INSTANCE.SetPosition(DepoArmTransferPos, DepoWristTransferPos)
-            );
+        Command a = null;
+
+        switch (currentPosition) {
+            case SAMPSCORE:
+                if (isRetracted) {
+                    a = new ParallelGroup( //True Transfer Position
+                            VerticalLiftPID.INSTANCE.SetPosition(VLiftTransferRPos),
+                            new SequentialGroup(
+                                    DepositClawManual.INSTANCE.SetPosition(125, 135),
+                                    new Delay(0.2),
+                                    DepositClawManual.INSTANCE.SetPosition(DepoArmTransferRPos, DepoWristTransferRPos)
+                            )
+                    );
+                } else {
+                    a = new ParallelGroup( //Waiting Transfer Position; Make room for the intake
+                            VerticalLiftPID.INSTANCE.SetPosition(VLiftTransferPos),
+                            new SequentialGroup(
+                                    DepositClawManual.INSTANCE.SetPosition(125, 135),
+                                    new Delay(0.2),
+                                    DepositClawManual.INSTANCE.SetPosition(DepoArmTransferPos, DepoWristTransferPos)
+                            )
+                    );
+                }
+                break;
+            case SPECSCORE:
+                if (isRetracted) {
+                    a = new ParallelGroup( //True Transfer Position
+                            VerticalLiftPID.INSTANCE.SetPosition(VLiftTransferRPos),
+                            new SequentialGroup(
+                                    DepositClawManual.INSTANCE.SetPosition(DepoArmTransferRPos, DepoWristTransferRPos)
+                            )
+                    );
+                } else {
+                    a = new ParallelGroup( //Waiting Transfer Position; Make room for the intake
+                            VerticalLiftPID.INSTANCE.SetPosition(VLiftTransferPos),
+                            new SequentialGroup(
+                                    DepositClawManual.INSTANCE.SetPosition(125, 135),
+                                    DepositClawManual.INSTANCE.SetPosition(DepoArmTransferPos, DepoWristTransferPos)
+                            )
+                    );
+                }
+                break;
+            case SPECCOLLECT:
+                if (isRetracted) {
+                    a = new ParallelGroup( //True Transfer Position
+                            VerticalLiftPID.INSTANCE.SetPosition(VLiftTransferRPos),
+                            new SequentialGroup(
+                                    DepositClawManual.INSTANCE.SetPosition(180, 190),
+                                    new Delay(0.25),
+                                    DepositClawManual.INSTANCE.SetPosition(80, 90),
+                                    new Delay(0.25),
+                                    DepositClawManual.INSTANCE.SetPosition(DepoArmTransferRPos, DepoWristTransferRPos)
+                            )
+                    );
+                } else {
+                    a = new ParallelGroup( //Waiting Transfer Position; Make room for the intake
+                            VerticalLiftPID.INSTANCE.SetPosition(VLiftTransferPos),
+                            new SequentialGroup(
+                                    DepositClawManual.INSTANCE.SetPosition(180, 190),
+                                    new Delay(0.25),
+                                    DepositClawManual.INSTANCE.SetPosition(80, 90),
+                                    new Delay(0.25),
+                                    DepositClawManual.INSTANCE.SetPosition(DepoArmTransferPos, DepoWristTransferPos)
+                            )
+                    );
+                }
+                break;
         }
+        currentPosition = Position.TRANSFER;
+        return a;
     }
 
     public static double VLiftSpecScore = 0.0;
+
+    public enum Position {
+        SPECSCORE,
+        SPECCOLLECT,
+        SAMPSCORE,
+        TRANSFER
+    }
+
+    public Position currentPosition;
     public Command SpecimenScorePos() {
-        return new ParallelGroup(
-                VerticalLiftPID.INSTANCE.SetPosition(VLiftSpecScore),
-                DepositClawManual.INSTANCE.SetPosition(90, 35)
-        );
+        Command a = null;
+
+        switch (currentPosition) {
+            case SPECCOLLECT:
+                a = new ParallelGroup(
+                        VerticalLiftPID.INSTANCE.SetPosition(VLiftSpecScore),
+                        new SequentialGroup(
+                                DepositClawManual.INSTANCE.SetPosition(170, 180),
+                                new Delay(0.2),
+                                DepositClawManual.INSTANCE.SetPosition(90, 35)
+                        )
+                );
+                break;
+            case TRANSFER:
+                a = new ParallelGroup(
+                        VerticalLiftPID.INSTANCE.SetPosition(VLiftSpecScore),
+                        DepositClawManual.INSTANCE.SetPosition(90, 35)
+                );
+                break;
+            case SAMPSCORE:
+                a = new ParallelGroup(
+                        VerticalLiftPID.INSTANCE.SetPosition(VLiftSpecScore),
+                        new SequentialGroup(
+                                DepositClawManual.INSTANCE.SetPosition(170, 180),
+                                new Delay(0.2),
+                                DepositClawManual.INSTANCE.SetPosition(90, 35)
+                        )
+                );
+                break;
+        }
+        currentPosition = Position.SPECSCORE;
+        return a;
     }
     public static double VLiftSpecCollect = 0.0;
     public Command SpecimenCollectPos() {
-        return new ParallelGroup(
-                VerticalLiftPID.INSTANCE.SetPosition(VLiftSpecCollect),
-                DepositClawManual.INSTANCE.SetPosition(270, 315)
-        );
+        
+        Command a = null;
+        
+        switch (currentPosition) {
+            case TRANSFER:
+                a = new ParallelGroup(
+                        VerticalLiftPID.INSTANCE.SetPosition(VLiftSpecCollect),
+                        new SequentialGroup(
+                                DepositClawManual.INSTANCE.SetPosition(90, 100),
+                                new Delay(0.3),
+                                DepositClawManual.INSTANCE.SetPosition(270, 280),
+                                new Delay(0.2),
+                                DepositClawManual.INSTANCE.SetPosition(270, 315)
+                        )
+                );
+                break;
+            case SAMPSCORE:
+                a = new ParallelGroup(
+                        VerticalLiftPID.INSTANCE.SetPosition(VLiftSpecCollect),
+                        DepositClawManual.INSTANCE.SetPosition(270, 315)
+                );
+                break;
+            case SPECSCORE:
+                a = new ParallelGroup(
+                        VerticalLiftPID.INSTANCE.SetPosition(VLiftSpecCollect),
+                        new SequentialGroup(
+                                DepositClawManual.INSTANCE.SetPosition(125, 135),
+                                new Delay(0.2),
+                                DepositClawManual.INSTANCE.SetPosition(215, 225),
+                                new Delay(0.3),
+                                DepositClawManual.INSTANCE.SetPosition(270, 315)
+                        )
+                );
+                break;
+        }
+        currentPosition = Position.SPECCOLLECT;
+        return a;
     }
 
     public Command Claw() {
