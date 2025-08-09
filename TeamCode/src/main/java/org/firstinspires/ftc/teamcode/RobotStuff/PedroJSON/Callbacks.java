@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.RobotStuff.PedroJSON;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.AllPresets.Presets.CombinedPresets;
+import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.DepositClawManual;
 import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.HorizontalLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.Intake;
 
@@ -56,6 +57,16 @@ public class Callbacks extends PedroJSON.main.Callback {
             case "IntakeBrr":
                 codeToRun = () -> {
                     Intake.INSTANCE.intake().invoke();
+                };
+                break;
+            case "DepoClawClose":
+                codeToRun = () -> {
+                    DepositClawManual.INSTANCE.Claw(true);
+                };
+                break;
+            case "DepoClawOpen":
+                codeToRun = () -> {
+                    DepositClawManual.INSTANCE.Claw(false);
                 };
                 break;
         }
