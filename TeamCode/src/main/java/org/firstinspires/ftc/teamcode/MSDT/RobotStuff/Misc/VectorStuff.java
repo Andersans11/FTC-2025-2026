@@ -19,6 +19,11 @@ public class VectorStuff {
         return Math.abs(getTheta(vector1) - getTheta(vector2));
     }
 
+    /**
+     * Calculate a vector
+     * @param theta Theta IN RADIANS
+     * @return The calculated vector
+     */
     public static Vector2D VectorFromPolar(double amp, double theta) {
         return new Vector2D(amp * Math.sin(theta), amp * Math.cos(theta));
     }

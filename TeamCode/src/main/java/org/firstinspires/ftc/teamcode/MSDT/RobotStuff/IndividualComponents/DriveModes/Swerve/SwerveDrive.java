@@ -4,7 +4,7 @@ import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.MSDT.RobotStuff.Config.Subconfigs.RobotConfig;
 import org.firstinspires.ftc.teamcode.MSDT.RobotStuff.Misc.DeltaTimer;
-import org.firstinspires.ftc.teamcode.MSDT.RobotStuff.Misc.*;
+import org.firstinspires.ftc.teamcode.MSDT.RobotStuff.Misc.VectorStuff;
 
 public class SwerveDrive {
 
@@ -44,6 +44,7 @@ public class SwerveDrive {
         if (forward != 0 || strafe != 0 || heading != 0) {
             deltatime.reset();
 
+            // once we have definite values for these, convert them to radians and use those values instead of calling Math.toRadians
             Vector2D forwardVector = VectorStuff.VectorFromPolar(forward * MAX_POWER, Math.toRadians(0.0));
             Vector2D strafeVector = VectorStuff.VectorFromPolar(strafe * MAX_POWER, Math.toRadians(90.0));
             Vector2D FLHeadingVector = VectorStuff.VectorFromPolar(heading * MAX_POWER, Math.toRadians(45.0));

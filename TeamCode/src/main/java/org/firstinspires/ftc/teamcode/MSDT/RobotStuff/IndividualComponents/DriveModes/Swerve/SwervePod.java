@@ -7,7 +7,7 @@ import com.rowanmcalpin.nextftc.ftc.hardware.controllables.MotorEx;
 import com.rowanmcalpin.nextftc.ftc.hardware.controllables.SetPower;
 
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
-import org.firstinspires.ftc.teamcode.MSDT.RobotStuff.Misc.*;
+import org.firstinspires.ftc.teamcode.MSDT.RobotStuff.Misc.VectorStuff;
 
 public class SwervePod extends Subsystem{
 
@@ -41,10 +41,10 @@ public class SwervePod extends Subsystem{
 
     public void update(Vector2D driveVector) {
 
-        if (Math.toDegrees(VectorStuff.getTheta(driveVector)) > 180) {
-            mirrorVector = VectorStuff.VectorFromPolar(Math.max(-1, Math.min(VectorStuff.getAmp(driveVector), 1)) * -1, Math.toDegrees(VectorStuff.getTheta(driveVector)) - 180);
+        if (VectorStuff.getTheta(driveVector) > Math.PI) {
+            mirrorVector = VectorStuff.VectorFromPolar(Math.max(-1, Math.min(VectorStuff.getAmp(driveVector), 1)) * -1, VectorStuff.getTheta(driveVector) - Math.PI);
         } else {
-            mirrorVector = VectorStuff.VectorFromPolar(Math.max(-1, Math.min(VectorStuff.getAmp(driveVector), 1)) * -1, Math.toDegrees(VectorStuff.getTheta(driveVector)) + 180);
+            mirrorVector = VectorStuff.VectorFromPolar(Math.max(-1, Math.min(VectorStuff.getAmp(driveVector), 1)) * -1, VectorStuff.getTheta(driveVector) + Math.PI);
         }
 
         if (VectorStuff.thetaDistance(oldVector, mirrorVector) < VectorStuff.thetaDistance(oldVector, driveVector)) {
