@@ -21,7 +21,7 @@ public class DifferenceArrayList extends ArrayList<Float> {
     }
 
     public Pair<Float, Double> getMinAtIndex() {
-        float min = this.get(0); // start at index zero
+        float min = this.get(0); // init at index zero
         double atIndex = 0;
         for (float measuredDiff : this) {
             if (measuredDiff < min) {
@@ -32,7 +32,7 @@ public class DifferenceArrayList extends ArrayList<Float> {
         return new Pair<>(min, atIndex);
     }
     public Pair<Float, Double> getMaxAtIndex() {
-        float max = this.get(0); // start at index zero
+        float max = this.get(0); // init at index zero
         double atIndex = 0;
         for (float measuredDiff : this) {
             if (measuredDiff > max) {
@@ -44,7 +44,7 @@ public class DifferenceArrayList extends ArrayList<Float> {
     }
 
     public Float getMin() {
-        float min = this.get(0); // start at index zero
+        float min = this.get(0); // init at index zero
         for (float measuredDiff : this) {
             if (measuredDiff < min) {
                 min = measuredDiff; // if the measured diff is less than the last record min
@@ -53,7 +53,7 @@ public class DifferenceArrayList extends ArrayList<Float> {
         return min;
     }
     public Float getMax() {
-        float max = this.get(0); // start at index zero
+        float max = this.get(0); // init at index zero
         for (float measuredDiff : this) {
             if (measuredDiff > max) {
                 max = measuredDiff; // if the measured diff is less than the last record min

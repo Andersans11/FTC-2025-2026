@@ -1,44 +1,86 @@
 package org.firstinspires.ftc.teamcode.MSDT.RobotStuff.IndividualComponents.DriveModes.Swerve;
 
-import com.qualcomm.robotcore.hardware.AnalogInput;
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.rowanmcalpin.nextftc.core.Subsystem;
-import com.rowanmcalpin.nextftc.core.command.Command;
-import com.rowanmcalpin.nextftc.core.command.groups.ParallelGroup;
-import com.rowanmcalpin.nextftc.ftc.hardware.controllables.MotorEx;
-
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.MSDT.RobotStuff.Config.Subconfigs.RobotConfig;
+import org.firstinspires.ftc.teamcode.MSDT.RobotStuff.Misc.DeltaTimer;
+import org.firstinspires.ftc.teamcode.MSDT.RobotStuff.Misc.*;
 
-public class SwerveDrive extends Subsystem {
+public class SwerveDrive {
 
-    VectorStuff vectorStuff = new VectorStuff();
+    public static double MAX_POWER = 1;
+
+    public DeltaTimer deltatime;
 
     public SwervePod[] pods = new SwervePod[4];
 
-    public static final SwerveDrive INSTANCE = new SwerveDrive();
+    public double[] rollingtime = new double[10];
 
-    private SwerveDrive() { }
+    public int writing = 0;
 
-    public void initSystem(RobotConfig robotConfig) {
+    public SwerveDrive(RobotConfig robotConfig) {
         pods[0] = new SwervePod(robotConfig.SwFLDrive.motor, robotConfig.SwFLPivot.servo, robotConfig.SwFLEnc);
         pods[1] = new SwervePod(robotConfig.SwBLDrive.motor, robotConfig.SwBLPivot.servo, robotConfig.SwBLEnc);
         pods[2] = new SwervePod(robotConfig.SwFRDrive.motor, robotConfig.SwFRPivot.servo, robotConfig.SwFREnc);
         pods[3] = new SwervePod(robotConfig.SwBRDrive.motor, robotConfig.SwBRPivot.servo, robotConfig.SwBREnc);
+        deltatime = new DeltaTimer();
     }
-    public Command update(float forward, float strafe, float heading) {
-        Vector2D forwardVector = vectorStuff.VectorFromPolar(forward, Math.toRadians(0.0));
-        Vector2D strafeVector = vectorStuff.VectorFromPolar(strafe, Math.toRadians(90.0));
-        Vector2D FLHeadingVector = vectorStuff.VectorFromPolar(heading, Math.toRadians(45.0));
-        Vector2D BLHeadingVector = vectorStuff.VectorFromPolar(heading, Math.toRadians(135.0));
-        Vector2D FRHeadingVector = vectorStuff.VectorFromPolar(heading, Math.toRadians(225.0));
-        Vector2D BRHeadingVector = vectorStuff.VectorFromPolar(heading, Math.toRadians(315.0));
 
-        return new ParallelGroup(
-                pods[0].update(new Vector2D(1.0, forwardVector, 1.0, strafeVector, 1.0, FLHeadingVector)),
-                pods[1].update(new Vector2D(1.0, forwardVector, 1.0, strafeVector, 1.0, BLHeadingVector)),
-                pods[2].update(new Vector2D(1.0, forwardVector, 1.0, strafeVector, 1.0, FRHeadingVector)),
-                pods[3].update(new Vector2D(1.0, forwardVector, 1.0, strafeVector, 1.0, BRHeadingVector))
-        );
+    public void init() {
+        pods[0].init();
+        pods[1].init();
+        pods[2].init();
+        pods[3].init();
+    }
+
+    public void initLoop() {
+        pods[0].initLoop();
+        pods[1].initLoop();
+        pods[2].initLoop();
+        pods[3].initLoop();
+    }
+
+    public void update(float forward, float strafe, float heading) {
+        if (forward != 0 || strafe != 0 || heading != 0) {
+            deltatime.reset();
+
+            Vector2D forwardVector = VectorStuff.VectorFromPolar(forward * MAX_POWER, Math.toRadians(0.0));
+            Vector2D strafeVector = VectorStuff.VectorFromPolar(strafe * MAX_POWER, Math.toRadians(90.0));
+            Vector2D FLHeadingVector = VectorStuff.VectorFromPolar(heading * MAX_POWER, Math.toRadians(45.0));
+            Vector2D BLHeadingVector = VectorStuff.VectorFromPolar(heading * MAX_POWER, Math.toRadians(135.0));
+            Vector2D FRHeadingVector = VectorStuff.VectorFromPolar(heading * MAX_POWER, Math.toRadians(225.0));
+            Vector2D BRHeadingVector = VectorStuff.VectorFromPolar(heading * MAX_POWER, Math.toRadians(315.0));
+
+            FLHeadingVector = new Vector2D(1.0, forwardVector, 1.0, strafeVector, 1.0, FLHeadingVector);
+            BLHeadingVector = new Vector2D(1.0, forwardVector, 1.0, strafeVector, 1.0, BLHeadingVector);
+            FRHeadingVector = new Vector2D(1.0, forwardVector, 1.0, strafeVector, 1.0, FRHeadingVector);
+            BRHeadingVector = new Vector2D(1.0, forwardVector, 1.0, strafeVector, 1.0, BRHeadingVector);
+
+            pods[0].update(FLHeadingVector);
+            pods[1].update(BLHeadingVector);
+            pods[2].update(FRHeadingVector);
+            pods[3].update(BRHeadingVector);
+
+            rollingtime[writing] = deltatime.getTimeMilli();
+            writing ++;
+            deltatime.reset();
+        }
+    }
+
+    public void telemetry(Telemetry telemetry) {
+        telemetry.addLine("Pod 0");
+        telemetry.addData("   Power: ", pods[0].getAmp());
+        telemetry.addData("   Direction: ", pods[0].getTheta());
+        telemetry.addLine("Pod 1");
+        telemetry.addData("   Power: ", pods[1].getAmp());
+        telemetry.addData("   Direction: ", pods[1].getTheta());
+        telemetry.addLine("Pod 2");
+        telemetry.addData("   Power: ", pods[2].getAmp());
+        telemetry.addData("   Direction: ", pods[2].getTheta());
+        telemetry.addLine("Pod 3");
+        telemetry.addData("   Power: ", pods[3].getAmp());
+        telemetry.addData("   Direction: ", pods[3].getTheta());
+
+        telemetry.addData("rolling deltatime: ", (rollingtime[0] + rollingtime[1] + rollingtime[2] + rollingtime[3] + rollingtime[4] + rollingtime[5] + rollingtime[6] + rollingtime[7] + rollingtime[8] + rollingtime[9]) / 10);
     }
 }

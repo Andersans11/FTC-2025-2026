@@ -2,15 +2,11 @@ package org.firstinspires.ftc.teamcode.MSDT.RobotStuff.IndividualComponents.Driv
 
 import android.annotation.SuppressLint;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-public class RTPAxon {
+public class SwervePivot {
     // Encoder for servo position feedback
     private final AnalogInput servoEncoder;
     // Continuous rotation servo
@@ -20,7 +16,7 @@ public class RTPAxon {
     // Current power applied to servo
     private double power;
     // Maximum allowed power
-    private double maxPower;
+    public static double maxPower;
     // Direction of servo movement
     private Direction direction;
     // Last measured angle
@@ -31,9 +27,9 @@ public class RTPAxon {
     private double targetRotation;
 
     // PID controller coefficients and state
-    private double kP;
-    private double kI;
-    private double kD;
+    public static double kP;
+    public static double kI;
+    public static double kD;
     private double integralSum;
     private double lastError;
     private double maxIntegralSum; 
@@ -54,16 +50,28 @@ public class RTPAxon {
     // region constructors
 
     // Basic constructor, defaults to FORWARD direction
-    public RTPAxon(CRServo servo, AnalogInput encoder) {
+    public SwervePivot(CRServo servo, AnalogInput encoder) {
         rtp = true;
         this.servo = servo;
         servoEncoder = encoder;
-        direction = Direction.FORWARD;
+
+        switch (servo.getDirection()) {
+            case FORWARD:
+                direction = Direction.FORWARD;
+                break;
+            case REVERSE:
+                direction = Direction.REVERSE;
+        }
+
+        if (direction == null) {
+            direction = Direction.FORWARD;
+        }
+
         initialize();
     }
 
     // Constructor with explicit direction
-    public RTPAxon(CRServo servo, AnalogInput encoder, Direction direction) {
+    public SwervePivot(CRServo servo, AnalogInput encoder, Direction direction) {
         this(servo, encoder);
         this.direction = direction;
         initialize();

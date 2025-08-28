@@ -3,23 +3,23 @@ package org.firstinspires.ftc.teamcode.MSDT.RobotStuff.IndividualComponents.Driv
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.rowanmcalpin.nextftc.core.Subsystem;
-import com.rowanmcalpin.nextftc.core.command.Command;
-import com.rowanmcalpin.nextftc.core.control.controllers.PIDFController;
-import com.rowanmcalpin.nextftc.ftc.hardware.controllables.Controllable;
 import com.rowanmcalpin.nextftc.ftc.hardware.controllables.MotorEx;
-import com.rowanmcalpin.nextftc.ftc.hardware.controllables.RunToPosition;
 import com.rowanmcalpin.nextftc.ftc.hardware.controllables.SetPower;
 
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
-
-import java.util.Set;
+import org.firstinspires.ftc.teamcode.MSDT.RobotStuff.Misc.*;
 
 public class SwervePod extends Subsystem{
 
     MotorEx driveMotor;
-    RTPAxon pivot;
+    SwervePivot pivot;
 
-    VectorStuff vectorStuff = new VectorStuff();
+    public double amp;
+    public double theta;
+
+    public Vector2D oldVector;
+
+    public Vector2D mirrorVector;
 
     public static double kP = 0.1;
     public static double kI = 0;
@@ -27,13 +27,46 @@ public class SwervePod extends Subsystem{
 
     public SwervePod(MotorEx drive, CRServo pivot, AnalogInput encoder) {
         driveMotor = drive;
-        this.pivot = new RTPAxon(pivot, encoder);
+        this.pivot = new SwervePivot(pivot, encoder);
         this.pivot.setPidCoeffs(kP, kI, kD);
     }
 
-    public Command update(Vector2D driveVector) {
-        pivot.changeTargetRotation(Math.toDegrees(vectorStuff.getTheta(driveVector)));
+    public void init() {
+        pivot.changeTargetRotation(0);
+    }
+
+    public void initLoop() {
         pivot.update();
-        return new SetPower(driveMotor, Math.max(0, Math.min(vectorStuff.getAmp(driveVector), 1)));
+    }
+
+    public void update(Vector2D driveVector) {
+
+        if (Math.toDegrees(VectorStuff.getTheta(driveVector)) > 180) {
+            mirrorVector = VectorStuff.VectorFromPolar(Math.max(-1, Math.min(VectorStuff.getAmp(driveVector), 1)) * -1, Math.toDegrees(VectorStuff.getTheta(driveVector)) - 180);
+        } else {
+            mirrorVector = VectorStuff.VectorFromPolar(Math.max(-1, Math.min(VectorStuff.getAmp(driveVector), 1)) * -1, Math.toDegrees(VectorStuff.getTheta(driveVector)) + 180);
+        }
+
+        if (VectorStuff.thetaDistance(oldVector, mirrorVector) < VectorStuff.thetaDistance(oldVector, driveVector)) {
+            amp = Math.max(-1, Math.min(VectorStuff.getAmp(mirrorVector), 1));
+            theta = Math.toDegrees(VectorStuff.getTheta(mirrorVector));
+            oldVector = mirrorVector;
+        } else {
+            amp = Math.max(-1, Math.min(VectorStuff.getAmp(driveVector), 1));
+            theta = Math.toDegrees(VectorStuff.getTheta(driveVector));
+            oldVector = driveVector;
+        }
+
+        pivot.changeTargetRotation(theta);
+        pivot.update();
+        new SetPower(driveMotor, amp).invoke();
+    }
+
+    public double getAmp() {
+        return amp;
+    }
+
+    public double getTheta() {
+        return theta;
     }
 }
