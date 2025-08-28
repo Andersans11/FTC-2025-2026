@@ -1,0 +1,610 @@
+{
+  "pathChains": [
+    {
+      "id": 1754706309141.0576,
+      "paths": [
+        {
+          "id": 0,
+          "type": "LINEAR",
+          "start": {
+            "x": 6,
+            "y": 66
+          },
+          "end": {
+            "x": 42,
+            "y": 66
+          },
+          "control1": null,
+          "control2": null,
+          "interpolation": {
+            "type": "CONSTANT",
+            "heading1": 0,
+            "heading2": 0
+          },
+          "callbacks": [
+            {
+              "type": "PARAMETRIC",
+              "t": 0.1,
+              "runnable": "DepoSpecScore"
+            },
+            {
+              "type": "PARAMETRIC",
+              "t": 1,
+              "runnable": "DepoClawOpen"
+            }
+          ]
+        },
+        {
+          "id": 1,
+          "type": "CUBIC",
+          "start": {
+            "x": 42,
+            "y": 66
+          },
+          "end": {
+            "x": 54,
+            "y": 24
+          },
+          "control1": {
+            "x": 24,
+            "y": 28
+          },
+          "control2": {
+            "x": 68,
+            "y": 55
+          },
+          "interpolation": {
+            "type": "CONSTANT",
+            "heading1": 0,
+            "heading2": 0
+          },
+          "callbacks": [
+            {
+              "type": "PARAMETRIC",
+              "t": 0.1,
+              "runnable": "DepoSpecCollect"
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "type": "LINEAR",
+          "start": {
+            "x": 54,
+            "y": 24
+          },
+          "end": {
+            "x": 12,
+            "y": 24
+          },
+          "control1": null,
+          "control2": null,
+          "interpolation": {
+            "type": "CONSTANT",
+            "heading1": 0,
+            "heading2": 0
+          },
+          "callbacks": []
+        },
+        {
+          "id": 3,
+          "type": "QUADRATIC",
+          "start": {
+            "x": 12,
+            "y": 24
+          },
+          "end": {
+            "x": 60,
+            "y": 12
+          },
+          "control1": {
+            "x": 66,
+            "y": 24
+          },
+          "control2": null,
+          "interpolation": {
+            "type": "CONSTANT",
+            "heading1": 0,
+            "heading2": 0
+          },
+          "callbacks": []
+        },
+        {
+          "id": 4,
+          "type": "LINEAR",
+          "start": {
+            "x": 60,
+            "y": 12
+          },
+          "end": {
+            "x": 12,
+            "y": 12
+          },
+          "control1": null,
+          "control2": null,
+          "interpolation": {
+            "type": "CONSTANT",
+            "heading1": 0,
+            "heading2": 0
+          },
+          "callbacks": []
+        },
+        {
+          "id": 5,
+          "type": "LINEAR",
+          "start": {
+            "x": 12,
+            "y": 12
+          },
+          "end": {
+            "x": 7,
+            "y": 24
+          },
+          "control1": null,
+          "control2": null,
+          "interpolation": {
+            "type": "LINEAR",
+            "heading1": 0,
+            "heading2": 0
+          },
+          "callbacks": [
+            {
+              "type": "PARAMETRIC",
+              "t": 1,
+              "runnable": "DepoClawClose"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 1754706362053.3313,
+      "paths": [
+        {
+          "id": 8,
+          "type": "LINEAR",
+          "start": {
+            "x": 7,
+            "y": 24
+          },
+          "end": {
+            "x": 42,
+            "y": 62
+          },
+          "control1": null,
+          "control2": null,
+          "interpolation": {
+            "type": "CONSTANT",
+            "heading1": 0,
+            "heading2": 0
+          },
+          "callbacks": [
+            {
+              "type": "PARAMETRIC",
+              "t": 0.25,
+              "runnable": "DepoSpecScore"
+            }
+          ]
+        },
+        {
+          "id": 9,
+          "type": "LINEAR",
+          "start": {
+            "x": 42,
+            "y": 62
+          },
+          "end": {
+            "x": 42,
+            "y": 66
+          },
+          "control1": null,
+          "control2": null,
+          "interpolation": {
+            "type": "LINEAR",
+            "heading1": 0,
+            "heading2": 0
+          },
+          "callbacks": [
+            {
+              "type": "PARAMETRIC",
+              "t": 1,
+              "runnable": "DepoClawOpen"
+            }
+          ]
+        },
+        {
+          "id": 10,
+          "type": "LINEAR",
+          "start": {
+            "x": 42,
+            "y": 66
+          },
+          "end": {
+            "x": 7,
+            "y": 24
+          },
+          "control1": null,
+          "control2": null,
+          "interpolation": {
+            "type": "LINEAR",
+            "heading1": 0,
+            "heading2": 0
+          },
+          "callbacks": [
+            {
+              "type": "PARAMETRIC",
+              "t": 0.25,
+              "runnable": "DepoSpecCollect"
+            },
+            {
+              "type": "PARAMETRIC",
+              "t": 1,
+              "runnable": "DepoClawClose"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 1754706362053.3313,
+      "paths": [
+        {
+          "id": 8,
+          "type": "LINEAR",
+          "start": {
+            "x": 7,
+            "y": 24
+          },
+          "end": {
+            "x": 42,
+            "y": 62
+          },
+          "control1": null,
+          "control2": null,
+          "interpolation": {
+            "type": "CONSTANT",
+            "heading1": 0,
+            "heading2": 0
+          },
+          "callbacks": [
+            {
+              "type": "PARAMETRIC",
+              "t": 0.25,
+              "runnable": "DepoSpecScore"
+            }
+          ]
+        },
+        {
+          "id": 9,
+          "type": "LINEAR",
+          "start": {
+            "x": 42,
+            "y": 62
+          },
+          "end": {
+            "x": 42,
+            "y": 66
+          },
+          "control1": null,
+          "control2": null,
+          "interpolation": {
+            "type": "LINEAR",
+            "heading1": 0,
+            "heading2": 0
+          },
+          "callbacks": [
+            {
+              "type": "PARAMETRIC",
+              "t": 1,
+              "runnable": "DepoClawOpen"
+            }
+          ]
+        },
+        {
+          "id": 10,
+          "type": "LINEAR",
+          "start": {
+            "x": 42,
+            "y": 66
+          },
+          "end": {
+            "x": 7,
+            "y": 24
+          },
+          "control1": null,
+          "control2": null,
+          "interpolation": {
+            "type": "LINEAR",
+            "heading1": 0,
+            "heading2": 0
+          },
+          "callbacks": [
+            {
+              "type": "PARAMETRIC",
+              "t": 0.25,
+              "runnable": "DepoSpecCollect"
+            },
+            {
+              "type": "PARAMETRIC",
+              "t": 1,
+              "runnable": "DepoClawClose"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 1754706362053.3313,
+      "paths": [
+        {
+          "id": 8,
+          "type": "LINEAR",
+          "start": {
+            "x": 7,
+            "y": 24
+          },
+          "end": {
+            "x": 42,
+            "y": 62
+          },
+          "control1": null,
+          "control2": null,
+          "interpolation": {
+            "type": "CONSTANT",
+            "heading1": 0,
+            "heading2": 0
+          },
+          "callbacks": [
+            {
+              "type": "PARAMETRIC",
+              "t": 0.25,
+              "runnable": "DepoSpecScore"
+            }
+          ]
+        },
+        {
+          "id": 9,
+          "type": "LINEAR",
+          "start": {
+            "x": 42,
+            "y": 62
+          },
+          "end": {
+            "x": 42,
+            "y": 66
+          },
+          "control1": null,
+          "control2": null,
+          "interpolation": {
+            "type": "LINEAR",
+            "heading1": 0,
+            "heading2": 0
+          },
+          "callbacks": [
+            {
+              "type": "PARAMETRIC",
+              "t": 1,
+              "runnable": "DepoClawOpen"
+            }
+          ]
+        },
+        {
+          "id": 10,
+          "type": "LINEAR",
+          "start": {
+            "x": 42,
+            "y": 66
+          },
+          "end": {
+            "x": 7,
+            "y": 24
+          },
+          "control1": null,
+          "control2": null,
+          "interpolation": {
+            "type": "LINEAR",
+            "heading1": 0,
+            "heading2": 0
+          },
+          "callbacks": [
+            {
+              "type": "PARAMETRIC",
+              "t": 0.25,
+              "runnable": "DepoSpecCollect"
+            },
+            {
+              "type": "PARAMETRIC",
+              "t": 1,
+              "runnable": "DepoClawClose"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "curves": [
+    {
+      "type": "line",
+      "points": [
+        {
+          "x": 6,
+          "y": 66
+        },
+        {
+          "x": 42,
+          "y": 66
+        }
+      ],
+      "color": "#007bff",
+      "lineWidth": 2,
+      "isComplete": true,
+      "actions": [
+        {
+          "id": 1754706541529.6934,
+          "type": "PARAMETRIC",
+          "t": 0.1,
+          "runnable": "DepoSpecScore"
+        },
+        {
+          "id": 1754706984872.5796,
+          "type": "PARAMETRIC",
+          "t": 1,
+          "runnable": "DepoClawOpen"
+        }
+      ],
+      "startHeading": 0,
+      "endHeading": 0,
+      "headingInterpolation": "CONSTANT",
+      "groupId": 1754706309141.0576
+    },
+    {
+      "type": "cubic",
+      "points": [
+        {
+          "x": 42,
+          "y": 66
+        },
+        {
+          "x": 24,
+          "y": 28
+        },
+        {
+          "x": 68,
+          "y": 55
+        },
+        {
+          "x": 54,
+          "y": 24
+        }
+      ],
+      "color": "#007bff",
+      "lineWidth": 2,
+      "isComplete": true,
+      "actions": [
+        {
+          "id": 1754706580548.7756,
+          "type": "PARAMETRIC",
+          "t": 0.1,
+          "runnable": "DepoSpecCollect"
+        }
+      ],
+      "startHeading": 0,
+      "endHeading": 0,
+      "headingInterpolation": "CONSTANT",
+      "groupId": 1754706309141.0576
+    },
+    {
+      "type": "line",
+      "points": [
+        {
+          "x": 54,
+          "y": 24
+        },
+        {
+          "x": 12,
+          "y": 24
+        }
+      ],
+      "color": "#007bff",
+      "lineWidth": 2,
+      "isComplete": true,
+      "actions": [],
+      "startHeading": 0,
+      "endHeading": 0,
+      "headingInterpolation": "CONSTANT",
+      "groupId": 1754706309141.0576
+    },
+    {
+      "type": "quadratic",
+      "points": [
+        {
+          "x": 12,
+          "y": 24
+        },
+        {
+          "x": 66,
+          "y": 24
+        },
+        {
+          "x": 60,
+          "y": 12
+        }
+      ],
+      "color": "#007bff",
+      "lineWidth": 2,
+      "isComplete": true,
+      "actions": [],
+      "startHeading": 0,
+      "endHeading": 0,
+      "headingInterpolation": "CONSTANT",
+      "groupId": 1754706309141.0576
+    },
+    {
+      "type": "line",
+      "points": [
+        {
+          "x": 60,
+          "y": 12
+        },
+        {
+          "x": 12,
+          "y": 12
+        }
+      ],
+      "color": "#007bff",
+      "lineWidth": 2,
+      "isComplete": true,
+      "actions": [],
+      "startHeading": 0,
+      "endHeading": 0,
+      "headingInterpolation": "CONSTANT",
+      "groupId": 1754706309141.0576
+    },
+    {
+      "type": "line",
+      "points": [
+        {
+          "x": 12,
+          "y": 12
+        },
+        {
+          "x": 7,
+          "y": 24
+        }
+      ],
+      "color": "#007bff",
+      "lineWidth": 2,
+      "isComplete": true,
+      "actions": [
+        {
+          "id": 1754709947420.8823,
+          "type": "PARAMETRIC",
+          "t": 1,
+          "runnable": "DepoClawClose"
+        }
+      ],
+      "startHeading": 0,
+      "endHeading": 0,
+      "headingInterpolation": "LINEAR"
+    }
+  ],
+  "groups": [
+    {
+      "id": 1754706309141.0576,
+      "name": "Group 1",
+      "curves": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "color": "#6f42c1",
+      "visible": true,
+      "collapsed": false
+    }
+  ]
+}
