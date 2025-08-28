@@ -44,18 +44,23 @@ public class SwerveDrive {
         if (forward != 0 || strafe != 0 || heading != 0) {
             deltatime.reset();
 
-            // once we have definite values for these, convert them to radians and use those values instead of calling Math.toRadians
-            Vector2D forwardVector = VectorStuff.VectorFromPolar(forward * MAX_POWER, Math.toRadians(0.0));
-            Vector2D strafeVector = VectorStuff.VectorFromPolar(strafe * MAX_POWER, Math.toRadians(90.0));
+            Vector2D FLForwardVector = VectorStuff.VectorFromPolar(forward * MAX_POWER, Math.toRadians(0.0));
+            Vector2D BLForwardVector = VectorStuff.VectorFromPolar(forward * MAX_POWER, Math.toRadians(0.0));
+            Vector2D FRForwardVector = VectorStuff.VectorFromPolar(forward * MAX_POWER, Math.toRadians(0.0));
+            Vector2D BRForwardVector = VectorStuff.VectorFromPolar(forward * MAX_POWER, Math.toRadians(0.0));
+            Vector2D FLStrafeVector = VectorStuff.VectorFromPolar(strafe * MAX_POWER, Math.toRadians(90.0));
+            Vector2D BLStrafeVector = VectorStuff.VectorFromPolar(strafe * MAX_POWER, Math.toRadians(90.0));
+            Vector2D FRStrafeVector = VectorStuff.VectorFromPolar(strafe * MAX_POWER, Math.toRadians(90.0));
+            Vector2D BRStrafeVector = VectorStuff.VectorFromPolar(strafe * MAX_POWER, Math.toRadians(90.0));
             Vector2D FLHeadingVector = VectorStuff.VectorFromPolar(heading * MAX_POWER, Math.toRadians(45.0));
             Vector2D BLHeadingVector = VectorStuff.VectorFromPolar(heading * MAX_POWER, Math.toRadians(135.0));
             Vector2D FRHeadingVector = VectorStuff.VectorFromPolar(heading * MAX_POWER, Math.toRadians(225.0));
             Vector2D BRHeadingVector = VectorStuff.VectorFromPolar(heading * MAX_POWER, Math.toRadians(315.0));
 
-            FLHeadingVector = new Vector2D(1.0, forwardVector, 1.0, strafeVector, 1.0, FLHeadingVector);
-            BLHeadingVector = new Vector2D(1.0, forwardVector, 1.0, strafeVector, 1.0, BLHeadingVector);
-            FRHeadingVector = new Vector2D(1.0, forwardVector, 1.0, strafeVector, 1.0, FRHeadingVector);
-            BRHeadingVector = new Vector2D(1.0, forwardVector, 1.0, strafeVector, 1.0, BRHeadingVector);
+            FLHeadingVector = new Vector2D(1.0, FLForwardVector, 1.0, FLStrafeVector, 1.0, FLHeadingVector);
+            BLHeadingVector = new Vector2D(1.0, BLForwardVector, 1.0, BLStrafeVector, 1.0, BLHeadingVector);
+            FRHeadingVector = new Vector2D(1.0, FRForwardVector, 1.0, FRStrafeVector, 1.0, FRHeadingVector);
+            BRHeadingVector = new Vector2D(1.0, BRForwardVector, 1.0, BRStrafeVector, 1.0, BRHeadingVector);
 
             pods[0].update(FLHeadingVector);
             pods[1].update(BLHeadingVector);
