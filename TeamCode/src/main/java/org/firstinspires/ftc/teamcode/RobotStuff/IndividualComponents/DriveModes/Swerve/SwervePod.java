@@ -6,20 +6,17 @@ import com.rowanmcalpin.nextftc.core.Subsystem;
 import com.rowanmcalpin.nextftc.ftc.hardware.controllables.MotorEx;
 import com.rowanmcalpin.nextftc.ftc.hardware.controllables.SetPower;
 
-import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
-import org.firstinspires.ftc.teamcode.RobotStuff.Misc.VectorStuff;
-
-public class SwervePod extends Subsystem{
+public class SwervePod extends Subsystem {
 
     MotorEx driveMotor;
     SwervePivot pivot;
 
-    public double amp;
+    public double mag;
     public double theta;
 
-    public Vector2D oldVector;
+    public SwerveVector oldVector;
 
-    public Vector2D mirrorVector;
+    public SwerveVector mirrorVector;
 
     public static double kP = 0.1;
     public static double kI = 0;
@@ -39,34 +36,38 @@ public class SwervePod extends Subsystem{
         pivot.update();
     }
 
-    public void update(Vector2D driveVector) {
+    public void update(SwerveVector driveVector) {
 
-        if (VectorStuff.getTheta(driveVector) > Math.PI) {
-            mirrorVector = VectorStuff.VectorFromPolar(Math.max(-1, Math.min(VectorStuff.getAmp(driveVector), 1)) * -1, VectorStuff.getTheta(driveVector) - Math.PI);
+        if (driveVector.getTheta() > Math.PI) {
+            mirrorVector = new SwerveVector(Math.max(-1, Math.min(driveVector.getMag(), 1)) * -1, driveVector.getTheta() + Math.PI);
+
         } else {
-            mirrorVector = VectorStuff.VectorFromPolar(Math.max(-1, Math.min(VectorStuff.getAmp(driveVector), 1)) * -1, VectorStuff.getTheta(driveVector) + Math.PI);
+            mirrorVector = new SwerveVector(Math.max(-1, Math.min(driveVector.getMag(), 1)) * -1, driveVector.getTheta() - Math.PI);
         }
 
-        if (VectorStuff.thetaDistance(oldVector, mirrorVector) < VectorStuff.thetaDistance(oldVector, driveVector)) {
-            amp = Math.max(-1, Math.min(VectorStuff.getAmp(mirrorVector), 1));
-            theta = Math.toDegrees(VectorStuff.getTheta(mirrorVector));
+        if (oldVector.thetaDist(mirrorVector) < oldVector.thetaDist(driveVector)) {
+            mag = Math.max(-1, Math.min(mirrorVector.getMag(), 1));
+            theta = mirrorVector.getThetaDeg();
             oldVector = mirrorVector;
+
         } else {
-            amp = Math.max(-1, Math.min(VectorStuff.getAmp(driveVector), 1));
-            theta = Math.toDegrees(VectorStuff.getTheta(driveVector));
+            mag = Math.max(-1, Math.min(driveVector.getMag(), 1));
+            theta = driveVector.getThetaDeg();
             oldVector = driveVector;
         }
 
         pivot.changeTargetRotation(theta);
         pivot.update();
-        new SetPower(driveMotor, amp).invoke();
+
+        new SetPower(driveMotor, mag).invoke();
     }
 
     public double getAmp() {
-        return amp;
+        return mag;
     }
 
     public double getTheta() {
         return theta;
     }
+
 }
