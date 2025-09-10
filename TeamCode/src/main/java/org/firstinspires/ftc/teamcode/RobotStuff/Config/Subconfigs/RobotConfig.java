@@ -19,25 +19,13 @@ public class RobotConfig {
     public final Sensitivities sensitivities;
     public DcMotor.ZeroPowerBehavior zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE;
 
-    public static MotorConfig SwFLDrive;
-    public static MotorConfig SwBLDrive;
-    public static MotorConfig SwFRDrive;
-    public static MotorConfig SwBRDrive;
-
-    public static CRServoConfig SwFLPivot;
-    public static CRServoConfig SwBLPivot;
-    public static CRServoConfig SwFRPivot;
-    public static CRServoConfig SwBRPivot;
-
-    public static AnalogInput SwFLEnc;
-    public static AnalogInput SwBLEnc;
-    public static AnalogInput SwFREnc;
-    public static AnalogInput SwBREnc;
-
     public static MotorConfig FLDrive;
     public static MotorConfig BLDrive;
     public static MotorConfig FRDrive;
     public static MotorConfig BRDrive;
+    public static CRServoConfig CarouselCR1;
+    public static CRServoConfig CarouselCR2;
+    public static CRServoConfig CarouselCR3;
     HardwareMap hardwareMap;
 
     NextFTCOpMode opMode;
@@ -57,55 +45,6 @@ public class RobotConfig {
         playerTwo.update_all();
     }
     public static void initHardware (HardwareMap hardwareMap) {
-        SwFLDrive = new MotorConfig(
-                hardwareMap,
-                "SwFLDrive",
-                DcMotorSimple.Direction.FORWARD,
-                DcMotor.ZeroPowerBehavior.BRAKE
-        );
-        SwBLDrive = new MotorConfig(
-                hardwareMap,
-                "SwBLDrive",
-                DcMotorSimple.Direction.FORWARD,
-                DcMotor.ZeroPowerBehavior.BRAKE
-        );
-        SwFRDrive = new MotorConfig(
-                hardwareMap,
-                "SwFRDrive",
-                DcMotorSimple.Direction.FORWARD,
-                DcMotor.ZeroPowerBehavior.BRAKE
-        );
-        SwBRDrive = new MotorConfig(
-                hardwareMap,
-                "SwBRDrive",
-                DcMotorSimple.Direction.FORWARD,
-                DcMotor.ZeroPowerBehavior.BRAKE
-        );
-        SwFLPivot = new CRServoConfig(
-                hardwareMap,
-                "SwFLPivot",
-                DcMotorSimple.Direction.FORWARD
-        );
-        SwBLPivot = new CRServoConfig(
-                hardwareMap,
-                "SwBLPivot",
-                DcMotorSimple.Direction.FORWARD
-        );
-        SwFRPivot = new CRServoConfig(
-                hardwareMap,
-                "SwFRPivot",
-                DcMotorSimple.Direction.FORWARD
-        );
-        SwBRPivot = new CRServoConfig(
-                hardwareMap,
-                "SwBRPivot",
-                DcMotorSimple.Direction.FORWARD
-        );
-        SwFLEnc = hardwareMap.get(AnalogInput.class, "SwFLEnc");
-        SwBLEnc = hardwareMap.get(AnalogInput.class, "SwFLEnc");
-        SwFREnc = hardwareMap.get(AnalogInput.class, "SwFLEnc");
-        SwBREnc = hardwareMap.get(AnalogInput.class, "SwFLEnc");
-
         FLDrive = new MotorConfig(
                 hardwareMap,
                 "Front Left Drive",
@@ -129,6 +68,21 @@ public class RobotConfig {
                 "Back Right Drive",
                 DcMotorSimple.Direction.FORWARD,
                 DcMotor.ZeroPowerBehavior.BRAKE
+        );
+        CarouselCR1 = new CRServoConfig(
+                hardwareMap,
+                "Carousel 1",
+                DcMotorSimple.Direction.FORWARD
+        );
+        CarouselCR2 = new CRServoConfig(
+                hardwareMap,
+                "Carousel 2",
+                DcMotorSimple.Direction.FORWARD
+        );
+        CarouselCR3 = new CRServoConfig(
+                hardwareMap,
+                "Carousel 3",
+                DcMotorSimple.Direction.FORWARD
         );
     }
 }

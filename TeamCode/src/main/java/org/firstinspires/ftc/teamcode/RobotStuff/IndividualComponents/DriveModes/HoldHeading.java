@@ -39,12 +39,12 @@ public class HoldHeading extends DriveMotors {
 
     long extDTN;
 
-    Function0<Float> forwardBackward = () -> (float) (config.playerOne.ForwardAxis.getValue() * config.sensitivities.getForwardSensitivity() * getSensitivityMod());
-    Function0<Float> strafe = () -> (float) (config.playerOne.StrafeAxis.getValue() * config.sensitivities.getStrafingSensitivity() * getSensitivityMod());
+    Function0<Float> forwardBackward = () -> (float) (forwardSupp.getValue() * config.sensitivities.getForwardSensitivity() * getSensitivityMod());
+    Function0<Float> strafe = () -> (float) (strafeSupp.getValue() * config.sensitivities.getStrafingSensitivity() * getSensitivityMod());
     Function0<Float> yaw = () -> { // funny lambda
         if (useNormTurn) {
             updateHeading();
-            return (float) (config.playerOne.TurnAxis.getValue() * config.sensitivities.getTurningSensitivity());
+            return (float) (turnSupp.getValue() * config.sensitivities.getTurningSensitivity());
         } else {
             return (float) HeadingPID.lockYaw(
                     targetRad,
@@ -103,7 +103,7 @@ public class HoldHeading extends DriveMotors {
         // speed at which the robot is turning
 
         //funny boolean shit
-        hasExcessVelocity = (!config.playerOne.TurnAxis.getState() && useNormTurn); // if the stick is not pressed but is still using normTurn (excess velocity after done turning)
+        hasExcessVelocity = (!turnSupp.getState() && useNormTurn); // if the stick is not pressed but is still using normTurn (excess velocity after done turning)
         hasVelocity = (yawVelocity > 0.1 || yawVelocity < -0.1); // if the robot is turning at all
         targetRad = Math.toRadians(targetHeading); // passed into the pid so the robot turns 5 degrees instead of 355 to get to 360
 
@@ -121,14 +121,9 @@ public class HoldHeading extends DriveMotors {
         targetHeading = getHeadingDeg();
     }
 
-    public float getSensitivityMod() {
-        float SensitivityModifier = config.sensitivities.getDriveSensitivity();
-        if (config.playerOne.LeftTrigger.getState()){SensitivityModifier = config.sensitivities.getSlowDownModifier();}
-        return SensitivityModifier;
-    }
-
-
     @Override
-    public void Start() {vroom.invoke();} // use in onStartButtonPressed()
+    public void Start() {
+        vroom.invoke();
+    } // use in onStartButtonPressed()
 }
 

@@ -37,10 +37,10 @@ public class HoldHeadingPID extends DriveMotors {
     double targetHeading;
     long extDTN;
 
-    Function0<Float> forwardBackward = () -> (float) (config.playerOne.ForwardAxis.getValue() * config.sensitivities.getForwardSensitivity() * getSensitivityMod());
-    Function0<Float> strafe = () -> (float) (config.playerOne.StrafeAxis.getValue() * config.sensitivities.getStrafingSensitivity() * getSensitivityMod());
+    Function0<Float> forwardBackward = () -> (float) (forwardSupp.getValue() * config.sensitivities.getForwardSensitivity() * getSensitivityMod());
+    Function0<Float> strafe = () -> (float) (strafeSupp.getValue() * config.sensitivities.getStrafingSensitivity() * getSensitivityMod());
     Function0<Float> yaw = () -> {
-        updateHeading(config.playerOne.TurnAxis.getValue() * config.sensitivities.getPIDturningSensitivity());
+        updateHeading(turnSupp.getValue() * config.sensitivities.getPIDturningSensitivity());
         return (float) HeadingPID.lockYaw(targetRad,  pinpoint.getHeading(AngleUnit.RADIANS), extDTN);
     };
     /*
@@ -124,14 +124,9 @@ public class HoldHeadingPID extends DriveMotors {
         targetRad = Math.toRadians(targetHeading);
     }
 
-    public float getSensitivityMod() {
-        float SensitivityModifier = config.sensitivities.getDriveSensitivity();
-        if (config.playerOne.LeftTrigger.getState()){SensitivityModifier = config.sensitivities.getSlowDownModifier();}
-        return SensitivityModifier;
-    }
-
-
     @Override
-    public void Start() {vroom.invoke();} // use in onStartButtonPressed()
+    public void Start() {
+        vroom.invoke();
+    } // use in onStartButtonPressed()
 }
 

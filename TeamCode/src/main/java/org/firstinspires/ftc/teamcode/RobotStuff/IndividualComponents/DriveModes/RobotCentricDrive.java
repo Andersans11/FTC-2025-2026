@@ -13,9 +13,9 @@ public class RobotCentricDrive extends DriveMotors {
 
     IMU imu;
 
-    Function0<Float> forwardBackward = () -> (float) (config.playerOne.ForwardAxis.getValue() * config.sensitivities.getForwardSensitivity() * getSensitivityMod());
-    Function0<Float> strafe = () -> (float) (config.playerOne.StrafeAxis.getValue() * config.sensitivities.getStrafingSensitivity() * getSensitivityMod());
-    Function0<Float> yaw = () -> (float) (config.playerOne.TurnAxis.getValue() * config.sensitivities.getTurningSensitivity() * getSensitivityMod());
+    Function0<Float> forwardBackward = () -> (float) (forwardSupp.getValue() * config.sensitivities.getForwardSensitivity() * getSensitivityMod());
+    Function0<Float> strafe = () -> (float) (strafeSupp.getValue() * config.sensitivities.getStrafingSensitivity() * getSensitivityMod());
+    Function0<Float> yaw = () -> (float) (turnSupp.getValue() * config.sensitivities.getTurningSensitivity() * getSensitivityMod());
 
     MecanumDriverControlled vroom;
 
@@ -27,18 +27,13 @@ public class RobotCentricDrive extends DriveMotors {
     }
 
 
-    public float getSensitivityMod() {
-        float SensitivityModifier = config.sensitivities.getDriveSensitivity();
-        if (config.playerOne.LeftTrigger.getState()){SensitivityModifier = config.sensitivities.getSlowDownModifier();}
-        return SensitivityModifier;
-    }
-
-
     @Override
     public void updateDrive(long deltaTimeNano) {
         vroom.update();
     } // only actually needed for holdHeading because of pid stuff, doesn't need to be called here
 
     @Override
-    public void Start() {vroom.invoke();}
+    public void Start() {
+        vroom.invoke();
+    }
 }

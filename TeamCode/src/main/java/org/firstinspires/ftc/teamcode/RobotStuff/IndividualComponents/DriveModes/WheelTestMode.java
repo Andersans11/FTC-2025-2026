@@ -11,7 +11,7 @@ import kotlin.jvm.functions.Function0;
 public class WheelTestMode extends DriveMotors {
 
 
-    Function0<Float> forwardBackward = () -> (float) (config.playerOne.ForwardAxis.getValue() * config.sensitivities.getForwardSensitivity());
+    Function0<Float> forwardBackward = () -> (float) (forwardSupp.getValue() * config.sensitivities.getForwardSensitivity());
     Function0<Float> strafe = () -> 0.0f;
     Function0<Float> yaw = () -> 0.0f;
 
