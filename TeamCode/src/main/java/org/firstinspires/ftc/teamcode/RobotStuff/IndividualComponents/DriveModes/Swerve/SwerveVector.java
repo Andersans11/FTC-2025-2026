@@ -7,14 +7,19 @@ public class SwerveVector {
     private final double magnitude; // mag = sqrt(x^2 + y^2)
     private final double theta; // theta = arctan(y / x)
 
-    public SwerveVector(double a, SwerveVector u) {
-        this.x = a * u.x;
-        this.y = a * u.y;
+    /**
+     * Build a SwerveVector from a base vector and a scalar
+     * @param scalar Scale factor
+     * @param ref Base unscaled vector
+     */
+    public SwerveVector(double scalar, SwerveVector ref) {
+        this.x = scalar * ref.x;
+        this.y = scalar * ref.y;
 
-        this.magnitude = Math.sqrt(x*x + y*y);
+        this.magnitude = Math.sqrt(x * x + y * y);
         this.theta = Math.atan(y / x);
     }
-
+    
     public SwerveVector(double scalar1, SwerveVector vec1, double scalar2, SwerveVector vec2, double scalar3, SwerveVector vec3) {
         this.x = scalar1 * vec1.x + scalar2 * vec2.x + scalar3 * vec3.x;
         this.y = scalar1 * vec1.y + scalar2 * vec2.y + scalar3 * vec3.y;
