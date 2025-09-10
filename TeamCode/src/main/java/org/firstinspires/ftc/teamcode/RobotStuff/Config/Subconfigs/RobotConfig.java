@@ -26,6 +26,9 @@ public class RobotConfig {
     public static CRServoConfig CarouselCR1;
     public static CRServoConfig CarouselCR2;
     public static CRServoConfig CarouselCR3;
+    public static AnalogInput CarouselENC1;
+    public static AnalogInput CarouselENC2;
+    public static AnalogInput CarouselENC3;
     HardwareMap hardwareMap;
 
     NextFTCOpMode opMode;
@@ -69,20 +72,28 @@ public class RobotConfig {
                 DcMotorSimple.Direction.FORWARD,
                 DcMotor.ZeroPowerBehavior.BRAKE
         );
+
+        CarouselENC1 = hardwareMap.get(AnalogInput.class, "CarENC1");
+        CarouselENC2 = hardwareMap.get(AnalogInput.class, "CarENC2");
+        CarouselENC3 = hardwareMap.get(AnalogInput.class, "CarENC3");
+
         CarouselCR1 = new CRServoConfig(
                 hardwareMap,
                 "Carousel 1",
-                DcMotorSimple.Direction.FORWARD
+                DcMotorSimple.Direction.FORWARD,
+                CarouselENC1
         );
         CarouselCR2 = new CRServoConfig(
                 hardwareMap,
                 "Carousel 2",
-                DcMotorSimple.Direction.FORWARD
+                DcMotorSimple.Direction.FORWARD,
+                CarouselENC2
         );
         CarouselCR3 = new CRServoConfig(
                 hardwareMap,
                 "Carousel 3",
-                DcMotorSimple.Direction.FORWARD
+                DcMotorSimple.Direction.FORWARD,
+                CarouselENC3
         );
     }
 }

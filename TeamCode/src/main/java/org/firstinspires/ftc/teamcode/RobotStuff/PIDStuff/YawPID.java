@@ -26,7 +26,6 @@ public class YawPID {
     public static boolean DEBUG = false;
 
     public YawPID(Telemetry telemetry, RobotConfig config, String pidName) {
-        this.config = config;
         this.telemetry = telemetry;
         this.pidName = pidName;
     }
