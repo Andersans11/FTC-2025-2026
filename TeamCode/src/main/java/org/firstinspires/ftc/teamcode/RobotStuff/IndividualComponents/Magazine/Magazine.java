@@ -6,7 +6,9 @@ import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.RTPAxon;
 
-public class Magazine {
+public class Magazine extends Subsystem {
+    public static final Magazine INSTANCE = new Magazine();
+    private Magazine() { } // nftc boilerplate
 
     RobotConfig config;
     NextFTCOpMode opMode;
@@ -14,14 +16,15 @@ public class Magazine {
 
     RTPAxon[] servos;
     double pos = 0;
-    public Magazine(NextFTCOpMode opMode, RobotConfig config) {
+
+    public void init(NextFTCOpMode opMode, RobotConfig config) {
         this.config = config;
         this.opMode = opMode;
 
         this.slots = new MagSlot[] {
-                new MagSlot(opMode, config, 0),
-                new MagSlot(opMode, config,120),
-                new MagSlot(opMode, config,-120)
+                new MagSlot(opMode, config, 0, config.Slot1CS), // this slot starts in front of intake
+                new MagSlot(opMode, config,120, config.Slot2CS),
+                new MagSlot(opMode, config,-120, config.Slot3CS)
         };
 
         this.servos = new RTPAxon[] {
@@ -31,7 +34,7 @@ public class Magazine {
         };
     }
 
-    public void alignBallToTurret(double turretPos) {
+    public void update() {
 
     }
 
