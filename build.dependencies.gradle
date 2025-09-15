@@ -17,11 +17,14 @@ dependencies {
     implementation 'org.firstinspires.ftc:Vision:10.1.1'
     implementation 'androidx.appcompat:appcompat:1.2.0'
 
-    implementation 'com.rowanmcalpin.nextftc:core:0.6.1'
-    implementation 'com.rowanmcalpin.nextftc:ftc:0.6.1'
-    implementation 'com.rowanmcalpin.nextftc:pedro:0.6.1' // Remove if you don't intend to use PedroPathing
     implementation 'com.pedropathing:pedro:1.0.9' // Remove if you don't intend to use PedroPathing
     implementation 'com.acmerobotics.dashboard:dashboard:0.4.16' // Remove if you don't intend to use the FTC Dashboard (required if using PedroPathing)
+
+    implementation 'dev.nextftc:ftc:1.0.0'
+    implementation 'dev.nextftc:hardware:1.0.0'
+    implementation 'dev.nextftc:control:1.0.0'
+    implementation 'dev.nextftc:bindings:1.0.1'
+    implementation 'dev.nextftc.extensions:pedro:1.0.0'
 
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
     implementation 'com.fasterxml.jackson.core:jackson-core:2.15.2'

@@ -1,14 +1,12 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.Magazine;
 
-import com.rowanmcalpin.nextftc.core.Subsystem;
-import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
+import dev.nextftc.core.subsystems.Subsystem;
+import dev.nextftc.ftc.NextFTCOpMode;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.RTPAxon;
 
-public class Magazine extends Subsystem {
-    public static final Magazine INSTANCE = new Magazine();
-    private Magazine() { } // nftc boilerplate
+public class Magazine implements Subsystem {
 
     RobotConfig config;
     NextFTCOpMode opMode;

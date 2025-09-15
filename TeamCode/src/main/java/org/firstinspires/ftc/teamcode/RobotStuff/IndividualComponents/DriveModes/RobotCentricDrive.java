@@ -1,35 +1,31 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.DriveModes;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.IMU;
-import com.rowanmcalpin.nextftc.ftc.driving.MecanumDriverControlled;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
 
-import kotlin.jvm.functions.Function0;
+import dev.nextftc.ftc.NextFTCOpMode;
+import dev.nextftc.hardware.driving.MecanumDriverControlled;
+
+import java.util.function.Supplier;
+
 
 public class RobotCentricDrive extends DriveMotors {
 
-    IMU imu;
 
-    Function0<Float> forwardBackward = () -> (float) (forwardSupp.getValue() * config.sensitivities.getForwardSensitivity() * getSensitivityMod());
-    Function0<Float> strafe = () -> (float) (strafeSupp.getValue() * config.sensitivities.getStrafingSensitivity() * getSensitivityMod());
-    Function0<Float> yaw = () -> (float) (turnSupp.getValue() * config.sensitivities.getTurningSensitivity() * getSensitivityMod());
-
+    Supplier<Double> forwardBackward = () -> (forwardSupp.get() * config.sensitivities.getForwardModifier());
+    Supplier<Double> strafe = () -> (strafeSupp.get() * config.sensitivities.getStrafeModifier());
+    Supplier<Double> yaw = () -> (turnSupp.get() * config.sensitivities.getTurnModifier());
     MecanumDriverControlled vroom;
 
-
-    public RobotCentricDrive(OpMode opMode, RobotConfig config) { // idk the name could be better
+    public RobotCentricDrive(NextFTCOpMode opMode, RobotConfig config) { // idk the name could be better
         super(opMode, config);
-        imu = opMode.hardwareMap.get(IMU.class, "imu");
-        this.vroom = new MecanumDriverControlled(driveMotors, forwardBackward, strafe, yaw, true, imu);
+        this.vroom = new MecanumDriverControlled(FL, FR, BL, BR, forwardBackward, strafe, yaw);
     }
-
 
     @Override
     public void updateDrive(long deltaTimeNano) {
         vroom.update();
-    } // only actually needed for holdHeading because of pid stuff, doesn't need to be called here
+    }
 
     @Override
     public void Start() {

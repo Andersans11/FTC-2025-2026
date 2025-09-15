@@ -4,7 +4,8 @@ import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.rowanmcalpin.nextftc.ftc.hardware.controllables.MotorEx;
+
+import dev.nextftc.hardware.impl.MotorEx;
 
 public class MotorConfig {
 

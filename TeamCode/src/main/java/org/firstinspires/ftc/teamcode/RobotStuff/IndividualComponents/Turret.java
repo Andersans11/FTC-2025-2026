@@ -1,19 +1,18 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents;
 
 import com.qualcomm.robotcore.hardware.Servo;
-import com.rowanmcalpin.nextftc.core.Subsystem;
-import com.rowanmcalpin.nextftc.core.command.Command;
-import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
-import com.rowanmcalpin.nextftc.ftc.hardware.controllables.Controllable;
-import com.rowanmcalpin.nextftc.ftc.hardware.controllables.MotorEx;
-import com.rowanmcalpin.nextftc.ftc.hardware.controllables.MotorGroup;
-import com.rowanmcalpin.nextftc.ftc.hardware.controllables.SetPower;
+
+import dev.nextftc.core.subsystems.Subsystem;
+import dev.nextftc.core.commands.Command;
+import dev.nextftc.ftc.NextFTCOpMode;
+import dev.nextftc.hardware.impl.MotorEx;
+import dev.nextftc.hardware.controllable.MotorGroup;
+import dev.nextftc.hardware.powerable.SetPower;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
 
-public class Turret extends Subsystem {
-    public static final Turret INSTANCE = new Turret();
-    private Turret() { } // nftc boilerplate
+public class Turret implements Subsystem {
+
     NextFTCOpMode opMode;
     RobotConfig config;
     Servo pitchServo;
@@ -33,16 +32,14 @@ public class Turret extends Subsystem {
     public Command shoot() {
         return new SetPower(
                 shootMotors,
-                1,
-                this
+                1
         );
     }
 
     public Command stop() {
         return new SetPower(
                 shootMotors,
-                0,
-                this
+                0
         );
     }
 

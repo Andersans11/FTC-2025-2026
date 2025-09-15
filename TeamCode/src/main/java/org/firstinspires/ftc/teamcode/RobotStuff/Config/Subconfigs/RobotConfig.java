@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
+import dev.nextftc.ftc.NextFTCOpMode;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.HardwareConfigs.CRServoConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.HardwareConfigs.MotorConfig;
@@ -47,8 +47,8 @@ public class RobotConfig {
     public RobotConfig(NextFTCOpMode opMode) {
         this.opMode = opMode;
         this.hardwareMap = opMode.hardwareMap;
-        playerOne = new ReadyPlayerOne(opMode.gamepadManager.getGamepad1());
-        playerTwo = new ReadyPlayerTwo(opMode.gamepadManager.getGamepad2());
+        playerOne = new ReadyPlayerOne(opMode.gamepad1);
+        playerTwo = new ReadyPlayerTwo(opMode.gamepad2);
         sensitivities = new Sensitivities();
 
         initHardware(hardwareMap);

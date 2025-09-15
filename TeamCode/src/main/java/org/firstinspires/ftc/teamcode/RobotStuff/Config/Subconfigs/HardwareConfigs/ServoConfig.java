@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.HardwareConfigs;
 
-import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 

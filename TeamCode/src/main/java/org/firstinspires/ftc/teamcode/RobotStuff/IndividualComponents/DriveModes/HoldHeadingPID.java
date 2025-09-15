@@ -1,28 +1,29 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.DriveModes;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.rowanmcalpin.nextftc.ftc.driving.MecanumDriverControlled;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.DriveModes.DriveMotors;
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.DifferenceArrayList;
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.GoBildaPinpointDriver;
 import org.firstinspires.ftc.teamcode.RobotStuff.PIDStuff.YawPID;
 
-import kotlin.jvm.functions.Function0;
+import dev.nextftc.ftc.NextFTCOpMode;
+import dev.nextftc.hardware.driving.MecanumDriverControlled;
+
+import java.util.function.Supplier;
+
 
 @Config
 public class HoldHeadingPID extends DriveMotors {
 
-    public static double kP = 2; //TODO: TUNE
+    public static double kP = 0; //TODO: TUNE
     public static double kI = 0;
-    public static double kD = 0.1;
+    public static double kD = 0;
 
-    public static double secondarykP = 2.5; // TODO: TUNE
+    public static double secondarykP = 0; // TODO: TUNE
     public static double secondarykI = 0;
-    public static double secondarykD = 0.05;
+    public static double secondarykD = 0;
     public static double threshold = Math.PI / 20;
 
     public static boolean DEBUGMODE = false;
@@ -37,11 +38,11 @@ public class HoldHeadingPID extends DriveMotors {
     double targetHeading;
     long extDTN;
 
-    Function0<Float> forwardBackward = () -> (float) (forwardSupp.getValue() * config.sensitivities.getForwardSensitivity() * getSensitivityMod());
-    Function0<Float> strafe = () -> (float) (strafeSupp.getValue() * config.sensitivities.getStrafingSensitivity() * getSensitivityMod());
-    Function0<Float> yaw = () -> {
-        updateHeading(turnSupp.getValue() * config.sensitivities.getPIDturningSensitivity());
-        return (float) HeadingPID.lockYaw(targetRad,  pinpoint.getHeading(AngleUnit.RADIANS), extDTN);
+    Supplier<Double> forwardBackward = () -> (forwardSupp.get() * config.sensitivities.getForwardModifier());
+    Supplier<Double> strafe = () -> (strafeSupp.get() * config.sensitivities.getStrafeModifier());
+    Supplier<Double> yaw = () -> {
+        updateHeading(turnSupp.get() * config.sensitivities.getPIDTurnModifier());
+        return HeadingPID.lockYaw(targetRad,  pinpoint.getHeading(AngleUnit.RADIANS), extDTN);
     };
     /*
     for new coders:
@@ -61,13 +62,15 @@ public class HoldHeadingPID extends DriveMotors {
 
     MecanumDriverControlled vroom;
 
-    public HoldHeadingPID(OpMode opMode, RobotConfig config) {
+    public HoldHeadingPID(NextFTCOpMode opMode, RobotConfig config) {
         super(opMode, config);
+
         HeadingPID = new YawPID(opMode.telemetry, config, "HeadingPID");
         HeadingPID.setSecondary(true);
         pinpoint = opMode.hardwareMap.get(GoBildaPinpointDriver.class, "sensor");
         setHeading(pinpoint.getHeading(AngleUnit.DEGREES)); // on init, take heading and set to that so that robot doesn't go to zero
-        this.vroom = new MecanumDriverControlled(driveMotors, forwardBackward, strafe, yaw, true);
+
+        this.vroom = new MecanumDriverControlled(FL, FR, BL, BR, forwardBackward, strafe, yaw);
     }
 
     double getHeadingDeg() {

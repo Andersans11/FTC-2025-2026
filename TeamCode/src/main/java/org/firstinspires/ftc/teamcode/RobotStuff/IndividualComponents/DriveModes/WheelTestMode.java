@@ -1,27 +1,25 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.DriveModes;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.rowanmcalpin.nextftc.ftc.driving.MecanumDriverControlled;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.DriveModes.DriveMotors;
 
-import kotlin.jvm.functions.Function0;
+import java.util.function.Supplier;
+
+import dev.nextftc.ftc.NextFTCOpMode;
+import dev.nextftc.hardware.driving.MecanumDriverControlled;
 
 public class WheelTestMode extends DriveMotors {
 
-
-    Function0<Float> forwardBackward = () -> (float) (forwardSupp.getValue() * config.sensitivities.getForwardSensitivity());
-    Function0<Float> strafe = () -> 0.0f;
-    Function0<Float> yaw = () -> 0.0f;
+    Supplier<Double> forwardBackward = () -> (forwardSupp.get() * config.sensitivities.getForwardModifier());
+    Supplier<Double> strafe = () -> 0.0;
+    Supplier<Double> yaw = () -> 0.0;
 
     MecanumDriverControlled vroom;
 
-    public WheelTestMode(OpMode opMode, RobotConfig config) { // idk the name could be better
+    public WheelTestMode(NextFTCOpMode opMode, RobotConfig config) { // idk the name could be better
         super(opMode, config);
-        this.vroom = new MecanumDriverControlled(driveMotors, forwardBackward, strafe, yaw, true);
+        this.vroom = new MecanumDriverControlled(FL, FR, BL, BR, forwardBackward, strafe, yaw);
     }
-
 
     @Override
     public void updateDrive(long deltaTimeNano) {

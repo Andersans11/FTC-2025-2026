@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.Magazine;
 
-import com.qualcomm.robotcore.hardware.ColorRangeSensor;
+
 import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.Utils.ArtifactTypes;
+
+import dev.nextftc.ftc.NextFTCOpMode;
+
 
 public class MagSlot {
 
