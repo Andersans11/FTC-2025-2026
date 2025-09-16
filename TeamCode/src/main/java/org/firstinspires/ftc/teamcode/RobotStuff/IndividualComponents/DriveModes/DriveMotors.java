@@ -36,7 +36,7 @@ public abstract class DriveMotors {
 
     }
 
-    public abstract void updateDrive(long deltaTimeNano);
+    public abstract void update(long deltaTimeNano);
 
-    public abstract void Start();
+    public abstract void invoke();
 }

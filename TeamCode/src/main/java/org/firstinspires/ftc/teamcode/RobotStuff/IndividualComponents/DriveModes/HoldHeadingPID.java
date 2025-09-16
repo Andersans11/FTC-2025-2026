@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.Sensitivities;
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.DifferenceArrayList;
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.GoBildaPinpointDriver;
 import org.firstinspires.ftc.teamcode.RobotStuff.PIDStuff.YawPID;
@@ -38,10 +39,10 @@ public class HoldHeadingPID extends DriveMotors {
     double targetHeading;
     long extDTN;
 
-    Supplier<Double> forwardBackward = () -> (forwardSupp.get() * config.sensitivities.getForwardModifier());
-    Supplier<Double> strafe = () -> (strafeSupp.get() * config.sensitivities.getStrafeModifier());
+    Supplier<Double> forwardBackward = () -> (forwardSupp.get() * Sensitivities.getForwardModifier());
+    Supplier<Double> strafe = () -> (strafeSupp.get() * Sensitivities.getStrafeModifier());
     Supplier<Double> yaw = () -> {
-        updateHeading(turnSupp.get() * config.sensitivities.getPIDTurnModifier());
+        updateHeading(turnSupp.get() * Sensitivities.getPIDTurnModifier());
         return HeadingPID.lockYaw(targetRad,  pinpoint.getHeading(AngleUnit.RADIANS), extDTN);
     };
     /*
@@ -94,7 +95,7 @@ public class HoldHeadingPID extends DriveMotors {
     }
 
     @Override
-    public void updateDrive(long deltaTimeNano) {
+    public void update(long deltaTimeNano) {
 
         extDTN = deltaTimeNano; // for pid
 
@@ -128,8 +129,7 @@ public class HoldHeadingPID extends DriveMotors {
     }
 
     @Override
-    public void Start() {
+    public void invoke() {
         vroom.invoke();
     } // use in onStartButtonPressed()
 }
-

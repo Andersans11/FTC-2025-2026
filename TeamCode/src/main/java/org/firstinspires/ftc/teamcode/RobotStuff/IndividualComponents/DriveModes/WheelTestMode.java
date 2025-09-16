@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.DriveMode
 
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.Sensitivities;
 
 import java.util.function.Supplier;
 
@@ -10,7 +11,7 @@ import dev.nextftc.hardware.driving.MecanumDriverControlled;
 
 public class WheelTestMode extends DriveMotors {
 
-    Supplier<Double> forwardBackward = () -> (forwardSupp.get() * config.sensitivities.getForwardModifier());
+    Supplier<Double> forwardBackward = () -> (forwardSupp.get() * Sensitivities.getForwardModifier());
     Supplier<Double> strafe = () -> 0.0;
     Supplier<Double> yaw = () -> 0.0;
 
@@ -22,12 +23,12 @@ public class WheelTestMode extends DriveMotors {
     }
 
     @Override
-    public void updateDrive(long deltaTimeNano) {
+    public void update(long deltaTimeNano) {
         vroom.update();
     } // only actually needed for holdHeading because of pid stuff, doesn't need to be called here
 
     @Override
-    public void Start() {
+    public void invoke() {
         vroom.invoke();
     }
 }

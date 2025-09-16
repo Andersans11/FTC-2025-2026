@@ -11,19 +11,19 @@ public class Sensitivities {
     public static float strafingSensitivity = 1;
     public static float driveModifier = 1f;
 
-    public float getForwardModifier() {
+    public static float getForwardModifier() {
         return driveModifier * forwardSensitivity;
     }
 
-    public float getStrafeModifier() {
+    public static float getStrafeModifier() {
         return driveModifier * strafingSensitivity;
     }
 
-    public float getTurnModifier() {
+    public static float getTurnModifier() {
         return driveModifier * turningSensitivity;
     }
 
-    public float getPIDTurnModifier() {
+    public static float getPIDTurnModifier() {
         return driveModifier * PIDturningSensitivity;
     }
 

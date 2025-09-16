@@ -19,7 +19,6 @@ public class RobotConfig {
     public final ReadyPlayerOne playerOne;
     public final ReadyPlayerTwo playerTwo;
 
-    public final Sensitivities sensitivities;
     public DcMotor.ZeroPowerBehavior zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE;
 
     public static MotorConfig FLDrive;
@@ -47,9 +46,9 @@ public class RobotConfig {
     public RobotConfig(NextFTCOpMode opMode) {
         this.opMode = opMode;
         this.hardwareMap = opMode.hardwareMap;
+
         playerOne = new ReadyPlayerOne(opMode.gamepad1);
         playerTwo = new ReadyPlayerTwo(opMode.gamepad2);
-        sensitivities = new Sensitivities();
 
         initHardware(hardwareMap);
     }

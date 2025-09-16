@@ -107,7 +107,8 @@ public class ReadyPlayerOne { // just a wrapper so that we can have custom names
 
 
     public Button SlowDown = gamepadEx.leftTrigger().atLeast(Sensitivities.playerOneLeftTriggerThreshold)
-            .whenTrue(() -> Sensitivities.driveModifier = 0.4f);
+            .whenTrue(() -> Sensitivities.driveModifier = 0.4f)
+            .whenFalse(() -> Sensitivities.driveModifier = 1f);
     public Button RightTrigger = gamepadEx.rightTrigger().atLeast(Sensitivities.playerOneRightTriggerThreshold);
 
     public void update_triggers() {
