@@ -28,10 +28,10 @@ public class ReadyPlayerTwo { // just a wrapper so that we can have custom names
     public Button Triangle = new Button(() -> gamepadEx.triangle().get());
 
     public void update_buttons() {
-        Cross.update("tele");
-        Circle.update("tele");
-        Square.update("tele");
-        Triangle.update("tele");
+        Cross.update(null);
+        Circle.update(null);
+        Square.update(null);
+        Triangle.update(null);
     }
 
 
@@ -55,10 +55,10 @@ public class ReadyPlayerTwo { // just a wrapper so that we can have custom names
     public Button DpadRight = new Button(() -> gamepadEx.dpadRight().get());
 
     public void update_dpad() {
-        DpadUp.update("tele");
-        DpadDown.update("tele");
-        DpadLeft.update("tele");
-        DpadRight.update("tele");
+        DpadUp.update(null);
+        DpadDown.update(null);
+        DpadLeft.update(null);
+        DpadRight.update(null);
     }
 
 
@@ -77,7 +77,7 @@ public class ReadyPlayerTwo { // just a wrapper so that we can have custom names
     public void update_left() {
         LeftY.update();
         LeftX.update();
-        LeftButton.update("tele");
+        LeftButton.update(null);
     }
 
 
@@ -98,7 +98,7 @@ public class ReadyPlayerTwo { // just a wrapper so that we can have custom names
     public void update_right() {
         RightX.update();
         RightY.update();
-        RightButton.update("tele");
+        RightButton.update(null);
     }
 
 
@@ -109,8 +109,8 @@ public class ReadyPlayerTwo { // just a wrapper so that we can have custom names
     public Button RightTrigger = gamepadEx.rightTrigger().atLeast(Sensitivities.playerTwoRightTriggerThreshold);
 
     public void update_triggers() {
-        LeftTrigger.update("tele");
-        RightTrigger.update("tele");
+        LeftTrigger.update(null);
+        RightTrigger.update(null);
     }
 
     public void update_all() {

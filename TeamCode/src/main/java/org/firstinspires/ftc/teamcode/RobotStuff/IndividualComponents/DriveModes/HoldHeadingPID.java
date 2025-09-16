@@ -36,13 +36,11 @@ public class HoldHeadingPID extends DriveMotors {
     DifferenceArrayList differences = new DifferenceArrayList();
 
     double targetRad;
-    double targetHeading;
     long extDTN;
 
-    Supplier<Double> forwardBackward = () -> (forwardSupp.get() * Sensitivities.getForwardModifier());
-    Supplier<Double> strafe = () -> (strafeSupp.get() * Sensitivities.getStrafeModifier());
-    Supplier<Double> yaw = () -> {
-        updateHeading(turnSupp.get() * Sensitivities.getPIDTurnModifier());
+
+    Supplier<Double> pidYaw = () -> {
+        targetRad = getHeadingRad() + (turnSupp.get() * Sensitivities.getPIDTurnModifier());
         return HeadingPID.lockYaw(targetRad,  pinpoint.getHeading(AngleUnit.RADIANS), extDTN);
     };
     /*
@@ -68,25 +66,30 @@ public class HoldHeadingPID extends DriveMotors {
 
         HeadingPID = new YawPID(opMode.telemetry, config, "HeadingPID");
         HeadingPID.setSecondary(true);
-        pinpoint = opMode.hardwareMap.get(GoBildaPinpointDriver.class, "sensor");
-        setHeading(pinpoint.getHeading(AngleUnit.DEGREES)); // on init, take heading and set to that so that robot doesn't go to zero
 
-        this.vroom = new MecanumDriverControlled(FL, FR, BL, BR, forwardBackward, strafe, yaw);
+        pinpoint = opMode.hardwareMap.get(GoBildaPinpointDriver.class, "sensor");
+        targetRad = getHeadingRad(); // on init, take heading and set to that so that robot doesn't go to zero
+
+        this.vroom = new MecanumDriverControlled(
+                FL, FR, BL, BR,
+                () -> (forwardSupp.get() * Sensitivities.getForwardModifier()),
+                () -> (strafeSupp.get() * Sensitivities.getStrafeModifier()),
+                pidYaw
+        );
     }
 
-    double getHeadingDeg() {
-        return pinpoint.getHeading(AngleUnit.DEGREES);
+    double getHeadingRad() {
+        return pinpoint.getHeading(AngleUnit.RADIANS);
     }
 
     public void runTelemetry() {
         opMode.telemetry.addLine("================================");
-        opMode.telemetry.addData("current heading", getHeadingDeg());
-        opMode.telemetry.addData("target heading", targetHeading);
+        opMode.telemetry.addData("current heading (radians)", getHeadingRad());
+        opMode.telemetry.addData("target heading (radians)", targetRad);
 
         if (DEBUGMODE) {
-            differences.add((float) Math.abs(targetHeading - getHeadingDeg()));
+            differences.add((float) Math.abs(targetRad - getHeadingRad()));
 
-            opMode.telemetry.addData("target heading (radians)", targetRad);
             opMode.telemetry.addData("target - current difference", differences.lastAdded());
             opMode.telemetry.addData("average difference", differences.getCollectiveAverage());
             opMode.telemetry.addData("maximum difference", differences.getMax());
@@ -111,21 +114,6 @@ public class HoldHeadingPID extends DriveMotors {
         HeadingPID.setThreshold(threshold);
 
         vroom.update();
-    }
-
-    public void updateHeading(double modifier) {
-        targetHeading = getHeadingDeg() + modifier;
-        targetRad = Math.toRadians(targetHeading);
-    }
-
-    public void updateHeading() { // if robot turns without joystick except no
-        targetHeading = getHeadingDeg();
-        targetRad = Math.toRadians(targetHeading);
-    }
-
-    public void setHeading(double set) {
-        targetHeading = set;
-        targetRad = Math.toRadians(targetHeading);
     }
 
     @Override
