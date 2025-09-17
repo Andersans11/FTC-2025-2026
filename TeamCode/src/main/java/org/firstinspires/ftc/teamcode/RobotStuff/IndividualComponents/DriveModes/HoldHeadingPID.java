@@ -61,10 +61,10 @@ public class HoldHeadingPID extends DriveMotors {
 
     MecanumDriverControlled vroom;
 
-    public HoldHeadingPID(NextFTCOpMode opMode, RobotConfig config) {
-        super(opMode, config);
+    public HoldHeadingPID(NextFTCOpMode opMode) {
+        super(opMode);
 
-        HeadingPID = new YawPID(opMode.telemetry, config, "HeadingPID");
+        HeadingPID = new YawPID(opMode.telemetry, "HeadingPID");
         HeadingPID.setSecondary(true);
 
         pinpoint = opMode.hardwareMap.get(GoBildaPinpointDriver.class, "sensor");

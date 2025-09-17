@@ -11,7 +11,6 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
 public abstract class DriveMotors {
 
     NextFTCOpMode opMode;
-    RobotConfig config;
     Range forwardSupp;
     Range strafeSupp;
     Range turnSupp;
@@ -21,18 +20,17 @@ public abstract class DriveMotors {
     MotorEx BL;
     MotorEx BR;
 
-    public DriveMotors(NextFTCOpMode opMode, RobotConfig config) {
+    public DriveMotors(NextFTCOpMode opMode) {
         this.opMode = opMode;
-        this.config = config;
 
-        this.forwardSupp = config.playerOne.ForwardAxis;
-        this.strafeSupp = config.playerOne.StrafeAxis;
-        this.turnSupp = config.playerOne.TurnAxis;
+        this.forwardSupp = RobotConfig.playerOne.ForwardAxis;
+        this.strafeSupp = RobotConfig.playerOne.StrafeAxis;
+        this.turnSupp = RobotConfig.playerOne.TurnAxis;
 
-        this.FL = config.FLDrive.motor;
-        this.FR = config.FRDrive.motor;
-        this.BL = config.BLDrive.motor;
-        this.BR = config.BRDrive.motor;
+        this.FL = RobotConfig.FLDrive.motor;
+        this.FR = RobotConfig.FRDrive.motor;
+        this.BL = RobotConfig.BLDrive.motor;
+        this.BR = RobotConfig.BRDrive.motor;
 
     }
 

@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.DriveModes;
 
 
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.Sensitivities;
 
 import java.util.function.Supplier;
@@ -17,8 +16,8 @@ public class WheelTestMode extends DriveMotors {
 
     MecanumDriverControlled vroom;
 
-    public WheelTestMode(NextFTCOpMode opMode, RobotConfig config) { // idk the name could be better
-        super(opMode, config);
+    public WheelTestMode(NextFTCOpMode opMode) { // idk the name could be better
+        super(opMode);
         this.vroom = new MecanumDriverControlled(FL, FR, BL, BR, forwardBackward, strafe, yaw);
     }
 

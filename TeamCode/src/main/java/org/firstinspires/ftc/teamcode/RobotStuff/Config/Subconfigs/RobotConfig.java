@@ -16,8 +16,8 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.HardwareConfi
 @Config
 public class RobotConfig {
 
-    public final ReadyPlayerOne playerOne;
-    public final ReadyPlayerTwo playerTwo;
+    public static ReadyPlayerOne playerOne;
+    public static ReadyPlayerTwo playerTwo;
 
     public static AnalogInput CarouselENC1;
     public static AnalogInput CarouselENC2;
@@ -41,15 +41,13 @@ public class RobotConfig {
     public static CRServoConfig CarouselCR3;
     public static CRServoConfig TurretPitch;
 
+    static HardwareMap hardwareMap;
+    static NextFTCOpMode opMode;
 
 
-    HardwareMap hardwareMap;
-
-    NextFTCOpMode opMode;
-
-    public RobotConfig(NextFTCOpMode opMode) {
-        this.opMode = opMode;
-        this.hardwareMap = opMode.hardwareMap;
+    public static void initConfig(NextFTCOpMode opMode) {
+        RobotConfig.opMode = opMode;
+        RobotConfig.hardwareMap = opMode.hardwareMap;
 
         playerOne = new ReadyPlayerOne(opMode.gamepad1);
         playerTwo = new ReadyPlayerTwo(opMode.gamepad2);
@@ -57,11 +55,12 @@ public class RobotConfig {
         initHardware(hardwareMap);
     }
 
-    public void gamepadUpdates() {
+
+    public static void gamepadUpdates() {
         playerOne.update_all();
         playerTwo.update_all();
     }
-    public static void initHardware (HardwareMap hardwareMap) {
+    private static void initHardware (HardwareMap hardwareMap) {
 
         CarouselENC1 = hardwareMap.get(AnalogInput.class, "CarENC1");
         CarouselENC2 = hardwareMap.get(AnalogInput.class, "CarENC2");

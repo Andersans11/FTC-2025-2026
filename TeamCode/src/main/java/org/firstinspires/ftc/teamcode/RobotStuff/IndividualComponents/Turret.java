@@ -15,31 +15,29 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.Sensitivities
 public class Turret implements Subsystem {
 
     NextFTCOpMode opMode;
-    RobotConfig config;
     RTPAxon pitchServo;
     MotorGroup shootMotors;
     MotorEx rotationMotor;
 
 
-    public void init(RobotConfig config, NextFTCOpMode opMode) {
-        this.config = config;
+    public void init(NextFTCOpMode opMode) {
         this.opMode = opMode;
 
-        this.pitchServo = new RTPAxon(config.TurretPitch);
-        this.rotationMotor = config.TurretRotation.motor;
+        this.pitchServo = new RTPAxon(RobotConfig.TurretPitch);
+        this.rotationMotor = RobotConfig.TurretRotation.motor;
 
-        this.shootMotors = new MotorGroup(config.ShootMotor1.motor, config.ShootMotor2.motor);
+        this.shootMotors = new MotorGroup(RobotConfig.ShootMotor1.motor, RobotConfig.ShootMotor2.motor);
 
-        config.playerOne.RightTrigger
+        RobotConfig.playerOne.RightTrigger
                 .whenTrue(() -> new SetPower(shootMotors,1))
                 .whenFalse(() -> new SetPower(shootMotors,0));
 
-        config.playerTwo.LeftX.greaterThan(0.01).or(() -> config.playerTwo.LeftX.lessThan(-0.01).get())
-                .whenTrue(() -> new SetPower(rotationMotor, Sensitivities.turretTurnSpeed * config.playerTwo.LeftX.get()))
+        RobotConfig.playerTwo.LeftX.greaterThan(0.01).or(() -> RobotConfig.playerTwo.LeftX.lessThan(-0.01).get())
+                .whenTrue(() -> new SetPower(rotationMotor, Sensitivities.turretTurnSpeed * RobotConfig.playerTwo.LeftX.get()))
                 .whenFalse(() -> new SetPower(rotationMotor, 0));
 
-        config.playerTwo.RightY.greaterThan(0.01).or(() -> config.playerTwo.RightY.lessThan(-0.01).get())
-                .whenTrue(() -> pitchServo.setPower(Sensitivities.turretPitchSpeed * config.playerTwo.RightY.get()))
+        RobotConfig.playerTwo.RightY.greaterThan(0.01).or(() -> RobotConfig.playerTwo.RightY.lessThan(-0.01).get())
+                .whenTrue(() -> pitchServo.setPower(Sensitivities.turretPitchSpeed * RobotConfig.playerTwo.RightY.get()))
                 .whenFalse(() -> pitchServo.setPower(0));
     }
 

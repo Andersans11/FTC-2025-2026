@@ -8,27 +8,25 @@ import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.RTPAxon;
 
 public class Magazine implements Subsystem {
 
-    RobotConfig config;
     NextFTCOpMode opMode;
     MagSlot[] slots;
 
     RTPAxon[] servos;
     double pos = 0;
 
-    public void init(NextFTCOpMode opMode, RobotConfig config) {
-        this.config = config;
+    public void init(NextFTCOpMode opMode) {
         this.opMode = opMode;
 
         this.slots = new MagSlot[] {
-                new MagSlot(opMode, config, 0, config.Slot1CS), // this slot starts in front of intake
-                new MagSlot(opMode, config,120, config.Slot2CS),
-                new MagSlot(opMode, config,-120, config.Slot3CS)
+                new MagSlot(opMode, 0, RobotConfig.Slot1CS), // this slot starts in front of intake
+                new MagSlot(opMode,120, RobotConfig.Slot2CS),
+                new MagSlot(opMode,-120, RobotConfig.Slot3CS)
         };
 
         this.servos = new RTPAxon[] {
-            new RTPAxon(config.CarouselCR1),
-            new RTPAxon(config.CarouselCR2),
-            new RTPAxon(config.CarouselCR3)
+            new RTPAxon(RobotConfig.CarouselCR1),
+            new RTPAxon(RobotConfig.CarouselCR2),
+            new RTPAxon(RobotConfig.CarouselCR3)
         };
     }
 

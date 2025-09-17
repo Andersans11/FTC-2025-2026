@@ -18,8 +18,8 @@ public class RobotCentricDrive extends DriveMotors {
     Supplier<Double> yaw = () -> (turnSupp.get() * Sensitivities.getTurnModifier());
     MecanumDriverControlled vroom;
 
-    public RobotCentricDrive(NextFTCOpMode opMode, RobotConfig config) { // idk the name could be better
-        super(opMode, config);
+    public RobotCentricDrive(NextFTCOpMode opMode) { // idk the name could be better
+        super(opMode);
         this.vroom = new MecanumDriverControlled(FL, FR, BL, BR, forwardBackward, strafe, yaw);
     }
 

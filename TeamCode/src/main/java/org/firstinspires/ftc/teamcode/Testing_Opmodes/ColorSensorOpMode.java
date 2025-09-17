@@ -12,18 +12,16 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.Utils;
 //@Disabled
 public class ColorSensorOpMode extends NextFTCOpMode {
 
-    RobotConfig robotConfig;
-
     int sensorargb = 0;
     @Override public void onInit() {
-        robotConfig = new RobotConfig(this);
+        RobotConfig.initConfig(this);
     }
     @Override public void onStartButtonPressed() {
     }
     @Override public void onUpdate() {
-        sensorargb = robotConfig.Slot1CS.argb();
+        sensorargb = RobotConfig.Slot1CS.argb();
         telemetry.addData("argb", sensorargb);
 
-        robotConfig.gamepadUpdates();
+        RobotConfig.gamepadUpdates();
     }
 }

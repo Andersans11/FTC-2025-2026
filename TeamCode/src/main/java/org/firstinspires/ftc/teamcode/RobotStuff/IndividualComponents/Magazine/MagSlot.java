@@ -11,14 +11,12 @@ import dev.nextftc.ftc.NextFTCOpMode;
 
 public class MagSlot {
 
-    RobotConfig config;
     NextFTCOpMode opMode;
     double offset;
     ArtifactTypes content;
     ColorSensor color;
 
-    public MagSlot(NextFTCOpMode opMode, RobotConfig config, double offset, ColorSensor color) {
-        this.config = config;
+    public MagSlot(NextFTCOpMode opMode, double offset, ColorSensor color) {
         this.opMode = opMode;
 
         this.offset = offset;
