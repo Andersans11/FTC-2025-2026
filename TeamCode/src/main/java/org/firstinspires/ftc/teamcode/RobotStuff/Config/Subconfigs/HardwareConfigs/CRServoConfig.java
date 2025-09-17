@@ -4,13 +4,14 @@ import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
+
+import dev.nextftc.hardware.impl.CRServoEx;
 
 public class CRServoConfig {
 
     public String name;
     public DcMotorSimple.Direction direction;
-    public CRServo servo;
+    public CRServoEx servo;
     public AnalogInput encoder;
     HardwareMap hardwareMap;
 
@@ -19,13 +20,15 @@ public class CRServoConfig {
         this.name = name;
         this.direction = direction;
         this.encoder = encoder;
-        initServo();
+        this.servo = new CRServoEx(
+            () -> {
+                CRServo temp = hardwareMap.get(CRServo.class, name);
+                temp.setDirection(direction);
+                return temp;
+            }
+        );
     }
 
-    public void initServo() {
-        servo = hardwareMap.get(CRServo.class, name);
 
-        servo.setDirection(direction);
-    }
 
 }

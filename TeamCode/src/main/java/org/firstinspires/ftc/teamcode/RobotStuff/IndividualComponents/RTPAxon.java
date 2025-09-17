@@ -3,17 +3,18 @@ package org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents;
 import android.annotation.SuppressLint;
 
 import com.qualcomm.robotcore.hardware.AnalogInput;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.HardwareConfigs.CRServoConfig;
 
+import dev.nextftc.hardware.impl.CRServoEx;
+
 public class RTPAxon {
     // Encoder for servo position feedback
     private final AnalogInput servoEncoder;
     // Continuous rotation servo
-    private final CRServo servo;
+    private final CRServoEx servo;
     // Run-to-position mode flag
     private boolean rtp;
     // Current power applied to servo
@@ -43,6 +44,7 @@ public class RTPAxon {
     public int ntry = 0;
     public int cliffs = 0;
     public double homeAngle;
+    private double limit;
 
     // Direction enum for servo
     public enum Direction {
@@ -53,12 +55,12 @@ public class RTPAxon {
     // region constructors
 
     // Basic constructor, defaults to FORWARD direction
-    public RTPAxon(CRServo servo, AnalogInput encoder) {
+    public RTPAxon(CRServoEx servo, AnalogInput encoder) {
         rtp = true;
         this.servo = servo;
         servoEncoder = encoder;
 
-        switch (servo.getDirection()) {
+        switch (servo.getServo().getDirection()) {
             case FORWARD:
                 direction = Direction.FORWARD;
                 break;
@@ -74,7 +76,7 @@ public class RTPAxon {
     }
 
     // Constructor with explicit direction
-    public RTPAxon(CRServo servo, AnalogInput encoder, Direction direction) {
+    public RTPAxon(CRServoEx servo, AnalogInput encoder, Direction direction) {
         this(servo, encoder);
         this.direction = direction;
         initialize();
@@ -164,6 +166,10 @@ public class RTPAxon {
         }
     }
 
+    public void setLimit(double limit) {
+        this.limit = limit;
+    }
+
     // Get run-to-position mode state
     public boolean getRtp() {
         return rtp;
@@ -207,16 +213,6 @@ public class RTPAxon {
         return kD;
     }
 
-    // Set only P coefficient (alias)
-    public void setK(double k) {
-        setKP(k);
-    }
-
-    // Get only P coefficient (alias)
-    public double getK() {
-        return getKP();
-    }
-
     // Set maximum allowed integral sum
     public void setMaxIntegralSum(double maxIntegralSum) {
         this.maxIntegralSum = maxIntegralSum;
@@ -239,7 +235,13 @@ public class RTPAxon {
 
     // Increment target rotation by a value
     public void changeTargetRotation(double change) {
-        targetRotation += change;
+        if (isAtTarget()) {
+            if (targetRotation + change > limit) {
+                targetRotation = limit;
+            } else {
+                targetRotation += change;
+            }
+        }
     }
 
     // Set target rotation and reset PID

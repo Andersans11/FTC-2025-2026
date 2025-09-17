@@ -10,6 +10,8 @@ public class Sensitivities {
     public static float PIDturningSensitivity = 1;
     public static float strafingSensitivity = 1;
     public static float driveModifier = 1f;
+    public static float turretTurnSpeed = 1f;
+    public static float turretPitchSpeed = 0.1f;
 
     public static float getForwardModifier() {
         return driveModifier * forwardSensitivity;

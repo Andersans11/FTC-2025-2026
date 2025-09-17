@@ -18,13 +18,20 @@ public class MotorConfig {
 
     public double encoderPPR;
 
-    public MotorConfig(HardwareMap hardwareMap, String motorName, Direction direction, ZeroPowerBehavior zeroPowerBehavior,double encoderPPR) {
+    public MotorConfig(HardwareMap hardwareMap, String motorName, Direction direction, ZeroPowerBehavior zeroPowerBehavior, double encoderPPR) {
         this.hardwareMap = hardwareMap;
         this.name = motorName;
         this.direction = direction;
         this.zeroPowerBehavior = zeroPowerBehavior;
         this.encoderPPR = encoderPPR;
-        initMotor();
+
+        this.motor = new MotorEx(() -> {
+            DcMotorEx tempMotor = hardwareMap.get(DcMotorEx.class, name);
+
+            tempMotor.setDirection(direction);
+            tempMotor.setZeroPowerBehavior(zeroPowerBehavior);
+            return tempMotor;
+        });
     }
 
     public MotorConfig(HardwareMap hardwareMap, String motorName, Direction direction, ZeroPowerBehavior zeroPowerBehavior) {
@@ -32,15 +39,13 @@ public class MotorConfig {
         this.name = motorName;
         this.direction = direction;
         this.zeroPowerBehavior = zeroPowerBehavior;
-        initMotor();
-    }
 
-    public void initMotor() {
-        DcMotorEx tempMotor = hardwareMap.get(DcMotorEx.class, name);
+        this.motor = new MotorEx(() -> {
+            DcMotorEx temp = hardwareMap.get(DcMotorEx.class, name);
 
-        tempMotor.setDirection(direction);
-        tempMotor.setZeroPowerBehavior(zeroPowerBehavior);
-
-        this.motor = new MotorEx(tempMotor);
+            temp.setDirection(direction);
+            temp.setZeroPowerBehavior(zeroPowerBehavior);
+            return temp;
+        });
     }
 }
