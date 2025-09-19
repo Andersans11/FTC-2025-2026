@@ -6,12 +6,10 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 import dev.nextftc.ftc.NextFTCOpMode;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.HardwareConfigs.CRServoConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.HardwareConfigs.MotorConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.HardwareConfigs.ServoConfig;
 
 @Config
 public class RobotConfig {
@@ -24,9 +22,7 @@ public class RobotConfig {
     public static AnalogInput CarouselENC3;
     public static AnalogInput PitchENC;
 
-    public static ColorSensor Slot1CS;
-    public static ColorSensor Slot2CS;
-    public static ColorSensor Slot3CS;
+    public static ColorSensor IntakeCS;
 
     public static MotorConfig FLDrive;
     public static MotorConfig BLDrive;
@@ -67,9 +63,7 @@ public class RobotConfig {
         CarouselENC3 = hardwareMap.get(AnalogInput.class, "CarENC3");
         PitchENC = hardwareMap.get(AnalogInput.class, "PitchENC");
 
-        Slot1CS = hardwareMap.get(ColorSensor.class, "Slot1CS");
-        Slot2CS = hardwareMap.get(ColorSensor.class, "Slot2CS");
-        Slot3CS = hardwareMap.get(ColorSensor.class, "Slot3CS");
+        IntakeCS = hardwareMap.get(ColorSensor.class, "IntakeCS");
 
         FLDrive = new MotorConfig(
                 hardwareMap,
