@@ -4,7 +4,7 @@ import com.pedropathing.follower.FollowerConstants;
 import com.pedropathing.localization.Localizers;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-public class FConstants {
+public class FConstantsTeleOp {
     static {
         FollowerConstants.localizers = Localizers.PINPOINT;
 
