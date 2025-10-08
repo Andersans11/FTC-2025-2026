@@ -3,24 +3,21 @@ package org.firstinspires.ftc.teamcode.MSDT.TeleOpModes;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.DriveModes.FieldCentricDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.DriveModes.RobotCentricDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.DeltaTimer;
 
-import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.components.BindingsComponent;
-import dev.nextftc.ftc.Gamepads;
 import dev.nextftc.ftc.NextFTCOpMode;
-import dev.nextftc.hardware.driving.MecanumDriverControlled;
-import dev.nextftc.hardware.impl.MotorEx;
 
-@TeleOp(name = "Basic Mecanum Drive")
-public class BasicMecanumDrive extends NextFTCOpMode {
+@TeleOp(name = "Basic FC Drive")
+public class FieldCentric extends NextFTCOpMode {
 
     long deltaTime;
     DeltaTimer deltaTimer;
-    RobotCentricDrive robotCentricDrive;
+    FieldCentricDrive fieldCentricDrive;
 
-    public BasicMecanumDrive() {
+    public FieldCentric() {
         addComponents(
                 BindingsComponent.INSTANCE
         );
@@ -29,18 +26,18 @@ public class BasicMecanumDrive extends NextFTCOpMode {
     @Override
     public void onInit() {
         RobotConfig.initConfig(this);
-        robotCentricDrive = new RobotCentricDrive(this);
+        fieldCentricDrive = new FieldCentricDrive(this);
     }
 
     @Override
     public void onStartButtonPressed() {
-        robotCentricDrive.schedule();
+        fieldCentricDrive.schedule();
     }
 
     @Override
     public void onUpdate() {
         deltaTime = deltaTimer.getDelta();
 
-        robotCentricDrive.update(deltaTime);
+        fieldCentricDrive.update(deltaTime);
     }
 }
