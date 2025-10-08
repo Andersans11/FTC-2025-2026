@@ -1,11 +1,11 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.PedroJSON;
 
-import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
+import dev.nextftc.ftc.NextFTCOpMode;
 
-public class Callbacks extends PedroJSON.main.Callbacks {
+public class Callbacks extends PedroJSON.main.Callback {
 
     public Callbacks(NextFTCOpMode opMode) {
-        super(opMode);
+        super();
     }
 
     @Override
