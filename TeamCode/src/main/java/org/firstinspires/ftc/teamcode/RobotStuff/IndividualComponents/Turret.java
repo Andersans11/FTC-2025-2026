@@ -5,9 +5,7 @@ import dev.nextftc.core.subsystems.Subsystem;
 import dev.nextftc.ftc.NextFTCOpMode;
 import dev.nextftc.hardware.impl.MotorEx;
 import dev.nextftc.hardware.controllable.MotorGroup;
-import dev.nextftc.hardware.impl.ServoEx;
 import dev.nextftc.hardware.powerable.SetPower;
-import dev.nextftc.hardware.positionable.SetPosition;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.Sensitivities;
@@ -23,7 +21,7 @@ public class Turret implements Subsystem {
     public void init(NextFTCOpMode opMode) {
         this.opMode = opMode;
 
-        this.pitchServo = new RTPAxon(RobotConfig.TurretPitch);
+        this.pitchServo = new RTPAxon(RobotConfig.HoodServo);
         this.rotationMotor = RobotConfig.TurretRotation.motor;
 
         this.shootMotors = new MotorGroup(RobotConfig.ShootMotor1.motor, RobotConfig.ShootMotor2.motor);

@@ -20,7 +20,7 @@ public class RobotConfig {
     public static AnalogInput CarouselENC1;
     public static AnalogInput CarouselENC2;
     public static AnalogInput CarouselENC3;
-    public static AnalogInput PitchENC;
+    public static AnalogInput HoodENC;
 
     public static ColorSensor IntakeCS;
 
@@ -35,7 +35,7 @@ public class RobotConfig {
     public static CRServoConfig CarouselCR1;
     public static CRServoConfig CarouselCR2;
     public static CRServoConfig CarouselCR3;
-    public static CRServoConfig TurretPitch;
+    public static CRServoConfig HoodServo;
 
     static HardwareMap hardwareMap;
     static NextFTCOpMode opMode;
@@ -61,7 +61,7 @@ public class RobotConfig {
         CarouselENC1 = hardwareMap.get(AnalogInput.class, "CarENC1");
         CarouselENC2 = hardwareMap.get(AnalogInput.class, "CarENC2");
         CarouselENC3 = hardwareMap.get(AnalogInput.class, "CarENC3");
-        PitchENC = hardwareMap.get(AnalogInput.class, "PitchENC");
+        HoodENC = hardwareMap.get(AnalogInput.class, "HoodENC");
 
         IntakeCS = hardwareMap.get(ColorSensor.class, "IntakeCS");
 
@@ -127,11 +127,11 @@ public class RobotConfig {
                 DcMotorSimple.Direction.FORWARD,
                 CarouselENC3
         );
-        TurretPitch = new CRServoConfig(
+        HoodServo = new CRServoConfig(
                 hardwareMap,
                 "Turret Pitch",
                 DcMotorSimple.Direction.FORWARD,
-                PitchENC
+                HoodENC
         );
     }
 }
