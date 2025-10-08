@@ -8,13 +8,10 @@ import dev.nextftc.ftc.NextFTCOpMode;
 
 public class MagSlot {
 
-    NextFTCOpMode opMode;
     double offset;
     ArtifactTypes content;
 
     public MagSlot(NextFTCOpMode opMode, double offset) {
-        this.opMode = opMode;
-
         this.offset = offset;
 
         this.content = ArtifactTypes.NONE;

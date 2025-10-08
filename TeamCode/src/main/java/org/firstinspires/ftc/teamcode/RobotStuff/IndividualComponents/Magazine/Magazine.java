@@ -16,7 +16,8 @@ public class Magazine implements Subsystem {
 
     enum MagazineMode {
         INTAKE,
-        OUTTAKE
+        OUTTAKE,
+        OUTTAKE_MANUAL
     }
 
     NextFTCOpMode opMode;
@@ -25,6 +26,7 @@ public class Magazine implements Subsystem {
     RTPAxon[] servos;
     ColorSensor color;
     double targetPos = 0;
+    double oldTargetPos = 180;
     Timer deltatime;
     Utils.ArtifactTypes[] motif;
     MagazineMode mode = MagazineMode.OUTTAKE;
@@ -78,6 +80,11 @@ public class Magazine implements Subsystem {
         return new NullCommand();
     }
 
+    public void setActiveSlot(int slot) {
+        activeSlot = slot;
+    }
+
+
     public void update() {
 
         if (mode == MagazineMode.INTAKE) {
@@ -94,8 +101,7 @@ public class Magazine implements Subsystem {
                     }
                 }
             }
-        } else {
-
+        } else if (mode == MagazineMode.OUTTAKE) {
             if (slots[activeSlot].content == Utils.ArtifactTypes.NONE) {
                 for (int i = 0; i == 3; i++) {
                     if (slots[i].content == motif[shotsFired]) {
@@ -105,6 +111,13 @@ public class Magazine implements Subsystem {
                     }
                 }
             }
+        } else {
+            targetPos = 180 + slots[activeSlot].offset;
+        }
+
+        if (targetPos != oldTargetPos) {
+            setRotation(targetPos);
+            oldTargetPos = targetPos;
         }
 
         servos[0].update();
