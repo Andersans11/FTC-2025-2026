@@ -117,7 +117,7 @@ public class HoldHeadingPID extends DriveMotors {
     }
 
     @Override
-    public void invoke() {
-        vroom.invoke();
+    public void schedule() {
+        vroom.schedule();
     } // use in onStartButtonPressed()
 }

@@ -27,7 +27,7 @@ public class WheelTestMode extends DriveMotors {
     } // only actually needed for holdHeading because of pid stuff, doesn't need to be called here
 
     @Override
-    public void invoke() {
-        vroom.invoke();
+    public void schedule() {
+        vroom.schedule();
     }
 }
