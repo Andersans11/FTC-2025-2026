@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.Magazine;
 
+import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 
 import dev.nextftc.core.commands.utility.NullCommand;
@@ -8,16 +9,26 @@ import dev.nextftc.ftc.NextFTCOpMode;
 import dev.nextftc.core.commands.Command;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.RTPAxon;
 
 public class Magazine implements Subsystem {
 
+    enum MagazineMode {
+        INTAKE,
+        OUTTAKE
+    }
+
     NextFTCOpMode opMode;
     MagSlot[] slots;
-    MagSlot activeSlot; // slot that receives the next ball
+    int activeSlot; // slot that receives the next ball
     RTPAxon[] servos;
     ColorSensor color;
-    double pos = 0;
+    double targetPos = 0;
+    Timer deltatime;
+    Utils.ArtifactTypes[] motif;
+    MagazineMode mode = MagazineMode.OUTTAKE;
+    int shotsFired;
 
     public void init(NextFTCOpMode opMode) {
         this.opMode = opMode;
@@ -27,7 +38,7 @@ public class Magazine implements Subsystem {
                 new MagSlot(opMode,120),
                 new MagSlot(opMode,-120)
         };
-        this.activeSlot = slots[0];
+        this.activeSlot = 0;
 
         this.servos = new RTPAxon[] {
             new RTPAxon(RobotConfig.CarouselCR1),
@@ -36,6 +47,12 @@ public class Magazine implements Subsystem {
         };
 
         this.color = RobotConfig.IntakeCS;
+
+        deltatime = new Timer();
+    }
+
+    public void setMotif(Utils.ArtifactTypes[] motif) {
+        this.motif = motif;
     }
 
     public Command setRotation(double to) {
@@ -43,8 +60,56 @@ public class Magazine implements Subsystem {
         return new NullCommand();
     }
 
+    public Command setMode(MagazineMode mode) {
+
+        if (mode == MagazineMode.OUTTAKE) {
+            for (int i = 0; i == 3; i++) {
+                if (slots[i].content == motif[0]) {
+                    activeSlot = i;
+                    targetPos = 180 + slots[activeSlot].offset;
+                    i = 3;
+                }
+            }
+
+            shotsFired = 0;
+        }
+
+        this.mode = mode;
+        return new NullCommand();
+    }
+
     public void update() {
 
+        if (mode == MagazineMode.INTAKE) {
+
+            if (slots[activeSlot].content != Utils.ArtifactTypes.NONE) {
+                deltatime.resetTimer();
+                if (deltatime.getElapsedTimeSeconds() >= 0.5) {
+                    for (int i = 0; i == 3; i++) {
+                        if (slots[i].content == Utils.ArtifactTypes.NONE) {
+                            activeSlot = i;
+                            targetPos = slots[activeSlot].offset;
+                            i = 3;
+                        }
+                    }
+                }
+            }
+        } else {
+
+            if (slots[activeSlot].content == Utils.ArtifactTypes.NONE) {
+                for (int i = 0; i == 3; i++) {
+                    if (slots[i].content == motif[shotsFired]) {
+                        activeSlot = i;
+                        targetPos = 180 + slots[activeSlot].offset;
+                        i = 3;
+                    }
+                }
+            }
+        }
+
+        servos[0].update();
+        servos[1].update();
+        servos[2].update();
     }
 
 }
