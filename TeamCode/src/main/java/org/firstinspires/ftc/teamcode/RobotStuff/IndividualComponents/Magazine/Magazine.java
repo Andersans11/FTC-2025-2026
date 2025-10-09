@@ -57,8 +57,20 @@ public class Magazine implements Subsystem {
         this.motif = motif;
     }
 
-    public Command setRotation(double to) {
-        // TODO: take an angle and calculate servo rotation
+    public void getColor() {
+        if (Math.abs((color.red() + color.blue())/2 - color.green()) >= 100) { // If the difference between green and purple is greater than a certain value
+            if ((color.red() + color.blue()) / 2 < color.green()) {
+                slots[activeSlot].setContent(Utils.ArtifactTypes.GREEN);
+            } else {
+                slots[activeSlot].setContent(Utils.ArtifactTypes.PURPLE);
+            }
+        }
+    }
+
+    public Command setRotation(double angleDegrees) {
+        servos[0].setTargetRotation(angleDegrees);
+        servos[1].setTargetRotation(angleDegrees);
+        servos[2].setTargetRotation(angleDegrees);
         return new NullCommand();
     }
 
