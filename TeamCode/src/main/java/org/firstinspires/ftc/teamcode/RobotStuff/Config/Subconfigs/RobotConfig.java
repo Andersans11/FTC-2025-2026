@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -31,11 +32,14 @@ public class RobotConfig {
     public static MotorConfig ShootMotor1;
     public static MotorConfig ShootMotor2;
     public static MotorConfig TurretRotation;
+    public static MotorConfig IntakeMotor;
 
     public static CRServoConfig CarouselCR1;
     public static CRServoConfig CarouselCR2;
     public static CRServoConfig CarouselCR3;
     public static CRServoConfig HoodServo;
+
+    public static HuskyLens camera;
 
     static HardwareMap hardwareMap;
     static NextFTCOpMode opMode;
@@ -64,6 +68,8 @@ public class RobotConfig {
         HoodENC = hardwareMap.get(AnalogInput.class, "HoodENC");
 
         IntakeCS = hardwareMap.get(ColorSensor.class, "IntakeCS");
+
+        camera = hardwareMap.get(HuskyLens.class, "Camera");
 
         FLDrive = new MotorConfig(
                 hardwareMap,
@@ -104,6 +110,12 @@ public class RobotConfig {
         TurretRotation = new MotorConfig(
                 hardwareMap,
                 "Turret Rotation",
+                DcMotorSimple.Direction.FORWARD,
+                DcMotor.ZeroPowerBehavior.BRAKE
+        );
+        IntakeMotor = new MotorConfig(
+                hardwareMap,
+                "Intake Motor",
                 DcMotorSimple.Direction.FORWARD,
                 DcMotor.ZeroPowerBehavior.BRAKE
         );
