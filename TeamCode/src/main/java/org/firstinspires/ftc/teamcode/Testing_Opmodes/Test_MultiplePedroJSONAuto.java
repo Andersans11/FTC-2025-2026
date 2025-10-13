@@ -34,20 +34,12 @@ public class Test_MultiplePedroJSONAuto extends NextFTCOpMode {
         base.Parse();
         outcome1.Parse();
         outcome2.Parse();
-
-        base.Init();
-        outcome1.Init();
-        outcome2.Init();
     }
 
     @Override
     public void onWaitForStart() {
         if (gamepad1.dpad_left) doOutcome1 = true;
         if (gamepad1.dpad_right) doOutcome2 = true;
-
-        base.Start();
-        outcome1.Start();
-        outcome2.Start();
     }
 
     @Override
