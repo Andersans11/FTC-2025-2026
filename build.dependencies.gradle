@@ -1,5 +1,6 @@
 repositories {
     mavenCentral()
+    maven { url = "https://repo1.maven.org/maven2/" } // Explicit Maven Central URL for PedroJSON
     google() // Needed for androidx
     maven { url = "https://maven.rowanmcalpin.com/" }
     maven { url = "https://maven.pedropathing.com/" } // Remove if you don't intend to use PedroPathing
