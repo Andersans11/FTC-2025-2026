@@ -22,14 +22,18 @@ public class Test_MultiplePedroJSONAuto extends NextFTCOpMode {
     boolean doOutcome1;
     boolean doOutcome2;
 
+    int outcomeState = 0;
+
     @Override
     public void onInit() {
         follower = new Follower(hardwareMap, FConstants.class, LConstants.class);
         callbacks = new Callbacks(this);
 
-        base = new PathLoader(new File(), follower, this, callbacks);
-        outcome1 = new PathLoader(new File(), follower, this, callbacks);
-        outcome2 = new PathLoader(new File(), follower, this, callbacks);
+        // TODO: Create Files
+
+        base = new PathLoader(new File("org/firstinspires/ftc/teamcode/RobotStuff/PedroJSON/Data/base.json"), follower, this, callbacks);
+        outcome1 = new PathLoader(new File("org/firstinspires/ftc/teamcode/RobotStuff/PedroJSON/Data/outcome1.json"), follower, this, callbacks);
+        outcome2 = new PathLoader(new File("org/firstinspires/ftc/teamcode/RobotStuff/PedroJSON/Data/outcome2.json"), follower, this, callbacks);
 
         base.Parse();
         outcome1.Parse();
@@ -44,6 +48,37 @@ public class Test_MultiplePedroJSONAuto extends NextFTCOpMode {
 
     @Override
     public void onStartButtonPressed() {
+        // starting position
+    }
 
+    @Override
+    public void onUpdate() {
+        switch (outcomeState) {
+            case 0:
+                base.Update();
+                if (base.isComplete()) {
+                    outcomeState = 1;
+                }
+                break;
+            case 1:
+                if (doOutcome1) {
+                    outcome1.Update();
+                    if (outcome1.isComplete()) {
+                        outcomeState = 2;
+                    }
+                } else outcomeState = 2;
+                break;
+            case 2:
+                if (doOutcome2) {
+                    outcome2.Update();
+                    if (outcome2.isComplete()) {
+                        outcomeState = 3;
+                    }
+                } else outcomeState = 3;
+                break;
+            case 3:
+                // maybe add a breaking function or smth idk
+                break;
+        }
     }
 }

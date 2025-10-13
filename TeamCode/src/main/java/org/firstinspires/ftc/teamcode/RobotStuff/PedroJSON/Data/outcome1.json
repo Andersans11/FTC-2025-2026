@@ -1,0 +1,97 @@
+{
+  "pathChains": [
+    {
+      "id": null,
+      "paths": [
+        {
+          "id": 0,
+          "type": "LINEAR",
+          "start": {
+            "x": 48,
+            "y": 72
+          },
+          "end": {
+            "x": 24,
+            "y": 72
+          },
+          "control1": null,
+          "control2": null,
+          "interpolation": {
+            "type": "LINEAR",
+            "heading1": 0,
+            "heading2": 0
+          },
+          "callbacks": []
+        }
+      ]
+    },
+    {
+      "id": null,
+      "paths": [
+        {
+          "id": 1,
+          "type": "LINEAR",
+          "start": {
+            "x": 24,
+            "y": 72
+          },
+          "end": {
+            "x": 48,
+            "y": 72
+          },
+          "control1": null,
+          "control2": null,
+          "interpolation": {
+            "type": "LINEAR",
+            "heading1": 0,
+            "heading2": 0
+          },
+          "callbacks": []
+        }
+      ]
+    }
+  ],
+  "curves": [
+    {
+      "type": "line",
+      "points": [
+        {
+          "x": 48,
+          "y": 72
+        },
+        {
+          "x": 24,
+          "y": 72
+        }
+      ],
+      "color": "#007bff",
+      "lineWidth": 2,
+      "isComplete": true,
+      "actions": [],
+      "startHeading": 0,
+      "endHeading": 0,
+      "headingInterpolation": "LINEAR"
+    },
+    {
+      "type": "line",
+      "points": [
+        {
+          "x": 24,
+          "y": 72
+        },
+        {
+          "x": 48,
+          "y": 72
+        }
+      ],
+      "color": "#007bff",
+      "lineWidth": 2,
+      "isComplete": true,
+      "actions": [],
+      "startHeading": 0,
+      "endHeading": 0,
+      "headingInterpolation": "LINEAR"
+    }
+  ],
+  "groups": []
+}
