@@ -7,10 +7,13 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
+
 import dev.nextftc.ftc.NextFTCOpMode;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.HardwareConfigs.CRServoConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.HardwareConfigs.MotorConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.HardwareConfigs.ServoConfig;
 
 @Config
 public class RobotConfig {
@@ -38,6 +41,8 @@ public class RobotConfig {
     public static CRServoConfig CarouselCR2;
     public static CRServoConfig CarouselCR3;
     public static CRServoConfig HoodServo;
+
+    public static ServoConfig Kicker;
 
     public static HuskyLens camera;
 
@@ -120,7 +125,11 @@ public class RobotConfig {
                 DcMotor.ZeroPowerBehavior.BRAKE
         );
 
-
+        Kicker = new ServoConfig(
+                hardwareMap,
+                "Kicker Servo",
+                Servo.Direction.FORWARD
+        );
         CarouselCR1 = new CRServoConfig(
                 hardwareMap,
                 "Carousel 1",

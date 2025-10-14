@@ -1,9 +1,7 @@
-package org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.Magazine;
+package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
 
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.Utils.ArtifactTypes;
-
-import dev.nextftc.ftc.NextFTCOpMode;
 
 
 public class MagSlot {
@@ -11,7 +9,7 @@ public class MagSlot {
     double offset;
     ArtifactTypes content;
 
-    public MagSlot(NextFTCOpMode opMode, double offset) {
+    public MagSlot(double offset) {
         this.offset = offset;
 
         this.content = ArtifactTypes.NONE;

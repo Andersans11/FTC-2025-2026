@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.DriveModes;
+package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes;
 
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.Sensitivities;

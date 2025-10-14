@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents;
+package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
 
@@ -8,9 +8,13 @@ import dev.nextftc.hardware.impl.MotorEx;
 import dev.nextftc.hardware.powerable.SetPower;
 
 public class Intake implements Subsystem {
+
+    public static final Intake INSTANCE = new Intake();
+
     MotorEx intake;
 
-    public void init() {
+    @Override
+    public void initialize() {
         intake = RobotConfig.IntakeMotor.motor;
     }
 

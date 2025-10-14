@@ -1,15 +1,12 @@
-package org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents;
+package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems;
 
 
 
 
 import com.qualcomm.hardware.dfrobot.HuskyLens;
 
-import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.subsystems.Subsystem;
-import dev.nextftc.ftc.NextFTCOpMode;
 import dev.nextftc.hardware.impl.MotorEx;
-import dev.nextftc.hardware.controllable.MotorGroup;
 import dev.nextftc.hardware.powerable.SetPower;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
@@ -18,29 +15,31 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.Utils.*;
 
 public class Turret implements Subsystem {
 
-    NextFTCOpMode opMode;
+    public static final Turret INSTANCE = new Turret();
+
     MotorEx rotationMotor;
     HuskyLens camera;
-    HuskyLens.Block[] detections;
     ArtifactTypes[] motif;
+    HuskyLens.Algorithm trackingMode;
 
-
-    public void init(NextFTCOpMode opMode, boolean eddieTracking) {
-        this.opMode = opMode;
+    @Override
+    public void initialize() {
 
         this.rotationMotor = RobotConfig.TurretRotation.motor;
 
         this.camera = RobotConfig.camera;
-
-        if (eddieTracking) camera.selectAlgorithm(HuskyLens.Algorithm.TAG_RECOGNITION);
-        else camera.selectAlgorithm(HuskyLens.Algorithm.FACE_RECOGNITION);
 
         RobotConfig.playerTwo.LeftX.greaterThan(0.01).or(() -> RobotConfig.playerTwo.LeftX.lessThan(-0.01).get())
                 .whenTrue(() -> new SetPower(rotationMotor, Sensitivities.turretTurnSpeed * RobotConfig.playerTwo.LeftX.get()))
                 .whenFalse(() -> new SetPower(rotationMotor, 0));
     }
 
+    public void setTrackingMode(HuskyLens.Algorithm mode) {
+        trackingMode = mode;
+    }
+
     public ArtifactTypes[] getMotif() {
+        camera.selectAlgorithm(HuskyLens.Algorithm.TAG_RECOGNITION);
         if (camera.blocks(2).length != 0)
             motif = new ArtifactTypes[] {
                     ArtifactTypes.GREEN,
@@ -57,6 +56,7 @@ public class Turret implements Subsystem {
                     ArtifactTypes.PURPLE,
                     ArtifactTypes.GREEN
             };
+        camera.selectAlgorithm(trackingMode);
         return motif;
     }
 

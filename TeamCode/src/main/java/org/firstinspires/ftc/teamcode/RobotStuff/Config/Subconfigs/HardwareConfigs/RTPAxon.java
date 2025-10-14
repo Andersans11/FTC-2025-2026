@@ -1,12 +1,10 @@
-package org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents;
+package org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.HardwareConfigs;
 
 import android.annotation.SuppressLint;
 
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.HardwareConfigs.CRServoConfig;
 
 import dev.nextftc.hardware.impl.CRServoEx;
 

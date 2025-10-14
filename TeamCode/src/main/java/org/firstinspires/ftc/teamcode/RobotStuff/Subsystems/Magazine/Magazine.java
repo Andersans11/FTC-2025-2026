@@ -1,26 +1,26 @@
-package org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.Magazine;
+package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
 
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 
 import dev.nextftc.core.commands.utility.NullCommand;
 import dev.nextftc.core.subsystems.Subsystem;
-import dev.nextftc.ftc.NextFTCOpMode;
 import dev.nextftc.core.commands.Command;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.Utils;
-import org.firstinspires.ftc.teamcode.RobotStuff.IndividualComponents.RTPAxon;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.HardwareConfigs.RTPAxon;
 
 public class Magazine implements Subsystem {
 
-    enum MagazineMode {
+    public static final Magazine INSTANCE = new Magazine();
+
+    public enum MagazineMode {
         INTAKE,
         OUTTAKE,
         OUTTAKE_MANUAL
     }
 
-    NextFTCOpMode opMode;
     MagSlot[] slots;
     int activeSlot; // slot that receives the next ball
     RTPAxon[] servos;
@@ -31,14 +31,15 @@ public class Magazine implements Subsystem {
     Utils.ArtifactTypes[] motif;
     MagazineMode mode = MagazineMode.OUTTAKE;
     int shotsFired;
+    double turretPos;
 
-    public void init(NextFTCOpMode opMode) {
-        this.opMode = opMode;
+    @Override
+    public void initialize() {
 
         this.slots = new MagSlot[] {
-                new MagSlot(opMode, 0), // this slot starts in front of intake
-                new MagSlot(opMode,120),
-                new MagSlot(opMode,-120)
+                new MagSlot(0), // this slot starts in front of intake
+                new MagSlot(120),
+                new MagSlot(-120)
         };
         this.activeSlot = 0;
 
@@ -67,6 +68,10 @@ public class Magazine implements Subsystem {
         }
     }
 
+    public void passTurretPos(double pos) {
+        turretPos = pos;
+    }
+
     public Command setRotation(double angleDegrees) {
         servos[0].setTargetRotation(angleDegrees);
         servos[1].setTargetRotation(angleDegrees);
@@ -80,7 +85,10 @@ public class Magazine implements Subsystem {
             for (int i = 0; i == 3; i++) {
                 if (slots[i].content == motif[0]) {
                     activeSlot = i;
-                    targetPos = 180 + slots[activeSlot].offset;
+                    targetPos = 180 + slots[activeSlot].offset + turretPos;
+                    while (targetPos >= 360) {
+                        targetPos = targetPos - 360;
+                    }
                     i = 3;
                 }
             }
@@ -97,7 +105,8 @@ public class Magazine implements Subsystem {
     }
 
 
-    public void update() {
+    @Override
+    public void periodic() {
 
         if (mode == MagazineMode.INTAKE) {
 
@@ -118,13 +127,19 @@ public class Magazine implements Subsystem {
                 for (int i = 0; i == 3; i++) {
                     if (slots[i].content == motif[shotsFired]) {
                         activeSlot = i;
-                        targetPos = 180 + slots[activeSlot].offset;
+                        targetPos = 180 + slots[activeSlot].offset + turretPos;
+                        while (targetPos >= 360) {
+                            targetPos = targetPos - 360;
+                        }
                         i = 3;
                     }
                 }
             }
         } else {
-            targetPos = 180 + slots[activeSlot].offset;
+            targetPos = 180 + slots[activeSlot].offset + turretPos;
+            while (targetPos >= 360) {
+                targetPos = targetPos - 360;
+            };
         }
 
         if (targetPos != oldTargetPos) {
