@@ -36,10 +36,28 @@ public class Perseus extends SubsystemGroup {
         return new NullCommand();
     }
 
-    public Command ShootMotif() {
-        return new SequentialGroup(
-                Shooter.INSTANCE.shoot(),
-                new Delay(0.3)
-        );
+    public Command Shoot() {
+
+        Command command = new NullCommand();
+
+        switch (Magazine.INSTANCE.getMode()) {
+            case OUTTAKE:
+                command = new SequentialGroup(
+                    Shooter.INSTANCE.shoot(),
+                    Magazine.INSTANCE.incShotsFired(),
+                    new Delay(0.3),
+                    Shooter.INSTANCE.shoot(),
+                    Magazine.INSTANCE.incShotsFired(),
+                    new Delay(0.3),
+                    Shooter.INSTANCE.shoot(),
+                    Magazine.INSTANCE.incShotsFired(),
+                    new Delay(0.3)
+                );
+                break;
+            case OUTTAKE_MANUAL:
+                command = Shooter.INSTANCE.shoot();
+                break;
+        }
+        return command;
     }
 }

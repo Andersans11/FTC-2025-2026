@@ -68,6 +68,11 @@ public class Magazine implements Subsystem {
         }
     }
 
+    public Command incShotsFired() {
+        shotsFired++;
+        return new NullCommand();
+    }
+
     public void passTurretPos(double pos) {
         turretPos = pos;
     }
@@ -98,6 +103,10 @@ public class Magazine implements Subsystem {
 
         this.mode = mode;
         return new NullCommand();
+    }
+
+    public MagazineMode getMode() {
+        return mode;
     }
 
     public void setActiveSlot(int slot) {
