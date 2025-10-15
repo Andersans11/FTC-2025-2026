@@ -109,8 +109,9 @@ public class Magazine implements Subsystem {
         return mode;
     }
 
-    public void setActiveSlot(int slot) {
+    public Command setActiveSlot(int slot) {
         activeSlot = slot;
+        return new NullCommand();
     }
 
 
