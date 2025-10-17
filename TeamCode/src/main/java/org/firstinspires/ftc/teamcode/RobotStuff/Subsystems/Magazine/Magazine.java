@@ -3,11 +3,14 @@ package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 
+import dev.nextftc.bindings.Button;
+import dev.nextftc.bindings.Range;
 import dev.nextftc.core.commands.utility.NullCommand;
 import dev.nextftc.core.subsystems.Subsystem;
 import dev.nextftc.core.commands.Command;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.Sensitivities;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.HardwareConfigs.RTPAxon;
 
@@ -22,7 +25,15 @@ public class Magazine implements Subsystem {
         OUTTAKE_MANUAL
     }
 
+    class Controls {
+        Button SLOT1 = null;
+        Button SLOT2 = null;
+        Button SLOT3 = null;
+        Range ROTATIONSUPP = null;
+    }
+
     MagSlot[] slots;
+    Range rotationSupp;
     int activeSlot; // slot that receives the next ball
     RTPAxon[] servos;
     ColorSensor color;
@@ -53,6 +64,10 @@ public class Magazine implements Subsystem {
         this.color = RobotConfig.IntakeCS;
 
         deltatime = new Timer();
+    }
+
+    public void setRotationSupp(Range supp) {
+        this.rotationSupp = supp;
     }
 
     public void setMotif(Utils.ArtifactTypes[] motif) {
@@ -115,11 +130,29 @@ public class Magazine implements Subsystem {
         return new NullCommand();
     }
 
+    public Command slot1() {
+        targetPos = slots[0].offset;
+        return setActiveSlot(0);
+    }
+    public Command slot2() {
+        targetPos = slots[1].offset;
+        return setActiveSlot(1);
+    }
+    public Command slot3() {
+        targetPos = slots[2].offset;
+        return setActiveSlot(2);
+    }
+
+
 
     @Override
     public void periodic() {
 
-        if (mode == MagazineMode.INTAKE) {
+        if (mode == MagazineMode.OUTTAKE_MANUAL) {
+            targetPos += rotationSupp.get() * Sensitivities.magazineTurnSpeed;
+        }
+
+        else if (mode == MagazineMode.INTAKE) {
 
             if (slots[activeSlot].content != Utils.ArtifactTypes.NONE) {
                 deltatime.resetTimer();

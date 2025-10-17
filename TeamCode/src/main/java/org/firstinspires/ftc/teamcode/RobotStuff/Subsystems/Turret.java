@@ -5,8 +5,11 @@ package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems;
 
 import com.qualcomm.hardware.dfrobot.HuskyLens;
 
+import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.subsystems.Subsystem;
+import dev.nextftc.hardware.controllable.RunToPosition;
 import dev.nextftc.hardware.impl.MotorEx;
+import dev.nextftc.hardware.positionable.SetPosition;
 import dev.nextftc.hardware.powerable.SetPower;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
@@ -18,12 +21,18 @@ public class Turret implements Subsystem {
     public static final Turret INSTANCE = new Turret();
 
     MotorEx rotationMotor;
+    boolean isRedAlliance;
+    boolean isPassiveTracking = true;
     HuskyLens camera;
     ArtifactTypes[] motif;
     HuskyLens.Algorithm trackingMode;
+    double turretPos;
+    double oldPos;
 
     @Override
     public void initialize() {
+
+        this.isRedAlliance = RobotConfig.isRedAlliance;
 
         this.rotationMotor = RobotConfig.TurretRotation.motor;
 
@@ -60,5 +69,18 @@ public class Turret implements Subsystem {
         return motif;
     }
 
+    public Command runPassiveTracking() {
+        camera.selectAlgorithm(HuskyLens.Algorithm.TAG_RECOGNITION);
+        
+        if ((isRedAlliance && camera.blocks(5).length != 0) ||
+                (!isRedAlliance && camera.blocks(6).length != 0)) {
+            int tagX = camera.blocks(5)[0].x;
 
+            if (tagX < 158 || tagX > 162) {
+                double power = (double) (160 - tagX) / 80;
+                return new SetPower(rotationMotor, power);
+            }
+        }
+        return new SetPower(rotationMotor, 0);
+    }
 }

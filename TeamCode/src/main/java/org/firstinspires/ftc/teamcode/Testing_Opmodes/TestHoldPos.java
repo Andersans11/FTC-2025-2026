@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants.FConstan
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants.LConstants;
 
 @TeleOp(name = "Test: Hold Position")
-public class Test_HoldPos extends OpMode {
+public class TestHoldPos extends OpMode {
     Follower follower;
 
     @Override

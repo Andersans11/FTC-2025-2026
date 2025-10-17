@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.Testing_Opmodes;
 
-import android.telecom.Call;
-
 import com.pedropathing.follower.Follower;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
@@ -15,7 +13,7 @@ import PedroJSON.main.PathLoader;
 import dev.nextftc.ftc.NextFTCOpMode;
 
 @Autonomous(name = "Test: PedroJSON Auto with Multiple PathLoaders")
-public class Test_MultiplePedroJSONAuto extends NextFTCOpMode {
+public class TestMultiplePedroJSONAuto extends NextFTCOpMode {
     PathLoader base, outcome1, outcome2;
     Follower follower;
     Callbacks callbacks;

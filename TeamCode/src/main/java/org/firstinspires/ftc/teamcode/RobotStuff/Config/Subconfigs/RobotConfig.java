@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import dev.nextftc.bindings.Button;
+import dev.nextftc.core.commands.Command;
 import dev.nextftc.ftc.NextFTCOpMode;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.HardwareConfigs.CRServoConfig;
@@ -48,6 +50,8 @@ public class RobotConfig {
 
     static HardwareMap hardwareMap;
     static NextFTCOpMode opMode;
+
+    public static boolean isRedAlliance = false;
 
 
     public static void initConfig(NextFTCOpMode opMode) {

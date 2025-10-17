@@ -12,6 +12,7 @@ public class Sensitivities {
     public static float driveModifier = 1f;
     public static float turretTurnSpeed = 1f;
     public static float turretPitchSpeed = 0.1f;
+    public static float magazineTurnSpeed = 1f;
 
     public static float getForwardModifier() {
         return driveModifier * forwardSensitivity;
