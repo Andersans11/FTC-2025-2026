@@ -11,32 +11,23 @@ import java.util.function.Supplier;
 
 public class RobotCentricDrive extends DriveMotors {
 
-
-    Supplier<Double> forwardBackward = () -> (forwardSupp.get() * Sensitivities.getForwardModifier());
-    Supplier<Double> strafe = () -> (strafeSupp.get() * Sensitivities.getStrafeModifier());
-    Supplier<Double> yaw = () -> (turnSupp.get() * Sensitivities.getTurnModifier());
+    public static final RobotCentricDrive INSTANCE = new RobotCentricDrive();
     MecanumDriverControlled vroom;
 
-    public RobotCentricDrive(NextFTCOpMode opMode) { // idk the name could be better
-        super(opMode);
-
+    @Override
+    public void initialize() {
         this.vroom = new MecanumDriverControlled(
-            FL, FR, BL, BR,
-            () -> (forwardSupp.get() * Sensitivities.getForwardModifier()),
-            () -> (strafeSupp.get() * Sensitivities.getStrafeModifier()),
-            () -> (turnSupp.get() * Sensitivities.getTurnModifier())
+                FL, FR, BL, BR,
+                () -> (forwardSupp.get() * Sensitivities.getForwardModifier()),
+                () -> (strafeSupp.get() * Sensitivities.getStrafeModifier()),
+                () -> (turnSupp.get() * Sensitivities.getTurnModifier())
         );
+
+        this.vroom.schedule();
     }
 
     @Override
-    public void update(long deltaTimeNano) {
-        vroom.update();
+    public void periodic() {
+        super.periodic();
     }
-
-    @Override
-    public void schedule() {
-        vroom.schedule();
-    }
-
-
 }

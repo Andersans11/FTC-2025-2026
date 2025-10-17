@@ -13,15 +13,13 @@ import dev.nextftc.ftc.NextFTCOpMode;
 
 public class TestMagazine extends NextFTCOpMode {
     long deltaTime;
-    DeltaTimer deltaTimer;
-    RobotCentricDrive robotCentricDrive;
-
 
     GamepadEx P1 = new GamepadEx(() -> this.gamepad1);
     GamepadEx P2 = new GamepadEx(() -> this.gamepad2);
 
     public TestMagazine() {
         addComponents(
+                new SubsystemComponent(RobotCentricDrive.INSTANCE),
                 new SubsystemComponent(Magazine.INSTANCE),
                 BindingsComponent.INSTANCE
         );
@@ -29,7 +27,7 @@ public class TestMagazine extends NextFTCOpMode {
 
     @Override
     public void onInit() {
-        RobotConfig.initConfig(this);
+        RobotConfig.initConfig(this, new DeltaTimer());
         RobotConfig.bind(P1.a(), "MAGAZINE_SLOT1");
         RobotConfig.bind(P1.b(), "MAGAZINE_SLOT2");
         RobotConfig.bind(P1.x(), "MAGAZINE_SLOT3");
@@ -38,18 +36,15 @@ public class TestMagazine extends NextFTCOpMode {
         RobotConfig.bind(P1.leftStickY(), "FB");
         RobotConfig.bind(P1.leftStickX(), "STRAFE");
         RobotConfig.bind(P1.rightStickX(), "YAW");
-        robotCentricDrive = new RobotCentricDrive(this);
     }
 
     @Override
-    public void onStartButtonPressed() {
-        robotCentricDrive.schedule();
-    }
+    public void onStartButtonPressed() {}
 
     @Override
     public void onUpdate() {
-        deltaTime = deltaTimer.getDelta();
+        deltaTime = RobotConfig.getDelta();
 
-        robotCentricDrive.update(deltaTime);
+        telemetry.addData("Deltatime", deltaTime);
     }
 }
