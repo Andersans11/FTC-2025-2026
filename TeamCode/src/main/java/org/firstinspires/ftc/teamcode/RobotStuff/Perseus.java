@@ -60,7 +60,6 @@ public class Perseus extends SubsystemGroup {
 
         switch (Magazine.INSTANCE.getMode()) {
             case OUTTAKE_MOTIF:
-            case OUTTAKE:
                 shoot = new SequentialGroup(
                     Shooter.INSTANCE.shoot(),
                     Magazine.INSTANCE.incShotsFired(),
