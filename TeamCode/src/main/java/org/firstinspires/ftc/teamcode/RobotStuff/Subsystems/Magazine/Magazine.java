@@ -134,14 +134,44 @@ public class Magazine implements Subsystem {
 
     public Command slot1() {
         targetPos = slots[0].offset;
+
+        if (targetPos != oldTargetPos) {
+            setRotation(targetPos);
+            oldTargetPos = targetPos;
+        }
+
+        servos[0].update();
+        servos[1].update();
+        servos[2].update();
+
         return setActiveSlot(0);
     }
     public Command slot2() {
         targetPos = slots[1].offset;
+
+        if (targetPos != oldTargetPos) {
+            setRotation(targetPos);
+            oldTargetPos = targetPos;
+        }
+
+        servos[0].update();
+        servos[1].update();
+        servos[2].update();
+
         return setActiveSlot(1);
     }
     public Command slot3() {
         targetPos = slots[2].offset;
+
+        if (targetPos != oldTargetPos) {
+            setRotation(targetPos);
+            oldTargetPos = targetPos;
+        }
+
+        servos[0].update();
+        servos[1].update();
+        servos[2].update();
+
         return setActiveSlot(2);
     }
 
