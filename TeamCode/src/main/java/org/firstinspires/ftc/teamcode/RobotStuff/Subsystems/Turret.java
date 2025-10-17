@@ -6,12 +6,13 @@ package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
 
 import dev.nextftc.core.commands.Command;
+import dev.nextftc.core.commands.utility.NullCommand;
 import dev.nextftc.core.subsystems.Subsystem;
+import dev.nextftc.hardware.controllable.RunToPosition;
 import dev.nextftc.hardware.impl.MotorEx;
 import dev.nextftc.hardware.powerable.SetPower;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.Sensitivities;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils.*;
 
 public class Turret implements Subsystem {
@@ -20,29 +21,25 @@ public class Turret implements Subsystem {
 
     MotorEx rotationMotor;
     boolean isRedAlliance;
-    boolean isPassiveTracking = true;
     HuskyLens camera;
     ArtifactTypes[] motif;
     HuskyLens.Algorithm trackingMode;
-    double turretPos;
-    double oldPos;
+    double targetPos;
+    double oldTargetPos;
 
     @Override
     public void initialize() {
-
-        this.isRedAlliance = RobotConfig.isRedAlliance;
-
         this.rotationMotor = RobotConfig.TurretRotation.motor;
 
         this.camera = RobotConfig.camera;
-
-        RobotConfig.RangeControls.TURRET_ROT.greaterThan(0.01).or(() -> RobotConfig.RangeControls.TURRET_ROT.lessThan(-0.01).get())
-                .whenTrue(() -> new SetPower(rotationMotor, Sensitivities.turretTurnSpeed * RobotConfig.RangeControls.TURRET_ROT.get()))
-                .whenFalse(() -> new SetPower(rotationMotor, 0));
     }
 
     public void setTrackingMode(HuskyLens.Algorithm mode) {
         trackingMode = mode;
+    }
+
+    public void setRedAlliance() {
+        isRedAlliance = true;
     }
 
     public ArtifactTypes[] getMotif() {
@@ -67,18 +64,27 @@ public class Turret implements Subsystem {
         return motif;
     }
 
-    public Command runPassiveTracking() {
-        camera.selectAlgorithm(HuskyLens.Algorithm.TAG_RECOGNITION);
+
+    public Command update() {
         
         if ((isRedAlliance && camera.blocks(5).length != 0) ||
                 (!isRedAlliance && camera.blocks(6).length != 0)) {
-            int tagX = camera.blocks(5)[0].x;
+            int tagX = camera.blocks(5)[0].y;
 
             if (tagX < 158 || tagX > 162) {
                 double power = (double) (160 - tagX) / 80;
                 return new SetPower(rotationMotor, power);
+            } else {
+                return new SetPower(rotationMotor, 0);
             }
+        } else {
+            return new NullCommand(); //Put PID Tracking here; this is for when the camera can't see the tag
         }
-        return new SetPower(rotationMotor, 0);
+
+    }
+
+    @Override
+    public void periodic() {
+        update().invoke();
     }
 }

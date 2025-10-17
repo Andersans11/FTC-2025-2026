@@ -2,15 +2,11 @@ package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
 
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.hardware.ColorSensor;
-
-import dev.nextftc.bindings.Button;
-import dev.nextftc.bindings.Range;
 import dev.nextftc.core.commands.utility.NullCommand;
 import dev.nextftc.core.subsystems.Subsystem;
 import dev.nextftc.core.commands.Command;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.Sensitivities;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.HardwareConfigs.RTPAxon;
 
@@ -25,15 +21,7 @@ public class Magazine implements Subsystem {
         OUTTAKE_MANUAL
     }
 
-    class Controls {
-        Button SLOT1 = null;
-        Button SLOT2 = null;
-        Button SLOT3 = null;
-        Range ROTATIONSUPP = null;
-    }
-
     MagSlot[] slots;
-    Range rotationSupp;
     int activeSlot; // slot that receives the next ball
     RTPAxon[] servos;
     ColorSensor color;
@@ -64,11 +52,6 @@ public class Magazine implements Subsystem {
         this.color = RobotConfig.IntakeCS;
 
         deltatime = new Timer();
-
-        RobotConfig.ButtonControls.MAGAZINE_SLOT1.whenTrue(slot1());
-        RobotConfig.ButtonControls.MAGAZINE_SLOT2.whenTrue(slot2());
-        RobotConfig.ButtonControls.MAGAZINE_SLOT3.whenTrue(slot3());
-        this.rotationSupp = RobotConfig.RangeControls.MAGAZINE_ROT;
     }
 
 
@@ -179,12 +162,7 @@ public class Magazine implements Subsystem {
 
     @Override
     public void periodic() {
-
-        if (mode == MagazineMode.OUTTAKE_MANUAL) {
-            targetPos += rotationSupp.get() * Sensitivities.magazineTurnSpeed;
-        }
-
-        else if (mode == MagazineMode.INTAKE) {
+        if (mode == MagazineMode.INTAKE) {
 
             if (slots[activeSlot].content != Utils.ArtifactTypes.NONE) {
                 deltatime.resetTimer();
