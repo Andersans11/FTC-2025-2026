@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
 
 
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.Utils.ArtifactTypes;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils.ArtifactTypes;
 
 
 public class MagSlot {

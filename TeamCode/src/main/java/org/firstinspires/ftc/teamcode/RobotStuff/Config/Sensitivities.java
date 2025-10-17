@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs;
+package org.firstinspires.ftc.teamcode.RobotStuff.Config;
 
 import com.acmerobotics.dashboard.config.Config;
 

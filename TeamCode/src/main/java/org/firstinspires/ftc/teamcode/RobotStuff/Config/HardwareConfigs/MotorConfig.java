@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.HardwareConfigs;
+package org.firstinspires.ftc.teamcode.RobotStuff.Config.HardwareConfigs;
 
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior;
 import com.qualcomm.robotcore.hardware.DcMotorEx;

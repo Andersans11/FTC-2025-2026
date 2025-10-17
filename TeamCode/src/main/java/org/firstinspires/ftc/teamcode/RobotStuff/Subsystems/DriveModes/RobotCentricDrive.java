@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes;
 
 
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.Sensitivities;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Sensitivities;
 
 import dev.nextftc.ftc.NextFTCOpMode;
 import dev.nextftc.hardware.driving.MecanumDriverControlled;
@@ -19,7 +19,13 @@ public class RobotCentricDrive extends DriveMotors {
 
     public RobotCentricDrive(NextFTCOpMode opMode) { // idk the name could be better
         super(opMode);
-        this.vroom = new MecanumDriverControlled(FL, FR, BL, BR, forwardBackward, strafe, yaw);
+
+        this.vroom = new MecanumDriverControlled(
+            FL, FR, BL, BR,
+            () -> (forwardSupp.get() * Sensitivities.getForwardModifier()),
+            () -> (strafeSupp.get() * Sensitivities.getStrafeModifier()),
+            () -> (turnSupp.get() * Sensitivities.getTurnModifier())
+        );
     }
 
     @Override

@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems;
 
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.HardwareConfigs.RTPAxon;
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.HardwareConfigs.RTPAxon;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.delays.Delay;

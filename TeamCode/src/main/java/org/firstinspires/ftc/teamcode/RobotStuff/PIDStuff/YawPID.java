@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.RobotStuff.PIDStuff;
 import com.acmerobotics.dashboard.config.Config;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
 
 @Config
 public class YawPID {
@@ -20,7 +19,6 @@ public class YawPID {
     double derivative;
 
     Telemetry telemetry;
-    RobotConfig config;
 
     public final String pidName;
     public static boolean DEBUG = false;

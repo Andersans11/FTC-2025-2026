@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes;
 
 
+import dev.nextftc.bindings.Button;
 import dev.nextftc.bindings.Range;
 import dev.nextftc.ftc.NextFTCOpMode;
 import dev.nextftc.hardware.impl.MotorEx;
 
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Sensitivities;
 
 
 public abstract class DriveMotors {
@@ -14,6 +16,7 @@ public abstract class DriveMotors {
     Range forwardSupp;
     Range strafeSupp;
     Range turnSupp;
+    Button slowmodeSupp;
 
     MotorEx FL;
     MotorEx FR;
@@ -23,9 +26,13 @@ public abstract class DriveMotors {
     public DriveMotors(NextFTCOpMode opMode) {
         this.opMode = opMode;
 
-        this.forwardSupp = RobotConfig.playerOne.ForwardAxis;
-        this.strafeSupp = RobotConfig.playerOne.StrafeAxis;
-        this.turnSupp = RobotConfig.playerOne.TurnAxis;
+        this.forwardSupp = RobotConfig.RangeControls.FB;
+        this.strafeSupp = RobotConfig.RangeControls.STRAFE;
+        this.turnSupp = RobotConfig.RangeControls.YAW;
+        this.slowmodeSupp = RobotConfig.ButtonControls.SLOWMODE;
+
+        this.slowmodeSupp.whenTrue(() -> Sensitivities.driveModifier = 0.4f)
+                .whenFalse(() -> Sensitivities.driveModifier = 1f);
 
         this.FL = RobotConfig.FLDrive.motor;
         this.FR = RobotConfig.FRDrive.motor;

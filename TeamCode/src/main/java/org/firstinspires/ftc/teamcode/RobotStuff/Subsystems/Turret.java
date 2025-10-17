@@ -7,14 +7,12 @@ import com.qualcomm.hardware.dfrobot.HuskyLens;
 
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.subsystems.Subsystem;
-import dev.nextftc.hardware.controllable.RunToPosition;
 import dev.nextftc.hardware.impl.MotorEx;
-import dev.nextftc.hardware.positionable.SetPosition;
 import dev.nextftc.hardware.powerable.SetPower;
 
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.RobotConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.Sensitivities;
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.Utils.*;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Sensitivities;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils.*;
 
 public class Turret implements Subsystem {
 
@@ -38,8 +36,8 @@ public class Turret implements Subsystem {
 
         this.camera = RobotConfig.camera;
 
-        RobotConfig.playerTwo.LeftX.greaterThan(0.01).or(() -> RobotConfig.playerTwo.LeftX.lessThan(-0.01).get())
-                .whenTrue(() -> new SetPower(rotationMotor, Sensitivities.turretTurnSpeed * RobotConfig.playerTwo.LeftX.get()))
+        RobotConfig.RangeControls.TURRET_ROT.greaterThan(0.01).or(() -> RobotConfig.RangeControls.TURRET_ROT.lessThan(-0.01).get())
+                .whenTrue(() -> new SetPower(rotationMotor, Sensitivities.turretTurnSpeed * RobotConfig.RangeControls.TURRET_ROT.get()))
                 .whenFalse(() -> new SetPower(rotationMotor, 0));
     }
 

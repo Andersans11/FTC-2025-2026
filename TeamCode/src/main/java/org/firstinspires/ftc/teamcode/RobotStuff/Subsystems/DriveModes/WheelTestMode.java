@@ -1,24 +1,22 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes;
 
 
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.Sensitivities;
-
-import java.util.function.Supplier;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Sensitivities;
 
 import dev.nextftc.ftc.NextFTCOpMode;
 import dev.nextftc.hardware.driving.MecanumDriverControlled;
 
 public class WheelTestMode extends DriveMotors {
-
-    Supplier<Double> forwardBackward = () -> (forwardSupp.get() * Sensitivities.getForwardModifier());
-    Supplier<Double> strafe = () -> 0.0;
-    Supplier<Double> yaw = () -> 0.0;
-
     MecanumDriverControlled vroom;
 
-    public WheelTestMode(NextFTCOpMode opMode) { // idk the name could be better
+    public WheelTestMode(NextFTCOpMode opMode) {
         super(opMode);
-        this.vroom = new MecanumDriverControlled(FL, FR, BL, BR, forwardBackward, strafe, yaw);
+        this.vroom = new MecanumDriverControlled(
+            FL, FR, BL, BR,
+            () -> (forwardSupp.get() * Sensitivities.getForwardModifier()),
+            () -> 0.0,
+            () -> 0.0
+        );
     }
 
     @Override

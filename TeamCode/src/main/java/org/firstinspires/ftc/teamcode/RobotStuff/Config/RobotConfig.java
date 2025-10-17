@@ -1,4 +1,6 @@
-package org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs;
+package org.firstinspires.ftc.teamcode.RobotStuff.Config;
+
+import androidx.annotation.StringDef;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
@@ -10,18 +12,17 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import dev.nextftc.bindings.Button;
-import dev.nextftc.core.commands.Command;
+import dev.nextftc.bindings.Range;
 import dev.nextftc.ftc.NextFTCOpMode;
 
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.HardwareConfigs.CRServoConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.HardwareConfigs.MotorConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.HardwareConfigs.ServoConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.HardwareConfigs.CRServoConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.HardwareConfigs.MotorConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.HardwareConfigs.ServoConfig;
+
+import java.lang.reflect.Field;
 
 @Config
 public class RobotConfig {
-
-    public static ReadyPlayerOne playerOne;
-    public static ReadyPlayerTwo playerTwo;
 
     public static AnalogInput CarouselENC1;
     public static AnalogInput CarouselENC2;
@@ -58,22 +59,80 @@ public class RobotConfig {
         RobotConfig.opMode = opMode;
         RobotConfig.hardwareMap = opMode.hardwareMap;
 
-        playerOne = new ReadyPlayerOne(opMode.gamepad1);
-        playerTwo = new ReadyPlayerTwo(opMode.gamepad2);
-
         initHardware(hardwareMap);
     }
 
+    public static class ButtonControls {
+        public static Button MAGAZINE_SLOT1 = null;
+        public static Button MAGAZINE_SLOT2 = null;
+        public static Button MAGAZINE_SLOT3 = null;
+        public static Button INTAKE = null;
+        public static Button SHOOT = null;
+        public static Button SHOOT_MOTIF = null;
+        public static Button SLOWMODE = null;
 
-    public static void gamepadUpdates() {
-        playerOne.update_all();
-        playerTwo.update_all();
     }
+
+    public static class RangeControls {
+        public static Range FB = null;
+        public static Range STRAFE = null;
+        public static Range YAW = null;
+        public static Range MAGAZINE_ROT = null;
+        public static Range TURRET_ROT = null;
+        public static Range TURRET_PITCH = null;
+    }
+
+    @StringDef({
+            "MAGAZINE_SLOT1",
+            "MAGAZINE_SLOT2",
+            "MAGAZINE_SLOT3",
+            "INTAKE",
+            "SHOOT",
+            "SHOOT_MOTIF",
+            "SLOWMODE"
+    })
+    @interface ButtonOption {}
+
+    @StringDef({
+            "FB",
+            "STRAFE",
+            "YAW",
+            "MAGAZINE_ROT",
+            "TURRET_ROT",
+            "TURRET_PITCH"
+    })
+    @interface RangeOption {}
+
+    public static void bind(Button button, @ButtonOption String control) {
+        try {
+            Field field = ButtonControls.class.getDeclaredField(control);
+            field.set(ButtonControls.class, button);
+            field.setAccessible(false);
+        } catch (NoSuchFieldException e) {
+            opMode.telemetry.addLine("Field with name " + control + "could not be found. This error should not be possible.");
+        } catch (IllegalAccessException e) {
+            opMode.telemetry.addLine("Field object is enforcing Java language access control, and the underlying field is inaccessible");
+        }
+    }
+
+    public static void bind(Range range, @RangeOption String control) {
+        try {
+            Field field = RangeControls.class.getDeclaredField(control);
+            field.set(RangeControls.class, range);
+            field.setAccessible(false);
+        } catch (NoSuchFieldException e) {
+            opMode.telemetry.addLine("Field with name " + control + "could not be found. This error should not be possible.");
+        } catch (IllegalAccessException e) {
+            opMode.telemetry.addLine("Field object is enforcing Java language access control, and the underlying field is inaccessible");
+        }
+    }
+
     private static void initHardware (HardwareMap hardwareMap) {
 
         CarouselENC1 = hardwareMap.get(AnalogInput.class, "CarENC1");
         CarouselENC2 = hardwareMap.get(AnalogInput.class, "CarENC2");
         CarouselENC3 = hardwareMap.get(AnalogInput.class, "CarENC3");
+
         HoodENC = hardwareMap.get(AnalogInput.class, "HoodENC");
 
         IntakeCS = hardwareMap.get(ColorSensor.class, "IntakeCS");
@@ -128,7 +187,6 @@ public class RobotConfig {
                 DcMotorSimple.Direction.FORWARD,
                 DcMotor.ZeroPowerBehavior.BRAKE
         );
-
         Kicker = new ServoConfig(
                 hardwareMap,
                 "Kicker Servo",

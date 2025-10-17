@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.RobotStuff.Config.Subconfigs.HardwareConfigs;
+package org.firstinspires.ftc.teamcode.RobotStuff.Config.HardwareConfigs;
 
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
