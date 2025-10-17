@@ -17,6 +17,7 @@ public class Magazine implements Subsystem {
 
     public enum MagazineMode {
         INTAKE,
+        OUTTAKE_MOTIF,
         OUTTAKE,
         OUTTAKE_MANUAL
     }
@@ -29,7 +30,7 @@ public class Magazine implements Subsystem {
     double oldTargetPos = 180;
     Timer deltatime;
     Utils.ArtifactTypes[] motif;
-    MagazineMode mode = MagazineMode.OUTTAKE;
+    MagazineMode mode = MagazineMode.OUTTAKE_MOTIF;
     int shotsFired;
     double turretPos;
 
@@ -86,7 +87,7 @@ public class Magazine implements Subsystem {
 
     public Command setMode(MagazineMode mode) {
 
-        if (mode == MagazineMode.OUTTAKE) {
+        if (mode == MagazineMode.OUTTAKE_MOTIF) {
             for (int i = 0; i == 3; i++) {
                 if (slots[i].content == motif[0]) {
                     activeSlot = i;
@@ -132,7 +133,7 @@ public class Magazine implements Subsystem {
                     }
                 }
             }
-        } else if (mode == MagazineMode.OUTTAKE) {
+        } else if (mode == MagazineMode.OUTTAKE_MOTIF) {
             if (slots[activeSlot].content == Utils.ArtifactTypes.NONE) {
                 for (int i = 0; i == 3; i++) {
                     if (slots[i].content == motif[shotsFired]) {
@@ -145,6 +146,20 @@ public class Magazine implements Subsystem {
                     }
                 }
             }
+        } else if (mode == MagazineMode.OUTTAKE) {
+            if (slots[activeSlot].content == Utils.ArtifactTypes.NONE) {
+                for (int i = 0; i == 3; i++) {
+                    if (slots[i].content != Utils.ArtifactTypes.NONE) {
+                        activeSlot = i;
+                        targetPos = 180 + slots[activeSlot].offset + turretPos;
+                        while (targetPos >= 360) {
+                            targetPos = targetPos - 360;
+                        }
+                        i = 3;
+                    }
+                }
+            }
+
         } else {
             targetPos = 180 + slots[activeSlot].offset + turretPos;
             while (targetPos >= 360) {
