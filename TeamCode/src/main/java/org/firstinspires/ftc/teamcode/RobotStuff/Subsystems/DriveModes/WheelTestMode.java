@@ -7,25 +7,24 @@ import dev.nextftc.ftc.NextFTCOpMode;
 import dev.nextftc.hardware.driving.MecanumDriverControlled;
 
 public class WheelTestMode extends DriveMotors {
+
+    public static final WheelTestMode INSTANCE = new WheelTestMode();
     MecanumDriverControlled vroom;
 
-    public WheelTestMode(NextFTCOpMode opMode) {
-        super(opMode);
+    @Override
+    public void initialize() {
         this.vroom = new MecanumDriverControlled(
-            FL, FR, BL, BR,
-            () -> (forwardSupp.get() * Sensitivities.getForwardModifier()),
-            () -> 0.0,
-            () -> 0.0
+                FL, FR, BL, BR,
+                () -> (forwardSupp.get() * Sensitivities.getForwardModifier()),
+                () -> 0.0,
+                () -> 0.0
         );
+
+        this.vroom.schedule();
     }
 
     @Override
-    public void update(long deltaTimeNano) {
-        vroom.update();
-    } // only actually needed for holdHeading because of pid stuff, doesn't need to be called here
-
-    @Override
-    public void schedule() {
-        vroom.schedule();
+    public void periodic() {
+        super.periodic();
     }
 }

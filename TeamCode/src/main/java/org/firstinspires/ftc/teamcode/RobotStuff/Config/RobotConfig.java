@@ -15,9 +15,12 @@ import dev.nextftc.bindings.Button;
 import dev.nextftc.bindings.Range;
 import dev.nextftc.ftc.NextFTCOpMode;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.HardwareConfigs.CRServoConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.HardwareConfigs.MotorConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.HardwareConfigs.ServoConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.Misc.DeltaTimer;
+import org.firstinspires.ftc.teamcode.RobotStuff.Misc.GoBildaPinpointDriver;
 
 import java.lang.reflect.Field;
 
@@ -49,17 +52,33 @@ public class RobotConfig {
 
     public static HuskyLens camera;
 
+    public static GoBildaPinpointDriver Pinpoint;
+
     static HardwareMap hardwareMap;
     static NextFTCOpMode opMode;
+    static DeltaTimer deltaTimer;
 
     public static boolean isRedAlliance = false;
 
 
-    public static void initConfig(NextFTCOpMode opMode) {
+    public static void initConfig(NextFTCOpMode opMode, DeltaTimer deltaTimer) {
         RobotConfig.opMode = opMode;
         RobotConfig.hardwareMap = opMode.hardwareMap;
+        RobotConfig.deltaTimer = deltaTimer;
 
         initHardware(hardwareMap);
+    }
+
+    public static NextFTCOpMode getOpMode() {
+        return opMode;
+    }
+
+    public static Telemetry getTelemetry() {
+        return opMode.telemetry;
+    }
+
+    public static long getDelta() {
+        return deltaTimer.getDelta();
     }
 
     public static class ButtonControls {
@@ -128,6 +147,8 @@ public class RobotConfig {
     }
 
     private static void initHardware (HardwareMap hardwareMap) {
+
+        Pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, "sensor");
 
         CarouselENC1 = hardwareMap.get(AnalogInput.class, "CarENC1");
         CarouselENC2 = hardwareMap.get(AnalogInput.class, "CarENC2");

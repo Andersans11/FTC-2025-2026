@@ -3,16 +3,19 @@ package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes;
 
 import dev.nextftc.bindings.Button;
 import dev.nextftc.bindings.Range;
+import dev.nextftc.core.subsystems.Subsystem;
 import dev.nextftc.ftc.NextFTCOpMode;
 import dev.nextftc.hardware.impl.MotorEx;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Sensitivities;
 
 
-public abstract class DriveMotors {
+public abstract class DriveMotors implements Subsystem {
 
     NextFTCOpMode opMode;
+    Telemetry telemetry;
     Range forwardSupp;
     Range strafeSupp;
     Range turnSupp;
@@ -23,8 +26,11 @@ public abstract class DriveMotors {
     MotorEx BL;
     MotorEx BR;
 
-    public DriveMotors(NextFTCOpMode opMode) {
-        this.opMode = opMode;
+    @Override
+    public void initialize() {
+
+        this.opMode = RobotConfig.getOpMode();
+        this.telemetry = RobotConfig.getTelemetry();
 
         this.forwardSupp = RobotConfig.RangeControls.FB;
         this.strafeSupp = RobotConfig.RangeControls.STRAFE;
@@ -40,8 +46,4 @@ public abstract class DriveMotors {
         this.BR = RobotConfig.BRDrive.motor;
 
     }
-
-    public abstract void update(long deltaTimeNano);
-
-    public abstract void schedule();
 }
