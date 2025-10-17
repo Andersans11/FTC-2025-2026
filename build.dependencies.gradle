@@ -5,6 +5,7 @@ repositories {
     maven { url = "https://maven.rowanmcalpin.com/" }
     maven { url = "https://maven.pedropathing.com/" } // Remove if you don't intend to use PedroPathing
     maven { url = "https://maven.brott.dev/" } // Remove if you don't intend to use the FTC Dashboard (required if using PedroPathing)
+    maven { url = "https://repo.dairy.foundation/releases" }
 }
 
 dependencies {
@@ -18,17 +19,26 @@ dependencies {
     implementation 'org.firstinspires.ftc:Vision:10.1.1'
     implementation 'androidx.appcompat:appcompat:1.2.0'
 
-    implementation 'com.pedropathing:pedro:1.0.9' // Remove if you don't intend to use PedroPathing
-    implementation 'com.acmerobotics.dashboard:dashboard:0.4.16' // Remove if you don't intend to use the FTC Dashboard (required if using PedroPathing)
+    //implementation "com.pedropathing:pedro:${pedropathing_version}" // old pedro dep
 
-    implementation 'dev.nextftc:ftc:1.0.0'
-    implementation 'dev.nextftc:hardware:1.0.0'
-    implementation 'dev.nextftc:control:1.0.0'
-    implementation 'dev.nextftc:bindings:1.0.1'
+    implementation("com.pedropathing:pedro:${pedropathing_version}") {
+        exclude group: "com.acmerobotics.dashboard"
+    }
+    //implementation "com.acmerobotics.dashboard:dashboard:${dashboard_version}" // commented out because sloth
+    implementation "com.acmerobotics.slothboard:dashboard:${slothboard_version}"
+
+    implementation "dev.nextftc:ftc:${nftc_ftc_version}"
+    implementation "dev.nextftc:hardware:${nftc_hardware_version}"
+    implementation "dev.nextftc:control:${nftc_control_version}"
+    implementation "dev.nextftc:bindings:${nftc_bindings_version}"
 
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
     implementation 'com.fasterxml.jackson.core:jackson-core:2.15.2'
     implementation 'com.fasterxml.jackson.core:jackson-annotations:2.15.2'
-    implementation 'io.github.andersans11:pedrojson-loader:testing-4'
+    implementation "io.github.andersans11:pedrojson-loader:${pedrojson_version}"
+    implementation "dev.frozenmilk.sinister:Sloth:${sloth_version}"
+
+
 }
+// versions for stuff we might change have moved to gradle.properties
 
