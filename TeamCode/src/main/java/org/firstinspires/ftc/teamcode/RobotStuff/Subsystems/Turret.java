@@ -51,7 +51,7 @@ public class Turret implements Subsystem {
                 ArtifactTypes.GREEN,
                 ArtifactTypes.PURPLE
             };
-        else motif = new ArtifactTypes[] {
+        else if (camera.blocks(4).length != 0) motif = new ArtifactTypes[] {
                     ArtifactTypes.PURPLE,
                     ArtifactTypes.PURPLE,
                     ArtifactTypes.GREEN
