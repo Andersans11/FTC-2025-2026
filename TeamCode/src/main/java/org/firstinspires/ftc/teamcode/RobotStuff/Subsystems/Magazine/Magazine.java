@@ -52,6 +52,12 @@ public class Magazine implements Subsystem {
         this.color = RobotConfig.IntakeCS;
 
         deltatime = new Timer();
+
+        RobotConfig.ButtonControls.MAGAZINE_SLOT1.whenTrue(this::slot1);
+        RobotConfig.ButtonControls.MAGAZINE_SLOT2.whenTrue(this::slot2);
+        RobotConfig.ButtonControls.MAGAZINE_SLOT3.whenTrue(this::slot3);
+        // bind the slot 1 button in robotconfig to slot 1 command,
+        // button that is slot 1 is determined in opmode via RobotConfig.bind()
     }
 
 

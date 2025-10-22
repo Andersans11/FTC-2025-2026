@@ -26,6 +26,10 @@ public class Turret implements Subsystem {
     HuskyLens.Algorithm trackingMode;
     double targetPos;
     double oldTargetPos;
+    double pitch;
+
+    final double lensCenterFromFloor = 279.87241113;
+    final double lensAngleFromVertical = 20.0; // deg
 
     @Override
     public void initialize() {
@@ -64,12 +68,22 @@ public class Turret implements Subsystem {
         return motif;
     }
 
+    public double getServoPitch() {
+        if ((isRedAlliance && camera.blocks(5).length != 0) ||
+                (!isRedAlliance && camera.blocks(6).length != 0)) {
+            int tagY = camera.blocks(5)[0].y;
+
+            return (double) 240 / tagY; // if tag is at max height, is 1
+        }
+        return 0;
+    }
+
 
     public Command update() {
         
         if ((isRedAlliance && camera.blocks(5).length != 0) ||
                 (!isRedAlliance && camera.blocks(6).length != 0)) {
-            int tagX = camera.blocks(5)[0].y;
+            int tagX = camera.blocks(5)[0].x;
 
             if (tagX < 158 || tagX > 162) {
                 double power = (double) (160 - tagX) / 80;
@@ -78,10 +92,10 @@ public class Turret implements Subsystem {
                 return new SetPower(rotationMotor, 0);
             }
         } else {
-            return new NullCommand(); //Put PID Tracking here; this is for when the camera can't see the tag
+            return new NullCommand(); // Put PID Tracking here; this is for when the camera can't see the tag
         }
 
-    }
+    } // TODO: IMPLEMENT PID TRACKING FOR PITCH AND YAW ON TURRET
 
     @Override
     public void periodic() {
