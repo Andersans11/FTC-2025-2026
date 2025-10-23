@@ -1,8 +1,9 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.Config;
 
-import com.acmerobotics.dashboard.config.Config;
 
-@Config
+import com.bylazar.configurables.annotations.Configurable;
+
+@Configurable
 public class Sensitivities {
 
     public static float forwardSensitivity = 1;

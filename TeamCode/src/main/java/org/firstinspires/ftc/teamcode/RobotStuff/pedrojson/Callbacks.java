@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.RobotStuff.PedroJSON;
+package org.firstinspires.ftc.teamcode.RobotStuff.pedrojson;
 
 import dev.nextftc.ftc.NextFTCOpMode;
 

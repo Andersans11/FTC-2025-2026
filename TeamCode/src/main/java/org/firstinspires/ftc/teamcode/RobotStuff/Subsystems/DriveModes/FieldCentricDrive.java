@@ -19,14 +19,12 @@ public class FieldCentricDrive extends DriveMotors {
     MecanumDriverControlled vroom;
 
     @Override
-    public void periodic() {
-        super.periodic();
+    public void hardware() {
+        this.pinpoint = RobotConfig.Pinpoint;
     }
 
     @Override
-    public void initialize() {
-        pinpoint = RobotConfig.Pinpoint;
-
+    public void commands() {
         this.vroom = new MecanumDriverControlled(
                 FL, FR, BL, BR,
                 () -> (forwardSupp.get() * Sensitivities.getForwardModifier()),

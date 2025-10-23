@@ -1,19 +1,18 @@
-package org.firstinspires.ftc.teamcode.Testing_Opmodes;
+package org.firstinspires.ftc.teamcode.TeleOpModes;
 
 import com.pedropathing.follower.Follower;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants.FConstants;
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants.LConstants;
-import org.firstinspires.ftc.teamcode.RobotStuff.PedroJSON.Callbacks;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
+import org.firstinspires.ftc.teamcode.RobotStuff.pedrojson.Callbacks;
 
 import java.io.File;
 
 import PedroJSON.main.PathLoader;
-import dev.nextftc.ftc.NextFTCOpMode;
 
 @Autonomous(name = "Test: PedroJSON Auto with Multiple PathLoaders")
-public class TestMultiplePedroJSONAuto extends NextFTCOpMode {
+public class TestMultiplePedroJSONAuto extends RoyallyFuckedUpMode {
     PathLoader base, outcome1, outcome2;
     Follower follower;
     Callbacks callbacks;
@@ -24,14 +23,16 @@ public class TestMultiplePedroJSONAuto extends NextFTCOpMode {
 
     @Override
     public void onInit() {
-        follower = new Follower(hardwareMap, FConstants.class, LConstants.class);
+        super.onInit();
+
+        follower = Constants.createFollower(hardwareMap);
         callbacks = new Callbacks(this);
 
         // TODO: Create Files
 
-        base = new PathLoader(new File("org/firstinspires/ftc/teamcode/RobotStuff/PedroJSON/Data/base.json"), follower, this, callbacks);
-        outcome1 = new PathLoader(new File("org/firstinspires/ftc/teamcode/RobotStuff/PedroJSON/Data/outcome1.json"), follower, this, callbacks);
-        outcome2 = new PathLoader(new File("org/firstinspires/ftc/teamcode/RobotStuff/PedroJSON/Data/outcome2.json"), follower, this, callbacks);
+        base = new PathLoader(new File("org/firstinspires/ftc/teamcode/RobotStuff/pedrojson/Data/base.json"), follower, this, callbacks);
+        outcome1 = new PathLoader(new File("org/firstinspires/ftc/teamcode/RobotStuff/pedrojson/Data/outcome1.json"), follower, this, callbacks);
+        outcome2 = new PathLoader(new File("org/firstinspires/ftc/teamcode/RobotStuff/pedrojson/Data/outcome2.json"), follower, this, callbacks);
 
         base.Parse();
         outcome1.Parse();
@@ -40,8 +41,8 @@ public class TestMultiplePedroJSONAuto extends NextFTCOpMode {
 
     @Override
     public void onWaitForStart() {
-        if (gamepad1.dpad_left) doOutcome1 = true;
-        if (gamepad1.dpad_right) doOutcome2 = true;
+        if (P1.dpadLeft().get()) doOutcome1 = true;
+        if (P1.dpadRight().get()) doOutcome2 = true;
     }
 
     @Override
@@ -51,6 +52,8 @@ public class TestMultiplePedroJSONAuto extends NextFTCOpMode {
 
     @Override
     public void onUpdate() {
+        super.onUpdate();
+
         switch (outcomeState) {
             case 0:
                 base.Update();

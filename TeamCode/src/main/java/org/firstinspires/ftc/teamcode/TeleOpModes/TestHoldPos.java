@@ -1,20 +1,18 @@
-package org.firstinspires.ftc.teamcode.Testing_Opmodes;
+package org.firstinspires.ftc.teamcode.TeleOpModes;
 
 import com.pedropathing.follower.Follower;
-import com.pedropathing.localization.Pose;
+import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants.FConstantsTeleOp;
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants.LConstants;
-
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
 @TeleOp(name = "Test: Hold Position")
 public class TestHoldPos extends OpMode {
     Follower follower;
 
     @Override
     public void init() {
-        follower = new Follower(hardwareMap, FConstantsTeleOp.class, LConstants.class);
+        follower = Constants.createFollower(hardwareMap);
         follower.setStartingPose(new Pose(0, 0, 0));
     }
 

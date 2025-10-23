@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes;
 
-import com.acmerobotics.dashboard.config.Config;
+
+import com.bylazar.configurables.annotations.Configurable;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
@@ -15,7 +16,7 @@ import dev.nextftc.hardware.driving.MecanumDriverControlled;
 import java.util.function.Supplier;
 
 
-@Config
+@Configurable
 public class HoldHeadingPID extends DriveMotors {
 
     public static final HoldHeadingPID INSTANCE = new HoldHeadingPID();
@@ -51,22 +52,8 @@ public class HoldHeadingPID extends DriveMotors {
     @Override
     public void initialize() {
 
-        super.initialize();
-
         HeadingPID = new YawPID(telemetry, "HeadingPID");
         HeadingPID.setSecondary(true);
-
-        pinpoint = RobotConfig.Pinpoint;
-        targetRad = getHeadingRad(); // on init, take heading and set to that so that robot doesn't go to zero
-
-        this.vroom = new MecanumDriverControlled(
-                FL, FR, BL, BR,
-                () -> (forwardSupp.get() * Sensitivities.getForwardModifier()),
-                () -> (strafeSupp.get() * Sensitivities.getStrafeModifier()),
-                pidYaw
-        );
-
-        this.vroom.schedule();
     }
 
     double getHeadingRad() {
@@ -108,5 +95,21 @@ public class HoldHeadingPID extends DriveMotors {
         vroom.update();
     }
 
+    @Override
+    public void hardware() {
+        pinpoint = RobotConfig.Pinpoint;
+        targetRad = getHeadingRad(); // on init, take heading and set to that so that robot doesn't go to zero
+    }
 
+    @Override
+    public void commands() {
+        this.vroom = new MecanumDriverControlled(
+                FL, FR, BL, BR,
+                () -> (forwardSupp.get() * Sensitivities.getForwardModifier()),
+                () -> (strafeSupp.get() * Sensitivities.getStrafeModifier()),
+                pidYaw
+        );
+
+        this.vroom.schedule();
+    }
 }

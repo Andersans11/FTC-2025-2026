@@ -45,7 +45,7 @@ public class Perseus extends SubsystemGroup {
         return command;
     }
 
-    public Command ShootMotif() {
+    public Command shootMotif() {
 
         Command modeSwitch = new NullCommand();
 
@@ -82,7 +82,7 @@ public class Perseus extends SubsystemGroup {
         );
     }
 
-    public Command ShootSingle(int slot) {
+    public Command shootSingle(int slot) {
         return new SequentialGroup(
                 Magazine.INSTANCE.setMode(Magazine.MagazineMode.OUTTAKE_MANUAL),
                 Magazine.INSTANCE.setActiveSlot(slot),
@@ -92,7 +92,7 @@ public class Perseus extends SubsystemGroup {
         );
     }
 
-    public Command Intake() {
+    public Command intake() {
 
         Command command;
 
@@ -109,7 +109,7 @@ public class Perseus extends SubsystemGroup {
         return command;
     }
 
-    public Command StopIntake() {
+    public Command stopIntake() {
         return Intake.INSTANCE.idle();
     }
 

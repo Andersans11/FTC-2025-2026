@@ -9,8 +9,9 @@ import dev.nextftc.core.commands.Command;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.HardwareConfigs.RTPAxon;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.IBetterSubsystem;
 
-public class Magazine implements Subsystem {
+public class Magazine implements IBetterSubsystem {
 
     public static final Magazine INSTANCE = new Magazine();
 
@@ -35,7 +36,6 @@ public class Magazine implements Subsystem {
 
     @Override
     public void initialize() {
-
         this.slots = new MagSlot[] {
                 new MagSlot(0), // this slot starts in front of intake
                 new MagSlot(120),
@@ -43,23 +43,33 @@ public class Magazine implements Subsystem {
         };
         this.activeSlot = 0;
 
+        deltatime = new Timer();
+    }
+
+    @Override
+    public void hardware() {
         this.servos = new RTPAxon[] {
-            new RTPAxon(RobotConfig.CarouselCR1),
-            new RTPAxon(RobotConfig.CarouselCR2),
-            new RTPAxon(RobotConfig.CarouselCR3)
+                new RTPAxon(RobotConfig.CarouselCR1),
+                new RTPAxon(RobotConfig.CarouselCR2),
+                new RTPAxon(RobotConfig.CarouselCR3)
         };
 
         this.color = RobotConfig.IntakeCS;
+    }
 
-        deltatime = new Timer();
+    @Override
+    public void commands() {
 
+    }
+
+    @Override
+    public void binds() {
         RobotConfig.ButtonControls.MAGAZINE_SLOT1.whenTrue(this::slot1);
         RobotConfig.ButtonControls.MAGAZINE_SLOT2.whenTrue(this::slot2);
         RobotConfig.ButtonControls.MAGAZINE_SLOT3.whenTrue(this::slot3);
         // bind the slot 1 button in robotconfig to slot 1 command,
         // button that is slot 1 is determined in opmode via RobotConfig.bind()
     }
-
 
     public void setMotif(Utils.ArtifactTypes[] motif) {
         this.motif = motif;
@@ -163,8 +173,6 @@ public class Magazine implements Subsystem {
 
         return setActiveSlot(2);
     }
-
-
 
     @Override
     public void periodic() {

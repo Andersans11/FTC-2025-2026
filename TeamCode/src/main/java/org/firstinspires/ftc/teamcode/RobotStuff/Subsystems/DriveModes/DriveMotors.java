@@ -10,9 +10,10 @@ import dev.nextftc.hardware.impl.MotorEx;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Sensitivities;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.IBetterSubsystem;
 
 
-public abstract class DriveMotors implements Subsystem {
+public abstract class DriveMotors implements IBetterSubsystem {
 
     NextFTCOpMode opMode;
     Telemetry telemetry;
@@ -27,11 +28,24 @@ public abstract class DriveMotors implements Subsystem {
     MotorEx BR;
 
     @Override
-    public void initialize() {
+    public void initialize() {}
 
+    @Override
+    public void periodic() {}
+
+    @Override
+    public void hardware() {
         this.opMode = RobotConfig.getOpMode();
         this.telemetry = RobotConfig.getTelemetry();
 
+        this.FL = RobotConfig.FLDrive.motor;
+        this.FR = RobotConfig.FRDrive.motor;
+        this.BL = RobotConfig.BLDrive.motor;
+        this.BR = RobotConfig.BRDrive.motor;
+    }
+
+    @Override
+    public void binds() {
         this.forwardSupp = RobotConfig.RangeControls.FB;
         this.strafeSupp = RobotConfig.RangeControls.STRAFE;
         this.turnSupp = RobotConfig.RangeControls.YAW;
@@ -39,11 +53,8 @@ public abstract class DriveMotors implements Subsystem {
 
         this.slowmodeSupp.whenTrue(() -> Sensitivities.driveModifier = 0.4f)
                 .whenFalse(() -> Sensitivities.driveModifier = 1f);
-
-        this.FL = RobotConfig.FLDrive.motor;
-        this.FR = RobotConfig.FRDrive.motor;
-        this.BL = RobotConfig.BLDrive.motor;
-        this.BR = RobotConfig.BRDrive.motor;
-
     }
+
+    @Override
+    public abstract void commands();
 }

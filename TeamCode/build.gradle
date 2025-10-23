@@ -15,7 +15,7 @@
 apply from: '../build.common.gradle'
 apply from: '../build.dependencies.gradle'
 apply plugin: 'org.jetbrains.kotlin.android'
-apply plugin: 'dev.frozenmilk.sinister.sloth.load'
+//apply plugin: 'dev.frozenmilk.sinister.sloth.load'
 
 android {
     namespace = 'org.firstinspires.ftc.teamcode'
@@ -25,6 +25,16 @@ android {
 
     packagingOptions {
         jniLibs.useLegacyPackaging true
+    }
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+        //maven { url "https://repo.dairy.foundation/releases" }
+    }
+    dependencies {
+        //classpath "dev.frozenmilk:Load:${load_version}"
     }
 }
 

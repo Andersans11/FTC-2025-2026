@@ -17,7 +17,6 @@ buildscript {
         // too fucking bad i'm going to anyway
         classpath 'com.android.tools.build:gradle:8.7.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "dev.frozenmilk:Load:${load_version}"
     }
 }
 

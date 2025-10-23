@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.RobotStuff.Config;
 
 import androidx.annotation.StringDef;
 
-import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -24,7 +23,6 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Misc.GoBildaPinpointDriver;
 
 import java.lang.reflect.Field;
 
-@Config
 public class RobotConfig {
 
     public static AnalogInput CarouselENC1;
@@ -148,92 +146,92 @@ public class RobotConfig {
 
     private static void initHardware (HardwareMap hardwareMap) {
 
-        Pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, "sensor");
+        Pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, "PINPOINT");
 
-        CarouselENC1 = hardwareMap.get(AnalogInput.class, "CarENC1");
-        CarouselENC2 = hardwareMap.get(AnalogInput.class, "CarENC2");
-        CarouselENC3 = hardwareMap.get(AnalogInput.class, "CarENC3");
+        CarouselENC1 = hardwareMap.get(AnalogInput.class, "CARENC1");
+        CarouselENC2 = hardwareMap.get(AnalogInput.class, "CARENC2");
+        CarouselENC3 = hardwareMap.get(AnalogInput.class, "CARENC3");
 
-        HoodENC = hardwareMap.get(AnalogInput.class, "HoodENC");
+        HoodENC = hardwareMap.get(AnalogInput.class, "HOODENC");
 
-        IntakeCS = hardwareMap.get(ColorSensor.class, "IntakeCS");
+        //IntakeCS = hardwareMap.get(ColorSensor.class, "IntakeCS");
 
-        camera = hardwareMap.get(HuskyLens.class, "Camera");
+        camera = hardwareMap.get(HuskyLens.class, "HUSKYLENS");
 
         FLDrive = new MotorConfig(
                 hardwareMap,
-                "Front Left Drive",
+                "FLDRIVE",
                 DcMotorSimple.Direction.REVERSE,
                 DcMotor.ZeroPowerBehavior.BRAKE
         );
         BLDrive = new MotorConfig(
                 hardwareMap,
-                "Back Left Drive",
+                "BLDRIVE",
                 DcMotorSimple.Direction.REVERSE,
                 DcMotor.ZeroPowerBehavior.BRAKE
         );
         FRDrive = new MotorConfig(
                 hardwareMap,
-                "Front Right Drive",
+                "FRDRIVE",
                 DcMotorSimple.Direction.FORWARD,
                 DcMotor.ZeroPowerBehavior.BRAKE
         );
         BRDrive = new MotorConfig(
                 hardwareMap,
-                "Back Right Drive",
+                "BRDRIVE",
                 DcMotorSimple.Direction.FORWARD,
                 DcMotor.ZeroPowerBehavior.BRAKE
         );
         ShootMotor1 = new MotorConfig(
                 hardwareMap,
-                "Shooter 1",
+                "SHOOTER1",
                 DcMotorSimple.Direction.FORWARD,
                 DcMotor.ZeroPowerBehavior.FLOAT
         );
         ShootMotor2 = new MotorConfig(
                 hardwareMap,
-                "Shooter 2",
+                "SHOOTER2",
                 DcMotorSimple.Direction.REVERSE, // motors are facing opposite directions
                 DcMotor.ZeroPowerBehavior.FLOAT
         );
         TurretRotation = new MotorConfig(
                 hardwareMap,
-                "Turret Rotation",
+                "TURRET",
                 DcMotorSimple.Direction.FORWARD,
                 DcMotor.ZeroPowerBehavior.BRAKE
         );
         IntakeMotor = new MotorConfig(
                 hardwareMap,
-                "Intake Motor",
+                "INTAKE",
                 DcMotorSimple.Direction.FORWARD,
                 DcMotor.ZeroPowerBehavior.BRAKE
         );
         Kicker = new ServoConfig(
                 hardwareMap,
-                "Kicker Servo",
+                "KICKER",
                 Servo.Direction.FORWARD
         );
         CarouselCR1 = new CRServoConfig(
                 hardwareMap,
-                "Carousel 1",
+                "CAROUSEL1",
                 DcMotorSimple.Direction.FORWARD,
                 CarouselENC1
         );
         CarouselCR2 = new CRServoConfig(
                 hardwareMap,
-                "Carousel 2",
+                "CAROUSEL2",
                 DcMotorSimple.Direction.FORWARD,
                 CarouselENC2
         );
         CarouselCR3 = new CRServoConfig(
                 hardwareMap,
-                "Carousel 3",
+                "CAROUSEL3",
                 DcMotorSimple.Direction.FORWARD,
                 CarouselENC3
         );
         HoodServo = new CRServoConfig(
                 hardwareMap,
-                "Turret Pitch",
+                "HOOD",
                 DcMotorSimple.Direction.FORWARD,
                 HoodENC
         );

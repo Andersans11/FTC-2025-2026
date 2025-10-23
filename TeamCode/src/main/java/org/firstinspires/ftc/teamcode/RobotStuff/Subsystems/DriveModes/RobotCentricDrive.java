@@ -15,7 +15,7 @@ public class RobotCentricDrive extends DriveMotors {
     MecanumDriverControlled vroom;
 
     @Override
-    public void initialize() {
+    public void commands() {
         this.vroom = new MecanumDriverControlled(
                 FL, FR, BL, BR,
                 () -> (forwardSupp.get() * Sensitivities.getForwardModifier()),
@@ -24,10 +24,5 @@ public class RobotCentricDrive extends DriveMotors {
         );
 
         this.vroom.schedule();
-    }
-
-    @Override
-    public void periodic() {
-        super.periodic();
     }
 }

@@ -1,10 +1,10 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.PIDStuff;
 
-import com.acmerobotics.dashboard.config.Config;
+import com.bylazar.configurables.annotations.Configurable;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-@Config
+@Configurable
 public class YawPID {
     double kP;  double secondarykP;  double P; // trust me it saves space
     double kI;  double secondarykI;  double I;
