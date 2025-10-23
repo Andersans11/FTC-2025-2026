@@ -58,12 +58,14 @@ public class Turret implements IBetterSubsystem {
                     ArtifactTypes.PURPLE,
                     ArtifactTypes.PURPLE
             };
-        else if (camera.blocks(3).length != 0) motif = new ArtifactTypes[] {
+        else if (camera.blocks(3).length != 0)
+            motif = new ArtifactTypes[] {
                 ArtifactTypes.PURPLE,
                 ArtifactTypes.GREEN,
                 ArtifactTypes.PURPLE
             };
-        else if (camera.blocks(4).length != 0) motif = new ArtifactTypes[] {
+        else if (camera.blocks(4).length != 0)
+            motif = new ArtifactTypes[] {
                     ArtifactTypes.PURPLE,
                     ArtifactTypes.PURPLE,
                     ArtifactTypes.GREEN
@@ -73,11 +75,14 @@ public class Turret implements IBetterSubsystem {
     }
 
     public double getServoPitch() {
-        if ((isRedAlliance && camera.blocks(5).length != 0) ||
-                (!isRedAlliance && camera.blocks(6).length != 0)) {
-            int tagY = camera.blocks(5)[0].y;
+        if (isRedAlliance && camera.blocks(1).length != 0) {
+            int tagY = camera.blocks(1)[0].height;
 
-            return (double) 240 / tagY; // if tag is at max height, is 1
+            return (double) (tagY/-100) + 1; // if tag is at max height, is 1
+        } else if (!isRedAlliance && camera.blocks(2).length != 0) {
+            int tagY = camera.blocks(2)[0].height;
+
+            return (double) (tagY/-100) + 1; // if tag is at max height, is 1
         }
         return 0;
     }
@@ -85,8 +90,8 @@ public class Turret implements IBetterSubsystem {
 
     public Command update() {
         
-        if ((isRedAlliance && camera.blocks(5).length != 0) ||
-                (!isRedAlliance && camera.blocks(6).length != 0)) {
+        if ((isRedAlliance && camera.blocks(1).length != 0) ||
+                (!isRedAlliance && camera.blocks(2).length != 0)) {
             int tagX = camera.blocks(5)[0].x;
 
             if (tagX < 158 || tagX > 162) {
@@ -104,6 +109,10 @@ public class Turret implements IBetterSubsystem {
     @Override
     public void binds() {
 
+    }
+
+    public Double getTurretPos() {
+        return rotationMotor.getCurrentPosition() / 537.7 / 2880;
     }
 
     @Override

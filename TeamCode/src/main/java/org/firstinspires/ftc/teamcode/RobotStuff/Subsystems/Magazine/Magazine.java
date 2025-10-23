@@ -17,9 +17,7 @@ public class Magazine implements IBetterSubsystem {
 
     public enum MagazineMode {
         INTAKE,
-        OUTTAKE_MOTIF,
         OUTTAKE,
-        OUTTAKE_MANUAL
     }
 
     MagSlot[] slots;
@@ -30,13 +28,10 @@ public class Magazine implements IBetterSubsystem {
     double oldTargetPos = 180;
     Timer deltatime;
     Utils.ArtifactTypes[] motif;
-    MagazineMode mode = MagazineMode.OUTTAKE_MOTIF;
+    MagazineMode mode = MagazineMode.OUTTAKE;
     int shotsFired;
     double turretPos;
-
-    public Command slot1;
-    public Command slot2;
-    public Command slot3;
+    boolean colorShooting = false;
 
     @Override
     public void initialize() {
@@ -89,6 +84,9 @@ public class Magazine implements IBetterSubsystem {
 
     public Command incShotsFired() {
         shotsFired++;
+        if (shotsFired == 3) {
+            shotsFired = 0;
+        }
         return new NullCommand();
     }
 
@@ -103,11 +101,27 @@ public class Magazine implements IBetterSubsystem {
         return new NullCommand();
     }
 
+    public Command ColorShooting(Utils.ArtifactTypes color) {
+        colorShooting = true;
+        for (int i = 0; i == 3; i++) {
+            if (slots[i].content == color || i == 2) {
+                activeSlot = i;
+                targetPos = 180 + slots[activeSlot].offset + turretPos;
+                while (targetPos >= 360) {
+                    targetPos = targetPos - 360;
+                }
+                i = 3;
+            }
+        }
+        shotsFired = 0;
+        return new NullCommand();
+    }
     public Command setMode(MagazineMode mode) {
 
-        if (mode == MagazineMode.OUTTAKE_MOTIF) {
+        if (mode == MagazineMode.OUTTAKE) {
+            colorShooting = false;
             for (int i = 0; i == 3; i++) {
-                if (slots[i].content == motif[0]) {
+                if (slots[i].content == motif[0] || i == 2) {
                     activeSlot = i;
                     targetPos = 180 + slots[activeSlot].offset + turretPos;
                     while (targetPos >= 360) {
@@ -192,37 +206,18 @@ public class Magazine implements IBetterSubsystem {
                     }
                 }
             }
-        } else if (mode == MagazineMode.OUTTAKE_MOTIF) {
-            if (slots[activeSlot].content == Utils.ArtifactTypes.NONE) {
-                for (int i = 0; i == 3; i++) {
-                    if (slots[i].content == motif[shotsFired]) {
-                        activeSlot = i;
-                        targetPos = 180 + slots[activeSlot].offset + turretPos;
-                        while (targetPos >= 360) {
-                            targetPos = targetPos - 360;
-                        }
-                        i = 3;
-                    }
-                }
-            }
-        } else if (mode == MagazineMode.OUTTAKE) {
-            if (slots[activeSlot].content == Utils.ArtifactTypes.NONE) {
-                for (int i = 0; i == 3; i++) {
-                    if (slots[i].content != Utils.ArtifactTypes.NONE) {
-                        activeSlot = i;
-                        targetPos = 180 + slots[activeSlot].offset + turretPos;
-                        while (targetPos >= 360) {
-                            targetPos = targetPos - 360;
-                        }
-                        i = 3;
-                    }
-                }
-            }
-
         } else {
-            targetPos = 180 + slots[activeSlot].offset + turretPos;
-            while (targetPos >= 360) {
-                targetPos = targetPos - 360;
+            if (slots[activeSlot].content == Utils.ArtifactTypes.NONE && !colorShooting) {
+                for (int i = 0; i == 3; i++) {
+                    if (slots[i].content == motif[shotsFired]  || i == 2) {
+                        activeSlot = i;
+                        targetPos = 180 + slots[activeSlot].offset + turretPos;
+                        while (targetPos >= 360) {
+                            targetPos = targetPos - 360;
+                        }
+                        i = 3;
+                    }
+                }
             }
         }
 
