@@ -31,10 +31,10 @@ public class Sensitivities {
         return driveModifier * PIDturningSensitivity;
     }
 
-    public static float playerOneLeftTriggerThreshold = 0.0f;
-    public static float playerOneRightTriggerThreshold = 0.0f;
-    public static float playerTwoLeftTriggerThreshold = 0.0f;
-    public static float playerTwoRightTriggerThreshold = 0.0f;
+    public static float playerOneLeftTriggerThreshold = 0.1f;
+    public static float playerOneRightTriggerThreshold = 0.1f;
+    public static float playerTwoLeftTriggerThreshold = 0.1f;
+    public static float playerTwoRightTriggerThreshold = 0.1f;
 }
 
 

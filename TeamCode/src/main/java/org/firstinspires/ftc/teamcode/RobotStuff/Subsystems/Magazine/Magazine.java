@@ -34,6 +34,10 @@ public class Magazine implements IBetterSubsystem {
     int shotsFired;
     double turretPos;
 
+    public Command slot1;
+    public Command slot2;
+    public Command slot3;
+
     @Override
     public void initialize() {
         this.slots = new MagSlot[] {
@@ -67,8 +71,6 @@ public class Magazine implements IBetterSubsystem {
         RobotConfig.ButtonControls.MAGAZINE_SLOT1.whenTrue(this::slot1);
         RobotConfig.ButtonControls.MAGAZINE_SLOT2.whenTrue(this::slot2);
         RobotConfig.ButtonControls.MAGAZINE_SLOT3.whenTrue(this::slot3);
-        // bind the slot 1 button in robotconfig to slot 1 command,
-        // button that is slot 1 is determined in opmode via RobotConfig.bind()
     }
 
     public void setMotif(Utils.ArtifactTypes[] motif) {

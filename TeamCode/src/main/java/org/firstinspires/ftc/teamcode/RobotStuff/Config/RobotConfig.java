@@ -44,7 +44,7 @@ public class RobotConfig {
     public static CRServoConfig CarouselCR1;
     public static CRServoConfig CarouselCR2;
     public static CRServoConfig CarouselCR3;
-    public static CRServoConfig HoodServo;
+    public static ServoConfig HoodServo;
 
     public static ServoConfig Kicker;
 
@@ -84,6 +84,7 @@ public class RobotConfig {
         public static Button MAGAZINE_SLOT2 = null;
         public static Button MAGAZINE_SLOT3 = null;
         public static Button INTAKE = null;
+        public static Button INTAKE_STOP = null;
         public static Button SHOOT = null;
         public static Button SHOOT_MOTIF = null;
         public static Button SLOWMODE = null;
@@ -104,6 +105,7 @@ public class RobotConfig {
             "MAGAZINE_SLOT2",
             "MAGAZINE_SLOT3",
             "INTAKE",
+            "INTAKE_STOP",
             "SHOOT",
             "SHOOT_MOTIF",
             "SLOWMODE"
@@ -229,11 +231,10 @@ public class RobotConfig {
                 DcMotorSimple.Direction.FORWARD,
                 CarouselENC3
         );
-        HoodServo = new CRServoConfig(
+        HoodServo = new ServoConfig(
                 hardwareMap,
                 "HOOD",
-                DcMotorSimple.Direction.FORWARD,
-                HoodENC
+                Servo.Direction.FORWARD
         );
     }
 }

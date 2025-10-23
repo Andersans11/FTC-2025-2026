@@ -19,9 +19,9 @@ public class BetterSubsystemComponent implements Component {
 
     @Override
     public void postInit() {
-        subsystem.binds();
         subsystem.hardware();
         subsystem.commands();
+        subsystem.binds();
     }
 
     @Override

@@ -32,13 +32,13 @@ public class Perseus extends SubsystemGroup {
             case OUTTAKE_MANUAL:
                 command  = new SequentialGroup(
                         Magazine.INSTANCE.setMode(Magazine.MagazineMode.OUTTAKE),
-                        Shooter.INSTANCE.idle()
+                        Shooter.INSTANCE.idle
                 );
                 break;
             case INTAKE:
                 command  = new SequentialGroup(
                         Magazine.INSTANCE.setMode(Magazine.MagazineMode.INTAKE),
-                        Shooter.INSTANCE.spinDown()
+                        Shooter.INSTANCE.spinDown
                 );
                 break;
         }
@@ -61,19 +61,19 @@ public class Perseus extends SubsystemGroup {
         switch (Magazine.INSTANCE.getMode()) {
             case OUTTAKE_MOTIF:
                 shoot = new SequentialGroup(
-                    Shooter.INSTANCE.shoot(),
+                    Shooter.INSTANCE.shoot,
                     Magazine.INSTANCE.incShotsFired(),
                     new Delay(0.3),
-                    Shooter.INSTANCE.shoot(),
+                    Shooter.INSTANCE.shoot,
                     Magazine.INSTANCE.incShotsFired(),
                     new Delay(0.3),
-                    Shooter.INSTANCE.shoot(),
+                    Shooter.INSTANCE.shoot,
                     Magazine.INSTANCE.incShotsFired(),
                     new Delay(0.3)
                 );
                 break;
             case OUTTAKE_MANUAL:
-                shoot = Shooter.INSTANCE.shoot();
+                shoot = Shooter.INSTANCE.shoot;
                 break;
         }
         return new SequentialGroup(
@@ -87,7 +87,7 @@ public class Perseus extends SubsystemGroup {
                 Magazine.INSTANCE.setMode(Magazine.MagazineMode.OUTTAKE_MANUAL),
                 Magazine.INSTANCE.setActiveSlot(slot),
                 new Delay(0.5),
-                Shooter.INSTANCE.shoot(),
+                Shooter.INSTANCE.shoot,
                 Magazine.INSTANCE.setMode(Magazine.MagazineMode.OUTTAKE)
         );
     }
@@ -100,17 +100,17 @@ public class Perseus extends SubsystemGroup {
             command = new NullCommand(
                     Magazine.INSTANCE.setMode(Magazine.MagazineMode.INTAKE),
                     new Delay(0.5),
-                    Intake.INSTANCE.start()
+                    Intake.INSTANCE.start
             );
         } else {
-            command = Intake.INSTANCE.start();
+            command = Intake.INSTANCE.start;
         }
 
         return command;
     }
 
     public Command stopIntake() {
-        return Intake.INSTANCE.idle();
+        return Intake.INSTANCE.idle;
     }
 
     public Command getMotif() {

@@ -1,8 +1,5 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems;
 
-
-
-
 import com.qualcomm.hardware.dfrobot.HuskyLens;
 
 import dev.nextftc.core.commands.Command;
@@ -15,7 +12,7 @@ import dev.nextftc.hardware.powerable.SetPower;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils.*;
 
-public class Turret implements Subsystem {
+public class Turret implements IBetterSubsystem {
 
     public static final Turret INSTANCE = new Turret();
 
@@ -32,10 +29,17 @@ public class Turret implements Subsystem {
     final double lensAngleFromVertical = 20.0; // deg
 
     @Override
-    public void initialize() {
-        this.rotationMotor = RobotConfig.TurretRotation.motor;
+    public void initialize() {}
 
+    @Override
+    public void hardware() {
+        this.rotationMotor = RobotConfig.TurretRotation.motor;
         this.camera = RobotConfig.camera;
+    }
+
+    @Override
+    public void commands() {
+
     }
 
     public void setTrackingMode(HuskyLens.Algorithm mode) {
@@ -96,6 +100,11 @@ public class Turret implements Subsystem {
         }
 
     } // TODO: IMPLEMENT PID TRACKING FOR PITCH AND YAW ON TURRET
+
+    @Override
+    public void binds() {
+
+    }
 
     @Override
     public void periodic() {
