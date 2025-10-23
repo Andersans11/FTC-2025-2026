@@ -1,5 +1,12 @@
 package org.firstinspires.ftc.teamcode.RobotStuff;
 
+import com.pedropathing.follower.Follower;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
+
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.Magazine;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
@@ -12,7 +19,11 @@ import dev.nextftc.core.commands.utility.NullCommand;
 import dev.nextftc.core.subsystems.SubsystemGroup;
 
 public class Perseus extends SubsystemGroup {
+
     public static final Perseus INSTANCE = new Perseus();
+
+    public Follower follower;
+    public Follower followerTeleOp;
 
     private Perseus() {
         super(
@@ -23,22 +34,30 @@ public class Perseus extends SubsystemGroup {
         );
     }
 
+    public void init(OpMode opmode) {
+        follower = Constants.createFollower(opmode.hardwareMap);
+
+    }
+
+    public Command start() {
+        return new NullCommand(); //Add stuff to do on start
+    }
+
     public Command setMode(Magazine.MagazineMode mode) {
 
         Command command = new NullCommand();
 
         switch (mode) {
-            case OUTTAKE_MOTIF:
-            case OUTTAKE_MANUAL:
+            case OUTTAKE:
                 command  = new SequentialGroup(
                         Magazine.INSTANCE.setMode(Magazine.MagazineMode.OUTTAKE),
-                        Shooter.INSTANCE.idle
+                        Shooter.INSTANCE.idle()
                 );
                 break;
             case INTAKE:
                 command  = new SequentialGroup(
                         Magazine.INSTANCE.setMode(Magazine.MagazineMode.INTAKE),
-                        Shooter.INSTANCE.spinDown
+                        Shooter.INSTANCE.spinDown()
                 );
                 break;
         }
@@ -56,39 +75,28 @@ public class Perseus extends SubsystemGroup {
             );
         }
 
-        Command shoot = new NullCommand();
-
-        switch (Magazine.INSTANCE.getMode()) {
-            case OUTTAKE_MOTIF:
-                shoot = new SequentialGroup(
-                    Shooter.INSTANCE.shoot,
-                    Magazine.INSTANCE.incShotsFired(),
-                    new Delay(0.3),
-                    Shooter.INSTANCE.shoot,
-                    Magazine.INSTANCE.incShotsFired(),
-                    new Delay(0.3),
-                    Shooter.INSTANCE.shoot,
-                    Magazine.INSTANCE.incShotsFired(),
-                    new Delay(0.3)
-                );
-                break;
-            case OUTTAKE_MANUAL:
-                shoot = Shooter.INSTANCE.shoot;
-                break;
-        }
         return new SequentialGroup(
+                Shooter.INSTANCE.spinUp(),
                 modeSwitch,
-                shoot
+                Shooter.INSTANCE.shoot(),
+                Magazine.INSTANCE.incShotsFired(),
+                new Delay(0.3),
+                Shooter.INSTANCE.shoot(),
+                Magazine.INSTANCE.incShotsFired(),
+                new Delay(0.3),
+                Shooter.INSTANCE.shoot(),
+                Magazine.INSTANCE.incShotsFired(),
+                Shooter.INSTANCE.idle()
         );
     }
 
-    public Command shootSingle(int slot) {
+    public Command shootSingle(Utils.ArtifactTypes color) {
         return new SequentialGroup(
-                Magazine.INSTANCE.setMode(Magazine.MagazineMode.OUTTAKE_MANUAL),
-                Magazine.INSTANCE.setActiveSlot(slot),
+                Magazine.INSTANCE.ColorShooting(color),
+                Shooter.INSTANCE.spinUp(),
                 new Delay(0.5),
-                Shooter.INSTANCE.shoot,
-                Magazine.INSTANCE.setMode(Magazine.MagazineMode.OUTTAKE)
+                Shooter.INSTANCE.shoot(),
+                Shooter.INSTANCE.idle()
         );
     }
 
@@ -116,5 +124,10 @@ public class Perseus extends SubsystemGroup {
     public Command getMotif() {
         Magazine.INSTANCE.setMotif(Turret.INSTANCE.getMotif());
         return new NullCommand();
+    }
+
+    @Override
+    public void periodic() {
+        Magazine.INSTANCE.passTurretPos(Turret.INSTANCE.getTurretPos());
     }
 }
