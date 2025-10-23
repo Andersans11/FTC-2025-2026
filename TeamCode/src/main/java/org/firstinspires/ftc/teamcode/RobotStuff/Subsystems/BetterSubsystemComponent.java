@@ -20,12 +20,12 @@ public class BetterSubsystemComponent implements Component {
     @Override
     public void postInit() {
         subsystem.hardware();
-        subsystem.commands();
-        subsystem.binds();
     }
 
     @Override
     public void preWaitForStart() {
+        subsystem.commands();
+        subsystem.binds();
         this.updateSubsystem();
     }
 
