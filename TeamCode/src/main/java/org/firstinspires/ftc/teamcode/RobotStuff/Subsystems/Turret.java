@@ -1,7 +1,11 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems;
 
+import com.pedropathing.geometry.Pose;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
 
+import dev.nextftc.control.ControlSystem;
+import dev.nextftc.control.feedback.AngleType;
+import dev.nextftc.control.feedback.PIDCoefficients;
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.utility.NullCommand;
 import dev.nextftc.core.subsystems.Subsystem;
@@ -24,12 +28,27 @@ public class Turret implements IBetterSubsystem {
     double targetPos;
     double oldTargetPos;
     double pitch;
+    Pose pose;
+    Pose oldPose;
+    double targetAngle;
+    double kP = 1.0;
+    double kI = 0.0;
+    double kD = 0.0;
+    ControlSystem controller;
+    boolean isManualControl = false;
+    double currentAxisPos;
 
     final double lensCenterFromFloor = 279.87241113;
     final double lensAngleFromVertical = 20.0; // deg
 
     @Override
-    public void initialize() {}
+    public void initialize() {
+        controller = ControlSystem.builder()
+                .angular(AngleType.DEGREES,
+                        feedback -> feedback.posPid(kP, kI, kD)
+                )
+                .build();
+    }
 
     @Override
     public void hardware() {
@@ -48,6 +67,10 @@ public class Turret implements IBetterSubsystem {
 
     public void setRedAlliance() {
         isRedAlliance = true;
+    }
+
+    public void setManualControl(boolean manualControl) {
+        isManualControl = manualControl;
     }
 
     public ArtifactTypes[] getMotif() {
@@ -87,21 +110,44 @@ public class Turret implements IBetterSubsystem {
         return 0;
     }
 
+    public void passAxis(double value) {
+        currentAxisPos = value;
+    }
 
     public Command update() {
-        
-        if ((isRedAlliance && camera.blocks(1).length != 0) ||
-                (!isRedAlliance && camera.blocks(2).length != 0)) {
-            int tagX = camera.blocks(5)[0].x;
+        if (!isManualControl) {
+            if ((isRedAlliance && camera.blocks(1).length != 0) ||
+                    (!isRedAlliance && camera.blocks(2).length != 0)) {
+                int tagX = camera.blocks(5)[0].x;
 
-            if (tagX < 158 || tagX > 162) {
-                double power = (double) (160 - tagX) / 80;
-                return new SetPower(rotationMotor, power);
+                if (tagX < 158 || tagX > 162) {
+                    double power = (double) (160 - tagX) / 80;
+                    return new SetPower(rotationMotor, power);
+                } else {
+                    return new SetPower(rotationMotor, 0);
+                }
             } else {
-                return new SetPower(rotationMotor, 0);
+                if (pose != oldPose) {
+                    if (!isRedAlliance) {
+                        targetAngle = Math.tan((144 - pose.getY()) / pose.getX()); // get angle with right triangle rules
+                        targetAngle = 180 - targetAngle; // get supplement of angle
+                        targetAngle = targetAngle - pose.getHeading(); // account for robot heading
+                        if (targetAngle < 0) {
+                            targetAngle = targetAngle + 360; // normalize angle
+                        }
+                    } else {
+                        targetAngle = Math.tan((144 - pose.getY()) / (144 - pose.getX())); // get angle with right triangle rules
+                        targetAngle = targetAngle - pose.getHeading(); // account for robot heading
+                        if (targetAngle < 0) {
+                            targetAngle = targetAngle + 360; // normalize angle
+                        }
+                    }
+                }
             }
-        } else {
+
             return new NullCommand(); // Put PID Tracking here; this is for when the camera can't see the tag
+        } else {
+            return new SetPower(rotationMotor, currentAxisPos);
         }
 
     } // TODO: IMPLEMENT PID TRACKING FOR PITCH AND YAW ON TURRET
@@ -113,6 +159,10 @@ public class Turret implements IBetterSubsystem {
 
     public Double getTurretPos() {
         return rotationMotor.getCurrentPosition() / 537.7 / 2880;
+    }
+
+    public void passRobotPose(Pose pose) {
+        this.pose = pose;
     }
 
     @Override

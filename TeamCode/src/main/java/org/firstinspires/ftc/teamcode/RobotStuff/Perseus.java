@@ -104,14 +104,10 @@ public class Perseus extends SubsystemGroup {
 
         Command command;
 
-        if (Magazine.INSTANCE.getMode() != Magazine.MagazineMode.INTAKE) {
-            command = new NullCommand(
-                    Magazine.INSTANCE.setMode(Magazine.MagazineMode.INTAKE),
-                    new Delay(0.5),
-                    Intake.INSTANCE.start
-            );
-        } else {
+        if (Magazine.INSTANCE.getMode() == Magazine.MagazineMode.INTAKE) {
             command = Intake.INSTANCE.start;
+        } else {
+            command = new NullCommand();
         }
 
         return command;
@@ -126,8 +122,13 @@ public class Perseus extends SubsystemGroup {
         return new NullCommand();
     }
 
+    public void manualTurretPassAxis(double value) {
+        Turret.INSTANCE.passAxis(value);
+    }
+
     @Override
     public void periodic() {
         Magazine.INSTANCE.passTurretPos(Turret.INSTANCE.getTurretPos());
+        Turret.INSTANCE.passRobotPose(followerTeleOp.getPose());
     }
 }

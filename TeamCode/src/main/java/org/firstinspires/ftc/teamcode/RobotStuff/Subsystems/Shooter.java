@@ -37,7 +37,6 @@ public class Shooter implements IBetterSubsystem {
                 shooterMotors[1]
         );
         hood = RobotConfig.HoodServo.servo;
-        //TODO: Set Hood PID
         kicker = RobotConfig.Kicker.servo;
     }
 
