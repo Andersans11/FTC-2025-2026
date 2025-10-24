@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems;
 import com.pedropathing.geometry.Pose;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
 
+import dev.nextftc.bindings.Range;
 import dev.nextftc.control.ControlSystem;
 import dev.nextftc.control.feedback.AngleType;
 import dev.nextftc.control.feedback.PIDCoefficients;
@@ -15,6 +16,8 @@ import dev.nextftc.hardware.powerable.SetPower;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils.*;
+
+import java.util.function.Supplier;
 
 public class Turret implements IBetterSubsystem {
 
@@ -36,10 +39,12 @@ public class Turret implements IBetterSubsystem {
     double kD = 0.0;
     ControlSystem controller;
     boolean isManualControl = false;
-    double currentAxisPos;
 
+    public Supplier<Command> update;
     final double lensCenterFromFloor = 279.87241113;
     final double lensAngleFromVertical = 20.0; // deg
+
+    public Range rotationSupp;
 
     @Override
     public void initialize() {
@@ -58,8 +63,45 @@ public class Turret implements IBetterSubsystem {
 
     @Override
     public void commands() {
+        this.update = () -> {
+            if (!isManualControl) {
+                if ((isRedAlliance && camera.blocks(1).length != 0) ||
+                        (!isRedAlliance && camera.blocks(2).length != 0)) {
+                    int tagX = camera.blocks(5)[0].x;
 
+                    if (tagX < 158 || tagX > 162) {
+                        double power = (double) (160 - tagX) / 80;
+                        return new SetPower(rotationMotor, power);
+                    } else {
+                        return new SetPower(rotationMotor, 0);
+                    }
+                } else {
+                    if (pose != oldPose) {
+                        if (!isRedAlliance) {
+                            targetAngle = Math.tan((144 - pose.getY()) / pose.getX()); // get angle with right triangle rules
+                            targetAngle = 180 - targetAngle; // get supplement of angle
+                            targetAngle = targetAngle - pose.getHeading(); // account for robot heading
+                            if (targetAngle < 0) {
+                                targetAngle = targetAngle + 360; // normalize angle
+                            }
+                        } else {
+                            targetAngle = Math.tan((144 - pose.getY()) / (144 - pose.getX())); // get angle with right triangle rules
+                            targetAngle = targetAngle - pose.getHeading(); // account for robot heading
+                            if (targetAngle < 0) {
+                                targetAngle = targetAngle + 360; // normalize angle
+                            }
+                        }
+                    }
+                }
+
+                return new NullCommand(); // Put PID Tracking here; this is for when the camera can't see the tag
+            } else {
+                return new SetPower(rotationMotor, this.rotationSupp.get());
+            }
+
+        };
     }
+
 
     public void setTrackingMode(HuskyLens.Algorithm mode) {
         trackingMode = mode;
@@ -110,51 +152,9 @@ public class Turret implements IBetterSubsystem {
         return 0;
     }
 
-    public void passAxis(double value) {
-        currentAxisPos = value;
-    }
-
-    public Command update() {
-        if (!isManualControl) {
-            if ((isRedAlliance && camera.blocks(1).length != 0) ||
-                    (!isRedAlliance && camera.blocks(2).length != 0)) {
-                int tagX = camera.blocks(5)[0].x;
-
-                if (tagX < 158 || tagX > 162) {
-                    double power = (double) (160 - tagX) / 80;
-                    return new SetPower(rotationMotor, power);
-                } else {
-                    return new SetPower(rotationMotor, 0);
-                }
-            } else {
-                if (pose != oldPose) {
-                    if (!isRedAlliance) {
-                        targetAngle = Math.tan((144 - pose.getY()) / pose.getX()); // get angle with right triangle rules
-                        targetAngle = 180 - targetAngle; // get supplement of angle
-                        targetAngle = targetAngle - pose.getHeading(); // account for robot heading
-                        if (targetAngle < 0) {
-                            targetAngle = targetAngle + 360; // normalize angle
-                        }
-                    } else {
-                        targetAngle = Math.tan((144 - pose.getY()) / (144 - pose.getX())); // get angle with right triangle rules
-                        targetAngle = targetAngle - pose.getHeading(); // account for robot heading
-                        if (targetAngle < 0) {
-                            targetAngle = targetAngle + 360; // normalize angle
-                        }
-                    }
-                }
-            }
-
-            return new NullCommand(); // Put PID Tracking here; this is for when the camera can't see the tag
-        } else {
-            return new SetPower(rotationMotor, currentAxisPos);
-        }
-
-    } // TODO: IMPLEMENT PID TRACKING FOR PITCH AND YAW ON TURRET
-
     @Override
     public void binds() {
-
+        this.rotationSupp = RobotConfig.RangeControls.TURRET_ROT;
     }
 
     public Double getTurretPos() {
@@ -167,6 +167,6 @@ public class Turret implements IBetterSubsystem {
 
     @Override
     public void periodic() {
-        update().invoke();
+        this.update.get().schedule();
     }
 }

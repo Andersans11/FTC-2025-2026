@@ -26,10 +26,10 @@ public class Constants {
             .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.1, 0, 0, 0.6, 0));
 
     public static MecanumConstants driveConstants = new MecanumConstants()
-            .leftFrontMotorName("leftFront")
-            .leftRearMotorName("leftRear")
-            .rightFrontMotorName("rightFront")
-            .rightRearMotorName("rightRear")
+            .leftFrontMotorName("FLDRIVE")
+            .leftRearMotorName("BLDRIVE")
+            .rightFrontMotorName("FRDRIVE")
+            .rightRearMotorName("BRDRIVE")
             .leftFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
             .leftRearMotorDirection(DcMotorSimple.Direction.REVERSE)
             .rightFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
@@ -37,7 +37,8 @@ public class Constants {
             .xVelocity(57.8741)
             .yVelocity(52.295);
 
-    public static PinpointConstants localizerConstants = new PinpointConstants();
+    public static PinpointConstants localizerConstants = new PinpointConstants()
+            .hardwareMapName("PINPOINT");
 
     public static PathConstraints pathConstraints = new PathConstraints(
             0.995,

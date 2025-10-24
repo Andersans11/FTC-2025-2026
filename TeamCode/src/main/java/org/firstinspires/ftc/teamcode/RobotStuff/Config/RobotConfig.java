@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -26,12 +27,9 @@ import java.lang.reflect.Field;
 public class RobotConfig {
 
     public static AnalogInput CarouselENC1;
-    public static AnalogInput CarouselENC2;
-    public static AnalogInput CarouselENC3;
-    public static AnalogInput HoodENC;
 
     public static ColorSensor IntakeCS;
-
+    public static DistanceSensor IntakeDS;
     public static MotorConfig FLDrive;
     public static MotorConfig BLDrive;
     public static MotorConfig FRDrive;
@@ -74,9 +72,11 @@ public class RobotConfig {
     public static Telemetry getTelemetry() {
         return opMode.telemetry;
     }
-
     public static long getDelta() {
         return deltaTimer.getDelta();
+    }
+    public static HardwareMap getHardwareMap() {
+        return hardwareMap;
     }
 
     public static class ButtonControls {
@@ -88,7 +88,9 @@ public class RobotConfig {
         public static Button SHOOT = null;
         public static Button SHOOT_MOTIF = null;
         public static Button SLOWMODE = null;
-
+        public static Button SHOOT_GREEN = null;
+        public static Button SHOOT_PURPLE = null;
+        public static Button STOP_SHOOT = null;
     }
 
     public static class RangeControls {
@@ -108,7 +110,10 @@ public class RobotConfig {
             "INTAKE_STOP",
             "SHOOT",
             "SHOOT_MOTIF",
-            "SLOWMODE"
+            "STOP_SHOOT",
+            "SLOWMODE",
+            "SHOOT_GREEN",
+            "SHOOT_PURPLE"
     })
     @interface ButtonOption {}
 
@@ -151,12 +156,9 @@ public class RobotConfig {
         Pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, "PINPOINT");
 
         CarouselENC1 = hardwareMap.get(AnalogInput.class, "CARENC1");
-        CarouselENC2 = hardwareMap.get(AnalogInput.class, "CARENC2");
-        CarouselENC3 = hardwareMap.get(AnalogInput.class, "CARENC3");
-
-        HoodENC = hardwareMap.get(AnalogInput.class, "HOODENC");
 
         //IntakeCS = hardwareMap.get(ColorSensor.class, "IntakeCS");
+        IntakeDS = hardwareMap.get(DistanceSensor.class, "Dis");
 
         camera = hardwareMap.get(HuskyLens.class, "HUSKYLENS");
 
@@ -223,13 +225,13 @@ public class RobotConfig {
                 hardwareMap,
                 "CAROUSEL2",
                 DcMotorSimple.Direction.FORWARD,
-                CarouselENC2
+                CarouselENC1
         );
         CarouselCR3 = new CRServoConfig(
                 hardwareMap,
                 "CAROUSEL3",
                 DcMotorSimple.Direction.FORWARD,
-                CarouselENC3
+                CarouselENC1
         );
         HoodServo = new ServoConfig(
                 hardwareMap,

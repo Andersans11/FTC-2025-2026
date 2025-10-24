@@ -26,7 +26,6 @@ public class BetterSubsystemComponent implements Component {
     public void preWaitForStart() {
         subsystem.commands();
         subsystem.binds();
-        this.updateSubsystem();
     }
 
     @Override

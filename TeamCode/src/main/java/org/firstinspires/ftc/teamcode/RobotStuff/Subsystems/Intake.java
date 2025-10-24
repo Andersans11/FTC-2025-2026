@@ -19,9 +19,9 @@ public class Intake implements IBetterSubsystem {
 
     @Override
     public void binds() {
-        RobotConfig.ButtonControls.INTAKE.whenTrue(this.start);
-        RobotConfig.ButtonControls.INTAKE_STOP.whenTrue(this.stop);
-        RobotConfig.ButtonControls.INTAKE.and(() -> !RobotConfig.ButtonControls.INTAKE_STOP.get()).whenTrue(this.idle);
+        RobotConfig.ButtonControls.INTAKE.whenBecomesTrue(this.start);
+        RobotConfig.ButtonControls.INTAKE.whenBecomesFalse(this.idle);
+        RobotConfig.ButtonControls.INTAKE_STOP.whenBecomesTrue(this.stop);
     }
 
     @Override
@@ -42,6 +42,6 @@ public class Intake implements IBetterSubsystem {
     public void commands() {
         this.start = new SetPower(intake, 1);
         this.stop = new SetPower(intake, 0);
-        this.idle = new SetPower(intake, 0.2);
+        this.idle = new SetPower(intake, 0.4);
     }
 }

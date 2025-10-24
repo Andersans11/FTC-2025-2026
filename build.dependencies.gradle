@@ -5,25 +5,24 @@ repositories {
     maven { url = "https://maven.rowanmcalpin.com/" }
     maven { url = "https://maven.pedropathing.com/" } // Remove if you don't intend to use PedroPathing
     maven { url = "https://maven.brott.dev/" } // Remove if you don't intend to use the FTC Dashboard (required if using PedroPathing)
-    maven { url = "https://repo.dairy.foundation/releases" }
     maven { url = "https://mymaven.bylazar.com/releases" }
 
 }
 
 dependencies {
-    implementation 'org.firstinspires.ftc:Inspection:10.1.1'
-    implementation 'org.firstinspires.ftc:Blocks:10.1.1'
-    implementation 'org.firstinspires.ftc:RobotCore:10.1.1'
-    implementation 'org.firstinspires.ftc:RobotServer:10.1.1'
-    implementation 'org.firstinspires.ftc:OnBotJava:10.1.1'
-    implementation 'org.firstinspires.ftc:Hardware:10.1.1'
-    implementation 'org.firstinspires.ftc:FtcCommon:10.1.1'
-    implementation 'org.firstinspires.ftc:Vision:10.1.1'
+    implementation 'org.firstinspires.ftc:Inspection:11.0.0'
+    implementation 'org.firstinspires.ftc:Blocks:11.0.0'
+    implementation 'org.firstinspires.ftc:RobotCore:11.0.0'
+    implementation 'org.firstinspires.ftc:RobotServer:11.0.0'
+    implementation 'org.firstinspires.ftc:OnBotJava:11.0.0'
+    implementation 'org.firstinspires.ftc:Hardware:11.0.0'
+    implementation 'org.firstinspires.ftc:FtcCommon:11.0.0'
+    implementation 'org.firstinspires.ftc:Vision:11.0.0'
     implementation 'androidx.appcompat:appcompat:1.2.0'
 
-    implementation "com.pedropathing:ftc:${pedropathing_version}"
-    implementation "com.pedropathing:telemetry:${pedropathing_tele_version}"
-    implementation "com.bylazar:fullpanels:${panels_version}"
+    implementation 'com.pedropathing:ftc:2.0.3'
+    implementation 'com.pedropathing:telemetry:1.0.0'
+    implementation 'com.bylazar:fullpanels:1.0.7'
 
     //implementation "com.acmerobotics.slothboard:dashboard:${slothboard_version}"
 
