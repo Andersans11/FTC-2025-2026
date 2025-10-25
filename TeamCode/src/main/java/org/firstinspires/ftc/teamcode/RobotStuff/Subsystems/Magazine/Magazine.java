@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -12,6 +13,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.HardwareConfigs.RTPAxon;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.IBetterSubsystem;
 
+@Config
 public class Magazine implements IBetterSubsystem {
 
     public static final Magazine INSTANCE = new Magazine();
@@ -24,34 +26,45 @@ public class Magazine implements IBetterSubsystem {
     }
 
     MagSlot[] slots;
-    int activeSlot; // slot that receives the next ball
-    RTPAxon[] servos;
+    public int activeSlot; // slot that receives the next ball
+    public RTPAxon[] servos;
     ColorSensor color;
     double targetPos = 0;
     double oldTargetPos = 180;
     Timer deltatime;
     Utils.ArtifactTypes[] motif;
-    MagazineMode mode = MagazineMode.OUTTAKE;
     int shotsFired;
-    double turretPos;
+    public double turretPos;
+    public double oldTurretPos;
     boolean colorShooting = false;
+    boolean manualControl = false;
 
-    public static double kP = 0.0025;
+    public static double kP = 0.008;
     public static double kI = 0.0;
-    public static double kD = 0.001;
+    public static double kD = 0.0;
+
+    public static double off0 = 0;
+    public static double off1 = 120;
+    public static double off2 = 240;
+
+    public boolean yej = false;
+    public int tre = 0;
+    public int fal = 0;
 
     @Override
     public void initialize() {
         this.slots = new MagSlot[] {
-                new MagSlot(0), // this slot starts in front of intake
-                new MagSlot(120),
-                new MagSlot(-120)
+                new MagSlot(off0), // this slot starts in front of intake
+                new MagSlot(off1),
+                new MagSlot(off2)
         };
         this.activeSlot = 0;
 
         deltatime = new Timer();
 
         telemetry = new MultipleTelemetry();
+
+        this.yej = false;
     }
 
     @Override
@@ -73,6 +86,10 @@ public class Magazine implements IBetterSubsystem {
         this.servos[2].setKP(kP);
         this.servos[2].setKI(kI);
         this.servos[2].setKD(kD);
+
+        this.servos[0].setMaxPower(1);
+        this.servos[1].setMaxPower(1);
+        this.servos[2].setMaxPower(1);
 
         this.color = RobotConfig.IntakeCS;
     }
@@ -109,6 +126,16 @@ public class Magazine implements IBetterSubsystem {
         }
     }
 
+    public String getContent(int slot) {
+        switch (slots[slot].content) {
+            case PURPLE:
+                return "PURPLE";
+            case GREEN:
+                return "GREEN";
+        }
+        return "NONE";
+    }
+
     public Command incShotsFired() {
         shotsFired++;
         if (shotsFired == 3) {
@@ -143,9 +170,17 @@ public class Magazine implements IBetterSubsystem {
         shotsFired = 0;
         return new NullCommand();
     }
-    public Command setMode(MagazineMode mode) {
 
-        if (mode == MagazineMode.OUTTAKE) {
+    public String getModeString() {
+        if (yej) {
+            return "INTAKE";
+        } else {
+            return "OUTTAKE";
+        }
+    }
+    public Command setMode(boolean mode) {
+
+        if (!mode) {
             colorShooting = false;
             for (int i = 0; i == 3; i++) {
                 if (slots[i].content == motif[0] || i == 2) {
@@ -157,16 +192,14 @@ public class Magazine implements IBetterSubsystem {
                     i = 3;
                 }
             }
-
+            fal++;
+            //this.yej = false;
             shotsFired = 0;
+        } else {
+            tre++;
+            this.yej = true;
         }
-
-        this.mode = mode;
         return new NullCommand();
-    }
-
-    public MagazineMode getMode() {
-        return mode;
     }
 
     public Command setActiveSlot(int slot) {
@@ -175,76 +208,64 @@ public class Magazine implements IBetterSubsystem {
     }
 
     public Command slot1() {
-        targetPos = slots[0].offset;
-
-        if (targetPos != oldTargetPos) {
-            setRotation(targetPos);
-            oldTargetPos = targetPos;
-        }
-
-        servos[0].update();
-        servos[1].update();
-        servos[2].update();
-
         return setActiveSlot(0);
     }
     public Command slot2() {
-        targetPos = slots[1].offset;
-
-        if (targetPos != oldTargetPos) {
-            setRotation(targetPos);
-            oldTargetPos = targetPos;
-        }
-
-        servos[0].update();
-        servos[1].update();
-        servos[2].update();
-
         return setActiveSlot(1);
     }
     public Command slot3() {
-        targetPos = slots[2].offset;
-
-        if (targetPos != oldTargetPos) {
-            setRotation(targetPos);
-            oldTargetPos = targetPos;
-        }
-
-        servos[0].update();
-        servos[1].update();
-        servos[2].update();
-
         return setActiveSlot(2);
+    }
+    public double getTargetPos(){
+        return (servos[0].getTargetRotation() + servos[1].getTargetRotation() + servos[2].getTargetRotation()) / 3;
+    }
+
+    public double getActualPos(){
+        return (servos[0].getTotalRotation() + servos[1].getTotalRotation() + servos[2].getTotalRotation()) / 3;
     }
 
     @Override
     public void periodic() {
-        if (mode == MagazineMode.INTAKE) {
+        if (!manualControl) {
+            if (yej) {
 
-            if (slots[activeSlot].content != Utils.ArtifactTypes.NONE) {
-                deltatime.resetTimer();
-                if (deltatime.getElapsedTimeSeconds() >= 0.5) {
+                if (slots[activeSlot].content != Utils.ArtifactTypes.NONE) {
+                    deltatime.resetTimer();
+                    if (deltatime.getElapsedTimeSeconds() >= 0.5) {
+                        for (int i = 0; i == 3; i++) {
+                            if (slots[i].content == Utils.ArtifactTypes.NONE) {
+                                activeSlot = i;
+                                i = 3;
+                            }
+                        }
+                    }
+                }
+            } else {
+                if (slots[activeSlot].content == Utils.ArtifactTypes.NONE && !colorShooting) {
                     for (int i = 0; i == 3; i++) {
-                        if (slots[i].content == Utils.ArtifactTypes.NONE) {
+                        if (slots[i].content == motif[shotsFired] || i == 2) {
                             activeSlot = i;
-                            targetPos = slots[activeSlot].offset;
                             i = 3;
                         }
                     }
                 }
             }
-        } else {
-            if (slots[activeSlot].content == Utils.ArtifactTypes.NONE && !colorShooting) {
-                for (int i = 0; i == 3; i++) {
-                    if (slots[i].content == motif[shotsFired]  || i == 2) {
-                        activeSlot = i;
-                        targetPos = 180 + slots[activeSlot].offset + turretPos;
-                        while (targetPos >= 360) {
-                            targetPos = targetPos - 360;
-                        }
-                        i = 3;
-                    }
+
+            if (turretPos != oldTurretPos) {
+                if (yej) {
+                    targetPos = slots[activeSlot].offset;
+                } else {
+                    targetPos = 180 + slots[activeSlot].offset + turretPos;
                 }
+                while (targetPos >= 360) {
+                    targetPos = targetPos - 360;
+                }
+                oldTurretPos = turretPos;
+            }
+        } else {
+            targetPos = slots[activeSlot].offset;
+            while (targetPos >= 360) {
+                targetPos = targetPos - 360;
             }
         }
 
@@ -256,8 +277,6 @@ public class Magazine implements IBetterSubsystem {
         servos[0].update();
         servos[1].update();
         servos[2].update();
-
-        telemetry.addData("Mag Pos: ", targetPos);
     }
 
 }

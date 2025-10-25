@@ -40,7 +40,8 @@ public class RoyallyFuckedUpMode extends NextFTCOpMode {
     public void onUpdate() {
         deltaTime = RobotConfig.getDelta();
 
-        telemetry.addData("Deltatime", deltaTime);
+        telemetry.addData("Deltatime", deltaTime / 1000000);
+        telemetry.update();
     }
 
 

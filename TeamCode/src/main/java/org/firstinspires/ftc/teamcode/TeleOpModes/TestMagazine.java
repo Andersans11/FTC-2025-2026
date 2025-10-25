@@ -24,7 +24,7 @@ public class TestMagazine extends RoyallyFuckedUpMode {
     public void onInit() {
         super.onInit();
 
-        Magazine.INSTANCE.setMode(Magazine.MagazineMode.INTAKE);
+        Magazine.INSTANCE.setMode(true);
 
         RobotConfig.bind(P1.a(), "MAGAZINE_SLOT1");
         RobotConfig.bind(P1.b(), "MAGAZINE_SLOT2");
@@ -39,5 +39,8 @@ public class TestMagazine extends RoyallyFuckedUpMode {
     @Override
     public void onUpdate() {
         super.onUpdate();
+        super.telemetry.addData("Target Pos", Magazine.INSTANCE.getTargetPos());
+        super.telemetry.addData("Actual Pos", Magazine.INSTANCE.getActualPos());
+        super.telemetry.addData("at target: ", Magazine.INSTANCE.servos[0].isAtTarget());
     }
 }

@@ -116,7 +116,7 @@ public class Turret implements IBetterSubsystem {
     }
 
     public void resetEncoders() {
-        rotationMotor.zero();
+        rotationMotor.setCurrentPosition(0);
     }
 
     public ArtifactTypes[] getMotif() {
@@ -162,7 +162,7 @@ public class Turret implements IBetterSubsystem {
     }
 
     public Double getTurretPos() {
-        return rotationMotor.getCurrentPosition() / 537.7 / 2880;
+        return rotationMotor.getCurrentPosition() / 537.7 * 360 / 8;
     }
 
     public void passRobotPose(Pose pose) {

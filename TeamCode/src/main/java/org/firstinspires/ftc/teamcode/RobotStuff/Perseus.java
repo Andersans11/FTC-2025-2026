@@ -64,9 +64,9 @@ public class Perseus extends BetterSubsystemGroup {
         this.shootMotif = () -> {
             Command modeSwitch = new NullCommand();
 
-            if (Magazine.INSTANCE.getMode() == Magazine.MagazineMode.INTAKE) {
+            if (Magazine.INSTANCE.yej) {
                 modeSwitch = new SequentialGroup(
-                        Magazine.INSTANCE.setMode(Magazine.MagazineMode.OUTTAKE),
+                        Magazine.INSTANCE.setMode(false),
                         new Delay(0.5)
                 );
             }
@@ -86,26 +86,7 @@ public class Perseus extends BetterSubsystemGroup {
             );
         };
 
-        this.setMode = (mode) -> {
 
-            Command command = new NullCommand();
-
-            switch (mode) {
-                case OUTTAKE:
-                    command  = new SequentialGroup(
-                            Magazine.INSTANCE.setMode(Magazine.MagazineMode.OUTTAKE),
-                            Shooter.INSTANCE.idle
-                    );
-                    break;
-                case INTAKE:
-                    command  = new SequentialGroup(
-                            Magazine.INSTANCE.setMode(Magazine.MagazineMode.INTAKE),
-                            Shooter.INSTANCE.spinDown
-                    );
-                    break;
-            }
-            return command;
-        };
 
         this.shootSingle = (color) -> new SequentialGroup(
                 Magazine.INSTANCE.ColorShooting(color),
@@ -115,17 +96,10 @@ public class Perseus extends BetterSubsystemGroup {
                 Shooter.INSTANCE.idle
         );
 
-        this.intake = () -> {
-            Command command;
-
-            if (Magazine.INSTANCE.getMode() == Magazine.MagazineMode.INTAKE) {
-                command = Intake.INSTANCE.start;
-            } else {
-                command = new NullCommand();
-            }
-
-            return command;
-        };
+        this.intake = () -> new SequentialGroup(
+                Magazine.INSTANCE.setMode(true),
+                Intake.INSTANCE.start
+        );
 
         this.stopIntake = () -> Intake.INSTANCE.idle;
 
@@ -145,9 +119,6 @@ public class Perseus extends BetterSubsystemGroup {
         RobotConfig.ButtonControls.INTAKE.whenBecomesFalse(this.stopIntake.get());
 
         RobotConfig.ButtonControls.SHOOT_MOTIF.whenBecomesTrue(this.shootMotif.get());
-
-        RobotConfig.ButtonControls.INTAKE_MODE.whenBecomesTrue(this.setMode.apply(Magazine.MagazineMode.INTAKE));
-        RobotConfig.ButtonControls.OUTTAKE_MODE.whenBecomesTrue(this.setMode.apply(Magazine.MagazineMode.OUTTAKE));
 
         Turret.INSTANCE.rotationSupp = RobotConfig.RangeControls.TURRET_ROT;
     }
