@@ -18,6 +18,8 @@ import dev.nextftc.hardware.powerable.SetPower;
 
 public class NewTurret implements Subsystem {
 
+    public static final NewTurret INSTANCE = new NewTurret();
+
     MotorEx rotationMotor;
     boolean isRedAlliance;
     double pitch;

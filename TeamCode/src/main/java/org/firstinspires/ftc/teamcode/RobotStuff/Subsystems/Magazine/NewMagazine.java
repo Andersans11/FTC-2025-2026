@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.HardwareConfigs.RTPAxon;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.NewTurret;
 
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.utility.NullCommand;
@@ -23,8 +24,6 @@ public class NewMagazine implements Subsystem {
     Timer deltatime;
     public Utils.ArtifactTypes[] motif;
     int shotsFired;
-    public double turretPos;
-    boolean colorShooting = false;
     public Utils.ArtifactTypes desiredColor;
 
     public static double kP = 0.008;
@@ -134,7 +133,7 @@ public class NewMagazine implements Subsystem {
                 || (mode == 0 && slots[activeSlot].content != Utils.ArtifactTypes.NONE))
             changeActiveSlot();
 
-        targetPos = ((180 + turretPos) * mode) + slots[activeSlot].offset; // TODO: Change turretPos to targetpos in turret class at some point
+        targetPos = ((180 + NewTurret.INSTANCE.targetAngle) * mode) + slots[activeSlot].offset;
 
         if (targetPos != oldTargetPos) {
             servos[0].changeTargetRotation(targetPos);
