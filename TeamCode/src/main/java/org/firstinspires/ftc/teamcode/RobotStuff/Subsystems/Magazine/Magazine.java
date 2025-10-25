@@ -62,9 +62,17 @@ public class Magazine implements IBetterSubsystem {
                 new RTPAxon(RobotConfig.CarouselCR3)
         };
 
-        this.servos[0].setPidCoeffs(kP, kI, kD);
-        this.servos[1].setPidCoeffs(kP, kI, kD);
-        this.servos[2].setPidCoeffs(kP, kI, kD);
+        this.servos[0].setKP(kP);
+        this.servos[0].setKI(kI);
+        this.servos[0].setKD(kD);
+
+        this.servos[1].setKP(kP);
+        this.servos[1].setKI(kI);
+        this.servos[1].setKD(kD);
+
+        this.servos[2].setKP(kP);
+        this.servos[2].setKI(kI);
+        this.servos[2].setKD(kD);
 
         this.color = RobotConfig.IntakeCS;
     }
