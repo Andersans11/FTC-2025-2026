@@ -99,7 +99,7 @@ public class NewMagazine implements IAmBetterSubsystem {
         servos[0].update();
     }
 
-    // -------------------- COMMANDS ------------------------ //
+    // -------------------- COMMANDS / METHODS ------------------------ //
     public Command changeActiveSlot() {
         boolean foundOne = false;
         switch (mode) {
@@ -111,7 +111,11 @@ public class NewMagazine implements IAmBetterSubsystem {
                         foundOne = true;
                     }
                 }
-                if (foundOne) mode = 1;
+                if (foundOne) {
+                    mode = 1;
+                    shotsFired = 0;
+                    setDesiredColor();
+                }
                 break;
             case 1:
                 for (int i = 0; i == 3; i++) {
@@ -135,24 +139,39 @@ public class NewMagazine implements IAmBetterSubsystem {
         return new NullCommand();
     }
 
-    // --------------------- METHODS ------------------------ //
-
     /**
      * Sets the desired color
      * @param desiredColor Manual color you want
      **/
-    public void setDesiredColor(Utils.ArtifactTypes desiredColor) {
+    public Command setDesiredColor(Utils.ArtifactTypes desiredColor) {
         this.desiredColor = desiredColor;
+
+        return new NullCommand();
     }
 
     /**
      * Sets the desired color to that of the next motif Artifact
      **/
-    public void setDesiredColor() {
+    public Command setDesiredColor() {
         this.desiredColor = motif[shotsFired];
+
+        return new NullCommand();
+    }
+
+    public Command setMode(int mode) {
+        this.mode = mode;
+
+        return new NullCommand();
+    }
+
+    public Command incShotsFired() {
+        shotsFired++;
+        if (shotsFired == 3) shotsFired = 0;
+
+        return setActiveSlotContent(Utils.ArtifactTypes.NONE);
     }
 
     public Utils.ArtifactTypes getSlotColor(int slot) {
-        return slots[slot-1].content;
+        return slots[slot].content;
     }
 }

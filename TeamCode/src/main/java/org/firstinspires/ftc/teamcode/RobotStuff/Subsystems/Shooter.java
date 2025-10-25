@@ -71,10 +71,7 @@ public class Shooter implements IAmBetterSubsystem {
                 this.spinUp(),
                 this.kick(),
                 new Delay(shootingSpeed),
-                new ParallelGroup(
-                        this.resetKicker(),
-                        this.idle()
-                )
+                this.resetKicker()
         );
     }
 

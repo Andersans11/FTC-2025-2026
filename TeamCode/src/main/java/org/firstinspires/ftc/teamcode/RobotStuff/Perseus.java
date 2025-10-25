@@ -54,15 +54,13 @@ public class Perseus extends BetterSubsystemGroup {
     @Override
     public void periodic() {
         super.periodic();
-        NewMagazine.INSTANCE.passTurretPos(NewTurret.INSTANCE.getTurretPos());
-        NewTurret.INSTANCE.passRobotPose(followerTeleOp.getPose());
     }
 
     //  ------------------------- COMMANDS --------------------------- //
 
     public Command shootSingle(Utils.ArtifactTypes color) {
         return new SequentialGroup(
-                NewMagazine.INSTANCE.colorShooting(color),
+                NewMagazine.INSTANCE.setDesiredColor(color),
                 Shooter.INSTANCE.spinUp(),
                 new Delay(0.5),
                 Shooter.INSTANCE.shoot()
@@ -71,7 +69,7 @@ public class Perseus extends BetterSubsystemGroup {
 
     public Command intake() {
         return new SequentialGroup(
-                NewMagazine.INSTANCE.setMode(true),
+                NewMagazine.INSTANCE.setMode(0),
                 Intake.INSTANCE.start()
         );
     }
@@ -81,16 +79,17 @@ public class Perseus extends BetterSubsystemGroup {
     }
 
     public Command getMotif() {
-        NewMagazine.INSTANCE.setMotif(NewTurret.INSTANCE.getMotif());
+        // TODO: Add motif passing when camera code is done
         return new NullCommand();
     }
 
     public Command shootMotif() {
         Command modeSwitch = new NullCommand();
 
-        if (NewMagazine.INSTANCE.yej) {
+        if (NewMagazine.INSTANCE.mode == 0) {
             modeSwitch = new SequentialGroup(
-                    NewMagazine.INSTANCE.setMode(false),
+                    NewMagazine.INSTANCE.setMode(1),
+                    NewMagazine.INSTANCE.setDesiredColor(),
                     new Delay(0.5)
             );
         }
@@ -100,9 +99,11 @@ public class Perseus extends BetterSubsystemGroup {
                 modeSwitch,
                 Shooter.INSTANCE.shoot(),
                 NewMagazine.INSTANCE.incShotsFired(),
+                NewMagazine.INSTANCE.setDesiredColor(),
                 new Delay(0.3),
                 Shooter.INSTANCE.shoot(),
                 NewMagazine.INSTANCE.incShotsFired(),
+                NewMagazine.INSTANCE.setDesiredColor(),
                 new Delay(0.3),
                 Shooter.INSTANCE.shoot(),
                 NewMagazine.INSTANCE.incShotsFired(),
@@ -111,9 +112,6 @@ public class Perseus extends BetterSubsystemGroup {
     }
 
     // ---------------------- METHODS ------------------------------ //
-    public void setManualControlTurret(boolean isManual) {
-        NewTurret.INSTANCE.setManualControl(isManual);
-    }
 
 
 }
