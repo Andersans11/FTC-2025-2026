@@ -115,6 +115,10 @@ public class Turret implements IBetterSubsystem {
         isManualControl = manualControl;
     }
 
+    public void resetEncoders() {
+        rotationMotor.zero();
+    }
+
     public ArtifactTypes[] getMotif() {
         camera.selectAlgorithm(HuskyLens.Algorithm.TAG_RECOGNITION);
         if (camera.blocks(2).length != 0)

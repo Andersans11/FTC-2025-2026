@@ -37,7 +37,7 @@ dependencies {
     implementation "io.github.andersans11:pedrojson-loader:${pedrojson_version}"
     //implementation "dev.frozenmilk.sinister:Sloth:${sloth_version}"
 
-
+    implementation "com.acmerobotics.dashboard:dashboard:0.5.0"
 }
 // versions for stuff we might change have moved to gradle.properties
 

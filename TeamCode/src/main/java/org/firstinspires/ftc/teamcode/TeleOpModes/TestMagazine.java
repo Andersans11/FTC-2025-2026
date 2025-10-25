@@ -24,6 +24,8 @@ public class TestMagazine extends RoyallyFuckedUpMode {
     public void onInit() {
         super.onInit();
 
+        Magazine.INSTANCE.setMode(Magazine.MagazineMode.INTAKE);
+
         RobotConfig.bind(P1.a(), "MAGAZINE_SLOT1");
         RobotConfig.bind(P1.b(), "MAGAZINE_SLOT2");
         RobotConfig.bind(P1.x(), "MAGAZINE_SLOT3");

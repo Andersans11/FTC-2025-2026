@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
 
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import dev.nextftc.core.commands.utility.NullCommand;
@@ -14,6 +15,8 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.IBetterSubsystem;
 public class Magazine implements IBetterSubsystem {
 
     public static final Magazine INSTANCE = new Magazine();
+
+    MultipleTelemetry telemetry;
 
     public enum MagazineMode {
         INTAKE,
@@ -33,6 +36,10 @@ public class Magazine implements IBetterSubsystem {
     double turretPos;
     boolean colorShooting = false;
 
+    public static double kP = 0.0025;
+    public static double kI = 0.0;
+    public static double kD = 0.001;
+
     @Override
     public void initialize() {
         this.slots = new MagSlot[] {
@@ -43,6 +50,8 @@ public class Magazine implements IBetterSubsystem {
         this.activeSlot = 0;
 
         deltatime = new Timer();
+
+        telemetry = new MultipleTelemetry();
     }
 
     @Override
@@ -53,12 +62,22 @@ public class Magazine implements IBetterSubsystem {
                 new RTPAxon(RobotConfig.CarouselCR3)
         };
 
+        this.servos[0].setPidCoeffs(kP, kI, kD);
+        this.servos[1].setPidCoeffs(kP, kI, kD);
+        this.servos[2].setPidCoeffs(kP, kI, kD);
+
         this.color = RobotConfig.IntakeCS;
     }
 
     @Override
     public void commands() {
 
+    }
+
+    public void resetEncoders() {
+        servos[0].forceResetTotalRotation();
+        servos[1].forceResetTotalRotation();
+        servos[2].forceResetTotalRotation();
     }
 
     @Override
@@ -229,6 +248,8 @@ public class Magazine implements IBetterSubsystem {
         servos[0].update();
         servos[1].update();
         servos[2].update();
+
+        telemetry.addData("Mag Pos: ", targetPos);
     }
 
 }

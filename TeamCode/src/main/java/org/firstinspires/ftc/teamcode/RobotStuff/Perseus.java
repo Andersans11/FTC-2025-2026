@@ -1,9 +1,6 @@
 package org.firstinspires.ftc.teamcode.RobotStuff;
 
 import com.pedropathing.follower.Follower;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.robot.Robot;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
 
@@ -22,7 +19,6 @@ import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.delays.Delay;
 import dev.nextftc.core.commands.groups.SequentialGroup;
 import dev.nextftc.core.commands.utility.NullCommand;
-import dev.nextftc.core.subsystems.SubsystemGroup;
 
 public class Perseus extends BetterSubsystemGroup {
 
@@ -150,6 +146,9 @@ public class Perseus extends BetterSubsystemGroup {
 
         RobotConfig.ButtonControls.SHOOT_MOTIF.whenBecomesTrue(this.shootMotif.get());
 
+        RobotConfig.ButtonControls.INTAKE_MODE.whenBecomesTrue(this.setMode.apply(Magazine.MagazineMode.INTAKE));
+        RobotConfig.ButtonControls.OUTTAKE_MODE.whenBecomesTrue(this.setMode.apply(Magazine.MagazineMode.OUTTAKE));
+
         Turret.INSTANCE.rotationSupp = RobotConfig.RangeControls.TURRET_ROT;
     }
 
@@ -157,7 +156,7 @@ public class Perseus extends BetterSubsystemGroup {
         return new NullCommand(); //Add stuff to do on start
     }
 
-    public void setManualControl(boolean isManual) {
+    public void setManualControlTurret(boolean isManual) {
         Turret.INSTANCE.setManualControl(isManual);
     }
 

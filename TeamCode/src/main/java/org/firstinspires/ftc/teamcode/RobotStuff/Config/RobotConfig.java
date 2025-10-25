@@ -91,6 +91,8 @@ public class RobotConfig {
         public static Button SHOOT_GREEN = null;
         public static Button SHOOT_PURPLE = null;
         public static Button STOP_SHOOT = null;
+        public static Button INTAKE_MODE = null;
+        public static Button OUTTAKE_MODE = null;
     }
 
     public static class RangeControls {
@@ -113,7 +115,9 @@ public class RobotConfig {
             "STOP_SHOOT",
             "SLOWMODE",
             "SHOOT_GREEN",
-            "SHOOT_PURPLE"
+            "SHOOT_PURPLE",
+            "INTAKE_MODE",
+            "OUTTAKE_MODE"
     })
     @interface ButtonOption {}
 
