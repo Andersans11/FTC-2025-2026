@@ -18,7 +18,7 @@ import dev.nextftc.hardware.impl.ServoEx;
 import dev.nextftc.hardware.positionable.SetPosition;
 import dev.nextftc.hardware.powerable.SetPower;
 
-public class Shooter implements IBetterSubsystem {
+public class Shooter implements Subsystem {
 
     public static final Shooter INSTANCE = new Shooter();
 
@@ -27,46 +27,10 @@ public class Shooter implements IBetterSubsystem {
     ServoEx hood;
     ServoEx kicker;
 
-    public Command spinUp;
-    public Command spinDown;
-    public Command idle;
-    public Supplier<Command> shoot;
-    public Function<Double, Command> setHoodPos;
-
     double shootingSpeed = 0.75;
 
     @Override
-    public void initialize() {}
-
-    @Override
-    public void binds() {
-        RobotConfig.ButtonControls.SHOOT.whenBecomesTrue(this.shoot.get());
-        RobotConfig.ButtonControls.STOP_SHOOT.whenBecomesTrue(this.spinDown);
-    }
-
-
-    @Override
-    public void periodic() {}
-
-    @Override
-    public void commands() {
-        this.spinUp = new SetPower(shooters, -1);
-        this.spinDown = new SetPower(shooters, 0);
-        this.idle = new SetPower(shooters, -0.7);
-
-        this.shoot = () -> new SequentialGroup(
-                this.spinUp,
-                new SetPosition(kicker, 0.2),
-                new Delay(shootingSpeed),
-                new SetPosition(kicker, 1),
-                this.idle
-        );
-
-        this.setHoodPos = (pos) -> new SetPosition(hood, pos);
-    }
-
-    @Override
-    public void hardware() {
+    public void initialize() {
         shooterMotors = new MotorEx[] {
                 RobotConfig.ShootMotor1.motor,
                 RobotConfig.ShootMotor2.motor
@@ -77,5 +41,40 @@ public class Shooter implements IBetterSubsystem {
         );
         hood = RobotConfig.HoodServo.servo;
         kicker = RobotConfig.Kicker.servo;
+    }
+
+    public Command spinUp() {
+        return new SetPower(
+                shooters,
+                -1
+        );
+    }
+
+    public Command spinDown() {
+        return new SetPower(
+                shooters,
+                -0
+        );
+    }
+
+    public Command idle() {
+        return new SetPower(
+                shooters,
+                -0.7
+        );
+    }
+
+    public Command shoot() {
+        return new SequentialGroup(
+                this.spinUp(),
+                new SetPosition(kicker, 0.2),
+                new Delay(shootingSpeed),
+                new SetPosition(kicker, 1),
+                this.idle()
+        );
+    }
+
+    public Command setHoodPos(double pos) {
+        return new SetPosition(hood, pos);
     }
 }

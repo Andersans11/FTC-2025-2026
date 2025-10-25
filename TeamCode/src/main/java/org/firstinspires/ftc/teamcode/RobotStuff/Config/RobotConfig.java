@@ -27,6 +27,7 @@ import java.lang.reflect.Field;
 public class RobotConfig {
 
     public static AnalogInput CarouselENC1;
+    public static AnalogInput HoodENC;
 
     public static ColorSensor IntakeCS;
     public static DistanceSensor IntakeDS;
@@ -156,6 +157,8 @@ public class RobotConfig {
         Pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, "PINPOINT");
 
         CarouselENC1 = hardwareMap.get(AnalogInput.class, "CARENC1");
+
+        HoodENC = hardwareMap.get(AnalogInput.class, "HOODENC");
 
         //IntakeCS = hardwareMap.get(ColorSensor.class, "IntakeCS");
         IntakeDS = hardwareMap.get(DistanceSensor.class, "Dis");

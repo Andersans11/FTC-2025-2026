@@ -9,14 +9,16 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.RobotCent
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 
+import dev.nextftc.core.components.SubsystemComponent;
+
 @TeleOp(name = "Turret Test")
 public class TurretTestMode extends RoyallyFuckedUpMode {
 
     public TurretTestMode() {
         super();
         addComponents(
-                new BetterSubsystemComponent(Turret.INSTANCE),
-                new BetterSubsystemComponent(Shooter.INSTANCE),
+                new SubsystemComponent(Turret.INSTANCE),
+                new SubsystemComponent(Shooter.INSTANCE),
                 new BetterSubsystemComponent(RobotCentricDrive.INSTANCE)
         );
     }

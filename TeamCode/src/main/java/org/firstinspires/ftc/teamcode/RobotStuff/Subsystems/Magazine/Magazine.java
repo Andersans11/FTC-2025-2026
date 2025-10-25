@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
 
+import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import dev.nextftc.core.commands.utility.NullCommand;
@@ -11,7 +12,8 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.HardwareConfigs.RTPAxon;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.IBetterSubsystem;
 
-public class Magazine implements IBetterSubsystem {
+@Configurable
+public class Magazine implements Subsystem {
 
     public static final Magazine INSTANCE = new Magazine();
 
@@ -32,6 +34,14 @@ public class Magazine implements IBetterSubsystem {
     int shotsFired;
     double turretPos;
     boolean colorShooting = false;
+    boolean manualControl = true;
+
+    public static double kP = 0.0025;
+    public static double kI = 0.0;
+    public static double kD = 0.001;
+
+
+
 
     @Override
     public void initialize() {
@@ -43,29 +53,42 @@ public class Magazine implements IBetterSubsystem {
         this.activeSlot = 0;
 
         deltatime = new Timer();
-    }
 
-    @Override
-    public void hardware() {
         this.servos = new RTPAxon[] {
                 new RTPAxon(RobotConfig.CarouselCR1),
                 new RTPAxon(RobotConfig.CarouselCR2),
                 new RTPAxon(RobotConfig.CarouselCR3)
         };
 
+        this.servos[0].setKP(kP);
+        this.servos[0].setKI(kI);
+        this.servos[0].setKD(kD);
+
+        this.servos[1].setKP(kP);
+        this.servos[1].setKI(kI);
+        this.servos[1].setKD(kD);
+
+        this.servos[2].setKP(kP);
+        this.servos[2].setKI(kI);
+        this.servos[2].setKD(kD);
+
         this.color = RobotConfig.IntakeCS;
     }
 
-    @Override
-    public void commands() {
+    public Command resetPID() {
+        this.servos[0].setKP(kP);
+        this.servos[0].setKI(kI);
+        this.servos[0].setKD(kD);
 
-    }
+        this.servos[1].setKP(kP);
+        this.servos[1].setKI(kI);
+        this.servos[1].setKD(kD);
 
-    @Override
-    public void binds() {
-        RobotConfig.ButtonControls.MAGAZINE_SLOT1.whenTrue(this::slot1);
-        RobotConfig.ButtonControls.MAGAZINE_SLOT2.whenTrue(this::slot2);
-        RobotConfig.ButtonControls.MAGAZINE_SLOT3.whenTrue(this::slot3);
+        this.servos[2].setKP(kP);
+        this.servos[2].setKI(kI);
+        this.servos[2].setKD(kD);
+
+        return new NullCommand();
     }
 
     public void setMotif(Utils.ArtifactTypes[] motif) {
@@ -148,77 +171,50 @@ public class Magazine implements IBetterSubsystem {
     }
 
     public Command slot1() {
-        targetPos = slots[0].offset;
-
-        if (targetPos != oldTargetPos) {
-            setRotation(targetPos);
-            oldTargetPos = targetPos;
-        }
-
-        servos[0].update();
-        servos[1].update();
-        servos[2].update();
-
         return setActiveSlot(0);
     }
     public Command slot2() {
-        targetPos = slots[1].offset;
-
-        if (targetPos != oldTargetPos) {
-            setRotation(targetPos);
-            oldTargetPos = targetPos;
-        }
-
-        servos[0].update();
-        servos[1].update();
-        servos[2].update();
 
         return setActiveSlot(1);
     }
     public Command slot3() {
-        targetPos = slots[2].offset;
-
-        if (targetPos != oldTargetPos) {
-            setRotation(targetPos);
-            oldTargetPos = targetPos;
-        }
-
-        servos[0].update();
-        servos[1].update();
-        servos[2].update();
 
         return setActiveSlot(2);
     }
 
     @Override
     public void periodic() {
-        if (mode == MagazineMode.INTAKE) {
+        if (!manualControl) {
+            if (mode == MagazineMode.INTAKE) {
 
-            if (slots[activeSlot].content != Utils.ArtifactTypes.NONE) {
-                deltatime.resetTimer();
-                if (deltatime.getElapsedTimeSeconds() >= 0.5) {
+                if (slots[activeSlot].content != Utils.ArtifactTypes.NONE) {
+                    deltatime.resetTimer();
+                    if (deltatime.getElapsedTimeSeconds() >= 0.5) {
+                        for (int i = 0; i == 3; i++) {
+                            if (slots[i].content == Utils.ArtifactTypes.NONE) {
+                                activeSlot = i;
+                                targetPos = slots[activeSlot].offset;
+                                i = 3;
+                            }
+                        }
+                    }
+                }
+            } else {
+                if (slots[activeSlot].content == Utils.ArtifactTypes.NONE && !colorShooting) {
                     for (int i = 0; i == 3; i++) {
-                        if (slots[i].content == Utils.ArtifactTypes.NONE) {
+                        if (slots[i].content == motif[shotsFired] || i == 2) {
                             activeSlot = i;
-                            targetPos = slots[activeSlot].offset;
+                            targetPos = 180 + slots[activeSlot].offset + turretPos;
+                            while (targetPos >= 360) {
+                                targetPos = targetPos - 360;
+                            }
                             i = 3;
                         }
                     }
                 }
             }
         } else {
-            if (slots[activeSlot].content == Utils.ArtifactTypes.NONE && !colorShooting) {
-                for (int i = 0; i == 3; i++) {
-                    if (slots[i].content == motif[shotsFired]  || i == 2) {
-                        activeSlot = i;
-                        targetPos = 180 + slots[activeSlot].offset + turretPos;
-                        while (targetPos >= 360) {
-                            targetPos = targetPos - 360;
-                        }
-                        i = 3;
-                    }
-                }
-            }
+            targetPos = slots[activeSlot].offset;
         }
 
         if (targetPos != oldTargetPos) {
@@ -230,5 +226,4 @@ public class Magazine implements IBetterSubsystem {
         servos[1].update();
         servos[2].update();
     }
-
 }

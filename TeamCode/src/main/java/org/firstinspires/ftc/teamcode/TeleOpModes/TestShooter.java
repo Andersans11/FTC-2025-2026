@@ -10,6 +10,8 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.RobotCent
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 
+import dev.nextftc.core.components.SubsystemComponent;
+
 @TeleOp(name = "Test Shooter")
 public class TestShooter extends RoyallyFuckedUpMode {
 
@@ -17,7 +19,7 @@ public class TestShooter extends RoyallyFuckedUpMode {
         super();
         addComponents(
                 new BetterSubsystemComponent(RobotCentricDrive.INSTANCE),
-                new BetterSubsystemComponent(Shooter.INSTANCE)
+                new SubsystemComponent(Shooter.INSTANCE)
         );
     }
 

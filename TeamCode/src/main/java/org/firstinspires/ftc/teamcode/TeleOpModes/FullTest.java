@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.TeleOpModes;
 
+import com.qualcomm.hardware.ams.AMSColorSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -18,32 +19,27 @@ import dev.nextftc.ftc.GamepadEx;
 import dev.nextftc.ftc.NextFTCOpMode;
 
 @TeleOp(name = "perseus throws an artifact and hits eddie in the face", group = Utils.PRIORITY)
-public class FullTest extends RoyallyFuckedUpMode {
+public class FullTest extends NextFTCOpMode {
 
     public FullTest() {
         super();
         addComponents(
                 new BetterSubsystemComponent(RobotCentricDrive.INSTANCE),
-                new BetterSubsystemComponent(Perseus.INSTANCE)
+                new SubsystemComponent(Perseus.INSTANCE)
         );
     }
 
     @Override
     public void onInit() {
-        super.onInit();
+        RobotConfig.initConfig(this, new DeltaTimer());
         Perseus.INSTANCE.setManualControl(true);
         driveTrainBinds();
-
-        RobotConfig.bind(P2.rightTrigger().atLeast(Sensitivities.playerTwoRightTriggerThreshold), "SHOOT_MOTIF");
-        RobotConfig.bind(P2.circle(), "SHOOT_PURPLE");
-        RobotConfig.bind(P2.cross(), "SHOOT_GREEN");
-        RobotConfig.bind(P1.rightTrigger().atLeast(Sensitivities.playerOneRightTriggerThreshold), "INTAKE");
-
-        RobotConfig.bind(P2.leftStickX(), "TURRET_ROT");
     }
 
     @Override
-    public void onStartButtonPressed() {}
+    public void onStartButtonPressed() {
+        P1.rightTrigger().atLeast(0.1).whenBecomesTrue(Perseus.INSTANCE.intake());
+    }
 
     @Override
     public void onUpdate() {
