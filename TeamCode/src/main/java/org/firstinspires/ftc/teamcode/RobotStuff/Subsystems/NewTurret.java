@@ -1,22 +1,20 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.pedropathing.geometry.Pose;
-import com.qualcomm.hardware.dfrobot.HuskyLens;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 
 import java.util.function.Supplier;
 
 import dev.nextftc.control.ControlSystem;
 import dev.nextftc.control.feedback.AngleType;
 import dev.nextftc.core.commands.Command;
-import dev.nextftc.core.subsystems.Subsystem;
-import dev.nextftc.hardware.controllable.RunToPosition;
 import dev.nextftc.hardware.impl.MotorEx;
 import dev.nextftc.hardware.powerable.SetPower;
 
-public class NewTurret implements Subsystem {
+@Config
+public class NewTurret implements IAmBetterSubsystem {
 
     public static final NewTurret INSTANCE = new NewTurret();
 
@@ -26,22 +24,34 @@ public class NewTurret implements Subsystem {
     Pose pose;
     Pose oldPose;
     public double targetAngle;
-    double kP = 1.0;
-    double kI = 0.0;
-    double kD = 0.0;
     boolean isManualControl = true;
+    ControlSystem controller;
 
-    public Supplier<Command> update;
-    final double lensCenterFromFloor = 279.87241113;
-    final double lensAngleFromVertical = 20.0; // deg
+    // ------------------------- CONFIG ------------------------------- //
+    public static double kP = 1.0;
+    public static double kI = 0.0;
+    public static double kD = 0.0;
+
+    // --------------------- OPMODE --------------------------------- //
+
 
     @Override
     public void initialize() {
+        controller = ControlSystem.builder()
+                .angular(AngleType.DEGREES,
+                        feedback -> feedback.posPid(kP, kI, kD)
+                )
+                .build();
+    }
+
+    @Override
+    public void initSystem() {
         this.rotationMotor = RobotConfig.TurretRotation.motor;
     }
 
-    public Command setPower(double power) {
-        return new SetPower(rotationMotor, power);
+    @Override
+    public void preStart() {
+
     }
 
     @Override
@@ -68,4 +78,9 @@ public class NewTurret implements Subsystem {
             }
         }
     }
+
+    public Command setPower(double power) {
+        return new SetPower(rotationMotor, power);
+    }
+
 }

@@ -3,17 +3,16 @@ package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes;
 
 import dev.nextftc.bindings.Button;
 import dev.nextftc.bindings.Range;
-import dev.nextftc.core.subsystems.Subsystem;
 import dev.nextftc.ftc.NextFTCOpMode;
 import dev.nextftc.hardware.impl.MotorEx;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Sensitivities;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.IBetterSubsystem;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.IAmBetterSubsystem;
 
 
-public abstract class DriveMotors implements IBetterSubsystem {
+public abstract class AbstractDriveMode implements IAmBetterSubsystem {
 
     NextFTCOpMode opMode;
     Telemetry telemetry;
@@ -33,8 +32,9 @@ public abstract class DriveMotors implements IBetterSubsystem {
     @Override
     public void periodic() {}
 
+
     @Override
-    public void hardware() {
+    public void initSystem() {
         this.opMode = RobotConfig.getOpMode();
         this.telemetry = RobotConfig.getTelemetry();
 
@@ -42,19 +42,15 @@ public abstract class DriveMotors implements IBetterSubsystem {
         this.FR = RobotConfig.FRDrive.motor;
         this.BL = RobotConfig.BLDrive.motor;
         this.BR = RobotConfig.BRDrive.motor;
-    }
 
-    @Override
-    public void binds() {
-        this.forwardSupp = RobotConfig.RangeControls.FB;
-        this.strafeSupp = RobotConfig.RangeControls.STRAFE;
-        this.turnSupp = RobotConfig.RangeControls.YAW;
-        this.slowmodeSupp = RobotConfig.ButtonControls.SLOWMODE;
+        this.forwardSupp = RobotConfig.player1().leftStickY();
+        this.strafeSupp = RobotConfig.player1().leftStickX();
+        this.turnSupp = RobotConfig.player1().rightStickX();
+        this.slowmodeSupp = RobotConfig.player1().leftTrigger().atLeast(Sensitivities.p1LTThreshold);
 
         this.slowmodeSupp.whenTrue(() -> Sensitivities.driveModifier = 0.4f)
                 .whenFalse(() -> Sensitivities.driveModifier = 1f);
     }
 
-    @Override
-    public abstract void commands();
+
 }

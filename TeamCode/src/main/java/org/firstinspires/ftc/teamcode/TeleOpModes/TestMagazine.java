@@ -2,21 +2,20 @@ package org.firstinspires.ftc.teamcode.TeleOpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.RobotCentricDrive;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.Magazine;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.NewMagazine;
 
 @TeleOp(name = "Test Magazine", group = Utils.TESTING)
 public class TestMagazine extends RoyallyFuckedUpMode {
 
     public TestMagazine() {
         super();
-        addComponents(
+        addSubsystemComponents(
                 new BetterSubsystemComponent(RobotCentricDrive.INSTANCE),
-                new BetterSubsystemComponent(Magazine.INSTANCE)
+                new BetterSubsystemComponent(NewMagazine.INSTANCE)
         );
     }
 
@@ -24,23 +23,20 @@ public class TestMagazine extends RoyallyFuckedUpMode {
     public void onInit() {
         super.onInit();
 
-        Magazine.INSTANCE.setMode(true);
-
-        RobotConfig.bind(P1.a(), "MAGAZINE_SLOT1");
-        RobotConfig.bind(P1.b(), "MAGAZINE_SLOT2");
-        RobotConfig.bind(P1.x(), "MAGAZINE_SLOT3");
-
-        driveTrainBinds();
+        P1.triangle().whenBecomesTrue(NewMagazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.PURPLE));
+        P1.circle().whenBecomesTrue(NewMagazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.GREEN));
+        P1.cross().whenBecomesTrue(NewMagazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.NONE));
+        P1.square().whenBecomesTrue(NewMagazine.INSTANCE.changeActiveSlot());
     }
-
-    @Override
-    public void onStartButtonPressed() {}
-
+    
     @Override
     public void onUpdate() {
+        telemetry.addData("1", NewMagazine.INSTANCE.getSlotColor(1));
+        telemetry.addData("2", NewMagazine.INSTANCE.getSlotColor(2));
+        telemetry.addData("3", NewMagazine.INSTANCE.getSlotColor(3));
+
+        telemetry.addData("active", NewMagazine.INSTANCE.activeSlot);
+
         super.onUpdate();
-        super.telemetry.addData("Target Pos", Magazine.INSTANCE.getTargetPos());
-        super.telemetry.addData("Actual Pos", Magazine.INSTANCE.getActualPos());
-        super.telemetry.addData("at target: ", Magazine.INSTANCE.servos[0].isAtTarget());
     }
 }

@@ -5,17 +5,17 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Sensitivities;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.RobotCentricDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Intake;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 
-@TeleOp(name = "Test Intake")
+@TeleOp(name = "Test Intake", group = Utils.TESTING)
 public class TestIntake extends RoyallyFuckedUpMode {
 
     public TestIntake() {
         super();
-        addComponents(
+        addSubsystemComponents(
                 new BetterSubsystemComponent(RobotCentricDrive.INSTANCE),
                 new BetterSubsystemComponent(Intake.INSTANCE)
         );
@@ -24,21 +24,14 @@ public class TestIntake extends RoyallyFuckedUpMode {
     @Override
     public void onInit() {
         super.onInit();
-        driveTrainBinds();
 
-        RobotConfig.bind(P1.rightTrigger().atLeast(Sensitivities.playerOneRightTriggerThreshold), "INTAKE");
-        RobotConfig.bind(P1.rightBumper(), "INTAKE_STOP");
-    }
-
-    @Override
-    public void onStartButtonPressed() {
-        telemetry.addLine("sdgndsfgjnsdfj");
+        P1.rightTrigger().atLeast(Sensitivities.p1RTThreshold).whenBecomesTrue(Intake.INSTANCE::start);
+        P1.rightTrigger().atLeast(Sensitivities.p1RTThreshold).whenBecomesFalse(Intake.INSTANCE::idle);
+        P1.rightBumper().whenBecomesTrue(Intake.INSTANCE::stop);
     }
 
     @Override
     public void onUpdate() {
         super.onUpdate();
-
-        telemetry.addLine("osuigsdfoiugbdsoifjnsts");
     }
 }

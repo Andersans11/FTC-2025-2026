@@ -10,17 +10,27 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Misc.DifferenceArrayList;
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.GoBildaPinpointDriver;
 import org.firstinspires.ftc.teamcode.RobotStuff.PIDStuff.YawPID;
 
-import dev.nextftc.ftc.NextFTCOpMode;
+import dev.nextftc.core.commands.CommandManager;
 import dev.nextftc.hardware.driving.MecanumDriverControlled;
 
 import java.util.function.Supplier;
 
 
 @Configurable
-public class HoldHeadingPID extends DriveMotors {
+public class HoldHeadingPID extends AbstractDriveMode {
 
     public static final HoldHeadingPID INSTANCE = new HoldHeadingPID();
 
+
+    GoBildaPinpointDriver pinpoint;
+    YawPID HeadingPID;
+
+    DifferenceArrayList differences = new DifferenceArrayList();
+
+    double targetRad;
+    long extDTN;
+
+    // ------------------------ CONFIG ------------------------- //
     public static double kP = 0; //TODO: TUNE
     public static double kI = 0;
     public static double kD = 0;
@@ -33,28 +43,58 @@ public class HoldHeadingPID extends DriveMotors {
     public static boolean DEBUGMODE = false;
     public static boolean CLEARDIFF = false;
 
-    GoBildaPinpointDriver pinpoint;
-    YawPID HeadingPID;
+    // ------------------------- OPMODE ----------------------------- //
+    @Override
+    public void initialize() {
+        HeadingPID = new YawPID(telemetry, "HeadingPID");
+        HeadingPID.setSecondary(true);
+    }
 
-    DifferenceArrayList differences = new DifferenceArrayList();
+    @Override
+    public void initSystem() {
+        super.initSystem();
 
-    double targetRad;
-    long extDTN;
+        pinpoint = RobotConfig.Pinpoint;
+        targetRad = getHeadingRad(); // on init, take heading and set to that so that robot doesn't go to zero
+    }
 
+    @Override
+    public void preStart() {
+        CommandManager.INSTANCE.scheduleCommand(this.vroom());
+    }
 
+    @Override
+    public void periodic() {
+        extDTN = RobotConfig.getDelta(); // for pid
+
+        runTelemetry(); // runs telemetry logic
+
+        if (CLEARDIFF) {
+            differences.clear();
+            CLEARDIFF = false; // user sets to true, resets diff and goes to false
+        }
+
+        HeadingPID.setCoefficients(kP, kI, kD);
+        HeadingPID.setSecondaryCoefficients(secondarykP, secondarykI, secondarykD);
+        HeadingPID.setThreshold(threshold);
+    }
+
+    // ----------------------- COMMANDS ---------------------------- //
+    public MecanumDriverControlled vroom() {
+        return new MecanumDriverControlled(
+                FL, FR, BL, BR,
+                () -> (forwardSupp.get() * Sensitivities.getForwardModifier()),
+                () -> (strafeSupp.get() * Sensitivities.getStrafeModifier()),
+                pidYaw
+        );
+    }
+
+    // ---------------------- METHODS ---------------------------- //
     Supplier<Double> pidYaw = () -> {
         targetRad = getHeadingRad() + (turnSupp.get() * Sensitivities.getPIDTurnModifier());
         return HeadingPID.lockYaw(targetRad,  pinpoint.getHeading(AngleUnit.RADIANS), extDTN);
     };
 
-    MecanumDriverControlled vroom;
-
-    @Override
-    public void initialize() {
-
-        HeadingPID = new YawPID(telemetry, "HeadingPID");
-        HeadingPID.setSecondary(true);
-    }
 
     double getHeadingRad() {
         return pinpoint.getHeading(AngleUnit.RADIANS);
@@ -75,41 +115,4 @@ public class HoldHeadingPID extends DriveMotors {
         }
     }
 
-
-
-    @Override
-    public void periodic() {
-        extDTN = RobotConfig.getDelta(); // for pid
-
-        runTelemetry(); // runs telemetry logic
-
-        if (CLEARDIFF) {
-            differences.clear();
-            CLEARDIFF = false; // user sets to true, resets diff and goes to false
-        }
-
-        HeadingPID.setCoefficients(kP, kI, kD);
-        HeadingPID.setSecondaryCoefficients(secondarykP, secondarykI, secondarykD);
-        HeadingPID.setThreshold(threshold);
-
-        vroom.update();
-    }
-
-    @Override
-    public void hardware() {
-        pinpoint = RobotConfig.Pinpoint;
-        targetRad = getHeadingRad(); // on init, take heading and set to that so that robot doesn't go to zero
-    }
-
-    @Override
-    public void commands() {
-        this.vroom = new MecanumDriverControlled(
-                FL, FR, BL, BR,
-                () -> (forwardSupp.get() * Sensitivities.getForwardModifier()),
-                () -> (strafeSupp.get() * Sensitivities.getStrafeModifier()),
-                pidYaw
-        );
-
-        this.vroom.schedule();
-    }
 }

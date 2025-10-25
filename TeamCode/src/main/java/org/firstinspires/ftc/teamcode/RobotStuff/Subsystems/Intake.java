@@ -3,45 +3,38 @@ package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 
 import dev.nextftc.core.commands.Command;
-import dev.nextftc.core.subsystems.Subsystem;
 import dev.nextftc.hardware.impl.MotorEx;
 import dev.nextftc.hardware.powerable.SetPower;
 
-public class Intake implements IBetterSubsystem {
+public class Intake implements IAmBetterSubsystem {
 
     public static final Intake INSTANCE = new Intake();
-
     MotorEx intake;
 
-    public Command start;
-    public Command stop;
-    public Command idle;
+    // ---------------------------- CONFIG -------------------------- //
+    public static double intakeSpeed = 1;
+    public static double idleSpeed = 0.4;
+
+
+    // ------------------------- OPMODE --------------------------- //
 
     @Override
-    public void binds() {
-        RobotConfig.ButtonControls.INTAKE.whenBecomesTrue(this.start);
-        RobotConfig.ButtonControls.INTAKE.whenBecomesFalse(this.idle);
-        RobotConfig.ButtonControls.INTAKE_STOP.whenBecomesTrue(this.stop);
-    }
-
-    @Override
-    public void periodic() {
-
-    }
-
-    @Override
-    public void initialize() {
-    }
-
-    @Override
-    public void hardware() {
+    public void initSystem() {
         intake = RobotConfig.IntakeMotor.motor;
     }
 
     @Override
-    public void commands() {
-        this.start = new SetPower(intake, 1);
-        this.stop = new SetPower(intake, 0);
-        this.idle = new SetPower(intake, 0.4);
+    public void preStart() {}
+
+    // ------------------------------ COMMANDS ------------------------- //
+
+    public Command start() {
+        return new SetPower(intake, intakeSpeed);
+    }
+    public Command stop() {
+        return new SetPower(intake, 0);
+    }
+    public Command idle() {
+        return new SetPower(intake, idleSpeed);
     }
 }

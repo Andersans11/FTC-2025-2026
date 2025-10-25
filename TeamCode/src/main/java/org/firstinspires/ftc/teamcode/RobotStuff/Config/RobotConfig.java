@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import dev.nextftc.bindings.Button;
 import dev.nextftc.bindings.Range;
+import dev.nextftc.ftc.GamepadEx;
 import dev.nextftc.ftc.NextFTCOpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -51,21 +52,25 @@ public class RobotConfig {
     public static GoBildaPinpointDriver Pinpoint;
 
     static HardwareMap hardwareMap;
-    static NextFTCOpMode opMode;
+    static RoyallyFuckedUpMode opMode;
     static DeltaTimer deltaTimer;
+    static GamepadEx p1;
+    static GamepadEx p2;
 
     public static boolean isRedAlliance = false;
 
 
-    public static void initConfig(NextFTCOpMode opMode, DeltaTimer deltaTimer) {
+    public static void initConfig(RoyallyFuckedUpMode opMode, DeltaTimer deltaTimer) {
         RobotConfig.opMode = opMode;
         RobotConfig.hardwareMap = opMode.hardwareMap;
         RobotConfig.deltaTimer = deltaTimer;
+        RobotConfig.p1 = opMode.P1;
+        RobotConfig.p2 = opMode.P2;
 
         initHardware(hardwareMap);
     }
 
-    public static NextFTCOpMode getOpMode() {
+    public static RoyallyFuckedUpMode getOpMode() {
         return opMode;
     }
 
@@ -74,6 +79,12 @@ public class RobotConfig {
     }
     public static long getDelta() {
         return deltaTimer.getDelta();
+    }
+    public static GamepadEx player1() {
+        return p1;
+    }
+    public static GamepadEx player2() {
+        return p2;
     }
     public static HardwareMap getHardwareMap() {
         return hardwareMap;

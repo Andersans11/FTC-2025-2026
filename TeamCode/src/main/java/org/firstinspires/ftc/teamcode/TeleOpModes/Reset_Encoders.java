@@ -1,35 +1,32 @@
 package org.firstinspires.ftc.teamcode.TeleOpModes;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.DeltaTimer;
-import org.firstinspires.ftc.teamcode.RobotStuff.Perseus;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.RobotCentricDrive;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.Magazine;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.NewMagazine;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.NewTurret;
 
-import dev.nextftc.ftc.NextFTCOpMode;
+@TeleOp(name = "Reset Encoders", group = Utils.UTILITY)
+public class Reset_Encoders extends RoyallyFuckedUpMode {
 
-@TeleOp(name = "Reset Encoders")
-public class Reset_Encoders extends NextFTCOpMode {
-    Magazine magazine;
-    Turret turret;
+    public Reset_Encoders() {
+        addSubsystemComponents(
+                new BetterSubsystemComponent(NewMagazine.INSTANCE),
+                new BetterSubsystemComponent(NewTurret.INSTANCE)
+        );
+    }
 
     @Override
     public void onInit() {
-        magazine = new Magazine();
-        turret = new Turret();
+        super.onInit();
+    }
 
-        RobotConfig.initConfig(this, new DeltaTimer());
-
-        magazine.hardware();
-        turret.hardware();
-
-        magazine.resetEncoders();
-        turret.resetEncoders();
+    @Override
+    public void onStartButtonPressed() {
+        super.onStartButtonPressed();
     }
 }

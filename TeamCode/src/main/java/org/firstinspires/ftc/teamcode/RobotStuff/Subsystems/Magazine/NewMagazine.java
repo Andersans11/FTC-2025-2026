@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -7,25 +8,28 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.HardwareConfigs.RTPAxon;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.IAmBetterSubsystem;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.NewTurret;
 
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.utility.NullCommand;
 import dev.nextftc.core.subsystems.Subsystem;
 
-public class NewMagazine implements Subsystem {
+@Config
+public class NewMagazine implements IAmBetterSubsystem {
 
+    public static final NewMagazine INSTANCE = new NewMagazine();
     MagSlot[] slots;
     public int activeSlot; // slot that receives the next ball
     public RTPAxon[] servos;
     ColorSensor color;
     double targetPos = 0;
     double oldTargetPos = 180;
-    Timer deltatime;
     public Utils.ArtifactTypes[] motif;
     int shotsFired;
     public Utils.ArtifactTypes desiredColor;
 
+    // ------------------------------ CONFIG ----------------------------- //
     public static double kP = 0.008;
     public static double kI = 0.0;
     public static double kD = 0.0;
@@ -37,15 +41,13 @@ public class NewMagazine implements Subsystem {
     public int mode;
 
     @Override
-    public void initialize() {
+    public void initSystem() {
         this.slots = new MagSlot[] {
                 new MagSlot(off0), // this slot starts in front of intake
                 new MagSlot(off1),
                 new MagSlot(off2)
         };
         this.activeSlot = 0;
-
-        deltatime = new Timer();
 
         this.servos = new RTPAxon[] {
                 new RTPAxon(RobotConfig.CarouselCR1),
@@ -74,6 +76,30 @@ public class NewMagazine implements Subsystem {
         mode = 0; // 1 is shooting, 0 is intake
     }
 
+    @Override
+    public void preStart() {}
+
+    @Override
+    public void periodic() {
+
+        if ((mode == 1 && slots[activeSlot].content != desiredColor)
+                || (mode == 0 && slots[activeSlot].content != Utils.ArtifactTypes.NONE))
+            changeActiveSlot();
+
+        targetPos = ((180 + NewTurret.INSTANCE.targetAngle) * mode) + slots[activeSlot].offset;
+
+        if (targetPos != oldTargetPos) {
+            servos[0].changeTargetRotation(targetPos);
+            servos[1].changeTargetRotation(targetPos);
+            servos[2].changeTargetRotation(targetPos);
+        }
+
+        servos[0].update();
+        servos[0].update();
+        servos[0].update();
+    }
+
+    // -------------------- COMMANDS ------------------------ //
     public Command changeActiveSlot() {
         boolean foundOne = false;
         switch (mode) {
@@ -109,11 +135,12 @@ public class NewMagazine implements Subsystem {
         return new NullCommand();
     }
 
+    // --------------------- METHODS ------------------------ //
+
     /**
      * Sets the desired color
      * @param desiredColor Manual color you want
      **/
-
     public void setDesiredColor(Utils.ArtifactTypes desiredColor) {
         this.desiredColor = desiredColor;
     }
@@ -121,28 +148,11 @@ public class NewMagazine implements Subsystem {
     /**
      * Sets the desired color to that of the next motif Artifact
      **/
-
     public void setDesiredColor() {
         this.desiredColor = motif[shotsFired];
     }
 
-    @Override
-    public void periodic() {
-
-        if ((mode == 1 && slots[activeSlot].content != desiredColor)
-                || (mode == 0 && slots[activeSlot].content != Utils.ArtifactTypes.NONE))
-            changeActiveSlot();
-
-        targetPos = ((180 + NewTurret.INSTANCE.targetAngle) * mode) + slots[activeSlot].offset;
-
-        if (targetPos != oldTargetPos) {
-            servos[0].changeTargetRotation(targetPos);
-            servos[1].changeTargetRotation(targetPos);
-            servos[2].changeTargetRotation(targetPos);
-        }
-
-        servos[0].update();
-        servos[0].update();
-        servos[0].update();
+    public Utils.ArtifactTypes getSlotColor(int slot) {
+        return slots[slot-1].content;
     }
 }

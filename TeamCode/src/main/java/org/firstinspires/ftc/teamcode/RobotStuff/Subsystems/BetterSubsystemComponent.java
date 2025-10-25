@@ -2,13 +2,12 @@ package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems;
 
 import dev.nextftc.core.commands.CommandManager;
 import dev.nextftc.core.components.Component;
-import dev.nextftc.core.subsystems.Subsystem;
 
 public class BetterSubsystemComponent implements Component {
 
-    private final IBetterSubsystem subsystem;
+    private final IAmBetterSubsystem subsystem;
 
-    public BetterSubsystemComponent(IBetterSubsystem subsystem) {
+    public BetterSubsystemComponent(IAmBetterSubsystem subsystem) {
         this.subsystem = subsystem;
     }
 
@@ -17,15 +16,13 @@ public class BetterSubsystemComponent implements Component {
         subsystem.initialize();
     }
 
-    @Override
-    public void postInit() {
-        subsystem.hardware();
+    public void initSubsystem() {
+        subsystem.initSystem();
     }
 
     @Override
-    public void preWaitForStart() {
-        subsystem.commands();
-        subsystem.binds();
+    public void preStartButtonPressed() {
+        subsystem.preStart();
     }
 
     @Override

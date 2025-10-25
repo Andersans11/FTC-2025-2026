@@ -1,12 +1,23 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.Config;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.DeltaTimer;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import dev.nextftc.core.components.BindingsComponent;
 import dev.nextftc.ftc.GamepadEx;
 import dev.nextftc.ftc.NextFTCOpMode;
 
 public class RoyallyFuckedUpMode extends NextFTCOpMode {
+
+    private final Set<BetterSubsystemComponent> subsystems = new HashSet<>();
+    public void addSubsystemComponents(BetterSubsystemComponent... subsystemComponents) {
+        subsystems.addAll(Arrays.asList(subsystemComponents));
+        addComponents(subsystemComponents);
+    }
 
     protected long deltaTime;
 
@@ -26,14 +37,10 @@ public class RoyallyFuckedUpMode extends NextFTCOpMode {
     @Override
     public void onInit() {
         RobotConfig.initConfig(this, new DeltaTimer());
-    }
 
-    protected void driveTrainBinds() {
-        RobotConfig.bind(P1.leftTrigger().atLeast(Sensitivities.playerOneLeftTriggerThreshold), "SLOWMODE");
-
-        RobotConfig.bind(P1.leftStickY(), "FB");
-        RobotConfig.bind(P1.leftStickX().negate(), "STRAFE");
-        RobotConfig.bind(P1.rightStickX().negate(), "YAW");
+        for (BetterSubsystemComponent sys : this.subsystems) {
+            sys.initSubsystem();
+        }
     }
 
     @Override

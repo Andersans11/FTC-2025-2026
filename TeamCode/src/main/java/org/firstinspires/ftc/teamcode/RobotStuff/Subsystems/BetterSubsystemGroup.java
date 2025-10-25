@@ -1,46 +1,37 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems;
 
-import dev.nextftc.core.subsystems.Subsystem;
+public class BetterSubsystemGroup implements IAmBetterSubsystem {
 
-public class BetterSubsystemGroup implements IBetterSubsystem {
+    IAmBetterSubsystem[] subsystems;
 
-    IBetterSubsystem[] subsystems;
-
-    public BetterSubsystemGroup(IBetterSubsystem... subsystems) {
+    public BetterSubsystemGroup(IAmBetterSubsystem... subsystems) {
         this.subsystems = subsystems;
     }
 
     @Override
     public void initialize() {
-        for (IBetterSubsystem system : this.subsystems) {
+        for (IAmBetterSubsystem system : this.subsystems) {
             system.initialize();
         }
     }
 
     @Override
-    public void hardware() {
-        for (IBetterSubsystem subsystem : this.subsystems) {
-            subsystem.hardware();
+    public void initSystem() {
+        for (IAmBetterSubsystem subsystem : this.subsystems) {
+            subsystem.initSystem();
         }
     }
 
     @Override
-    public void commands() {
-        for (IBetterSubsystem subsystem : this.subsystems) {
-            subsystem.commands();
-        }
-    }
-
-    @Override
-    public void binds() {
-        for (IBetterSubsystem subsystem : this.subsystems) {
-            subsystem.binds();
+    public void preStart() {
+        for (IAmBetterSubsystem subsystem : this.subsystems) {
+            subsystem.preStart();
         }
     }
 
     @Override
     public void periodic() {
-        for (IBetterSubsystem subsystem : this.subsystems) {
+        for (IAmBetterSubsystem subsystem : this.subsystems) {
             subsystem.periodic();
         }
     }

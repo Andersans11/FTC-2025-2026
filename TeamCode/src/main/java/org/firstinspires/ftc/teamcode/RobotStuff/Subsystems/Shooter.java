@@ -1,24 +1,21 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems;
 
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.HardwareConfigs.RTPAxon;
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
+import com.acmerobotics.dashboard.config.Config;
 
-import java.util.function.Function;
-import java.util.function.Supplier;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.delays.Delay;
 import dev.nextftc.core.commands.groups.ParallelGroup;
 import dev.nextftc.core.commands.groups.SequentialGroup;
-import dev.nextftc.core.commands.utility.NullCommand;
-import dev.nextftc.core.subsystems.Subsystem;
 import dev.nextftc.hardware.controllable.MotorGroup;
 import dev.nextftc.hardware.impl.MotorEx;
 import dev.nextftc.hardware.impl.ServoEx;
 import dev.nextftc.hardware.positionable.SetPosition;
 import dev.nextftc.hardware.powerable.SetPower;
 
-public class Shooter implements IBetterSubsystem {
+@Config
+public class Shooter implements IAmBetterSubsystem {
 
     public static final Shooter INSTANCE = new Shooter();
 
@@ -27,46 +24,12 @@ public class Shooter implements IBetterSubsystem {
     ServoEx hood;
     ServoEx kicker;
 
-    public Command spinUp;
-    public Command spinDown;
-    public Command idle;
-    public Supplier<Command> shoot;
-    public Function<Double, Command> setHoodPos;
+    // ------------------------ CONFIG ------------------------ //
+    public static double shootingSpeed = 0.75;
 
-    double shootingSpeed = 0.75;
-
+    // --------------------- OPMODE -------------------------- //
     @Override
-    public void initialize() {}
-
-    @Override
-    public void binds() {
-        RobotConfig.ButtonControls.SHOOT.whenBecomesTrue(this.shoot.get());
-        RobotConfig.ButtonControls.STOP_SHOOT.whenBecomesTrue(this.spinDown);
-    }
-
-
-    @Override
-    public void periodic() {}
-
-    @Override
-    public void commands() {
-        this.spinUp = new SetPower(shooters, -1);
-        this.spinDown = new SetPower(shooters, 0);
-        this.idle = new SetPower(shooters, -0.7);
-
-        this.shoot = () -> new SequentialGroup(
-                this.spinUp,
-                new SetPosition(kicker, 0.2),
-                new Delay(shootingSpeed),
-                new SetPosition(kicker, 1),
-                this.idle
-        );
-
-        this.setHoodPos = (pos) -> new SetPosition(hood, pos);
-    }
-
-    @Override
-    public void hardware() {
+    public void initSystem() {
         shooterMotors = new MotorEx[] {
                 RobotConfig.ShootMotor1.motor,
                 RobotConfig.ShootMotor2.motor
@@ -77,5 +40,45 @@ public class Shooter implements IBetterSubsystem {
         );
         hood = RobotConfig.HoodServo.servo;
         kicker = RobotConfig.Kicker.servo;
+    }
+
+    @Override
+    public void preStart() {}
+
+    @Override
+    public void periodic() {}
+
+
+    // ---------- COMMANDS ---------------------- //
+    public Command spinUp() {
+        return new SetPower(shooters, -1);
+    }
+    public Command spinDown() {
+        return new SetPower(shooters, 0);
+    }
+    public Command idle() {
+        return new SetPower(shooters, 0.6);
+    }
+    public Command kick() {
+        return new SetPosition(kicker, 0.2);
+    }
+    public Command resetKicker() {
+        return new SetPosition(kicker, 1);
+    }
+
+    public Command shoot() {
+        return new SequentialGroup(
+                this.spinUp(),
+                this.kick(),
+                new Delay(shootingSpeed),
+                new ParallelGroup(
+                        this.resetKicker(),
+                        this.idle()
+                )
+        );
+    }
+
+    public Command setHoodPos(double pos) {
+        return new SetPosition(hood, pos);
     }
 }
