@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Sensitivities;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.HoldHeadingPID;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.RobotCentricDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Intake;
 
@@ -16,7 +17,7 @@ public class TestIntake extends RoyallyFuckedUpMode {
     public TestIntake() {
         super();
         addSubsystemComponents(
-                new BetterSubsystemComponent(RobotCentricDrive.INSTANCE),
+                new BetterSubsystemComponent(HoldHeadingPID.INSTANCE),
                 new BetterSubsystemComponent(Intake.INSTANCE)
         );
     }

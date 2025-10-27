@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.Sensitivities;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Perseus;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.HoldHeadingPID;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.RobotCentricDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.Magazine;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.NewMagazine;
@@ -19,7 +20,7 @@ public class FullTest extends RoyallyFuckedUpMode {
     public FullTest() {
         super();
         addSubsystemComponents(
-                new BetterSubsystemComponent(RobotCentricDrive.INSTANCE),
+                new BetterSubsystemComponent(HoldHeadingPID.INSTANCE),
                 new BetterSubsystemComponent(Perseus.INSTANCE)
         );
     }

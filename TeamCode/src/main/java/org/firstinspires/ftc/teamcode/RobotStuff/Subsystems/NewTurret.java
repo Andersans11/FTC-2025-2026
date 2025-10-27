@@ -6,6 +6,8 @@ import com.qualcomm.hardware.dfrobot.HuskyLens;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.function.Supplier;
 
 import dev.nextftc.control.ControlSystem;
@@ -31,7 +33,7 @@ public class NewTurret implements IAmBetterSubsystem {
     Pose pose;
     Pose oldPose;
     public double targetAngle = 0;
-    boolean isManualControl = true;
+    boolean isManualControl = false;
     boolean isSearching = true;
     public ControlSystem controller;
     public double tagPos;
@@ -40,8 +42,7 @@ public class NewTurret implements IAmBetterSubsystem {
     public static double kP = 0.01;
     public static double kI = 0.0;
     public static double kD = 0.0;
-
-    public static double cP = 1;
+    public static double a = 0.21875;
 
     // --------------------- OPMODE --------------------------------- //
 
@@ -96,13 +97,27 @@ public class NewTurret implements IAmBetterSubsystem {
         this.pose = pose;
     }
 
+
+
+    public double waugh() { // yes, this is how we get the tag x position
+        try {
+            if (isRedAlliance) {
+                return camera.blocks(1)[0].x;
+            } else {
+                return camera.blocks(2)[0].x;
+            }
+        } catch (RuntimeException reeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee) {
+            return 69420;
+        }
+    }
+
+
     @Override
     public void periodic() {
         if (!isManualControl) {
-            if (isRedAlliance && camera.blocks(1).length > 0 && camera.blocks(1) != null) {
-                targetAngle = ticksToDegrees(rotationMotor.getCurrentPosition()) + ((double) camera.blocks(1)[0].x / 10 * cP);
-            } else if (!isRedAlliance && camera.blocks(2).length > 0 && camera.blocks(2) != null) {
-                targetAngle = ticksToDegrees(rotationMotor.getCurrentPosition()) + ((double) camera.blocks(2)[0].x / 10 * cP);
+            double waluigiWaugh = waugh();
+            if (waluigiWaugh != 69420) {
+                targetAngle = ticksToDegrees(rotationMotor.getCurrentPosition()) - (a * (waluigiWaugh - 160));
             } else {
                 if (isSearching) {
                     // searching stuff

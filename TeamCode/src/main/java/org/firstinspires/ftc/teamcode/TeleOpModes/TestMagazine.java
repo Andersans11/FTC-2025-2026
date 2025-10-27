@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.HoldHeadingPID;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.RobotCentricDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.Magazine;
@@ -20,7 +21,7 @@ public class TestMagazine extends RoyallyFuckedUpMode {
     public TestMagazine() {
         super();
         addSubsystemComponents(
-                new BetterSubsystemComponent(RobotCentricDrive.INSTANCE),
+                new BetterSubsystemComponent(HoldHeadingPID.INSTANCE),
                 new BetterSubsystemComponent(NewMagazine.INSTANCE)
         );
     }
