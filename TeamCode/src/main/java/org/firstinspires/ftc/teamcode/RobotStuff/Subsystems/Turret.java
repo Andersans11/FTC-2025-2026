@@ -57,7 +57,7 @@ public class Turret implements Subsystem {
 
 
     public void hardware() {
-        this.rotationMotor = RobotConfig.TurretRotation.motor;
+        this.rotationMotor = RobotConfig.TurretRotation.motor.brakeMode();
         this.camera = RobotConfig.camera;
     }
 

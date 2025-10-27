@@ -16,7 +16,7 @@ public class RTPAxon {
     // Run-to-position mode flag
     private boolean rtp;
     // Current power applied to servo
-    private double power;
+    public double power;
     // Maximum allowed power
     public static double maxPower;
     // Direction of servo movement

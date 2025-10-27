@@ -23,6 +23,8 @@ public class Reset_Encoders extends RoyallyFuckedUpMode {
     @Override
     public void onInit() {
         super.onInit();
+        NewTurret.INSTANCE.rotationMotor.zero();
+        stop();
     }
 
     @Override

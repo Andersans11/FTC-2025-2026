@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.RobotStuff.Config;
 import androidx.annotation.StringDef;
 
 import com.qualcomm.hardware.dfrobot.HuskyLens;
+import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -21,7 +22,6 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.HardwareConfigs.CRServoC
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.HardwareConfigs.MotorConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.HardwareConfigs.ServoConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.DeltaTimer;
-import org.firstinspires.ftc.teamcode.RobotStuff.Misc.GoBildaPinpointDriver;
 
 import java.lang.reflect.Field;
 

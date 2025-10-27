@@ -9,6 +9,9 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemCompo
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.RobotCentricDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.NewTurret;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
+
+import dev.nextftc.core.commands.utility.InstantCommand;
 
 @TeleOp(name = "Turret Test", group = Utils.TESTING)
 public class TurretTestMode extends RoyallyFuckedUpMode {
@@ -17,7 +20,6 @@ public class TurretTestMode extends RoyallyFuckedUpMode {
         super();
         addSubsystemComponents(
                 new BetterSubsystemComponent(NewTurret.INSTANCE),
-                new BetterSubsystemComponent(Shooter.INSTANCE),
                 new BetterSubsystemComponent(RobotCentricDrive.INSTANCE)
         );
     }
@@ -25,11 +27,21 @@ public class TurretTestMode extends RoyallyFuckedUpMode {
     @Override
     public void onInit() {
         super.onInit();
+
+        //P1.dpadDown().whenBecomesTrue(NewTurret.INSTANCE.setPosition(0));
+        //P1.dpadRight().whenBecomesTrue(NewTurret.INSTANCE.setPosition(90));
+        //P1.dpadLeft().whenBecomesTrue(NewTurret.INSTANCE.setPosition(-90));
+        //P1.dpadUp().whenBecomesTrue(NewTurret.INSTANCE.resetPID());
     }
 
 
     @Override
     public void onUpdate() {
         super.onUpdate();
+
+        super.telemetry.addData("targetAngle", NewTurret.INSTANCE.targetAngle);
+        super.telemetry.addData("motorPower", NewTurret.INSTANCE.controller.calculate(NewTurret.INSTANCE.rotationMotor.getState()));
+        super.telemetry.addData("goal", NewTurret.INSTANCE.controller.getGoal());
+        super.telemetry.addData("length", NewTurret.INSTANCE.camera.blocks().length);
     }
 }

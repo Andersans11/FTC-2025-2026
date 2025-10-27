@@ -1,11 +1,11 @@
-package org.firstinspires.ftc.teamcode.TeleOpModes;
+package org.firstinspires.ftc.teamcode.TestingOpModes;
 
-import static org.firstinspires.ftc.teamcode.TeleOpModes.Tuning.changes;
-import static org.firstinspires.ftc.teamcode.TeleOpModes.Tuning.drawOnlyCurrent;
-import static org.firstinspires.ftc.teamcode.TeleOpModes.Tuning.draw;
-import static org.firstinspires.ftc.teamcode.TeleOpModes.Tuning.follower;
-import static org.firstinspires.ftc.teamcode.TeleOpModes.Tuning.stopRobot;
-import static org.firstinspires.ftc.teamcode.TeleOpModes.Tuning.telemetryM;
+import static org.firstinspires.ftc.teamcode.TestingOpModes.Tuning.changes;
+import static org.firstinspires.ftc.teamcode.TestingOpModes.Tuning.drawOnlyCurrent;
+import static org.firstinspires.ftc.teamcode.TestingOpModes.Tuning.draw;
+import static org.firstinspires.ftc.teamcode.TestingOpModes.Tuning.follower;
+import static org.firstinspires.ftc.teamcode.TestingOpModes.Tuning.stopRobot;
+import static org.firstinspires.ftc.teamcode.TestingOpModes.Tuning.telemetryM;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
 
