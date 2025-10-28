@@ -24,10 +24,10 @@ public class Constants {
             .useSecondaryHeadingPIDF(false)
             .useSecondaryDrivePIDF(false)
             .centripetalScaling(0.0005)
-            .translationalPIDFCoefficients(new PIDFCoefficients(0.1, 0, 0.01, 0))
-            .headingPIDFCoefficients(new PIDFCoefficients(2, 0, 0.1, 0))
+            .translationalPIDFCoefficients(new PIDFCoefficients(0.15,0,0.01,0))
+            .headingPIDFCoefficients(new PIDFCoefficients(2,0,0.1,0))
             .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.1, 0, 0, 0.6, 0))
-            .secondaryTranslationalPIDFCoefficients(new PIDFCoefficients(0.1, 0, 0.01, 0))
+            .secondaryTranslationalPIDFCoefficients(new PIDFCoefficients(0.15,0,0.007,0))
             .secondaryHeadingPIDFCoefficients(new PIDFCoefficients(2, 0, 0.1, 0))
             .secondaryDrivePIDFCoefficients(new FilteredPIDFCoefficients(0.1, 0, 0, 0.6, 0));
 
@@ -41,8 +41,8 @@ public class Constants {
             .rightFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
             .rightRearMotorDirection(DcMotorSimple.Direction.REVERSE)
             .maxPower(1)
-            .xVelocity(57.8741)
-            .yVelocity(52.295);
+            .xVelocity(68.2498)
+            .yVelocity(49.5211);
 
     public static PinpointConstants localizerConstants = new PinpointConstants()
             .hardwareMapName("PINPOINT")
