@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.pedropathing.geometry.Pose;
+import com.pedropathing.util.Timer;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
@@ -34,9 +35,18 @@ public class NewTurret implements IAmBetterSubsystem {
     Pose oldPose;
     public double targetAngle = 0;
     boolean isManualControl = false;
-    boolean isSearching = true;
+    boolean isSweeping = true;
+    boolean started = false;
+    Timer timer;
     public ControlSystem controller;
     public double tagPos;
+    public enum TurretMode {
+        TAG_TRACKING, // Using AprilTags
+        RECOVERY, // Either position-based or sweep-based
+        MANUAL
+    }
+
+    public TurretMode mode;
 
     // ------------------------- CONFIG ------------------------------- //
     public static double kP = 0.01;
@@ -52,6 +62,8 @@ public class NewTurret implements IAmBetterSubsystem {
         controller = ControlSystem.builder()
                 .posPid(kP, kI, kD)
                 .build();
+
+        timer = new Timer();
     }
 
     @Override
@@ -114,13 +126,38 @@ public class NewTurret implements IAmBetterSubsystem {
 
     @Override
     public void periodic() {
-        if (!isManualControl) {
-            double waluigiWaugh = waugh();
-            if (waluigiWaugh != 69420) {
-                targetAngle = ticksToDegrees(rotationMotor.getCurrentPosition()) - (a * (waluigiWaugh - 160));
-            } else {
-                if (isSearching) {
-                    // searching stuff
+        double waluigiWaugh = waugh();
+        
+        switch (mode) {
+            case TAG_TRACKING:
+                if (waluigiWaugh != 69420) {
+                    targetAngle = ticksToDegrees(rotationMotor.getCurrentPosition()) - (a * (waluigiWaugh - 160));
+                    timer.resetTimer();
+                } else if (timer.getElapsedTimeSeconds() >= 0.25) {
+                    mode = TurretMode.RECOVERY;
+                } else {
+                    double deltaHeading = pose.getHeading() - oldPose.getHeading();
+                    targetAngle = ticksToDegrees(rotationMotor.getCurrentPosition()) + deltaHeading;
+                }
+                controller.setGoal(new KineticState(degreesToTicks(Math.max(-90, Math.min(90, targetAngle)))));
+                break;
+            case RECOVERY:
+                if (isSweeping) {
+                    if (waluigiWaugh != 69420) {
+                        targetAngle = ticksToDegrees(rotationMotor.getCurrentPosition()) - (a * (waluigiWaugh - 160));
+                        timer.resetTimer();
+                        mode = TurretMode.TAG_TRACKING;
+                        started = false;
+                    } else {
+                        if (!started) {
+                            controller.setGoal(new KineticState(-90));
+                            started = true;
+                        } else if (ticksToDegrees(rotationMotor.getCurrentPosition()) >= 89) {
+                            controller.setGoal(new KineticState(-90));
+                        } else if (ticksToDegrees(rotationMotor.getCurrentPosition()) <= -89) {
+                            controller.setGoal(new KineticState(90));
+                        }
+                    }
                 } else {
                     if (pose != oldPose) {
                         if (!isRedAlliance) {
@@ -141,9 +178,9 @@ public class NewTurret implements IAmBetterSubsystem {
                         }
                     }
                 }
-            }
-            controller.setGoal(new KineticState(degreesToTicks(Math.max(-90, Math.min(90, targetAngle)))));
+                controller.setGoal(new KineticState(degreesToTicks(Math.max(-90, Math.min(90, targetAngle)))));
         }
         rotationMotor.setPower(controller.calculate(rotationMotor.getState()));
+        oldPose = pose;
     }
 }

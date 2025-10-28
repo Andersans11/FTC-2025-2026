@@ -21,7 +21,7 @@ public class Magazine implements Subsystem {
 
     public enum MagazineMode {
         INTAKE,
-        OUTTAKE,
+        OUTTAKE
     }
 
     MagSlot[] slots;
