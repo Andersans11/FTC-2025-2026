@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.RobotStuff;
 
 import com.pedropathing.follower.Follower;
+import com.pedropathing.localization.PoseTracker;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
 
@@ -22,7 +23,7 @@ public class Perseus extends BetterSubsystemGroup {
     public static final Perseus INSTANCE = new Perseus();
 
     public Follower follower;
-    public Follower followerTeleOp;
+    public PoseTracker followerTeleOp;
 
     private Perseus() {
         super(
@@ -43,7 +44,6 @@ public class Perseus extends BetterSubsystemGroup {
         super.initSystem();
 
         follower = Constants.createFollower(RobotConfig.getHardwareMap());
-        followerTeleOp = Constants.createFollower(RobotConfig.getHardwareMap());
     }
 
     @Override

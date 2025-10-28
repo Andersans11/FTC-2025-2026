@@ -14,20 +14,21 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 
 import dev.nextftc.core.commands.utility.InstantCommand;
 
-@TeleOp(name = "fuck you", group = Utils.TESTING)
+@TeleOp(name = "Test: Turret", group = Utils.TESTING)
 public class TurretTestMode extends RoyallyFuckedUpMode {
 
     public TurretTestMode() {
         super();
         addSubsystemComponents(
                 new BetterSubsystemComponent(NewTurret.INSTANCE),
-                new BetterSubsystemComponent(HoldHeadingPID.INSTANCE)
+                new BetterSubsystemComponent(RobotCentricDrive.INSTANCE)
         );
     }
 
     @Override
     public void onInit() {
         super.onInit();
+        NewTurret.INSTANCE.initPoseUpdater(this);
 
         //P1.dpadDown().whenBecomesTrue(NewTurret.INSTANCE.setPosition(0));
         //P1.dpadRight().whenBecomesTrue(NewTurret.INSTANCE.setPosition(90));
@@ -45,5 +46,6 @@ public class TurretTestMode extends RoyallyFuckedUpMode {
         super.telemetry.addData("goal", NewTurret.INSTANCE.controller.getGoal());
         super.telemetry.addData("length", NewTurret.INSTANCE.camera.blocks().length);
         super.telemetry.addData("waugh", NewTurret.INSTANCE.waugh());
+        super.telemetry.addData("timer", NewTurret.INSTANCE.timer.getElapsedTimeSeconds());
     }
 }

@@ -1,10 +1,15 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
+import com.pedropathing.localization.PoseTracker;
 import com.pedropathing.util.Timer;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
+import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 
 import java.lang.reflect.Array;
@@ -31,13 +36,13 @@ public class NewTurret implements IAmBetterSubsystem {
     public HuskyLens camera;
     boolean isRedAlliance = true;
     double pitch;
-    Pose pose;
-    Pose oldPose;
+    Pose pose = new Pose(0, 0, 0);
+    Pose oldPose = new Pose(0, 0, 0);
     public double targetAngle = 0;
     boolean isManualControl = false;
     boolean isSweeping = true;
     boolean started = false;
-    Timer timer;
+    public Timer timer;
     public ControlSystem controller;
     public double tagPos;
     public enum TurretMode {
@@ -46,13 +51,15 @@ public class NewTurret implements IAmBetterSubsystem {
         MANUAL
     }
 
-    public TurretMode mode;
+    public TurretMode mode = TurretMode.TAG_TRACKING;
+
+    public Follower poseUpdater;
 
     // ------------------------- CONFIG ------------------------------- //
     public static double kP = 0.01;
     public static double kI = 0.0;
     public static double kD = 0.0;
-    public static double a = 0.21875;
+    public static double a = 0.04;
 
     // --------------------- OPMODE --------------------------------- //
 
@@ -64,6 +71,15 @@ public class NewTurret implements IAmBetterSubsystem {
                 .build();
 
         timer = new Timer();
+    }
+
+    public void initPoseUpdater(OpMode opmode) {
+        poseUpdater = Constants.createFollower(opmode.hardwareMap);
+        poseUpdater.setStartingPose(pose);
+    }
+
+    public void initPoseUpdater(Follower follower) {
+        poseUpdater = follower;
     }
 
     @Override
@@ -133,11 +149,11 @@ public class NewTurret implements IAmBetterSubsystem {
                 if (waluigiWaugh != 69420) {
                     targetAngle = ticksToDegrees(rotationMotor.getCurrentPosition()) - (a * (waluigiWaugh - 160));
                     timer.resetTimer();
-                } else if (timer.getElapsedTimeSeconds() >= 0.25) {
+                } else if (timer.getElapsedTimeSeconds() >= 1) {
                     mode = TurretMode.RECOVERY;
                 } else {
                     double deltaHeading = pose.getHeading() - oldPose.getHeading();
-                    targetAngle = ticksToDegrees(rotationMotor.getCurrentPosition()) + deltaHeading;
+                    targetAngle = ticksToDegrees(rotationMotor.getCurrentPosition()) - Math.toDegrees(deltaHeading);
                 }
                 controller.setGoal(new KineticState(degreesToTicks(Math.max(-90, Math.min(90, targetAngle)))));
                 break;
@@ -150,12 +166,12 @@ public class NewTurret implements IAmBetterSubsystem {
                         started = false;
                     } else {
                         if (!started) {
-                            targetAngle = -90;
+                            targetAngle = 0;
                             started = true;
                         } else if (ticksToDegrees(rotationMotor.getCurrentPosition()) >= 89) {
-                            targetAngle = -90;
+                            //targetAngle = -90;
                         } else if (ticksToDegrees(rotationMotor.getCurrentPosition()) <= -89) {
-                            targetAngle = 90;
+                            //targetAngle = 90;
                         }
                     }
                 } else {
@@ -181,6 +197,8 @@ public class NewTurret implements IAmBetterSubsystem {
                 controller.setGoal(new KineticState(degreesToTicks(Math.max(-90, Math.min(90, targetAngle)))));
         }
         rotationMotor.setPower(controller.calculate(rotationMotor.getState()));
+        poseUpdater.update();
         oldPose = pose;
+        pose = poseUpdater.getPose();
     }
 }
