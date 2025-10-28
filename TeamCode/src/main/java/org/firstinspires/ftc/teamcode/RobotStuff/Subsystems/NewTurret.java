@@ -150,12 +150,12 @@ public class NewTurret implements IAmBetterSubsystem {
                         started = false;
                     } else {
                         if (!started) {
-                            controller.setGoal(new KineticState(-90));
+                            targetAngle = -90;
                             started = true;
                         } else if (ticksToDegrees(rotationMotor.getCurrentPosition()) >= 89) {
-                            controller.setGoal(new KineticState(-90));
+                            targetAngle = -90;
                         } else if (ticksToDegrees(rotationMotor.getCurrentPosition()) <= -89) {
-                            controller.setGoal(new KineticState(90));
+                            targetAngle = 90;
                         }
                     }
                 } else {
