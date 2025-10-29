@@ -256,7 +256,7 @@ public class RTPAxon {
 
     // Check if servo is at target (default tolerance)
     public boolean isAtTarget() {
-        return isAtTarget(5);
+        return isAtTarget(2);
     }
 
     // Check if servo is at target (custom tolerance)

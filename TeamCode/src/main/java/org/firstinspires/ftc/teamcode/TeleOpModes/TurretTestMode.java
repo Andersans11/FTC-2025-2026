@@ -40,7 +40,9 @@ public class TurretTestMode extends RoyallyFuckedUpMode {
     @Override
     public void onUpdate() {
         super.onUpdate();
-
+        if (NewTurret.INSTANCE.camera.blocks(1).length > 0 && NewTurret.INSTANCE.camera.blocks(1) != null) {
+            super.telemetry.addData("Detected Tag Pos", NewTurret.INSTANCE.camera.blocks(1)[0]);
+        }
         super.telemetry.addData("targetAngle", NewTurret.INSTANCE.targetAngle);
         super.telemetry.addData("motorPower", NewTurret.INSTANCE.controller.calculate(NewTurret.INSTANCE.rotationMotor.getState()));
         super.telemetry.addData("goal", NewTurret.INSTANCE.controller.getGoal());

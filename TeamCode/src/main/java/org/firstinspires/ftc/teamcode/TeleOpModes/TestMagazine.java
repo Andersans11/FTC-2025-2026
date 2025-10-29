@@ -58,7 +58,9 @@ public class TestMagazine extends RoyallyFuckedUpMode {
         telemetry.addData("i", NewMagazine.INSTANCE.i);
         telemetry.addData("desiredColor", NewMagazine.INSTANCE.desiredColor);
         telemetry.addData("power", NewMagazine.INSTANCE.servos[0].power);
-        telemetry.addData("P", NewMagazine.INSTANCE.servos[0].getKD());
+        telemetry.addData("P", NewMagazine.INSTANCE.servos[0].getKP());
+        telemetry.addData("I", NewMagazine.INSTANCE.servos[0].getKI());
+        telemetry.addData("D", NewMagazine.INSTANCE.servos[0].getKD());
 
         super.onUpdate();
     }

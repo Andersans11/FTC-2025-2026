@@ -37,13 +37,8 @@ public class NewMagazine implements IAmBetterSubsystem {
 
     // ------------------------------ CONFIG ----------------------------- //
     public static double kP = 0.008;
-    public static double kI = 0.0;
+    public static double kI = 0.001;
     public static double kD = 0.00013;
-
-
-    public static double kP2 = 0.01;
-    public static double kI2 = 0.0;
-    public static double kD2 = 0.00013;
 
     public static double off0 = 0;
     public static double off1 = 120;
@@ -102,33 +97,17 @@ public class NewMagazine implements IAmBetterSubsystem {
             oldTargetPos = targetPos;
         }
 
-        if (servos[0].isAtTarget() && !usingSec) {
-            this.servos[0].setKP(kP2);
-            this.servos[0].setKI(kI2);
-            this.servos[0].setKD(kD2);
+        this.servos[0].setKP(kP);
+        this.servos[0].setKI(kI);
+        this.servos[0].setKD(kD);
 
-            this.servos[1].setKP(kP2);
-            this.servos[1].setKI(kI2);
-            this.servos[1].setKD(kD2);
+        this.servos[1].setKP(kP);
+        this.servos[1].setKI(kI);
+        this.servos[1].setKD(kD);
 
-            this.servos[2].setKP(kP2);
-            this.servos[2].setKI(kI2);
-            this.servos[2].setKD(kD2);
-            usingSec = true;
-        } else if (!servos[0].isAtTarget() && usingSec) {
-            this.servos[0].setKP(kP);
-            this.servos[0].setKI(kI);
-            this.servos[0].setKD(kD);
-
-            this.servos[1].setKP(kP);
-            this.servos[1].setKI(kI);
-            this.servos[1].setKD(kD);
-
-            this.servos[2].setKP(kP);
-            this.servos[2].setKI(kI);
-            this.servos[2].setKD(kD);
-            usingSec = false;
-        }
+        this.servos[2].setKP(kP);
+        this.servos[2].setKI(kI);
+        this.servos[2].setKD(kD);
 
         servos[0].update();
         servos[1].update();
