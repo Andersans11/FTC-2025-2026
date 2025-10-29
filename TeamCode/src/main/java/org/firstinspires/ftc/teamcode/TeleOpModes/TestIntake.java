@@ -17,7 +17,7 @@ public class TestIntake extends RoyallyFuckedUpMode {
     public TestIntake() {
         super();
         addSubsystemComponents(
-                new BetterSubsystemComponent(HoldHeadingPID.INSTANCE),
+                new BetterSubsystemComponent(RobotCentricDrive.INSTANCE),
                 new BetterSubsystemComponent(Intake.INSTANCE)
         );
     }
@@ -26,8 +26,8 @@ public class TestIntake extends RoyallyFuckedUpMode {
     public void onInit() {
         super.onInit();
 
-        P1.rightTrigger().atLeast(Sensitivities.p1RTThreshold).whenBecomesTrue(Intake.INSTANCE::start);
-        P1.rightTrigger().atLeast(Sensitivities.p1RTThreshold).whenBecomesFalse(Intake.INSTANCE::idle);
+        P1.rightTrigger().atLeast(0.1).whenBecomesTrue(Intake.INSTANCE::start);
+        P1.rightTrigger().atLeast(0.1).whenBecomesFalse(Intake.INSTANCE::idle);
         P1.rightBumper().whenBecomesTrue(Intake.INSTANCE::stop);
     }
 
