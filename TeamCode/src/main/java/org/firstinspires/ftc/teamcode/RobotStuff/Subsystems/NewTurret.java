@@ -153,7 +153,7 @@ public class NewTurret implements IAmBetterSubsystem {
                     mode = TurretMode.RECOVERY;
                 } else {
                     double deltaHeading = pose.getHeading() - oldPose.getHeading();
-                    targetAngle = ticksToDegrees(rotationMotor.getCurrentPosition()) - Math.toDegrees(deltaHeading);
+                    targetAngle = targetAngle - Math.toDegrees(deltaHeading);
                 }
                 controller.setGoal(new KineticState(degreesToTicks(Math.max(-90, Math.min(90, targetAngle)))));
                 break;

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.pedropathing.control.FilteredPIDFCoefficients;
 import com.pedropathing.control.PIDFCoefficients;
 import com.pedropathing.follower.Follower;
@@ -13,13 +14,15 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-
+@Config
 public class Constants {
+
+
 
     public static FollowerConstants followerConstants = new FollowerConstants()
             .mass(9.888314)
-            .forwardZeroPowerAcceleration(-41.278)
-            .lateralZeroPowerAcceleration(-59.7819)
+            .forwardZeroPowerAcceleration(-65.5397)
+            .lateralZeroPowerAcceleration(-87.0747)
             .useSecondaryTranslationalPIDF(false)
             .useSecondaryHeadingPIDF(false)
             .useSecondaryDrivePIDF(false)
@@ -36,10 +39,10 @@ public class Constants {
             .leftRearMotorName("BLDRIVE")
             .rightFrontMotorName("FRDRIVE")
             .rightRearMotorName("BRDRIVE")
-            .leftFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
-            .leftRearMotorDirection(DcMotorSimple.Direction.REVERSE)
-            .rightFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
-            .rightRearMotorDirection(DcMotorSimple.Direction.FORWARD)
+            .leftFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
+            .leftRearMotorDirection(DcMotorSimple.Direction.FORWARD)
+            .rightFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
+            .rightRearMotorDirection(DcMotorSimple.Direction.REVERSE)
             .maxPower(1)
             .xVelocity(68.2498)
             .yVelocity(49.5211);

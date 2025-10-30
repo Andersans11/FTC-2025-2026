@@ -40,9 +40,9 @@ public class RobotConfig {
     public static MotorConfig TurretRotation;
     public static MotorConfig IntakeMotor;
 
-    public static CRServoConfig CarouselCR1;
-    public static CRServoConfig CarouselCR2;
-    public static CRServoConfig CarouselCR3;
+    public static ServoConfig CarouselCR1;
+    public static ServoConfig CarouselCR2;
+    public static ServoConfig CarouselCR3;
     public static ServoConfig HoodServo;
 
     public static ServoConfig Kicker;
@@ -230,23 +230,20 @@ public class RobotConfig {
                 "KICKER",
                 Servo.Direction.FORWARD
         );
-        CarouselCR1 = new CRServoConfig(
+        CarouselCR1 = new ServoConfig(
                 hardwareMap,
                 "CAROUSEL1",
-                DcMotorSimple.Direction.FORWARD,
-                CarouselENC1
+                Servo.Direction.FORWARD
         );
-        CarouselCR2 = new CRServoConfig(
+        CarouselCR2 = new ServoConfig(
                 hardwareMap,
                 "CAROUSEL2",
-                DcMotorSimple.Direction.FORWARD,
-                CarouselENC1
+                Servo.Direction.FORWARD
         );
-        CarouselCR3 = new CRServoConfig(
+        CarouselCR3 = new ServoConfig(
                 hardwareMap,
                 "CAROUSEL3",
-                DcMotorSimple.Direction.FORWARD,
-                CarouselENC1
+                Servo.Direction.FORWARD
         );
         HoodServo = new ServoConfig(
                 hardwareMap,
