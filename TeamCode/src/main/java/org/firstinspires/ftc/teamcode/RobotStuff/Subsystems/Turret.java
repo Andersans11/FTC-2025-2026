@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems;
 
+import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.geometry.Pose;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
 
@@ -19,6 +20,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils.*;
 
 import java.util.function.Supplier;
 
+@Configurable
 public class Turret implements Subsystem {
 
     public static final Turret INSTANCE = new Turret();
@@ -157,9 +159,9 @@ public class Turret implements Subsystem {
     }
 
 
-    public void binds() {
-        this.rotationSupp = RobotConfig.RangeControls.TURRET_ROT;
-    }
+//    public void binds() {
+//        this.rotationSupp = RobotConfig.RangeControls.TURRET_ROT;
+//    }
 
     public Double getTurretPos() {
         return rotationMotor.getCurrentPosition() / 537.7 * 360 / 8;

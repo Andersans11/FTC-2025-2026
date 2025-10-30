@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.localization.PoseTracker;
@@ -27,7 +28,7 @@ import dev.nextftc.hardware.controllable.RunToPosition;
 import dev.nextftc.hardware.impl.MotorEx;
 import dev.nextftc.hardware.powerable.SetPower;
 
-@Config
+@Configurable
 public class NewTurret implements IAmBetterSubsystem {
 
     public static final NewTurret INSTANCE = new NewTurret();
@@ -153,7 +154,7 @@ public class NewTurret implements IAmBetterSubsystem {
                     mode = TurretMode.RECOVERY;
                 } else {
                     double deltaHeading = pose.getHeading() - oldPose.getHeading();
-                    targetAngle = ticksToDegrees(rotationMotor.getCurrentPosition()) - Math.toDegrees(deltaHeading);
+                    targetAngle = targetAngle - Math.toDegrees(deltaHeading);
                 }
                 controller.setGoal(new KineticState(degreesToTicks(Math.max(-90, Math.min(90, targetAngle)))));
                 break;

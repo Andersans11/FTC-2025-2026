@@ -1,11 +1,14 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems;
 
+import com.bylazar.configurables.annotations.Configurable;
+
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.hardware.impl.MotorEx;
 import dev.nextftc.hardware.powerable.SetPower;
 
+@Configurable
 public class Intake implements IAmBetterSubsystem {
 
     public static final Intake INSTANCE = new Intake();

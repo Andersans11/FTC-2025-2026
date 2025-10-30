@@ -27,8 +27,6 @@ import java.lang.reflect.Field;
 
 public class RobotConfig {
 
-    public static AnalogInput CarouselENC1;
-
     public static ColorSensor IntakeCS;
     public static DistanceSensor IntakeDS;
     public static MotorConfig FLDrive;
@@ -40,9 +38,9 @@ public class RobotConfig {
     public static MotorConfig TurretRotation;
     public static MotorConfig IntakeMotor;
 
-    public static CRServoConfig CarouselCR1;
-    public static CRServoConfig CarouselCR2;
-    public static CRServoConfig CarouselCR3;
+    public static ServoConfig CarouselCR1;
+    public static ServoConfig CarouselCR2;
+    public static ServoConfig CarouselCR3;
     public static ServoConfig HoodServo;
 
     public static ServoConfig Kicker;
@@ -90,89 +88,10 @@ public class RobotConfig {
         return hardwareMap;
     }
 
-    public static class ButtonControls {
-        public static Button MAGAZINE_SLOT1 = null;
-        public static Button MAGAZINE_SLOT2 = null;
-        public static Button MAGAZINE_SLOT3 = null;
-        public static Button INTAKE = null;
-        public static Button INTAKE_STOP = null;
-        public static Button SHOOT = null;
-        public static Button SHOOT_MOTIF = null;
-        public static Button SLOWMODE = null;
-        public static Button SHOOT_GREEN = null;
-        public static Button SHOOT_PURPLE = null;
-        public static Button STOP_SHOOT = null;
-        public static Button INTAKE_MODE = null;
-        public static Button OUTTAKE_MODE = null;
-    }
-
-    public static class RangeControls {
-        public static Range FB = null;
-        public static Range STRAFE = null;
-        public static Range YAW = null;
-        public static Range MAGAZINE_ROT = null;
-        public static Range TURRET_ROT = null;
-        public static Range TURRET_PITCH = null;
-    }
-
-    @StringDef({
-            "MAGAZINE_SLOT1",
-            "MAGAZINE_SLOT2",
-            "MAGAZINE_SLOT3",
-            "INTAKE",
-            "INTAKE_STOP",
-            "SHOOT",
-            "SHOOT_MOTIF",
-            "STOP_SHOOT",
-            "SLOWMODE",
-            "SHOOT_GREEN",
-            "SHOOT_PURPLE",
-            "INTAKE_MODE",
-            "OUTTAKE_MODE"
-    })
-    @interface ButtonOption {}
-
-    @StringDef({
-            "FB",
-            "STRAFE",
-            "YAW",
-            "MAGAZINE_ROT",
-            "TURRET_ROT",
-            "TURRET_PITCH"
-    })
-    @interface RangeOption {}
-
-    public static void bind(Button button, @ButtonOption String control) {
-        try {
-            Field field = ButtonControls.class.getDeclaredField(control);
-            field.set(ButtonControls.class, button);
-            field.setAccessible(false);
-        } catch (NoSuchFieldException e) {
-            opMode.telemetry.addLine("Field with name " + control + "could not be found. This error should not be possible.");
-        } catch (IllegalAccessException e) {
-            opMode.telemetry.addLine("Field object is enforcing Java language access control, and the underlying field is inaccessible");
-        }
-    }
-
-    public static void bind(Range range, @RangeOption String control) {
-        try {
-            Field field = RangeControls.class.getDeclaredField(control);
-            field.set(RangeControls.class, range);
-            field.setAccessible(false);
-        } catch (NoSuchFieldException e) {
-            opMode.telemetry.addLine("Field with name " + control + "could not be found. This error should not be possible.");
-        } catch (IllegalAccessException e) {
-            opMode.telemetry.addLine("Field object is enforcing Java language access control, and the underlying field is inaccessible");
-        }
-    }
-
     private static void initHardware (HardwareMap hardwareMap) {
 
         Pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, "PINPOINT");
 
-        CarouselENC1 = hardwareMap.get(AnalogInput.class, "CARENC1");
-
-        //IntakeCS = hardwareMap.get(ColorSensor.class, "IntakeCS");
         IntakeDS = hardwareMap.get(DistanceSensor.class, "Dis");
 
         camera = hardwareMap.get(HuskyLens.class, "HUSKYLENS");
@@ -230,23 +149,20 @@ public class RobotConfig {
                 "KICKER",
                 Servo.Direction.FORWARD
         );
-        CarouselCR1 = new CRServoConfig(
+        CarouselCR1 = new ServoConfig(
                 hardwareMap,
                 "CAROUSEL1",
-                DcMotorSimple.Direction.FORWARD,
-                CarouselENC1
+                Servo.Direction.FORWARD
         );
-        CarouselCR2 = new CRServoConfig(
+        CarouselCR2 = new ServoConfig(
                 hardwareMap,
                 "CAROUSEL2",
-                DcMotorSimple.Direction.FORWARD,
-                CarouselENC1
+                Servo.Direction.FORWARD
         );
-        CarouselCR3 = new CRServoConfig(
+        CarouselCR3 = new ServoConfig(
                 hardwareMap,
                 "CAROUSEL3",
-                DcMotorSimple.Direction.FORWARD,
-                CarouselENC1
+                Servo.Direction.FORWARD
         );
         HoodServo = new ServoConfig(
                 hardwareMap,

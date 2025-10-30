@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.RobotStuff;
 
+import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.PoseTracker;
 
@@ -18,6 +19,7 @@ import dev.nextftc.core.commands.delays.Delay;
 import dev.nextftc.core.commands.groups.SequentialGroup;
 import dev.nextftc.core.commands.utility.NullCommand;
 
+@Configurable
 public class Perseus extends BetterSubsystemGroup {
 
     public static final Perseus INSTANCE = new Perseus();

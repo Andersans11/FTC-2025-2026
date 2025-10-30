@@ -2,22 +2,16 @@ package org.firstinspires.ftc.teamcode.TeleOpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.HoldHeadingPID;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.RobotCentricDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.NewTurret;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
-
-import dev.nextftc.core.commands.utility.InstantCommand;
 
 @TeleOp(name = "Test: Turret", group = Utils.TESTING)
-public class TurretTestMode extends RoyallyFuckedUpMode {
+public class TestTurret extends RoyallyFuckedUpMode {
 
-    public TurretTestMode() {
+    public TestTurret() {
         super();
         addSubsystemComponents(
                 new BetterSubsystemComponent(NewTurret.INSTANCE),

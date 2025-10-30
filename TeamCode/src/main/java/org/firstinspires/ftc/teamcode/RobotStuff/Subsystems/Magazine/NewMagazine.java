@@ -1,28 +1,28 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
 
-import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.pedropathing.util.Timer;
+import androidx.annotation.NonNull;
+
+import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.HardwareConfigs.RTPAxon;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.IAmBetterSubsystem;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.NewTurret;
 
 import dev.nextftc.core.commands.Command;
+import dev.nextftc.core.commands.CommandManager;
 import dev.nextftc.core.commands.utility.InstantCommand;
-import dev.nextftc.core.commands.utility.NullCommand;
-import dev.nextftc.core.subsystems.Subsystem;
+import dev.nextftc.hardware.impl.ServoEx;
+import dev.nextftc.hardware.positionable.SetPositions;
 
-@Config
+@Configurable
 public class NewMagazine implements IAmBetterSubsystem {
 
     public static final NewMagazine INSTANCE = new NewMagazine();
     MagSlot[] slots;
     public int activeSlot; // slot that receives the next ball
-    public RTPAxon[] servos;
+    public ServoEx[] servos;
     ColorSensor color;
     public double targetPos = 0;
     public double oldTargetPos = 0;
@@ -36,14 +36,6 @@ public class NewMagazine implements IAmBetterSubsystem {
     boolean usingSec = false;
 
     // ------------------------------ CONFIG ----------------------------- //
-    public static double kP = 0.008;
-    public static double kI = 0.0;
-    public static double kD = 0.00013;
-
-
-    public static double kP2 = 0.01;
-    public static double kI2 = 0.0;
-    public static double kD2 = 0.00013;
 
     public static double off0 = 0;
     public static double off1 = 120;
@@ -60,27 +52,11 @@ public class NewMagazine implements IAmBetterSubsystem {
         };
         this.activeSlot = 0;
 
-        this.servos = new RTPAxon[] {
-                new RTPAxon(RobotConfig.CarouselCR1),
-                new RTPAxon(RobotConfig.CarouselCR2),
-                new RTPAxon(RobotConfig.CarouselCR3)
+        servos = new ServoEx[]{
+                RobotConfig.CarouselCR1.servo,
+                RobotConfig.CarouselCR2.servo,
+                RobotConfig.CarouselCR3.servo
         };
-
-        this.servos[0].setKP(kP);
-        this.servos[0].setKI(kI);
-        this.servos[0].setKD(kD);
-
-        this.servos[1].setKP(kP);
-        this.servos[1].setKI(kI);
-        this.servos[1].setKD(kD);
-
-        this.servos[2].setKP(kP);
-        this.servos[2].setKI(kI);
-        this.servos[2].setKD(kD);
-
-        this.servos[0].setMaxPower(1);
-        this.servos[1].setMaxPower(1);
-        this.servos[2].setMaxPower(1);
 
         this.color = RobotConfig.IntakeCS;
 
@@ -96,43 +72,11 @@ public class NewMagazine implements IAmBetterSubsystem {
         targetPos = ((180 + NewTurret.INSTANCE.targetAngle) * mode) + slots[activeSlot].offset;
 
         if (targetPos != oldTargetPos) {
-            servos[0].setTargetRotation(targetPos);
-            servos[1].setTargetRotation(targetPos);
-            servos[2].setTargetRotation(targetPos);
+            servos[0].setPosition(targetPos);
+            servos[1].setPosition(targetPos);
+            servos[2].setPosition(targetPos);
             oldTargetPos = targetPos;
         }
-
-        if (servos[0].isAtTarget() && !usingSec) {
-            this.servos[0].setKP(kP2);
-            this.servos[0].setKI(kI2);
-            this.servos[0].setKD(kD2);
-
-            this.servos[1].setKP(kP2);
-            this.servos[1].setKI(kI2);
-            this.servos[1].setKD(kD2);
-
-            this.servos[2].setKP(kP2);
-            this.servos[2].setKI(kI2);
-            this.servos[2].setKD(kD2);
-            usingSec = true;
-        } else if (!servos[0].isAtTarget() && usingSec) {
-            this.servos[0].setKP(kP);
-            this.servos[0].setKI(kI);
-            this.servos[0].setKD(kD);
-
-            this.servos[1].setKP(kP);
-            this.servos[1].setKI(kI);
-            this.servos[1].setKD(kD);
-
-            this.servos[2].setKP(kP);
-            this.servos[2].setKI(kI);
-            this.servos[2].setKD(kD);
-            usingSec = false;
-        }
-
-        servos[0].update();
-        servos[1].update();
-        servos[2].update();
     }
 
     // -------------------- COMMANDS / METHODS ------------------------ //
@@ -168,21 +112,6 @@ public class NewMagazine implements IAmBetterSubsystem {
         });
     }
 
-    public Command resetPID() {
-        return new InstantCommand(() -> {
-            this.servos[0].setKP(kP);
-            this.servos[0].setKI(kI);
-            this.servos[0].setKD(kD);
-
-            this.servos[1].setKP(kP);
-            this.servos[1].setKI(kI);
-            this.servos[1].setKD(kD);
-
-            this.servos[2].setKP(kP);
-            this.servos[2].setKI(kI);
-            this.servos[2].setKD(kD);
-        });
-    }
 
     public Command setActiveSlotContent(Utils.ArtifactTypes content) {
         return new InstantCommand(() -> {

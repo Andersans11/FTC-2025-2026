@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.bylazar.configurables.annotations.Configurable;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 
@@ -14,7 +15,7 @@ import dev.nextftc.hardware.impl.ServoEx;
 import dev.nextftc.hardware.positionable.SetPosition;
 import dev.nextftc.hardware.powerable.SetPower;
 
-@Config
+@Configurable
 public class Shooter implements IAmBetterSubsystem {
 
     public static final Shooter INSTANCE = new Shooter();

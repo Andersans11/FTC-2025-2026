@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import dev.nextftc.core.commands.utility.NullCommand;
@@ -12,7 +13,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.HardwareConfigs.RTPAxon;
 
-@Config
+@Configurable
 public class Magazine implements Subsystem {
 
     public static final Magazine INSTANCE = new Magazine();
@@ -67,11 +68,11 @@ public class Magazine implements Subsystem {
     }
 
     public void hardware() {
-        this.servos = new RTPAxon[] {
-                new RTPAxon(RobotConfig.CarouselCR1),
-                new RTPAxon(RobotConfig.CarouselCR2),
-                new RTPAxon(RobotConfig.CarouselCR3)
-        };
+//        this.servos = new RTPAxon[] {
+//                new RTPAxon(RobotConfig.CarouselCR1),
+//                new RTPAxon(RobotConfig.CarouselCR2),
+//                new RTPAxon(RobotConfig.CarouselCR3)
+//        };
 
         this.servos[0].setKP(kP);
         this.servos[0].setKI(kI);
@@ -105,9 +106,9 @@ public class Magazine implements Subsystem {
 
 
     public void binds() {
-        RobotConfig.ButtonControls.MAGAZINE_SLOT1.whenTrue(this::slot1);
-        RobotConfig.ButtonControls.MAGAZINE_SLOT2.whenTrue(this::slot2);
-        RobotConfig.ButtonControls.MAGAZINE_SLOT3.whenTrue(this::slot3);
+//        RobotConfig.ButtonControls.MAGAZINE_SLOT1.whenTrue(this::slot1);
+//        RobotConfig.ButtonControls.MAGAZINE_SLOT2.whenTrue(this::slot2);
+//        RobotConfig.ButtonControls.MAGAZINE_SLOT3.whenTrue(this::slot3);
     }
 
     public void setMotif(Utils.ArtifactTypes[] motif) {
