@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
 import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.HardwareConfigs.ServoExFullRange;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.IAmBetterSubsystem;
@@ -10,7 +11,6 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.NewTurret;
 
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.utility.InstantCommand;
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.HardwareConfigs.ServoExFullRangeJava;
 
 @Configurable
 public class NewMagazine implements IAmBetterSubsystem {
@@ -18,7 +18,7 @@ public class NewMagazine implements IAmBetterSubsystem {
     public static final NewMagazine INSTANCE = new NewMagazine();
     MagSlot[] slots;
     public int activeSlot; // slot that receives the next ball
-    public ServoExFullRangeJava[] servos;
+    public ServoExFullRange[] servos;
     ColorSensor color;
     public double targetPos = 0;
     public double oldTargetPos = 0;
@@ -36,7 +36,7 @@ public class NewMagazine implements IAmBetterSubsystem {
     public static double off0 = 0;
     public static double off1 = 120;
     public static double off2 = 240;
-    public static double off = 91.5;
+    public static double off = 105;
     public int i = 0;
     public int mode;
 
@@ -49,7 +49,7 @@ public class NewMagazine implements IAmBetterSubsystem {
         };
         this.activeSlot = 0;
 
-        servos = new ServoExFullRangeJava[]{
+        servos = new ServoExFullRange[]{
                 RobotConfig.CarouselCR1.servo,
                 RobotConfig.CarouselCR2.servo,
                 RobotConfig.CarouselCR3.servo
@@ -69,12 +69,12 @@ public class NewMagazine implements IAmBetterSubsystem {
         targetPos = ((180 + NewTurret.INSTANCE.targetAngle) * mode) + slots[activeSlot].offset;
 
         if (targetPos != oldTargetPos) {
-            while (targetPos + off >= 322.10526) {
+            while (targetPos + off >= 355) {
                 targetPos = targetPos - 360;
             }
-            servos[0].setPosition((targetPos + off) / 322.10526);
-            servos[1].setPosition((targetPos + off) / 322.10526);
-            servos[2].setPosition((targetPos + off) / 322.10526);
+            servos[0].setPosition((targetPos + off) / 355);
+            servos[1].setPosition((targetPos + off) / 355);
+            servos[2].setPosition((targetPos + off) / 355);
             oldTargetPos = targetPos;
         }
     }
