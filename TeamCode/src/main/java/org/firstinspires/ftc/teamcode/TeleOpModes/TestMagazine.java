@@ -21,7 +21,7 @@ public class TestMagazine extends RoyallyFuckedUpMode {
     public TestMagazine() {
         super();
         addSubsystemComponents(
-                new BetterSubsystemComponent(HoldHeadingPID.INSTANCE),
+                new BetterSubsystemComponent(RobotCentricDrive.INSTANCE),
                 new BetterSubsystemComponent(NewMagazine.INSTANCE)
         );
     }

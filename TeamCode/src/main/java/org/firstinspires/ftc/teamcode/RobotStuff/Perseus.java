@@ -44,7 +44,6 @@ public class Perseus extends BetterSubsystemGroup {
     @Override
     public void initSystem() {
         super.initSystem();
-
         follower = Constants.createFollower(RobotConfig.getHardwareMap());
     }
 

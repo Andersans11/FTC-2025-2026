@@ -10,17 +10,18 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Perseus;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.HoldHeadingPID;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.RobotCentricDrive;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.Magazine;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.NewMagazine;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.NewTurret;
 
-@TeleOp(name = "perseus throws an artifact and hits eddie in the face", group = Utils.PRIORITY)
+@TeleOp(name = "Test: Full", group = Utils.PRIORITY)
 public class FullTest extends RoyallyFuckedUpMode {
 
     public FullTest() {
         super();
         addSubsystemComponents(
-                new BetterSubsystemComponent(HoldHeadingPID.INSTANCE),
+                new BetterSubsystemComponent(RobotCentricDrive.INSTANCE),
                 new BetterSubsystemComponent(Perseus.INSTANCE)
         );
     }
@@ -28,11 +29,15 @@ public class FullTest extends RoyallyFuckedUpMode {
     @Override
     public void onInit() {
         super.onInit();
+        NewTurret.INSTANCE.initPoseUpdater(this);
 
         Perseus.INSTANCE.stopIntake().schedule();
 
         P1.rightTrigger().atLeast(0.1).whenBecomesTrue(Perseus.INSTANCE.intake());
         P1.rightTrigger().atLeast(0.1).whenBecomesFalse(Perseus.INSTANCE.stopIntake());
+
+        P1.triangle().whenBecomesTrue(NewMagazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.PURPLE));
+        P1.circle().whenBecomesTrue(NewMagazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.GREEN));
 
 
         P2.cross().whenBecomesTrue(Perseus.INSTANCE.shootSingle(Utils.ArtifactTypes.GREEN));
@@ -42,6 +47,12 @@ public class FullTest extends RoyallyFuckedUpMode {
 
         P2.square().whenBecomesTrue(NewMagazine.INSTANCE.setMode(0));
         P2.triangle().whenBecomesTrue(NewMagazine.INSTANCE.setMode(1));
+    }
+
+    @Override
+    public void onStartButtonPressed() {
+        super.onStartButtonPressed();
+        Intake.INSTANCE.idle();
     }
 
     @Override

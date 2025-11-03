@@ -19,6 +19,7 @@ import dev.nextftc.ftc.NextFTCOpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.HardwareConfigs.CRServoConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.HardwareConfigs.FullServoConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.HardwareConfigs.MotorConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.HardwareConfigs.ServoConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.DeltaTimer;
@@ -38,9 +39,9 @@ public class RobotConfig {
     public static MotorConfig TurretRotation;
     public static MotorConfig IntakeMotor;
 
-    public static ServoConfig CarouselCR1;
-    public static ServoConfig CarouselCR2;
-    public static ServoConfig CarouselCR3;
+    public static FullServoConfig CarouselCR1;
+    public static FullServoConfig CarouselCR2;
+    public static FullServoConfig CarouselCR3;
     public static ServoConfig HoodServo;
 
     public static ServoConfig Kicker;
@@ -149,17 +150,17 @@ public class RobotConfig {
                 "KICKER",
                 Servo.Direction.FORWARD
         );
-        CarouselCR1 = new ServoConfig(
+        CarouselCR1 = new FullServoConfig(
                 hardwareMap,
                 "CAROUSEL1",
                 Servo.Direction.FORWARD
         );
-        CarouselCR2 = new ServoConfig(
+        CarouselCR2 = new FullServoConfig(
                 hardwareMap,
                 "CAROUSEL2",
                 Servo.Direction.FORWARD
         );
-        CarouselCR3 = new ServoConfig(
+        CarouselCR3 = new FullServoConfig(
                 hardwareMap,
                 "CAROUSEL3",
                 Servo.Direction.FORWARD

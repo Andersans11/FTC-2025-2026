@@ -39,7 +39,7 @@ public class NewTurret implements IAmBetterSubsystem {
     double pitch;
     Pose pose = new Pose(0, 0, 0);
     Pose oldPose = new Pose(0, 0, 0);
-    public double targetAngle = 75;
+    public double targetAngle = 0;
     boolean isManualControl = false;
     boolean isSweeping = true;
     boolean started = false;
