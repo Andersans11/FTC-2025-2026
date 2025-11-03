@@ -40,6 +40,7 @@ public class NewMagazine implements IAmBetterSubsystem {
     public static double off0 = 0;
     public static double off1 = 120;
     public static double off2 = 240;
+    public static double off = 77;
     public int i = 0;
     public int mode;
 
@@ -72,9 +73,12 @@ public class NewMagazine implements IAmBetterSubsystem {
         targetPos = ((180 + NewTurret.INSTANCE.targetAngle) * mode) + slots[activeSlot].offset;
 
         if (targetPos != oldTargetPos) {
-            servos[0].setPosition(targetPos);
-            servos[1].setPosition(targetPos);
-            servos[2].setPosition(targetPos);
+            while (targetPos >= 360) {
+                targetPos = targetPos - 360;
+            }
+            servos[0].setPosition((targetPos + off) / 322.10526);
+            servos[1].setPosition((targetPos + off) / 322.10526);
+            servos[2].setPosition((targetPos + off) / 322.10526);
             oldTargetPos = targetPos;
         }
     }
