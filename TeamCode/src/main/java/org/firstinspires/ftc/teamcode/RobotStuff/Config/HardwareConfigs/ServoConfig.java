@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.RobotStuff.Config.HardwareConfigs;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import dev.nextftc.hardware.impl.ServoEx;
+
 public class ServoConfig {
 
     public String name;

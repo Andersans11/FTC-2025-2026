@@ -11,6 +11,12 @@ import dev.nextftc.core.components.BindingsComponent;
 import dev.nextftc.ftc.GamepadEx;
 import dev.nextftc.ftc.NextFTCOpMode;
 
+import com.bylazar.gamepad.GamepadManager;
+import com.bylazar.gamepad.PanelsGamepad;
+import com.bylazar.telemetry.PanelsTelemetry;
+import com.bylazar.telemetry.TelemetryManager;
+import com.qualcomm.robotcore.hardware.Gamepad;
+
 public class RoyallyFuckedUpMode extends NextFTCOpMode {
 
     private final Set<BetterSubsystemComponent> subsystems = new HashSet<>();
@@ -23,6 +29,9 @@ public class RoyallyFuckedUpMode extends NextFTCOpMode {
 
     protected GamepadEx P1 = new GamepadEx(() -> this.gamepad1);
     protected GamepadEx P2 = new GamepadEx(() -> this.gamepad2);
+    protected GamepadManager GM1 = PanelsGamepad.INSTANCE.getFirstManager();
+    protected GamepadManager GM2 = PanelsGamepad.INSTANCE.getSecondManager();
+    protected TelemetryManager TM = PanelsTelemetry.INSTANCE.getTelemetry();
 
     /**
      * just a class with basic stuff we use in every opmode
@@ -45,10 +54,14 @@ public class RoyallyFuckedUpMode extends NextFTCOpMode {
 
     @Override
     public void onUpdate() {
+        Gamepad gp1 = GM1.asCombinedFTCGamepad(gamepad1);
+        Gamepad gp2 = GM2.asCombinedFTCGamepad(gamepad2);
+
         deltaTime = RobotConfig.getDelta();
 
         telemetry.addData("Deltatime", deltaTime / 1000000);
-        telemetry.update();
+
+        TM.update(telemetry);
     }
 
 

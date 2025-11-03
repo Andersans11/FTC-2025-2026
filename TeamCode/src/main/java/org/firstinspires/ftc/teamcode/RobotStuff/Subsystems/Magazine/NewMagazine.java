@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.NewTurret;
 
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.utility.InstantCommand;
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.HardwareConfigs.ServoExFullRange;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.HardwareConfigs.ServoExFullRangeJava;
 
 @Configurable
 public class NewMagazine implements IAmBetterSubsystem {
@@ -18,7 +18,7 @@ public class NewMagazine implements IAmBetterSubsystem {
     public static final NewMagazine INSTANCE = new NewMagazine();
     MagSlot[] slots;
     public int activeSlot; // slot that receives the next ball
-    public ServoExFullRange[] servos;
+    public ServoExFullRangeJava[] servos;
     ColorSensor color;
     public double targetPos = 0;
     public double oldTargetPos = 0;
@@ -49,7 +49,7 @@ public class NewMagazine implements IAmBetterSubsystem {
         };
         this.activeSlot = 0;
 
-        servos = new ServoExFullRange[]{
+        servos = new ServoExFullRangeJava[]{
                 RobotConfig.CarouselCR1.servo,
                 RobotConfig.CarouselCR2.servo,
                 RobotConfig.CarouselCR3.servo

@@ -2,10 +2,7 @@ package org.firstinspires.ftc.teamcode.RobotStuff.Config.HardwareConfigs;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.ServoImpl;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
-
-import dev.nextftc.hardware.impl.ServoEx;
 
 public class FullServoConfig {
 
