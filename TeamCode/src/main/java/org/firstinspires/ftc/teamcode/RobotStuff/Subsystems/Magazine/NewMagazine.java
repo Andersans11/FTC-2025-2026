@@ -36,7 +36,7 @@ public class NewMagazine implements IAmBetterSubsystem {
     public static double off0 = 0;
     public static double off1 = 120;
     public static double off2 = 240;
-    public static double off = 105;
+    public static double off = 97.5;
     public int i = 0;
     public int mode;
 
