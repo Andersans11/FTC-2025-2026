@@ -31,8 +31,6 @@ public class FullTest extends RoyallyFuckedUpMode {
         super.onInit();
         NewTurret.INSTANCE.initPoseUpdater(this);
 
-        Perseus.INSTANCE.stopIntake().schedule();
-
         P1.rightTrigger().atLeast(0.1).whenBecomesTrue(Perseus.INSTANCE.intake());
         P1.rightTrigger().atLeast(0.1).whenBecomesFalse(Perseus.INSTANCE.stopIntake());
 
@@ -52,7 +50,6 @@ public class FullTest extends RoyallyFuckedUpMode {
     @Override
     public void onStartButtonPressed() {
         super.onStartButtonPressed();
-        Intake.INSTANCE.idle();
     }
 
     @Override

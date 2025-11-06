@@ -10,6 +10,8 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.IAmBetterSubsystem;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.NewTurret;
 
 import dev.nextftc.core.commands.Command;
+import dev.nextftc.core.commands.delays.Delay;
+import dev.nextftc.core.commands.groups.SequentialGroup;
 import dev.nextftc.core.commands.utility.InstantCommand;
 
 @Configurable
@@ -136,12 +138,15 @@ public class NewMagazine implements IAmBetterSubsystem {
     }
 
     public Command setMode(int mode) {
-        return new InstantCommand(() -> {
-            if (mode == 0) desiredColor = Utils.ArtifactTypes.NONE;
-            else desiredColor = motif[0];
-            shotsFired = 0;
-            this.mode = mode;
-        });
+        return new SequentialGroup(
+            new Delay(0.25),
+            new InstantCommand(() -> {
+                if (mode == 0) desiredColor = Utils.ArtifactTypes.NONE;
+                else desiredColor = motif[0];
+                shotsFired = 0;
+                this.mode = mode;
+                })
+        );
     }
 
     public Command incShotsFired() {

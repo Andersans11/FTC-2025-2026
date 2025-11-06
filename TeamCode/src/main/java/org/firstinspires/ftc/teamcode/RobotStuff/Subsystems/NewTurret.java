@@ -59,7 +59,7 @@ public class NewTurret implements IAmBetterSubsystem {
     public Follower poseUpdater;
 
     // ------------------------- CONFIG ------------------------------- //
-    public static double kP = 0.01;
+    public static double kP = 0.005;
     public static double kI = 0.0;
     public static double kD = 0.0;
     public static double a = 0.04;
