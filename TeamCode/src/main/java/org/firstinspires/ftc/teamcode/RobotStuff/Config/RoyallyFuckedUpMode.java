@@ -6,6 +6,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemCompo
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import dev.nextftc.core.components.BindingsComponent;
 import dev.nextftc.ftc.GamepadEx;
@@ -59,7 +60,7 @@ public class RoyallyFuckedUpMode extends NextFTCOpMode {
 
         deltaTime = RobotConfig.getDelta();
 
-        telemetry.addData("Deltatime", deltaTime / 1000000);
+        telemetry.addData("deltatime (ms)", TimeUnit.MILLISECONDS.convert(deltaTime, TimeUnit.NANOSECONDS));
 
         TM.update(telemetry);
     }
