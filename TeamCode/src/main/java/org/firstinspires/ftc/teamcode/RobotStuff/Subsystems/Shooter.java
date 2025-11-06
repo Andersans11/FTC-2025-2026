@@ -56,7 +56,7 @@ public class Shooter implements IAmBetterSubsystem {
         return new SetPower(shooters, 0);
     }
     public Command idle() {
-        return new SetPower(shooters, 0.6);
+        return new SetPower(shooters, -0.25);
     }
     public Command kick() {
         return new SetPosition(kicker, 0.2);

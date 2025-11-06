@@ -25,7 +25,7 @@ public class NewMagazine implements IAmBetterSubsystem {
     public Utils.ArtifactTypes[] motif = new Utils.ArtifactTypes[] {
             Utils.ArtifactTypes.PURPLE,
             Utils.ArtifactTypes.PURPLE,
-            Utils.ArtifactTypes.PURPLE
+            Utils.ArtifactTypes.GREEN
     };
     int shotsFired;
     public Utils.ArtifactTypes desiredColor;
@@ -36,7 +36,7 @@ public class NewMagazine implements IAmBetterSubsystem {
     public static double off0 = 0;
     public static double off1 = 120;
     public static double off2 = 240;
-    public static double off = 105;
+    public static double off = 104;
     public int i = 0;
     public int mode;
 
@@ -57,7 +57,7 @@ public class NewMagazine implements IAmBetterSubsystem {
 
         this.color = RobotConfig.IntakeCS;
 
-        setMode(0);
+        setMode(0).schedule();
     }
 
     @Override
@@ -77,6 +77,7 @@ public class NewMagazine implements IAmBetterSubsystem {
             servos[2].setPosition((targetPos + off) / 355);
             oldTargetPos = targetPos;
         }
+        if (slots[activeSlot].content != desiredColor) changeActiveSlot().schedule();
     }
 
     // -------------------- COMMANDS / METHODS ------------------------ //
@@ -103,11 +104,11 @@ public class NewMagazine implements IAmBetterSubsystem {
                     activeSlot = 2;
                     foundOne = true;
                 }
+                this.i++;
             }
             if (!foundOne) {
-                if (mode == 0) setMode(1);
-                else setMode(0);
-                this.i++;
+                if (mode == 0) setMode(1).schedule();
+                else setMode(0).schedule();
             }
         });
     }
@@ -116,7 +117,6 @@ public class NewMagazine implements IAmBetterSubsystem {
     public Command setActiveSlotContent(Utils.ArtifactTypes content) {
         return new InstantCommand(() -> {
             slots[activeSlot].content = content;
-            changeActiveSlot().schedule();
         });
     }
 

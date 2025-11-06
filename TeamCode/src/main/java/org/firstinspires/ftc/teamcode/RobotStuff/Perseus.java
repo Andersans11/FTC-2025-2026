@@ -64,7 +64,9 @@ public class Perseus extends BetterSubsystemGroup {
                 NewMagazine.INSTANCE.setDesiredColor(color),
                 Shooter.INSTANCE.spinUp(),
                 new Delay(0.5),
-                Shooter.INSTANCE.shoot()
+                Shooter.INSTANCE.shoot(),
+                NewMagazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.NONE),
+                Shooter.INSTANCE.idle()
         );
     }
 

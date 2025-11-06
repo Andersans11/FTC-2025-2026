@@ -12,6 +12,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.NewMagazine;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
@@ -202,5 +204,25 @@ public class NewTurret implements IAmBetterSubsystem {
         poseUpdater.update();
         oldPose = pose;
         pose = poseUpdater.getPose();
+
+        if (camera.blocks(3).length != 0) {
+            NewMagazine.INSTANCE.motif = new Utils.ArtifactTypes[]{
+                    Utils.ArtifactTypes.GREEN,
+                    Utils.ArtifactTypes.PURPLE,
+                    Utils.ArtifactTypes.PURPLE
+            };
+        } else if (camera.blocks(4).length != 0) {
+            NewMagazine.INSTANCE.motif = new Utils.ArtifactTypes[]{
+                    Utils.ArtifactTypes.PURPLE,
+                    Utils.ArtifactTypes.GREEN,
+                    Utils.ArtifactTypes.PURPLE
+            };
+        } else if (camera.blocks(5).length != 0) {
+            NewMagazine.INSTANCE.motif = new Utils.ArtifactTypes[]{
+                    Utils.ArtifactTypes.PURPLE,
+                    Utils.ArtifactTypes.PURPLE,
+                    Utils.ArtifactTypes.GREEN
+            };
+        }
     }
 }
