@@ -129,8 +129,6 @@ public class NewTurret implements IAmBetterSubsystem {
         this.pose = pose;
     }
 
-
-
     public double waugh() { // yes, this is how we get the tag x position
         try {
             if (isRedAlliance) {
@@ -199,6 +197,7 @@ public class NewTurret implements IAmBetterSubsystem {
                     }
                 }
                 controller.setGoal(new KineticState(degreesToTicks(Math.max(-90, Math.min(90, targetAngle)))));
+                break;
         }
         rotationMotor.setPower(controller.calculate(rotationMotor.getState()));
         poseUpdater.update();

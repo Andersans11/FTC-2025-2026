@@ -16,6 +16,7 @@ public class Intake implements IAmBetterSubsystem {
 
     // ---------------------------- CONFIG -------------------------- //
     public static double intakeSpeed = 1;
+    public static double reverseSpeed = -0.75;
     public static double idleSpeed = 0.7;
 
 
@@ -39,5 +40,8 @@ public class Intake implements IAmBetterSubsystem {
     }
     public Command idle() {
         return new SetPower(intake, idleSpeed);
+    }
+    public Command reverse() {
+        return new SetPower(intake, reverseSpeed);
     }
 }

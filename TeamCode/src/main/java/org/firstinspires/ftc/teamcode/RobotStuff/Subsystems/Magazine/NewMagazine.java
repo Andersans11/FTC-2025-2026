@@ -148,15 +148,6 @@ public class NewMagazine implements IAmBetterSubsystem {
                 })
         );
     }
-
-    public Command incShotsFired() {
-        return new InstantCommand(() -> {
-            shotsFired++;
-            if (shotsFired == 3) shotsFired = 0;
-            setActiveSlotContent(Utils.ArtifactTypes.NONE).schedule();
-        });
-    }
-
     public Utils.ArtifactTypes getSlotColor(int slot) {
         return slots[slot].content;
     }
