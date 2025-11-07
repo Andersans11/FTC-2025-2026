@@ -32,11 +32,7 @@ public class TestMagazine extends RoyallyFuckedUpMode {
 
         P1.triangle().whenBecomesTrue(NewMagazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.PURPLE));
         P1.circle().whenBecomesTrue(NewMagazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.GREEN));
-        P1.cross().whenBecomesTrue(NewMagazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.NONE));
-        P1.square().whenBecomesTrue(new SequentialGroup(
-                NewMagazine.INSTANCE.incShotsFired(),
-                NewMagazine.INSTANCE.setDesiredColor()
-        ));
+        P1.cross().whenBecomesTrue(NewMagazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.NONE)); 
 
         P2.circle().whenBecomesTrue(() -> i++);
 

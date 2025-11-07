@@ -77,6 +77,10 @@ public class Perseus extends BetterSubsystemGroup {
         );
     }
 
+    public Command outtake() {
+        return Intake.INSTANCE.reverse();
+    }
+
     public Command stopIntake() {
         return Intake.INSTANCE.idle();
     }
@@ -87,19 +91,9 @@ public class Perseus extends BetterSubsystemGroup {
     }
 
     public Command shootMotif() {
-        Command modeSwitch = new NullCommand();
-
-        if (NewMagazine.INSTANCE.mode == 0) {
-            modeSwitch = new SequentialGroup(
-                    NewMagazine.INSTANCE.setMode(1),
-                    NewMagazine.INSTANCE.setDesiredColor(),
-                    new Delay(0.5)
-            );
-        }
 
         return new SequentialGroup(
                 Shooter.INSTANCE.spinUp(),
-                modeSwitch,
                 shootSingle(NewMagazine.INSTANCE.motif[0]),
                 new Delay(0.3),
                 shootSingle(NewMagazine.INSTANCE.motif[1]),
@@ -109,6 +103,13 @@ public class Perseus extends BetterSubsystemGroup {
         );
     }
 
+    public Command start() {
+        return new SequentialGroup(
+                NewMagazine.INSTANCE.setMode(1),
+                new Delay(0.25),
+                Intake.INSTANCE.idle()
+        );
+    }
     // ---------------------- METHODS ------------------------------ //
 
 

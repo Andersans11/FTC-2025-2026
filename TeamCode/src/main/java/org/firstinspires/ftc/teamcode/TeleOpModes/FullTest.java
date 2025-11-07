@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.TeleOpModes;
 
+import com.qualcomm.hardware.ams.AMSColorSensor;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
@@ -34,9 +35,17 @@ public class FullTest extends RoyallyFuckedUpMode {
         P1.rightTrigger().atLeast(0.1).whenBecomesTrue(Perseus.INSTANCE.intake());
         P1.rightTrigger().atLeast(0.1).whenBecomesFalse(Perseus.INSTANCE.stopIntake());
 
-        P1.triangle().whenBecomesTrue(NewMagazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.PURPLE));
-        P1.circle().whenBecomesTrue(NewMagazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.GREEN));
+        P1.dpadUp().whenBecomesTrue(() -> NewTurret.INSTANCE.isRedAlliance = false);
+        P1.dpadDown().whenBecomesTrue(() -> NewTurret.INSTANCE.isRedAlliance = true);
 
+        P1.rightBumper().whenBecomesTrue(Perseus.INSTANCE.outtake());
+        P1.rightBumper().whenBecomesFalse(Perseus.INSTANCE.stopIntake());
+
+        P2.dpadLeft().whenBecomesTrue(NewMagazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.GREEN));
+        P2.dpadRight().whenBecomesTrue(NewMagazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.PURPLE));
+
+        P1.dpadLeft().whenBecomesTrue(NewMagazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.GREEN));
+        P1.dpadRight().whenBecomesTrue(NewMagazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.PURPLE));
 
         P2.cross().whenBecomesTrue(Perseus.INSTANCE.shootSingle(Utils.ArtifactTypes.GREEN));
         P2.circle().whenBecomesTrue(Perseus.INSTANCE.shootSingle(Utils.ArtifactTypes.PURPLE));
@@ -50,14 +59,12 @@ public class FullTest extends RoyallyFuckedUpMode {
     @Override
     public void onStartButtonPressed() {
         super.onStartButtonPressed();
+        Perseus.INSTANCE.start();
     }
 
     @Override
     public void onUpdate() {
         super.onUpdate();
-
-        P2.leftStickX().update();
-        NewTurret.INSTANCE.ChangePosition(P2.leftStickX().get()).schedule();
 
         telemetry.addData("0", NewMagazine.INSTANCE.getSlotColor(0));
         telemetry.addData("1", NewMagazine.INSTANCE.getSlotColor(1));

@@ -37,7 +37,7 @@ public class NewTurret implements IAmBetterSubsystem {
 
     public MotorEx rotationMotor;
     public HuskyLens camera;
-    boolean isRedAlliance = true;
+    public boolean isRedAlliance = true;
     double pitch;
     Pose pose = new Pose(0, 0, 0);
     Pose oldPose = new Pose(0, 0, 0);
@@ -54,7 +54,7 @@ public class NewTurret implements IAmBetterSubsystem {
         MANUAL
     }
 
-    public TurretMode mode = TurretMode.TAG_TRACKING;
+    public TurretMode mode = TurretMode.TAG_TRACKING; //ty waz here ><> <--- fish
 
     public Follower poseUpdater;
 
