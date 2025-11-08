@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.Magazine;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.NewMagazine;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.NewTurret;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 
 @TeleOp(name = "Test: Full", group = Utils.PRIORITY)
 public class FullTest extends RoyallyFuckedUpMode {
@@ -54,6 +55,8 @@ public class FullTest extends RoyallyFuckedUpMode {
 
         P2.square().whenBecomesTrue(NewMagazine.INSTANCE.setMode(0));
         P2.triangle().whenBecomesTrue(NewMagazine.INSTANCE.setMode(1));
+
+        P2.dpadUp().whenBecomesTrue(Shooter.INSTANCE.resetKicker());
     }
 
     @Override
