@@ -59,7 +59,9 @@ public class NewMagazine implements IAmBetterSubsystem {
 
         this.color = RobotConfig.IntakeCS;
 
-        setMode(0).schedule();
+        servos[0].setPosition((targetPos + off) / 355);
+        servos[1].setPosition((targetPos + off) / 355);
+        servos[2].setPosition((targetPos + off) / 355);
     }
 
     @Override

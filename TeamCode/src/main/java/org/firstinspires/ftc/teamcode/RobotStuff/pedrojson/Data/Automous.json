@@ -25,7 +25,7 @@
             {
               "type": "PARAMETRIC",
               "t": 1,
-              "runnable": "Shoot Motif"
+              "runnable": "shootMotif"
             }
           ]
         }
@@ -53,7 +53,7 @@
           "id": 1762483367409.7925,
           "type": "PARAMETRIC",
           "t": 1,
-          "runnable": "Shoot Motif"
+          "runnable": "shootMotif"
         }
       ],
       "startHeading": 180,

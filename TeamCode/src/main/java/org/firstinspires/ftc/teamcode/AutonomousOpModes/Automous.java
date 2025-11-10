@@ -14,7 +14,7 @@ import java.io.File;
 
 import PedroJSON.main.PathLoader;
 
-@Autonomous(name = "Automous Ultra Pro Max Masters Edition Plus")
+@Autonomous(name = "Automous")
 public class Automous extends RoyallyFuckedUpMode {
     PathLoader loader;
     Follower follower;
@@ -36,7 +36,7 @@ public class Automous extends RoyallyFuckedUpMode {
         follower = Constants.createFollower(hardwareMap);
         callbacks = new Callbacks(this);
 
-        loader = new PathLoader("org/firstinspires/ftc/teamcode/RobotStuff/pedrojson/Data/Automous.json", follower, this, callbacks);
+        loader = new PathLoader("org/firstinspires/ftc/teamcode/RobotStuff/pedrojson/Data/Automous.json", follower, this, callbacks, 1);
 
         loader.Parse();
         NewTurret.INSTANCE.setPosition(90);

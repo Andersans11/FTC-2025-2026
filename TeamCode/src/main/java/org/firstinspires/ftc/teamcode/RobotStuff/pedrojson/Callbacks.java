@@ -16,10 +16,14 @@ public class Callbacks extends PedroJSON.main.Callback {
         Runnable codeToRun = null;
 
         switch (identifier) {
-            case "Shoot Motif":
-                codeToRun = () -> {
-                    Perseus.INSTANCE.shootMotif().schedule();
-                };
+            case "shootMotif":
+                codeToRun = () -> Perseus.INSTANCE.shootMotif().schedule();
+                break;
+            case "intake":
+                codeToRun = () -> Perseus.INSTANCE.intake().schedule();
+                break;
+            case "idle":
+                codeToRun = () -> Perseus.INSTANCE.stopIntake().schedule();
                 break;
         }
 

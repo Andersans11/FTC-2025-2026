@@ -85,11 +85,6 @@ public class Perseus extends BetterSubsystemGroup {
         return Intake.INSTANCE.idle();
     }
 
-    public Command getMotif() {
-        // TODO: Add motif passing when camera code is done
-        return new NullCommand();
-    }
-
     public Command shootMotif() {
 
         return new SequentialGroup(

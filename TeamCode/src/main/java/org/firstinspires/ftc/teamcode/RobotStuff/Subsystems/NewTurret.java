@@ -141,6 +141,10 @@ public class NewTurret implements IAmBetterSubsystem {
         }
     }
 
+    public void manualUpdate() {
+        rotationMotor.setPower(controller.calculate(rotationMotor.getState()));
+    }
+
 
     @Override
     public void periodic() {
