@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems;
 
-import com.acmerobotics.dashboard.config.Config;
 import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;

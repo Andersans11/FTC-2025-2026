@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
 
-import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -17,8 +15,6 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.HardwareConfigs.RTPAxon;
 public class Magazine implements Subsystem {
 
     public static final Magazine INSTANCE = new Magazine();
-
-    MultipleTelemetry telemetry;
 
     public enum MagazineMode {
         INTAKE,
@@ -61,8 +57,6 @@ public class Magazine implements Subsystem {
         this.activeSlot = 0;
 
         deltatime = new Timer();
-
-        telemetry = new MultipleTelemetry();
 
         this.yej = false;
     }

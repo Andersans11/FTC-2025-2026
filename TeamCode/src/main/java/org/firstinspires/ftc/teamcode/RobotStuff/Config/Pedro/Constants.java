@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro;
 
-import com.acmerobotics.dashboard.config.Config;
 import com.pedropathing.control.FilteredPIDFCoefficients;
 import com.pedropathing.control.PIDFCoefficients;
 import com.pedropathing.follower.Follower;
@@ -14,7 +13,6 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-@Config
 public class Constants {
 
 
