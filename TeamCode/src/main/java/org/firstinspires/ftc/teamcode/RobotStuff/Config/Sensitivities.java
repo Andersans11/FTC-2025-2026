@@ -6,10 +6,10 @@ import com.bylazar.configurables.annotations.Configurable;
 @Configurable
 public class Sensitivities {
 
-    public static float forwardSensitivity = 1;
-    public static float turningSensitivity = 1;
-    public static float PIDturningSensitivity = 1;
-    public static float strafingSensitivity = 1;
+    public static float forwardSensitivity = 1f;
+    public static float turningSensitivity = 0.75f;
+    public static float PIDturningSensitivity = 1f;
+    public static float strafingSensitivity = 1f;
     public static float driveModifier = 1f;
     public static float turretTurnSpeed = 1f;
     public static float turretPitchSpeed = 0.1f;
