@@ -5,6 +5,7 @@ import androidx.annotation.StringDef;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.hardware.AnalogInput;
+import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -28,7 +29,7 @@ import java.lang.reflect.Field;
 
 public class RobotConfig {
 
-    public static ColorSensor IntakeCS;
+    public static ColorRangeSensor IntakeCS;
     public static DistanceSensor IntakeDS;
     public static MotorConfig FLDrive;
     public static MotorConfig BLDrive;
@@ -93,7 +94,9 @@ public class RobotConfig {
 
         Pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, "PINPOINT");
 
-        IntakeDS = hardwareMap.get(DistanceSensor.class, "Dis");
+        //IntakeDS = hardwareMap.get(DistanceSensor.class, "Dis");
+
+        IntakeCS = hardwareMap.get(ColorRangeSensor.class, "COLOR");
 
         camera = hardwareMap.get(HuskyLens.class, "HUSKYLENS");
 

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
 
 import com.bylazar.configurables.annotations.Configurable;
+import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.HardwareConfigs.ServoExFullRange;
@@ -21,7 +22,7 @@ public class NewMagazine implements IAmBetterSubsystem {
     MagSlot[] slots;
     public int activeSlot; // slot that receives the next ball
     public ServoExFullRange[] servos;
-    ColorSensor color;
+    public ColorRangeSensor color;
     public double targetPos = 0;
     public double oldTargetPos = 0;
     public Utils.ArtifactTypes[] motif = new Utils.ArtifactTypes[] {
@@ -33,12 +34,14 @@ public class NewMagazine implements IAmBetterSubsystem {
     public Utils.ArtifactTypes desiredColor;
     boolean usingSec = false;
 
+    Utils.ArtifactTypes colorQueue = Utils.ArtifactTypes.NONE;
+
     // ------------------------------ CONFIG ----------------------------- //
 
     public static double off0 = 0;
     public static double off1 = 120;
     public static double off2 = 240;
-    public static double off = 104;
+    public static double off = 110;
     public int i = 0;
     public int mode;
 
@@ -82,6 +85,8 @@ public class NewMagazine implements IAmBetterSubsystem {
             oldTargetPos = targetPos;
         }
         if (slots[activeSlot].content != desiredColor) changeActiveSlot().schedule();
+
+        getColor();
     }
 
     // -------------------- COMMANDS / METHODS ------------------------ //
@@ -122,6 +127,22 @@ public class NewMagazine implements IAmBetterSubsystem {
         return new InstantCommand(() -> {
             slots[activeSlot].content = content;
         });
+    }
+
+    public void getColor() {
+        if (Math.abs((color.red() + color.blue())/2 - color.green()) >= 100) { // If the difference between green and purple is greater than a certain value
+            if ((color.red() + color.blue()) / 2 < color.green()) {
+                colorQueue = Utils.ArtifactTypes.GREEN;
+            } else {
+                colorQueue = Utils.ArtifactTypes.PURPLE;
+            }
+        } else if (colorQueue != Utils.ArtifactTypes.NONE) {
+            new SequentialGroup(
+                    new Delay(0.25),
+                    setActiveSlotContent(colorQueue)
+                    ).schedule();
+            colorQueue = Utils.ArtifactTypes.NONE;
+        }
     }
 
     /**

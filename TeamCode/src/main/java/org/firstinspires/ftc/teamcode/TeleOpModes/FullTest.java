@@ -83,5 +83,9 @@ public class FullTest extends RoyallyFuckedUpMode {
         telemetry.addData("motorPower", NewTurret.INSTANCE.controller.calculate(NewTurret.INSTANCE.rotationMotor.getState()));
         telemetry.addData("goal", NewTurret.INSTANCE.controller.getGoal());
         telemetry.addData("length", NewTurret.INSTANCE.camera.blocks().length);
+
+        telemetry.addData("red", NewMagazine.INSTANCE.color.red());
+        telemetry.addData("green", NewMagazine.INSTANCE.color.green());
+        telemetry.addData("blue", NewMagazine.INSTANCE.color.blue());
     }
 }
