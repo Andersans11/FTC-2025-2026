@@ -19,9 +19,11 @@ dependencies {
     implementation 'org.firstinspires.ftc:Vision:11.0.0'
     implementation 'androidx.appcompat:appcompat:1.2.0'
 
-    implementation 'com.pedropathing:ftc:2.0.4'
-    implementation 'com.pedropathing:telemetry:1.0.0'
-    implementation 'com.bylazar:fullpanels:1.0.7'
+    implementation "com.pedropathing:ftc:${pedropathing_version}"
+    implementation "com.pedropathing:telemetry:${pedropathing_tele_version}"
+    implementation "io.github.andersans11:pedrojson-loader:${pedrojson_version}"
+
+    implementation "com.bylazar:fullpanels:${panels_version}"
 
     implementation "dev.nextftc:ftc:${nftc_ftc_version}"
     implementation "dev.nextftc:hardware:${nftc_hardware_version}"
@@ -31,7 +33,4 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
     implementation 'com.fasterxml.jackson.core:jackson-core:2.15.2'
     implementation 'com.fasterxml.jackson.core:jackson-annotations:2.15.2'
-    implementation "io.github.andersans11:pedrojson-loader:${pedrojson_version}"
 }
-// versions for stuff we might change have moved to gradle.properties
-

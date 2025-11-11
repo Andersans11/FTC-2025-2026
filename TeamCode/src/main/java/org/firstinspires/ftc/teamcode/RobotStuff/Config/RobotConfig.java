@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.RobotStuff.Config;
 
 import androidx.annotation.StringDef;
 
+import com.bylazar.telemetry.PanelsTelemetry;
+import com.bylazar.telemetry.TelemetryManager;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.hardware.AnalogInput;
@@ -73,7 +75,7 @@ public class RobotConfig {
         return opMode;
     }
 
-    public static Telemetry getTelemetry() {
+    public static TelemetryManager getTelemetry() {
         return opMode.telemetry;
     }
     public static long getDelta() {

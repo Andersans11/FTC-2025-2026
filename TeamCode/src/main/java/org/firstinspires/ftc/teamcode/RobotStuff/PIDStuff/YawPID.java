@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.PIDStuff;
 
 import com.bylazar.configurables.annotations.Configurable;
+import com.bylazar.telemetry.TelemetryManager;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -18,12 +19,12 @@ public class YawPID {
     double integral;
     double derivative;
 
-    Telemetry telemetry;
+    TelemetryManager telemetry;
 
     public final String pidName;
     public static boolean DEBUG = false;
 
-    public YawPID(Telemetry telemetry, String pidName) {
+    public YawPID(TelemetryManager telemetry, String pidName) {
         this.telemetry = telemetry;
         this.pidName = pidName;
     }
