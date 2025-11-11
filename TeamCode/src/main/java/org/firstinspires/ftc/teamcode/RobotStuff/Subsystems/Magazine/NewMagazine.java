@@ -136,7 +136,7 @@ public class NewMagazine implements IAmBetterSubsystem {
      * Sets the desired color to that of the next motif Artifact
      **/
     public Command setDesiredColor() {
-        return new InstantCommand(() -> this.desiredColor = motif[shotsFired]);
+        return new InstantCommand(() -> this.desiredColor = motif[0]);
     }
 
     public Command setMode(int mode) {

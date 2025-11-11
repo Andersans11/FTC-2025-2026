@@ -36,6 +36,12 @@ public class Perseus extends BetterSubsystemGroup {
         );
     }
 
+    public Utils.ArtifactTypes[] motif = new Utils.ArtifactTypes[] {
+            Utils.ArtifactTypes.PURPLE,
+            Utils.ArtifactTypes.PURPLE,
+            Utils.ArtifactTypes.GREEN
+    };
+
     @Override
     public void initialize() {
         super.initialize();
@@ -89,11 +95,11 @@ public class Perseus extends BetterSubsystemGroup {
 
         return new SequentialGroup(
                 Shooter.INSTANCE.spinUp(),
-                shootSingle(NewMagazine.INSTANCE.motif[0]),
-                new Delay(0.5),
-                shootSingle(NewMagazine.INSTANCE.motif[1]),
-                new Delay(0.5),
-                shootSingle(NewMagazine.INSTANCE.motif[2]),
+                shootSingle(motif[0]),
+                new Delay(0.3),
+                shootSingle(motif[1]),
+                new Delay(0.3),
+                shootSingle(motif[2]),
                 Shooter.INSTANCE.idle()
         );
     }

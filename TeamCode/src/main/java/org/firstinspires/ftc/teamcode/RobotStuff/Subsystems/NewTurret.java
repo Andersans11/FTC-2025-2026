@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
+import org.firstinspires.ftc.teamcode.RobotStuff.Perseus;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.NewMagazine;
 
 import java.lang.reflect.Array;
@@ -53,6 +54,8 @@ public class NewTurret implements IAmBetterSubsystem {
         RECOVERY, // Either position-based or sweep-based
         MANUAL
     }
+
+    double waluigiWaugh;
 
     public TurretMode mode = TurretMode.TAG_TRACKING; //ty waz here ><> <--- fish
 
@@ -148,7 +151,7 @@ public class NewTurret implements IAmBetterSubsystem {
 
     @Override
     public void periodic() {
-        double waluigiWaugh = waugh();
+        waluigiWaugh = waugh();
         
         switch (mode) {
             case TAG_TRACKING:
@@ -214,14 +217,29 @@ public class NewTurret implements IAmBetterSubsystem {
                     Utils.ArtifactTypes.PURPLE,
                     Utils.ArtifactTypes.PURPLE
             };
+            Perseus.INSTANCE.motif = new Utils.ArtifactTypes[]{
+                    Utils.ArtifactTypes.GREEN,
+                    Utils.ArtifactTypes.PURPLE,
+                    Utils.ArtifactTypes.PURPLE
+            };
         } else if (camera.blocks(4).length != 0) {
             NewMagazine.INSTANCE.motif = new Utils.ArtifactTypes[]{
                     Utils.ArtifactTypes.PURPLE,
                     Utils.ArtifactTypes.GREEN,
                     Utils.ArtifactTypes.PURPLE
             };
+            Perseus.INSTANCE.motif = new Utils.ArtifactTypes[]{
+                    Utils.ArtifactTypes.PURPLE,
+                    Utils.ArtifactTypes.GREEN,
+                    Utils.ArtifactTypes.PURPLE
+            };
         } else if (camera.blocks(5).length != 0) {
             NewMagazine.INSTANCE.motif = new Utils.ArtifactTypes[]{
+                    Utils.ArtifactTypes.PURPLE,
+                    Utils.ArtifactTypes.PURPLE,
+                    Utils.ArtifactTypes.GREEN
+            };
+            Perseus.INSTANCE.motif = new Utils.ArtifactTypes[]{
                     Utils.ArtifactTypes.PURPLE,
                     Utils.ArtifactTypes.PURPLE,
                     Utils.ArtifactTypes.GREEN
