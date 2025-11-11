@@ -90,9 +90,9 @@ public class Perseus extends BetterSubsystemGroup {
         return new SequentialGroup(
                 Shooter.INSTANCE.spinUp(),
                 shootSingle(NewMagazine.INSTANCE.motif[0]),
-                new Delay(0.3),
+                new Delay(0.5),
                 shootSingle(NewMagazine.INSTANCE.motif[1]),
-                new Delay(0.3),
+                new Delay(0.5),
                 shootSingle(NewMagazine.INSTANCE.motif[2]),
                 Shooter.INSTANCE.idle()
         );
