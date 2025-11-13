@@ -4,6 +4,7 @@ import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.HardwareConfigs.ServoExFullRange;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
@@ -41,7 +42,8 @@ public class NewMagazine implements IAmBetterSubsystem {
     public static double off0 = 0;
     public static double off1 = 120;
     public static double off2 = 240;
-    public static double off = 110;
+    public static double off = 117;
+    public static double dist = 50;
     public int i = 0;
     public int mode;
 
@@ -130,7 +132,7 @@ public class NewMagazine implements IAmBetterSubsystem {
     }
 
     public void getColor() {
-        if (Math.abs((color.red() + color.blue())/2 - color.green()) >= 100) { // If the difference between green and purple is greater than a certain value
+        if (color.getDistance(DistanceUnit.MM) <= dist) { // Range now
             if ((color.red() + color.blue()) / 2 < color.green()) {
                 colorQueue = Utils.ArtifactTypes.GREEN;
             } else {
