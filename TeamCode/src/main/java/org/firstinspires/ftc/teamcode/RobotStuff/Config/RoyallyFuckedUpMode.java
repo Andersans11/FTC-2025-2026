@@ -12,9 +12,6 @@ import dev.nextftc.core.components.BindingsComponent;
 import dev.nextftc.ftc.GamepadEx;
 import dev.nextftc.ftc.NextFTCOpMode;
 
-import com.bylazar.telemetry.PanelsTelemetry;
-import com.bylazar.telemetry.TelemetryManager;
-
 public class RoyallyFuckedUpMode extends NextFTCOpMode {
 
     private final Set<BetterSubsystemComponent> subsystems = new HashSet<>();
@@ -27,7 +24,6 @@ public class RoyallyFuckedUpMode extends NextFTCOpMode {
 
     protected GamepadEx P1 = new GamepadEx(() -> this.gamepad1);
     protected GamepadEx P2 = new GamepadEx(() -> this.gamepad2);
-    protected TelemetryManager telemetry = PanelsTelemetry.INSTANCE.getTelemetry();
     boolean isUpdating = true;
 
     /**
@@ -56,7 +52,7 @@ public class RoyallyFuckedUpMode extends NextFTCOpMode {
         telemetry.addData("deltatime (ms)", TimeUnit.MILLISECONDS.convert(deltaTime, TimeUnit.NANOSECONDS));
 
         if (isUpdating) {
-            telemetry.update(super.telemetry);
+            telemetry.update();
             isUpdating = false;
         } else isUpdating = true;
     }
