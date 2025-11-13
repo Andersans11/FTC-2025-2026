@@ -140,7 +140,7 @@ public class NewMagazine implements IAmBetterSubsystem {
             }
         } else if (colorQueue != Utils.ArtifactTypes.NONE) {
             new SequentialGroup(
-                    new Delay(0.25),
+                    new Delay(0.15),
                     setActiveSlotContent(colorQueue)
                     ).schedule();
             colorQueue = Utils.ArtifactTypes.NONE;
