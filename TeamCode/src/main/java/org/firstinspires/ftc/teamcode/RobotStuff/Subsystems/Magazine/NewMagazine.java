@@ -32,7 +32,7 @@ public class NewMagazine implements IAmBetterSubsystem {
             Utils.ArtifactTypes.GREEN
     };
     int shotsFired;
-    public Utils.ArtifactTypes desiredColor;
+    public Utils.ArtifactTypes desiredColor = Utils.ArtifactTypes.PURPLE;
     boolean usingSec = false;
 
     Utils.ArtifactTypes colorQueue = Utils.ArtifactTypes.NONE;
@@ -140,7 +140,7 @@ public class NewMagazine implements IAmBetterSubsystem {
             }
         } else if (colorQueue != Utils.ArtifactTypes.NONE) {
             new SequentialGroup(
-                    new Delay(0.15),
+                    new Delay(0.25),
                     setActiveSlotContent(colorQueue)
                     ).schedule();
             colorQueue = Utils.ArtifactTypes.NONE;

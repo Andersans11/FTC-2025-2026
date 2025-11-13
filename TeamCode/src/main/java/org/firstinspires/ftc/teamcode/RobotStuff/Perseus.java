@@ -96,9 +96,9 @@ public class Perseus extends BetterSubsystemGroup {
         return new SequentialGroup(
                 Shooter.INSTANCE.spinUp(),
                 shootSingle(motif[0]),
-                new Delay(0.2),
+                new Delay(0.3),
                 shootSingle(motif[1]),
-                new Delay(0.2),
+                new Delay(0.3),
                 shootSingle(motif[2]),
                 Shooter.INSTANCE.idle()
         );

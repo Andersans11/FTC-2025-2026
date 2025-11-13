@@ -28,6 +28,7 @@ public class RoyallyFuckedUpMode extends NextFTCOpMode {
     protected GamepadEx P1 = new GamepadEx(() -> this.gamepad1);
     protected GamepadEx P2 = new GamepadEx(() -> this.gamepad2);
     protected TelemetryManager telemetry = PanelsTelemetry.INSTANCE.getTelemetry();
+    boolean isUpdating = true;
 
     /**
      * just a class with basic stuff we use in every opmode
@@ -54,6 +55,9 @@ public class RoyallyFuckedUpMode extends NextFTCOpMode {
 
         telemetry.addData("deltatime (ms)", TimeUnit.MILLISECONDS.convert(deltaTime, TimeUnit.NANOSECONDS));
 
-        telemetry.update(super.telemetry);
+        if (isUpdating) {
+            telemetry.update(super.telemetry);
+            isUpdating = false;
+        } else isUpdating = true;
     }
 }

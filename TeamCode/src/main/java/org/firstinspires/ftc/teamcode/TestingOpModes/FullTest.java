@@ -1,18 +1,13 @@
-package org.firstinspires.ftc.teamcode.TeleOpModes;
+package org.firstinspires.ftc.teamcode.TestingOpModes;
 
-import com.qualcomm.hardware.ams.AMSColorSensor;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.Sensitivities;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Perseus;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.HoldHeadingPID;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.RobotCentricDrive;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Intake;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.Magazine;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.NewMagazine;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.NewTurret;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
@@ -74,18 +69,24 @@ public class FullTest extends RoyallyFuckedUpMode {
         telemetry.addData("2", NewMagazine.INSTANCE.getSlotColor(2));
         telemetry.addData("Active", NewMagazine.INSTANCE.activeSlot);
         telemetry.addData("Mode", NewMagazine.INSTANCE.mode);
-        telemetry.addData("targetPos", NewMagazine.INSTANCE.targetPos);
-        telemetry.addData("oldTargetPos", NewMagazine.INSTANCE.oldTargetPos);
-        telemetry.addData("i", NewMagazine.INSTANCE.i);
+        //telemetry.addData("targetPos", NewMagazine.INSTANCE.targetPos);
+        //telemetry.addData("oldTargetPos", NewMagazine.INSTANCE.oldTargetPos);
+        //telemetry.addData("i", NewMagazine.INSTANCE.i);
         telemetry.addData("desiredColor", NewMagazine.INSTANCE.desiredColor);
+        telemetry.addData("range", NewMagazine.INSTANCE.color.getDistance(DistanceUnit.MM));
 
-        telemetry.addData("targetAngle", NewTurret.INSTANCE.targetAngle);
-        telemetry.addData("motorPower", NewTurret.INSTANCE.controller.calculate(NewTurret.INSTANCE.rotationMotor.getState()));
-        telemetry.addData("goal", NewTurret.INSTANCE.controller.getGoal());
-        telemetry.addData("length", NewTurret.INSTANCE.camera.blocks().length);
+        //telemetry.addData("targetAngle", NewTurret.INSTANCE.targetAngle);
+        //telemetry.addData("motorPower", NewTurret.INSTANCE.controller.calculate(NewTurret.INSTANCE.rotationMotor.getState()));
+        //telemetry.addData("goal", NewTurret.INSTANCE.controller.getGoal());
+        //telemetry.addData("length", NewTurret.INSTANCE.camera.blocks().length);
 
         telemetry.addData("red", NewMagazine.INSTANCE.color.red());
         telemetry.addData("green", NewMagazine.INSTANCE.color.green());
         telemetry.addData("blue", NewMagazine.INSTANCE.color.blue());
+
+        telemetry.addData("motif1", Perseus.INSTANCE.motif[0]);
+        telemetry.addData("motif2", Perseus.INSTANCE.motif[1]);
+        telemetry.addData("motif3", Perseus.INSTANCE.motif[2]);
+
     }
 }
