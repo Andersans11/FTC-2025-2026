@@ -10,20 +10,20 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemCompo
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.NewMagazine;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.NewTurret;
 
+import dev.nextftc.hardware.impl.MotorEx;
+
 @TeleOp(name = "Reset Encoders", group = Utils.UTILITY)
 public class Reset_Encoders extends RoyallyFuckedUpMode {
 
-    public Reset_Encoders() {
-        addSubsystemComponents(
-                new BetterSubsystemComponent(NewMagazine.INSTANCE),
-                new BetterSubsystemComponent(NewTurret.INSTANCE)
-        );
-    }
+    public Reset_Encoders() {}
+
+    MotorEx rotationMotor;
 
     @Override
     public void onInit() {
         super.onInit();
-        NewTurret.INSTANCE.rotationMotor.zero();
+        rotationMotor = RobotConfig.TurretRotation.motor;
+        rotationMotor.zero();
         stop();
     }
 

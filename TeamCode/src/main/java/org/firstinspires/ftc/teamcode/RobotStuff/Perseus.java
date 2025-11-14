@@ -69,7 +69,7 @@ public class Perseus extends BetterSubsystemGroup {
         return new SequentialGroup(
                 NewMagazine.INSTANCE.setDesiredColor(color),
                 Shooter.INSTANCE.spinUp(),
-                new Delay(0.5),
+                new Delay(0.25),
                 Shooter.INSTANCE.shoot(),
                 NewMagazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.NONE),
                 Shooter.INSTANCE.idle()

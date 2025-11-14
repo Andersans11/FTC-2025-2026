@@ -76,7 +76,7 @@ public class RobotConfig {
         return opMode;
     }
 
-    public static TelemetryManager getTelemetry() {
+    public static Telemetry getTelemetry() {
         return opMode.telemetry;
     }
     public static long getDelta() {

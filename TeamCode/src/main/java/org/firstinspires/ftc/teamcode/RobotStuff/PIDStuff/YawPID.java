@@ -19,12 +19,12 @@ public class YawPID {
     double integral;
     double derivative;
 
-    TelemetryManager telemetry;
+    Telemetry telemetry;
 
     public final String pidName;
     public static boolean DEBUG = false;
 
-    public YawPID(TelemetryManager telemetry, String pidName) {
+    public YawPID(Telemetry telemetry, String pidName) {
         this.telemetry = telemetry;
         this.pidName = pidName;
     }
