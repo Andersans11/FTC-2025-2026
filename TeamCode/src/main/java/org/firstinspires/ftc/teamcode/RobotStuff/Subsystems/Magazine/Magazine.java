@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
 
 import com.bylazar.configurables.annotations.Configurable;
+import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -41,10 +42,13 @@ public class Magazine implements IAmBetterSubsystem {
     public static double off0 = 0;
     public static double off1 = 120;
     public static double off2 = 240;
-    public static double off = 117;
-    public static double dist = 50;
-    public int i = 0;
+    public static double off = 116;
+    public static double dist = 110;
+    public static double dist2 = 400;
+    public int it = 0;
     public int mode;
+
+    public Timer timer;
 
     @Override
     public void initSystem() {
@@ -66,6 +70,8 @@ public class Magazine implements IAmBetterSubsystem {
         servos[0].setPosition((targetPos + off) / 355);
         servos[1].setPosition((targetPos + off) / 355);
         servos[2].setPosition((targetPos + off) / 355);
+
+        timer = new Timer();
     }
 
     @Override
@@ -114,7 +120,7 @@ public class Magazine implements IAmBetterSubsystem {
                     activeSlot = 2;
                     foundOne = true;
                 }
-                this.i++;
+                this.it++;
             }
             if (!foundOne) {
                 if (mode == 0) setMode(1).schedule();
@@ -130,6 +136,12 @@ public class Magazine implements IAmBetterSubsystem {
         });
     }
 
+    public Command setSlotContent(int slot, Utils.ArtifactTypes content) {
+        return new InstantCommand(() -> {
+            slots[slot].content = content;
+        });
+    }
+
     public void getColor() {
         if (color.getDistance(DistanceUnit.MM) <= dist) { // Range now
             if ((color.red() + color.blue()) / 2 < color.green()) {
@@ -137,11 +149,11 @@ public class Magazine implements IAmBetterSubsystem {
             } else {
                 colorQueue = Utils.ArtifactTypes.PURPLE;
             }
-        } else if (colorQueue != Utils.ArtifactTypes.NONE) {
-            new SequentialGroup(
-                    new Delay(0.25),
-                    setActiveSlotContent(colorQueue)
-                    ).schedule();
+            timer.resetTimer();
+        } else if (color.getDistance(DistanceUnit.MM) <= dist2) {
+            timer.resetTimer();
+        } else if (colorQueue != Utils.ArtifactTypes.NONE && timer.getElapsedTimeSeconds() >= 0.25) {
+            setActiveSlotContent(colorQueue).schedule();
             colorQueue = Utils.ArtifactTypes.NONE;
         }
     }
@@ -157,8 +169,8 @@ public class Magazine implements IAmBetterSubsystem {
     /**
      * Sets the desired color to that of the next motif Artifact
      **/
-    public Command setDesiredColor() {
-        return new InstantCommand(() -> this.desiredColor = motif[0]);
+    public Command setDesiredColor(int i) {
+        return new InstantCommand(() -> this.desiredColor = motif[i]);
     }
 
     public Command setMode(int mode) {

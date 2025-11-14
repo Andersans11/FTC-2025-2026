@@ -24,7 +24,7 @@ public class Shooter implements IAmBetterSubsystem {
     ServoEx kicker;
 
     // ------------------------ CONFIG ------------------------ //
-    public static double shootingSpeed = 0.25;
+    public static double shootingSpeed = 0.375;
 
     // --------------------- OPMODE -------------------------- //
     @Override
@@ -59,7 +59,7 @@ public class Shooter implements IAmBetterSubsystem {
         return new SetPower(shooters, -0.25);
     }
     public Command kick() {
-        return new SetPosition(kicker, 0.2);
+        return new SetPosition(kicker, 0);
     }
     public Command resetKicker() {
         return new SetPosition(kicker, 0.95);

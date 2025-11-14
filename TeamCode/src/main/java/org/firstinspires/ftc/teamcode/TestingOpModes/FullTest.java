@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.TestingOpModes;
 
+import com.qualcomm.hardware.lynx.commands.standard.LynxSetNewModuleAddressCommand;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -85,13 +86,9 @@ public class FullTest extends RoyallyFuckedUpMode {
         //telemetry.addData("goal", NewTurret.INSTANCE.controller.getGoal());
         //telemetry.addData("length", NewTurret.INSTANCE.camera.blocks().length);
 
-        telemetry.addData("red", Magazine.INSTANCE.color.red());
-        telemetry.addData("green", Magazine.INSTANCE.color.green());
-        telemetry.addData("blue", Magazine.INSTANCE.color.blue());
-
-        telemetry.addData("motif1", Perseus.INSTANCE.motif[0]);
-        telemetry.addData("motif2", Perseus.INSTANCE.motif[1]);
-        telemetry.addData("motif3", Perseus.INSTANCE.motif[2]);
+        telemetry.addData("motif1", Magazine.INSTANCE.motif[0]);
+        telemetry.addData("motif2", Magazine.INSTANCE.motif[1]);
+        telemetry.addData("motif3", Magazine.INSTANCE.motif[2]);
 
     }
 }

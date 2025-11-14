@@ -44,7 +44,7 @@ public class TestMagazine extends RoyallyFuckedUpMode {
         telemetry.addData("Mode", Magazine.INSTANCE.mode);
         telemetry.addData("targetPos", Magazine.INSTANCE.targetPos);
         telemetry.addData("oldTargetPos", Magazine.INSTANCE.oldTargetPos);
-        telemetry.addData("i", Magazine.INSTANCE.i);
+        telemetry.addData("i", Magazine.INSTANCE.it);
         telemetry.addData("desiredColor", Magazine.INSTANCE.desiredColor);
 
         super.onUpdate();

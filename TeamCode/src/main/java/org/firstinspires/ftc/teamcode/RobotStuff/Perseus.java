@@ -35,10 +35,20 @@ public class Perseus extends BetterSubsystemGroup {
         );
     }
 
-    public Utils.ArtifactTypes[] motif = new Utils.ArtifactTypes[] {
+    public Utils.ArtifactTypes[] PPG = new Utils.ArtifactTypes[] {
             Utils.ArtifactTypes.PURPLE,
             Utils.ArtifactTypes.PURPLE,
             Utils.ArtifactTypes.GREEN
+    };
+    public Utils.ArtifactTypes[] GPP = new Utils.ArtifactTypes[] {
+            Utils.ArtifactTypes.GREEN,
+            Utils.ArtifactTypes.PURPLE,
+            Utils.ArtifactTypes.PURPLE
+    };
+    public Utils.ArtifactTypes[] PGP = new Utils.ArtifactTypes[] {
+            Utils.ArtifactTypes.PURPLE,
+            Utils.ArtifactTypes.GREEN,
+            Utils.ArtifactTypes.PURPLE
     };
 
     @Override
@@ -75,6 +85,17 @@ public class Perseus extends BetterSubsystemGroup {
         );
     }
 
+    public Command shootSingleMotif(int i) {
+        return new SequentialGroup(
+                Magazine.INSTANCE.setDesiredColor(i),
+                Shooter.INSTANCE.spinUp(),
+                new Delay(0.25),
+                Shooter.INSTANCE.shoot(),
+                Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.NONE),
+                Shooter.INSTANCE.idle()
+        );
+    }
+
     public Command intake() {
         return new SequentialGroup(
                 Magazine.INSTANCE.setMode(0),
@@ -94,11 +115,11 @@ public class Perseus extends BetterSubsystemGroup {
 
         return new SequentialGroup(
                 Shooter.INSTANCE.spinUp(),
-                shootSingle(motif[0]),
+                shootSingleMotif(0),
                 new Delay(0.3),
-                shootSingle(motif[1]),
+                shootSingleMotif(1),
                 new Delay(0.3),
-                shootSingle(motif[2]),
+                shootSingleMotif(2),
                 Shooter.INSTANCE.idle()
         );
     }

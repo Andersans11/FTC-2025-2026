@@ -52,8 +52,8 @@ public class Comp_OpMode extends RoyallyFuckedUpMode {
 
         P2.dpadUp().whenBecomesTrue(Shooter.INSTANCE.resetKicker());
 
-        P2.rightBumper().whenTrue(Turret.INSTANCE.ChangePosition(0.5));
-        P2.leftBumper().whenTrue(Turret.INSTANCE.ChangePosition(-0.5));
+        P2.rightBumper().whenTrue(Turret.INSTANCE.ChangePosition(-0.5));
+        P2.leftBumper().whenTrue(Turret.INSTANCE.ChangePosition(0.5));
 
         P2.dpadDown().whenBecomesTrue(Turret.INSTANCE.AutoControl());
     }
@@ -73,5 +73,6 @@ public class Comp_OpMode extends RoyallyFuckedUpMode {
         telemetry.addData("2", Magazine.INSTANCE.getSlotColor(2));
         telemetry.addData("Active", Magazine.INSTANCE.activeSlot);
         telemetry.addData("Mode", Magazine.INSTANCE.mode);
+        telemetry.addData("desiredColor", Magazine.INSTANCE.desiredColor);
     }
 }

@@ -215,27 +215,18 @@ public class Turret implements IAmBetterSubsystem {
                     Utils.ArtifactTypes.PURPLE,
                     Utils.ArtifactTypes.PURPLE
             };
-            Perseus.INSTANCE.motif[0] = Utils.ArtifactTypes.GREEN;
-            Perseus.INSTANCE.motif[1] = Utils.ArtifactTypes.PURPLE;
-            Perseus.INSTANCE.motif[2] = Utils.ArtifactTypes.PURPLE;
         } else if (camera.blocks(4).length != 0) {
             Magazine.INSTANCE.motif = new Utils.ArtifactTypes[]{
                     Utils.ArtifactTypes.PURPLE,
                     Utils.ArtifactTypes.GREEN,
                     Utils.ArtifactTypes.PURPLE
             };
-            Perseus.INSTANCE.motif[0] = Utils.ArtifactTypes.PURPLE;
-            Perseus.INSTANCE.motif[1] = Utils.ArtifactTypes.GREEN;
-            Perseus.INSTANCE.motif[2] = Utils.ArtifactTypes.PURPLE;
         } else if (camera.blocks(5).length != 0) {
             Magazine.INSTANCE.motif = new Utils.ArtifactTypes[]{
                     Utils.ArtifactTypes.PURPLE,
                     Utils.ArtifactTypes.PURPLE,
                     Utils.ArtifactTypes.GREEN
             };
-            Perseus.INSTANCE.motif[0] = Utils.ArtifactTypes.PURPLE;
-            Perseus.INSTANCE.motif[1] = Utils.ArtifactTypes.PURPLE;
-            Perseus.INSTANCE.motif[2] = Utils.ArtifactTypes.GREEN;
         }
     }
 }
