@@ -98,6 +98,7 @@ public class Turret implements IAmBetterSubsystem {
 
     public Command setPosition(double pos) {
         return new InstantCommand(() -> {
+            mode = TurretMode.MANUAL;
             targetAngle = Math.max(-90, Math.min(90, pos));
             controller.setGoal(new KineticState(degreesToTicks(targetAngle)));
         });
@@ -105,10 +106,19 @@ public class Turret implements IAmBetterSubsystem {
 
     public Command ChangePosition(double pos) {
         return new InstantCommand(() -> {
+            mode = TurretMode.MANUAL;
             targetAngle = targetAngle + pos;
             targetAngle = Math.max(-90, Math.min(90, targetAngle));
             controller.setGoal(new KineticState(degreesToTicks(targetAngle)));
         });
+    }
+
+    public Command AutoControl() {
+        return new InstantCommand(() -> mode = TurretMode.TAG_TRACKING);
+    }
+
+    public Command Zero() {
+        return new InstantCommand(() -> rotationMotor.zero());
     }
 
     public double degreesToTicks(double degrees) {

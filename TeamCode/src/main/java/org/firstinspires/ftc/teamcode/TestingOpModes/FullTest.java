@@ -52,6 +52,11 @@ public class FullTest extends RoyallyFuckedUpMode {
         P2.triangle().whenBecomesTrue(Magazine.INSTANCE.setMode(1));
 
         P2.dpadUp().whenBecomesTrue(Shooter.INSTANCE.resetKicker());
+
+        P2.rightBumper().whenTrue(Turret.INSTANCE.ChangePosition(0.5));
+        P2.leftBumper().whenTrue(Turret.INSTANCE.ChangePosition(-0.5));
+
+        P2.dpadDown().whenBecomesTrue(Turret.INSTANCE.AutoControl());
     }
 
     @Override
