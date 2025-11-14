@@ -1,54 +1,53 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
 
 import com.bylazar.configurables.annotations.Configurable;
-import com.pedropathing.util.Timer;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import dev.nextftc.core.commands.utility.NullCommand;
-import dev.nextftc.core.subsystems.Subsystem;
-import dev.nextftc.core.commands.Command;
+import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.HardwareConfigs.ServoExFullRange;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.HardwareConfigs.RTPAxon;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.IAmBetterSubsystem;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
+
+import dev.nextftc.core.commands.Command;
+import dev.nextftc.core.commands.delays.Delay;
+import dev.nextftc.core.commands.groups.SequentialGroup;
+import dev.nextftc.core.commands.utility.InstantCommand;
 
 @Configurable
-public class Magazine implements Subsystem {
+public class Magazine implements IAmBetterSubsystem {
 
     public static final Magazine INSTANCE = new Magazine();
-
-    public enum MagazineMode {
-        INTAKE,
-        OUTTAKE
-    }
-
     MagSlot[] slots;
     public int activeSlot; // slot that receives the next ball
-    public RTPAxon[] servos;
-    ColorSensor color;
-    double targetPos = 0;
-    double oldTargetPos = 180;
-    Timer deltatime;
-    Utils.ArtifactTypes[] motif;
+    public ServoExFullRange[] servos;
+    public ColorRangeSensor color;
+    public double targetPos = 0;
+    public double oldTargetPos = 0;
+    public Utils.ArtifactTypes[] motif = new Utils.ArtifactTypes[] {
+            Utils.ArtifactTypes.PURPLE,
+            Utils.ArtifactTypes.PURPLE,
+            Utils.ArtifactTypes.GREEN
+    };
     int shotsFired;
-    public double turretPos;
-    public double oldTurretPos;
-    boolean colorShooting = false;
-    boolean manualControl = false;
+    public Utils.ArtifactTypes desiredColor = Utils.ArtifactTypes.PURPLE;
+    boolean usingSec = false;
 
-    public static double kP = 0.008;
-    public static double kI = 0.0;
-    public static double kD = 0.0;
+    Utils.ArtifactTypes colorQueue = Utils.ArtifactTypes.NONE;
+
+    // ------------------------------ CONFIG ----------------------------- //
 
     public static double off0 = 0;
     public static double off1 = 120;
     public static double off2 = 240;
-
-    public boolean yej = false;
-    public int tre = 0;
-    public int fal = 0;
+    public static double off = 117;
+    public static double dist = 50;
+    public int i = 0;
+    public int mode;
 
     @Override
-    public void initialize() {
+    public void initSystem() {
         this.slots = new MagSlot[] {
                 new MagSlot(off0), // this slot starts in front of intake
                 new MagSlot(off1),
@@ -56,220 +55,124 @@ public class Magazine implements Subsystem {
         };
         this.activeSlot = 0;
 
-        deltatime = new Timer();
-
-        this.yej = false;
-    }
-
-    public void hardware() {
-//        this.servos = new RTPAxon[] {
-//                new RTPAxon(RobotConfig.CarouselCR1),
-//                new RTPAxon(RobotConfig.CarouselCR2),
-//                new RTPAxon(RobotConfig.CarouselCR3)
-//        };
-
-        this.servos[0].setKP(kP);
-        this.servos[0].setKI(kI);
-        this.servos[0].setKD(kD);
-
-        this.servos[1].setKP(kP);
-        this.servos[1].setKI(kI);
-        this.servos[1].setKD(kD);
-
-        this.servos[2].setKP(kP);
-        this.servos[2].setKI(kI);
-        this.servos[2].setKD(kD);
-
-        this.servos[0].setMaxPower(1);
-        this.servos[1].setMaxPower(1);
-        this.servos[2].setMaxPower(1);
+        servos = new ServoExFullRange[]{
+                RobotConfig.CarouselCR1.servo,
+                RobotConfig.CarouselCR2.servo,
+                RobotConfig.CarouselCR3.servo
+        };
 
         this.color = RobotConfig.IntakeCS;
-    }
 
-
-    public void commands() {
-
-    }
-
-    public void resetEncoders() {
-        servos[0].forceResetTotalRotation();
-        servos[1].forceResetTotalRotation();
-        servos[2].forceResetTotalRotation();
-    }
-
-
-    public void binds() {
-//        RobotConfig.ButtonControls.MAGAZINE_SLOT1.whenTrue(this::slot1);
-//        RobotConfig.ButtonControls.MAGAZINE_SLOT2.whenTrue(this::slot2);
-//        RobotConfig.ButtonControls.MAGAZINE_SLOT3.whenTrue(this::slot3);
-    }
-
-    public void setMotif(Utils.ArtifactTypes[] motif) {
-        this.motif = motif;
-    }
-
-    public void getColor() {
-        if (Math.abs((color.red() + color.blue())/2 - color.green()) >= 100) { // If the difference between green and purple is greater than a certain value
-            if ((color.red() + color.blue()) / 2 < color.green()) {
-                slots[activeSlot].setContent(Utils.ArtifactTypes.GREEN);
-            } else {
-                slots[activeSlot].setContent(Utils.ArtifactTypes.PURPLE);
-            }
-        }
-    }
-
-    public String getContent(int slot) {
-        switch (slots[slot].content) {
-            case PURPLE:
-                return "PURPLE";
-            case GREEN:
-                return "GREEN";
-        }
-        return "NONE";
-    }
-
-    public Command incShotsFired() {
-        shotsFired++;
-        if (shotsFired == 3) {
-            shotsFired = 0;
-        }
-        return new NullCommand();
-    }
-
-    public void passTurretPos(double pos) {
-        turretPos = pos;
-    }
-
-    public Command setRotation(double angleDegrees) {
-        servos[0].setTargetRotation(angleDegrees);
-        servos[1].setTargetRotation(angleDegrees);
-        servos[2].setTargetRotation(angleDegrees);
-        return new NullCommand();
-    }
-
-    public Command ColorShooting(Utils.ArtifactTypes color) {
-        colorShooting = true;
-        for (int i = 0; i == 3; i++) {
-            if (slots[i].content == color || i == 2) {
-                activeSlot = i;
-                targetPos = 180 + slots[activeSlot].offset + turretPos;
-                while (targetPos >= 360) {
-                    targetPos = targetPos - 360;
-                }
-                i = 3;
-            }
-        }
-        shotsFired = 0;
-        return new NullCommand();
-    }
-
-    public String getModeString() {
-        if (yej) {
-            return "INTAKE";
-        } else {
-            return "OUTTAKE";
-        }
-    }
-    public Command setMode(boolean mode) {
-
-        if (!mode) {
-            colorShooting = false;
-            for (int i = 0; i == 3; i++) {
-                if (slots[i].content == motif[0] || i == 2) {
-                    activeSlot = i;
-                    targetPos = 180 + slots[activeSlot].offset + turretPos;
-                    while (targetPos >= 360) {
-                        targetPos = targetPos - 360;
-                    }
-                    i = 3;
-                }
-            }
-            fal++;
-            //this.yej = false;
-            shotsFired = 0;
-        } else {
-            tre++;
-            this.yej = true;
-        }
-        return new NullCommand();
-    }
-
-    public Command setActiveSlot(int slot) {
-        activeSlot = slot;
-        return new NullCommand();
-    }
-
-    public Command slot1() {
-        return setActiveSlot(0);
-    }
-    public Command slot2() {
-        return setActiveSlot(1);
-    }
-    public Command slot3() {
-        return setActiveSlot(2);
-    }
-    public double getTargetPos(){
-        return (servos[0].getTargetRotation() + servos[1].getTargetRotation() + servos[2].getTargetRotation()) / 3;
-    }
-
-    public double getActualPos(){
-        return (servos[0].getTotalRotation() + servos[1].getTotalRotation() + servos[2].getTotalRotation()) / 3;
+        servos[0].setPosition((targetPos + off) / 355);
+        servos[1].setPosition((targetPos + off) / 355);
+        servos[2].setPosition((targetPos + off) / 355);
     }
 
     @Override
+    public void preStart() {}
+
+    @Override
     public void periodic() {
-        if (!manualControl) {
-            if (yej) {
 
-                if (slots[activeSlot].content != Utils.ArtifactTypes.NONE) {
-                    deltatime.resetTimer();
-                    if (deltatime.getElapsedTimeSeconds() >= 0.5) {
-                        for (int i = 0; i == 3; i++) {
-                            if (slots[i].content == Utils.ArtifactTypes.NONE) {
-                                activeSlot = i;
-                                i = 3;
-                            }
-                        }
-                    }
-                }
-            } else {
-                if (slots[activeSlot].content == Utils.ArtifactTypes.NONE && !colorShooting) {
-                    for (int i = 0; i == 3; i++) {
-                        if (slots[i].content == motif[shotsFired] || i == 2) {
-                            activeSlot = i;
-                            i = 3;
-                        }
-                    }
-                }
-            }
-
-            if (turretPos != oldTurretPos) {
-                if (yej) {
-                    targetPos = slots[activeSlot].offset;
-                } else {
-                    targetPos = 180 + slots[activeSlot].offset + turretPos;
-                }
-                while (targetPos >= 360) {
-                    targetPos = targetPos - 360;
-                }
-                oldTurretPos = turretPos;
-            }
-        } else {
-            targetPos = slots[activeSlot].offset;
-            while (targetPos >= 360) {
-                targetPos = targetPos - 360;
-            }
-        }
+        targetPos = ((180 + Turret.INSTANCE.targetAngle) * mode) + slots[activeSlot].offset;
 
         if (targetPos != oldTargetPos) {
-            setRotation(targetPos);
+            while (targetPos + off >= 355) {
+                targetPos = targetPos - 360;
+            }
+            servos[0].setPosition((targetPos + off) / 355);
+            servos[1].setPosition((targetPos + off) / 355);
+            servos[2].setPosition((targetPos + off) / 355);
             oldTargetPos = targetPos;
         }
+        if (slots[activeSlot].content != desiredColor) changeActiveSlot().schedule();
 
-        servos[0].update();
-        servos[1].update();
-        servos[2].update();
+        getColor();
     }
 
+    // -------------------- COMMANDS / METHODS ------------------------ //
+    public Command changeActiveSlot() {
+        return new InstantCommand(() -> {
+            boolean foundOne = false;
+            if (slots[0].content == desiredColor) {
+                activeSlot = 0;
+                foundOne = true;
+            } else if (slots[1].content == desiredColor) {
+                activeSlot = 1;
+                foundOne = true;
+            } else if (slots[2].content == desiredColor) {
+                activeSlot = 2;
+                foundOne = true;
+            } else if (desiredColor == Utils.ArtifactTypes.GREEN || desiredColor == Utils.ArtifactTypes.PURPLE) {
+                if (slots[0].content == Utils.ArtifactTypes.GREEN || slots[0].content == Utils.ArtifactTypes.PURPLE) {
+                    activeSlot = 0;
+                    foundOne = true;
+                } else if (slots[1].content == Utils.ArtifactTypes.GREEN || slots[1].content == Utils.ArtifactTypes.PURPLE) {
+                    activeSlot = 1;
+                    foundOne = true;
+                } else if (slots[2].content == Utils.ArtifactTypes.GREEN || slots[2].content == Utils.ArtifactTypes.PURPLE) {
+                    activeSlot = 2;
+                    foundOne = true;
+                }
+                this.i++;
+            }
+            if (!foundOne) {
+                if (mode == 0) setMode(1).schedule();
+                else setMode(0).schedule();
+            }
+        });
+    }
+
+
+    public Command setActiveSlotContent(Utils.ArtifactTypes content) {
+        return new InstantCommand(() -> {
+            slots[activeSlot].content = content;
+        });
+    }
+
+    public void getColor() {
+        if (color.getDistance(DistanceUnit.MM) <= dist) { // Range now
+            if ((color.red() + color.blue()) / 2 < color.green()) {
+                colorQueue = Utils.ArtifactTypes.GREEN;
+            } else {
+                colorQueue = Utils.ArtifactTypes.PURPLE;
+            }
+        } else if (colorQueue != Utils.ArtifactTypes.NONE) {
+            new SequentialGroup(
+                    new Delay(0.25),
+                    setActiveSlotContent(colorQueue)
+                    ).schedule();
+            colorQueue = Utils.ArtifactTypes.NONE;
+        }
+    }
+
+    /**
+     * Sets the desired color
+     * @param desiredColor Manual color you want
+     **/
+    public Command setDesiredColor(Utils.ArtifactTypes desiredColor) {
+        return new InstantCommand(() -> this.desiredColor = desiredColor);
+    }
+
+    /**
+     * Sets the desired color to that of the next motif Artifact
+     **/
+    public Command setDesiredColor() {
+        return new InstantCommand(() -> this.desiredColor = motif[0]);
+    }
+
+    public Command setMode(int mode) {
+        return new SequentialGroup(
+            new Delay(0.25),
+            new InstantCommand(() -> {
+                if (mode == 0) desiredColor = Utils.ArtifactTypes.NONE;
+                else desiredColor = motif[0];
+                shotsFired = 0;
+                this.mode = mode;
+                })
+        );
+    }
+    public Utils.ArtifactTypes getSlotColor(int slot) {
+        return slots[slot].content;
+    }
 }

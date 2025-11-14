@@ -10,14 +10,13 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemGroup;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Intake;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.NewMagazine;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.NewTurret;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.Magazine;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.delays.Delay;
 import dev.nextftc.core.commands.groups.SequentialGroup;
-import dev.nextftc.core.commands.utility.NullCommand;
 
 @Configurable
 public class Perseus extends BetterSubsystemGroup {
@@ -29,8 +28,8 @@ public class Perseus extends BetterSubsystemGroup {
 
     private Perseus() {
         super(
-                NewMagazine.INSTANCE,
-                NewTurret.INSTANCE,
+                Magazine.INSTANCE,
+                Turret.INSTANCE,
                 Intake.INSTANCE,
                 Shooter.INSTANCE
         );
@@ -67,18 +66,18 @@ public class Perseus extends BetterSubsystemGroup {
 
     public Command shootSingle(Utils.ArtifactTypes color) {
         return new SequentialGroup(
-                NewMagazine.INSTANCE.setDesiredColor(color),
+                Magazine.INSTANCE.setDesiredColor(color),
                 Shooter.INSTANCE.spinUp(),
                 new Delay(0.25),
                 Shooter.INSTANCE.shoot(),
-                NewMagazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.NONE),
+                Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.NONE),
                 Shooter.INSTANCE.idle()
         );
     }
 
     public Command intake() {
         return new SequentialGroup(
-                NewMagazine.INSTANCE.setMode(0),
+                Magazine.INSTANCE.setMode(0),
                 Intake.INSTANCE.start()
         );
     }
@@ -106,7 +105,7 @@ public class Perseus extends BetterSubsystemGroup {
 
     public Command start() {
         return new SequentialGroup(
-                NewMagazine.INSTANCE.setMode(1),
+                Magazine.INSTANCE.setMode(1),
                 new Delay(0.25),
                 Intake.INSTANCE.idle()
         );
