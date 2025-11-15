@@ -9,12 +9,18 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.HardwareConfigs.ServoExF
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.IAmBetterSubsystem;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Intake;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
+
+import java.util.HashMap;
+import java.util.List;
 
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.delays.Delay;
 import dev.nextftc.core.commands.groups.SequentialGroup;
 import dev.nextftc.core.commands.utility.InstantCommand;
+import kotlin.Pair;
 
 @Configurable
 public class Magazine implements IAmBetterSubsystem {
@@ -34,6 +40,16 @@ public class Magazine implements IAmBetterSubsystem {
     int shotsFired;
     public Utils.ArtifactTypes desiredColor = Utils.ArtifactTypes.PURPLE;
     boolean usingSec = false;
+
+    Command[] toStop = {
+            Shooter.INSTANCE.spinDown(), // mode set to intake
+            Intake.INSTANCE.slowIdle()   // mode set to shoot, slow to keep balls in mag
+    };
+
+    Command[] toStart = {
+            Intake.INSTANCE.idle(),  // mode set to intake
+            Shooter.INSTANCE.idle() // mode set to shoot
+    };
 
     Utils.ArtifactTypes colorQueue = Utils.ArtifactTypes.NONE;
 
@@ -131,15 +147,11 @@ public class Magazine implements IAmBetterSubsystem {
 
 
     public Command setActiveSlotContent(Utils.ArtifactTypes content) {
-        return new InstantCommand(() -> {
-            slots[activeSlot].content = content;
-        });
+        return new InstantCommand(() -> slots[activeSlot].content = content);
     }
 
     public Command setSlotContent(int slot, Utils.ArtifactTypes content) {
-        return new InstantCommand(() -> {
-            slots[slot].content = content;
-        });
+        return new InstantCommand(() -> slots[slot].content = content);
     }
 
     public void getColor() {
@@ -181,7 +193,9 @@ public class Magazine implements IAmBetterSubsystem {
                 else desiredColor = motif[0];
                 shotsFired = 0;
                 this.mode = mode;
-                })
+                }),
+            this.toStop[mode],
+            this.toStart[mode]
         );
     }
     public Utils.ArtifactTypes getSlotColor(int slot) {

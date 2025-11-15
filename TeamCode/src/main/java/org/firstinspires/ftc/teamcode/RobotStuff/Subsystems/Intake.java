@@ -18,6 +18,7 @@ public class Intake implements IAmBetterSubsystem {
     public static double intakeSpeed = 1;
     public static double reverseSpeed = -0.75;
     public static double idleSpeed = 0.5;
+    public static double slowIdleSpeed = 0.3;
 
 
     // ------------------------- OPMODE --------------------------- //
@@ -40,6 +41,9 @@ public class Intake implements IAmBetterSubsystem {
     }
     public Command idle() {
         return new SetPower(intake, idleSpeed);
+    }
+    public Command slowIdle() {
+        return new SetPower(intake, slowIdleSpeed);
     }
     public Command reverse() {
         return new SetPower(intake, reverseSpeed);
