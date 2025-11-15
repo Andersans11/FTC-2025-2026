@@ -33,9 +33,9 @@ public class FieldCentricDrive extends AbstractDriveMode {
     public MecanumDriverControlled vroom() {
         return new MecanumDriverControlled(
                 FL, FR, BL, BR,
-                () -> (forwardSupp.get() * Sensitivities.getForwardModifier()),
-                () -> (strafeSupp.get() * Sensitivities.getStrafeModifier()),
-                () -> (turnSupp.get() * Sensitivities.getTurnModifier()),
+                () -> (forwardSupp.get() * Sensitivities.forwardModifier.get()),
+                () -> (strafeSupp.get() * Sensitivities.strafeModifier.get()),
+                () -> (turnSupp.get() * Sensitivities.turnModifier.get()),
                 new FieldCentric(
                         () -> (Angle.fromRad(pinpoint.getHeading(AngleUnit.RADIANS)))
                 )

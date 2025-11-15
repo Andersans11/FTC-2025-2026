@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.HardwareConfigs.RTPAxon;
 
-@Configurable
+
 public class Magazine implements Subsystem {
 
     public static final Magazine INSTANCE = new Magazine();

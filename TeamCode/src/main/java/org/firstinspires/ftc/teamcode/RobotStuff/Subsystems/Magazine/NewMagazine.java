@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
 
 import com.bylazar.configurables.annotations.Configurable;
+import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 
@@ -43,9 +44,11 @@ public class NewMagazine implements IAmBetterSubsystem {
     public static double off1 = 120;
     public static double off2 = 240;
     public static double off = 117;
-    public static double dist = 50;
+    public static double dist = 70;
     public int i = 0;
     public int mode;
+
+    public Timer timer;
 
     @Override
     public void initSystem() {
@@ -67,6 +70,8 @@ public class NewMagazine implements IAmBetterSubsystem {
         servos[0].setPosition((targetPos + off) / 355);
         servos[1].setPosition((targetPos + off) / 355);
         servos[2].setPosition((targetPos + off) / 355);
+
+        timer = new Timer();
     }
 
     @Override
@@ -132,12 +137,13 @@ public class NewMagazine implements IAmBetterSubsystem {
     }
 
     public void getColor() {
-        if (color.getDistance(DistanceUnit.MM) <= dist) { // Range now
+        if (color.getDistance(DistanceUnit.MM) <= dist && timer.getElapsedTimeSeconds() >= 0.25) { // Range now
             if ((color.red() + color.blue()) / 2 < color.green()) {
                 colorQueue = Utils.ArtifactTypes.GREEN;
             } else {
                 colorQueue = Utils.ArtifactTypes.PURPLE;
             }
+            timer.resetTimer();
         } else if (colorQueue != Utils.ArtifactTypes.NONE) {
             new SequentialGroup(
                     new Delay(0.25),

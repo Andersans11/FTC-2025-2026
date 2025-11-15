@@ -83,15 +83,15 @@ public class HoldHeadingPID extends AbstractDriveMode {
     public MecanumDriverControlled vroom() {
         return new MecanumDriverControlled(
                 FL, FR, BL, BR,
-                () -> (forwardSupp.get() * Sensitivities.getForwardModifier()),
-                () -> (strafeSupp.get() * Sensitivities.getStrafeModifier()),
+                () -> (forwardSupp.get() * Sensitivities.forwardModifier.get()),
+                () -> (strafeSupp.get() * Sensitivities.strafeModifier.get()),
                 pidYaw
         );
     }
 
     // ---------------------- METHODS ---------------------------- //
     Supplier<Double> pidYaw = () -> {
-        targetRad = getHeadingRad() + (turnSupp.get() * Sensitivities.getPIDTurnModifier());
+        targetRad = getHeadingRad() + (turnSupp.get() * Sensitivities.turnPIDModifier.get());
         return HeadingPID.lockYaw(targetRad,  pinpoint.getHeading(AngleUnit.RADIANS), extDTN);
     };
 

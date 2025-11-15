@@ -17,6 +17,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.delays.Delay;
 import dev.nextftc.core.commands.groups.SequentialGroup;
+import dev.nextftc.core.commands.utility.InstantCommand;
 import dev.nextftc.core.commands.utility.NullCommand;
 
 @Configurable
@@ -26,6 +27,8 @@ public class Perseus extends BetterSubsystemGroup {
 
     public Follower follower;
     public PoseTracker followerTeleOp;
+    boolean isShooting = false;
+    boolean hasMaliciousIntent = false;
 
     private Perseus() {
         super(
@@ -66,14 +69,20 @@ public class Perseus extends BetterSubsystemGroup {
     //  ------------------------- COMMANDS --------------------------- //
 
     public Command shootSingle(Utils.ArtifactTypes color) {
-        return new SequentialGroup(
-                NewMagazine.INSTANCE.setDesiredColor(color),
-                Shooter.INSTANCE.spinUp(),
-                new Delay(0.5),
-                Shooter.INSTANCE.shoot(),
-                NewMagazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.NONE),
-                Shooter.INSTANCE.idle()
-        );
+        if (!isShooting) {
+            return new SequentialGroup(
+                    new InstantCommand(() -> this.isShooting = true),
+                    NewMagazine.INSTANCE.setDesiredColor(color),
+                    Shooter.INSTANCE.spinUp(),
+                    new Delay(0.5),
+                    Shooter.INSTANCE.shoot(),
+                    NewMagazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.NONE),
+                    Shooter.INSTANCE.idle(),
+                    new InstantCommand(() -> this.isShooting = false)
+            );
+        } else {
+            return new NullCommand();
+        }
     }
 
     public Command intake() {
@@ -92,16 +101,21 @@ public class Perseus extends BetterSubsystemGroup {
     }
 
     public Command shootMotif() {
-
-        return new SequentialGroup(
-                Shooter.INSTANCE.spinUp(),
-                shootSingle(motif[0]),
-                new Delay(0.3),
-                shootSingle(motif[1]),
-                new Delay(0.3),
-                shootSingle(motif[2]),
-                Shooter.INSTANCE.idle()
-        );
+        if (!this.hasMaliciousIntent) {
+            return new SequentialGroup(
+                    new InstantCommand(() -> this.hasMaliciousIntent = true),
+                    Shooter.INSTANCE.spinUp(),
+                    shootSingle(motif[0]),
+                    new Delay(0.3),
+                    shootSingle(motif[1]),
+                    new Delay(0.3),
+                    shootSingle(motif[2]),
+                    Shooter.INSTANCE.idle(),
+                    new InstantCommand(() -> this.hasMaliciousIntent = false)
+            );
+        } else {
+            return new NullCommand();
+        }
     }
 
     public Command start() {

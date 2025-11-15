@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.Config;
 
+import com.bylazar.telemetry.PanelsTelemetry;
+import com.bylazar.telemetry.TelemetryManager;
+
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.DeltaTimer;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
 
@@ -21,6 +24,8 @@ public class RoyallyFuckedUpMode extends NextFTCOpMode {
     }
 
     protected long deltaTime;
+
+    protected TelemetryManager telemetryManager = PanelsTelemetry.INSTANCE.getTelemetry();
 
     protected GamepadEx P1 = new GamepadEx(() -> this.gamepad1);
     protected GamepadEx P2 = new GamepadEx(() -> this.gamepad2);
@@ -49,10 +54,10 @@ public class RoyallyFuckedUpMode extends NextFTCOpMode {
     public void onUpdate() {
         deltaTime = RobotConfig.getDelta();
 
-        telemetry.addData("deltatime (ms)", TimeUnit.MILLISECONDS.convert(deltaTime, TimeUnit.NANOSECONDS));
+        telemetryManager.addData("deltatime (ms)", TimeUnit.MILLISECONDS.convert(deltaTime, TimeUnit.NANOSECONDS));
 
         if (isUpdating) {
-            telemetry.update();
+            telemetryManager.update(telemetry);
             isUpdating = false;
         } else isUpdating = true;
     }

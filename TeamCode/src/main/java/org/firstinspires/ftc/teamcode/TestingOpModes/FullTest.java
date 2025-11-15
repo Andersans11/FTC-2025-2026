@@ -64,29 +64,29 @@ public class FullTest extends RoyallyFuckedUpMode {
     public void onUpdate() {
         super.onUpdate();
 
-        telemetry.addData("0", NewMagazine.INSTANCE.getSlotColor(0));
-        telemetry.addData("1", NewMagazine.INSTANCE.getSlotColor(1));
-        telemetry.addData("2", NewMagazine.INSTANCE.getSlotColor(2));
-        telemetry.addData("Active", NewMagazine.INSTANCE.activeSlot);
-        telemetry.addData("Mode", NewMagazine.INSTANCE.mode);
+        telemetryManager.addData("0", NewMagazine.INSTANCE.getSlotColor(0));
+        telemetryManager.addData("1", NewMagazine.INSTANCE.getSlotColor(1));
+        telemetryManager.addData("2", NewMagazine.INSTANCE.getSlotColor(2));
+        telemetryManager.addData("Active", NewMagazine.INSTANCE.activeSlot);
+        telemetryManager.addData("Mode", NewMagazine.INSTANCE.mode);
         //telemetry.addData("targetPos", NewMagazine.INSTANCE.targetPos);
         //telemetry.addData("oldTargetPos", NewMagazine.INSTANCE.oldTargetPos);
         //telemetry.addData("i", NewMagazine.INSTANCE.i);
-        telemetry.addData("desiredColor", NewMagazine.INSTANCE.desiredColor);
-        telemetry.addData("range", NewMagazine.INSTANCE.color.getDistance(DistanceUnit.MM));
+        telemetryManager.addData("desiredColor", NewMagazine.INSTANCE.desiredColor);
+        telemetryManager.addData("range", NewMagazine.INSTANCE.color.getDistance(DistanceUnit.MM));
 
         //telemetry.addData("targetAngle", NewTurret.INSTANCE.targetAngle);
         //telemetry.addData("motorPower", NewTurret.INSTANCE.controller.calculate(NewTurret.INSTANCE.rotationMotor.getState()));
         //telemetry.addData("goal", NewTurret.INSTANCE.controller.getGoal());
         //telemetry.addData("length", NewTurret.INSTANCE.camera.blocks().length);
 
-        telemetry.addData("red", NewMagazine.INSTANCE.color.red());
-        telemetry.addData("green", NewMagazine.INSTANCE.color.green());
-        telemetry.addData("blue", NewMagazine.INSTANCE.color.blue());
+        telemetryManager.addData("red", NewMagazine.INSTANCE.color.red());
+        telemetryManager.addData("green", NewMagazine.INSTANCE.color.green());
+        telemetryManager.addData("blue", NewMagazine.INSTANCE.color.blue());
 
-        telemetry.addData("motif1", Perseus.INSTANCE.motif[0]);
-        telemetry.addData("motif2", Perseus.INSTANCE.motif[1]);
-        telemetry.addData("motif3", Perseus.INSTANCE.motif[2]);
+        telemetryManager.addData("motif1", Perseus.INSTANCE.motif[0]);
+        telemetryManager.addData("motif2", Perseus.INSTANCE.motif[1]);
+        telemetryManager.addData("motif3", Perseus.INSTANCE.motif[2]);
 
     }
 }

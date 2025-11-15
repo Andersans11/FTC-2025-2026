@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils.*;
 
 import java.util.function.Supplier;
 
-@Configurable
+
 public class Turret implements Subsystem {
 
     public static final Turret INSTANCE = new Turret();
