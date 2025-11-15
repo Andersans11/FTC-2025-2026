@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.RobotCentricDrive;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.NewTurret;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 
 @TeleOp(name = "Test: Turret", group = Utils.TESTING)
 public class TestTurret extends RoyallyFuckedUpMode {
@@ -14,7 +14,7 @@ public class TestTurret extends RoyallyFuckedUpMode {
     public TestTurret() {
         super();
         addSubsystemComponents(
-                new BetterSubsystemComponent(NewTurret.INSTANCE),
+                new BetterSubsystemComponent(Turret.INSTANCE),
                 new BetterSubsystemComponent(RobotCentricDrive.INSTANCE)
         );
     }
@@ -22,7 +22,7 @@ public class TestTurret extends RoyallyFuckedUpMode {
     @Override
     public void onInit() {
         super.onInit();
-        NewTurret.INSTANCE.initPoseUpdater(this);
+        Turret.INSTANCE.initPoseUpdater(this);
 
         //P1.dpadDown().whenBecomesTrue(NewTurret.INSTANCE.setPosition(0));
         //P1.dpadRight().whenBecomesTrue(NewTurret.INSTANCE.setPosition(90));
@@ -35,11 +35,11 @@ public class TestTurret extends RoyallyFuckedUpMode {
     public void onUpdate() {
         super.onUpdate();
 
-        super.telemetry.addData("targetAngle", NewTurret.INSTANCE.targetAngle);
-        super.telemetry.addData("motorPower", NewTurret.INSTANCE.controller.calculate(NewTurret.INSTANCE.rotationMotor.getState()));
-        super.telemetry.addData("goal", NewTurret.INSTANCE.controller.getGoal());
-        super.telemetry.addData("length", NewTurret.INSTANCE.camera.blocks().length);
-        super.telemetry.addData("waugh", NewTurret.INSTANCE.waugh());
-        super.telemetry.addData("timer", NewTurret.INSTANCE.timer.getElapsedTimeSeconds());
+        super.telemetry.addData("targetAngle", Turret.INSTANCE.targetAngle);
+        super.telemetry.addData("motorPower", Turret.INSTANCE.controller.calculate(Turret.INSTANCE.rotationMotor.getState()));
+        super.telemetry.addData("goal", Turret.INSTANCE.controller.getGoal());
+        super.telemetry.addData("length", Turret.INSTANCE.camera.blocks().length);
+        super.telemetry.addData("waugh", Turret.INSTANCE.waugh());
+        super.telemetry.addData("timer", Turret.INSTANCE.timer.getElapsedTimeSeconds());
     }
 }

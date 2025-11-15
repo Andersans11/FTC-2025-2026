@@ -7,10 +7,8 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Perseus;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.NewTurret;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 import org.firstinspires.ftc.teamcode.RobotStuff.pedrojson.Callbacks;
-
-import java.io.File;
 
 import PedroJSON.main.PathLoader;
 
@@ -33,20 +31,24 @@ public class Automous extends RoyallyFuckedUpMode {
     public void onInit() {
         super.onInit();
 
+        telemetry.addLine("1");
         follower = Constants.createFollower(hardwareMap);
+        telemetry.addLine("1");
         callbacks = new Callbacks(this);
-
-        loader = new PathLoader("org/firstinspires/ftc/teamcode/RobotStuff/pedrojson/Data/Automous.json", follower, this, callbacks, 1);
-
+        telemetry.addLine("1");
+        loader = new PathLoader("org\\firstinspires\\ftc\\teamcode\\RobotStuff\\pedrojson\\Data\\Automous.json", follower, this, callbacks, 1);
+        telemetry.addLine("1");
         loader.Parse();
-        NewTurret.INSTANCE.setPosition(90);
+        telemetry.addLine("1");
+        Turret.INSTANCE.setPosition(-90).schedule();
+        telemetry.addLine("1");
+        Turret.INSTANCE.initPoseUpdater(this);
     }
 
     @Override
     public void onWaitForStart() {
-        super.onWaitForStart();
-
-        NewTurret.INSTANCE.periodic();
+        telemetry.update();
+        Turret.INSTANCE.periodic();
     }
 
     @Override

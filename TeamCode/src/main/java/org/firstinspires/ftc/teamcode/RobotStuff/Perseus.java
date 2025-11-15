@@ -10,15 +10,13 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemGroup;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Intake;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.NewMagazine;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.NewTurret;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.Magazine;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.delays.Delay;
 import dev.nextftc.core.commands.groups.SequentialGroup;
-import dev.nextftc.core.commands.utility.InstantCommand;
-import dev.nextftc.core.commands.utility.NullCommand;
 
 @Configurable
 public class Perseus extends BetterSubsystemGroup {
@@ -27,22 +25,30 @@ public class Perseus extends BetterSubsystemGroup {
 
     public Follower follower;
     public PoseTracker followerTeleOp;
-    boolean isShooting = false;
-    boolean hasMaliciousIntent = false;
 
     private Perseus() {
         super(
-                NewMagazine.INSTANCE,
-                NewTurret.INSTANCE,
+                Magazine.INSTANCE,
+                Turret.INSTANCE,
                 Intake.INSTANCE,
                 Shooter.INSTANCE
         );
     }
 
-    public Utils.ArtifactTypes[] motif = new Utils.ArtifactTypes[] {
+    public Utils.ArtifactTypes[] PPG = new Utils.ArtifactTypes[] {
             Utils.ArtifactTypes.PURPLE,
             Utils.ArtifactTypes.PURPLE,
             Utils.ArtifactTypes.GREEN
+    };
+    public Utils.ArtifactTypes[] GPP = new Utils.ArtifactTypes[] {
+            Utils.ArtifactTypes.GREEN,
+            Utils.ArtifactTypes.PURPLE,
+            Utils.ArtifactTypes.PURPLE
+    };
+    public Utils.ArtifactTypes[] PGP = new Utils.ArtifactTypes[] {
+            Utils.ArtifactTypes.PURPLE,
+            Utils.ArtifactTypes.GREEN,
+            Utils.ArtifactTypes.PURPLE
     };
 
     @Override
@@ -69,25 +75,30 @@ public class Perseus extends BetterSubsystemGroup {
     //  ------------------------- COMMANDS --------------------------- //
 
     public Command shootSingle(Utils.ArtifactTypes color) {
-        if (!isShooting) {
-            return new SequentialGroup(
-                    new InstantCommand(() -> this.isShooting = true),
-                    NewMagazine.INSTANCE.setDesiredColor(color),
-                    Shooter.INSTANCE.spinUp(),
-                    new Delay(0.5),
-                    Shooter.INSTANCE.shoot(),
-                    NewMagazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.NONE),
-                    Shooter.INSTANCE.idle(),
-                    new InstantCommand(() -> this.isShooting = false)
-            );
-        } else {
-            return new NullCommand();
-        }
+        return new SequentialGroup(
+                Magazine.INSTANCE.setDesiredColor(color),
+                Shooter.INSTANCE.spinUp(),
+                new Delay(0.25),
+                Shooter.INSTANCE.shoot(),
+                Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.NONE),
+                Shooter.INSTANCE.idle()
+        );
+    }
+
+    public Command shootSingleMotif(int i) {
+        return new SequentialGroup(
+                Magazine.INSTANCE.setDesiredColor(i),
+                Shooter.INSTANCE.spinUp(),
+                new Delay(0.25),
+                Shooter.INSTANCE.shoot(),
+                Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.NONE),
+                Shooter.INSTANCE.idle()
+        );
     }
 
     public Command intake() {
         return new SequentialGroup(
-                NewMagazine.INSTANCE.setMode(0),
+                Magazine.INSTANCE.setMode(0),
                 Intake.INSTANCE.start()
         );
     }
@@ -101,26 +112,21 @@ public class Perseus extends BetterSubsystemGroup {
     }
 
     public Command shootMotif() {
-        if (!this.hasMaliciousIntent) {
-            return new SequentialGroup(
-                    new InstantCommand(() -> this.hasMaliciousIntent = true),
-                    Shooter.INSTANCE.spinUp(),
-                    shootSingle(motif[0]),
-                    new Delay(0.3),
-                    shootSingle(motif[1]),
-                    new Delay(0.3),
-                    shootSingle(motif[2]),
-                    Shooter.INSTANCE.idle(),
-                    new InstantCommand(() -> this.hasMaliciousIntent = false)
-            );
-        } else {
-            return new NullCommand();
-        }
+
+        return new SequentialGroup(
+                Shooter.INSTANCE.spinUp(),
+                shootSingleMotif(0),
+                new Delay(0.3),
+                shootSingleMotif(1),
+                new Delay(0.3),
+                shootSingleMotif(2),
+                Shooter.INSTANCE.idle()
+        );
     }
 
     public Command start() {
         return new SequentialGroup(
-                NewMagazine.INSTANCE.setMode(1),
+                Magazine.INSTANCE.setMode(1),
                 new Delay(0.25),
                 Intake.INSTANCE.idle()
         );
