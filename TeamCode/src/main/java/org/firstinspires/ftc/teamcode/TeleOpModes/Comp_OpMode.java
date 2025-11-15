@@ -11,6 +11,8 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.Magazine;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 
+import dev.nextftc.core.commands.groups.ParallelGroup;
+
 @TeleOp(name = "TwoAndOnlyOpMode", group = Utils.PRIORITY)
 public class Comp_OpMode extends RoyallyFuckedUpMode {
 
@@ -55,7 +57,7 @@ public class Comp_OpMode extends RoyallyFuckedUpMode {
         P2.rightBumper().whenTrue(Turret.INSTANCE.ChangePosition(-0.5));
         P2.leftBumper().whenTrue(Turret.INSTANCE.ChangePosition(0.5));
 
-        P2.dpadDown().whenBecomesTrue(Turret.INSTANCE.AutoControl());
+        P2.dpadDown().whenBecomesTrue(new ParallelGroup(Turret.INSTANCE.AutoControl(), Turret.INSTANCE.Zero()));
     }
 
     @Override
