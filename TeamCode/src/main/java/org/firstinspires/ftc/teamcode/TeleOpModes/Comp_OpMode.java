@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 
 import dev.nextftc.core.commands.groups.ParallelGroup;
 
-@TeleOp(name = "TwoAndOnlyOpMode", group = Utils.PRIORITY)
+@TeleOp(name = "TwoAndOnlyOpMode", group = Utils.PRIORITY_PRIORITY)
 public class Comp_OpMode extends RoyallyFuckedUpMode {
 
     public Comp_OpMode() {
@@ -32,8 +32,8 @@ public class Comp_OpMode extends RoyallyFuckedUpMode {
         P1.rightTrigger().atLeast(0.1).whenBecomesTrue(Perseus.INSTANCE.intake());
         P1.rightTrigger().atLeast(0.1).whenBecomesFalse(Perseus.INSTANCE.stopIntake());
 
-        P1.dpadUp().whenBecomesTrue(() -> Turret.INSTANCE.isRedAlliance = false);
-        P1.dpadDown().whenBecomesTrue(() -> Turret.INSTANCE.isRedAlliance = true);
+        P1.dpadUp().whenBecomesTrue(Turret.INSTANCE.setRedAlliance(false));
+        P1.dpadDown().whenBecomesTrue(Turret.INSTANCE.setRedAlliance(true));
 
         P1.rightBumper().whenBecomesTrue(Perseus.INSTANCE.outtake());
         P1.rightBumper().whenBecomesFalse(Perseus.INSTANCE.stopIntake());
@@ -54,10 +54,10 @@ public class Comp_OpMode extends RoyallyFuckedUpMode {
 
         P2.dpadUp().whenBecomesTrue(Shooter.INSTANCE.resetKicker());
 
-        P2.rightBumper().whenTrue(Turret.INSTANCE.ChangePosition(-0.5));
-        P2.leftBumper().whenTrue(Turret.INSTANCE.ChangePosition(0.5));
+        P2.rightBumper().whenTrue(Turret.INSTANCE.changePosition(-0.5));
+        P2.leftBumper().whenTrue(Turret.INSTANCE.changePosition(0.5));
 
-        P2.dpadDown().whenBecomesTrue(new ParallelGroup(Turret.INSTANCE.AutoControl(), Turret.INSTANCE.Zero()));
+        P2.dpadDown().whenBecomesTrue(new ParallelGroup(Turret.INSTANCE.autoControl(), Turret.INSTANCE.zero()));
     }
 
     @Override
@@ -70,11 +70,11 @@ public class Comp_OpMode extends RoyallyFuckedUpMode {
     public void onUpdate() {
         super.onUpdate();
 
-        telemetry.addData("0", Magazine.INSTANCE.getSlotColor(0));
-        telemetry.addData("1", Magazine.INSTANCE.getSlotColor(1));
-        telemetry.addData("2", Magazine.INSTANCE.getSlotColor(2));
-        telemetry.addData("Active", Magazine.INSTANCE.activeSlot);
-        telemetry.addData("Mode", Magazine.INSTANCE.mode);
-        telemetry.addData("desiredColor", Magazine.INSTANCE.desiredColor);
+        telemetryManager.addData("0", Magazine.INSTANCE.getSlotColor(0));
+        telemetryManager.addData("1", Magazine.INSTANCE.getSlotColor(1));
+        telemetryManager.addData("2", Magazine.INSTANCE.getSlotColor(2));
+        telemetryManager.addData("Active", Magazine.INSTANCE.activeSlot);
+        telemetryManager.addData("Mode", Magazine.INSTANCE.mode);
+        telemetryManager.addData("desiredColor", Magazine.INSTANCE.desiredColor);
     }
 }

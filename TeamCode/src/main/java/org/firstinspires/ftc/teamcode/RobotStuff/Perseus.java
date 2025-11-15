@@ -17,6 +17,8 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.delays.Delay;
 import dev.nextftc.core.commands.groups.SequentialGroup;
+import dev.nextftc.core.commands.utility.InstantCommand;
+import dev.nextftc.core.commands.utility.NullCommand;
 
 @Configurable
 public class Perseus extends BetterSubsystemGroup {
@@ -25,6 +27,9 @@ public class Perseus extends BetterSubsystemGroup {
 
     public Follower follower;
     public PoseTracker followerTeleOp;
+
+    boolean isShooting = false;
+    boolean isMotifShooting = false;
 
     private Perseus() {
         super(
@@ -75,14 +80,20 @@ public class Perseus extends BetterSubsystemGroup {
     //  ------------------------- COMMANDS --------------------------- //
 
     public Command shootSingle(Utils.ArtifactTypes color) {
-        return new SequentialGroup(
-                Magazine.INSTANCE.setDesiredColor(color),
-                Shooter.INSTANCE.spinUp(),
-                new Delay(0.25),
-                Shooter.INSTANCE.shoot(),
-                Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.NONE),
-                Shooter.INSTANCE.idle()
-        );
+        if (!isShooting) {
+            return new SequentialGroup(
+                    new InstantCommand(() -> this.isShooting = true),
+                    Magazine.INSTANCE.setDesiredColor(color),
+                    Shooter.INSTANCE.spinUp(),
+                    new Delay(0.25),
+                    Shooter.INSTANCE.shoot(),
+                    Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.NONE),
+                    Shooter.INSTANCE.idle(),
+                    new InstantCommand(() -> this.isShooting = false)
+            );
+        } else {
+            return new NullCommand();
+        }
     }
 
     public Command shootSingleMotif(int i) {
@@ -112,16 +123,21 @@ public class Perseus extends BetterSubsystemGroup {
     }
 
     public Command shootMotif() {
-
-        return new SequentialGroup(
-                Shooter.INSTANCE.spinUp(),
-                shootSingleMotif(0),
-                new Delay(0.3),
-                shootSingleMotif(1),
-                new Delay(0.3),
-                shootSingleMotif(2),
-                Shooter.INSTANCE.idle()
-        );
+        if (!isMotifShooting) {
+            return new SequentialGroup(
+                    new InstantCommand(() -> this.isMotifShooting = true),
+                    Shooter.INSTANCE.spinUp(),
+                    shootSingleMotif(0),
+                    new Delay(0.3),
+                    shootSingleMotif(1),
+                    new Delay(0.3),
+                    shootSingleMotif(2),
+                    Shooter.INSTANCE.idle(),
+                    new InstantCommand(() -> this.isMotifShooting = false)
+            );
+        } else {
+            return new NullCommand();
+        }
     }
 
     public Command start() {
@@ -131,7 +147,4 @@ public class Perseus extends BetterSubsystemGroup {
                 Intake.INSTANCE.idle()
         );
     }
-    // ---------------------- METHODS ------------------------------ //
-
-
 }

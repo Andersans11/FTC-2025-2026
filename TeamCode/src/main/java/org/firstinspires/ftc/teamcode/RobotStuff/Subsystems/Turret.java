@@ -17,6 +17,7 @@ import dev.nextftc.control.ControlSystem;
 import dev.nextftc.control.KineticState;
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.utility.InstantCommand;
+import dev.nextftc.core.commands.utility.NullCommand;
 import dev.nextftc.hardware.impl.MotorEx;
 
 @Configurable
@@ -27,6 +28,7 @@ public class Turret implements IAmBetterSubsystem {
     public MotorEx rotationMotor;
     public HuskyLens camera;
     public boolean isRedAlliance = true;
+    boolean hasSetAlliance = false;
     double pitch;
     Pose pose = new Pose(0, 0, 0);
     Pose oldPose = new Pose(0, 0, 0);
@@ -104,7 +106,7 @@ public class Turret implements IAmBetterSubsystem {
         });
     }
 
-    public Command ChangePosition(double pos) {
+    public Command changePosition(double pos) {
         return new InstantCommand(() -> {
             mode = TurretMode.MANUAL;
             targetAngle = targetAngle + pos;
@@ -113,12 +115,21 @@ public class Turret implements IAmBetterSubsystem {
         });
     }
 
-    public Command AutoControl() {
+    public Command autoControl() {
         return new InstantCommand(() -> mode = TurretMode.TAG_TRACKING);
     }
 
-    public Command Zero() {
+    public Command zero() {
         return new InstantCommand(() -> rotationMotor.zero());
+    }
+
+    public Command setRedAlliance(boolean isRed) {
+        if (!this.hasSetAlliance) {
+            this.isRedAlliance = isRed;
+            this.hasSetAlliance = true;
+        }
+
+        return new NullCommand();
     }
 
     public double degreesToTicks(double degrees) {

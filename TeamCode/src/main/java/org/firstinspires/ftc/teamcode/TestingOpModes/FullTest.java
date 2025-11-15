@@ -31,8 +31,8 @@ public class FullTest extends RoyallyFuckedUpMode {
         P1.rightTrigger().atLeast(0.1).whenBecomesTrue(Perseus.INSTANCE.intake());
         P1.rightTrigger().atLeast(0.1).whenBecomesFalse(Perseus.INSTANCE.stopIntake());
 
-        P1.dpadUp().whenBecomesTrue(() -> Turret.INSTANCE.isRedAlliance = false);
-        P1.dpadDown().whenBecomesTrue(() -> Turret.INSTANCE.isRedAlliance = true);
+        P1.dpadUp().whenBecomesTrue(Turret.INSTANCE.setRedAlliance(false));
+        P1.dpadDown().whenBecomesTrue(Turret.INSTANCE.setRedAlliance(true));
 
         P1.rightBumper().whenBecomesTrue(Perseus.INSTANCE.outtake());
         P1.rightBumper().whenBecomesFalse(Perseus.INSTANCE.stopIntake());
@@ -53,10 +53,10 @@ public class FullTest extends RoyallyFuckedUpMode {
 
         P2.dpadUp().whenBecomesTrue(Shooter.INSTANCE.resetKicker());
 
-        P2.rightBumper().whenTrue(Turret.INSTANCE.ChangePosition(0.5));
-        P2.leftBumper().whenTrue(Turret.INSTANCE.ChangePosition(-0.5));
+        P2.rightBumper().whenTrue(Turret.INSTANCE.changePosition(0.5));
+        P2.leftBumper().whenTrue(Turret.INSTANCE.changePosition(-0.5));
 
-        P2.dpadDown().whenBecomesTrue(Turret.INSTANCE.AutoControl());
+        P2.dpadDown().whenBecomesTrue(Turret.INSTANCE.autoControl());
     }
 
     @Override
