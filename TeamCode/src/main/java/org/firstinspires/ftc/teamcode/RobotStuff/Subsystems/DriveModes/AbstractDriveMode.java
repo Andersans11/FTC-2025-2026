@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.IAmBetterSubsystem;
 public abstract class AbstractDriveMode implements IAmBetterSubsystem {
 
     NextFTCOpMode opMode;
-    Telemetry telemetry;
+    TelemetryManager telemetry;
     Range forwardSupp;
     Range strafeSupp;
     Range turnSupp;
@@ -38,6 +38,8 @@ public abstract class AbstractDriveMode implements IAmBetterSubsystem {
     @Override
     public void initSystem() {
         this.opMode = RobotConfig.getOpMode();
+
+        this.telemetry = RobotConfig.getTelemetry();
 
         this.FL = RobotConfig.FLDrive.motor.brakeMode();
         this.FR = RobotConfig.FRDrive.motor.brakeMode();

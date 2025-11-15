@@ -44,15 +44,13 @@ public class HoldHeadingPID extends AbstractDriveMode {
     public static boolean CLEARDIFF = false;
 
     // ------------------------- OPMODE ----------------------------- //
-    @Override
-    public void initialize() {
-        HeadingPID = new YawPID(telemetry, "HeadingPID");
-        HeadingPID.setSecondary(true);
-    }
 
     @Override
     public void initSystem() {
         super.initSystem();
+
+        HeadingPID = new YawPID(telemetry, "HeadingPID");
+        HeadingPID.setSecondary(true);
 
         pinpoint = RobotConfig.Pinpoint;
         targetRad = getHeadingRad(); // on init, take heading and set to that so that robot doesn't go to zero

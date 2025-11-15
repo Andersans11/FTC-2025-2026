@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.TestingOpModes;
 
-import com.qualcomm.hardware.lynx.commands.standard.LynxSetNewModuleAddressCommand;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -70,25 +69,25 @@ public class FullTest extends RoyallyFuckedUpMode {
     public void onUpdate() {
         super.onUpdate();
 
-        telemetry.addData("0", Magazine.INSTANCE.getSlotColor(0));
-        telemetry.addData("1", Magazine.INSTANCE.getSlotColor(1));
-        telemetry.addData("2", Magazine.INSTANCE.getSlotColor(2));
-        telemetry.addData("Active", Magazine.INSTANCE.activeSlot);
-        telemetry.addData("Mode", Magazine.INSTANCE.mode);
+        telemetryManager.addData("0", Magazine.INSTANCE.getSlotColor(0));
+        telemetryManager.addData("1", Magazine.INSTANCE.getSlotColor(1));
+        telemetryManager.addData("2", Magazine.INSTANCE.getSlotColor(2));
+        telemetryManager.addData("Active", Magazine.INSTANCE.activeSlot);
+        telemetryManager.addData("Mode", Magazine.INSTANCE.mode);
         //telemetry.addData("targetPos", Magazine.INSTANCE.targetPos);
         //telemetry.addData("oldTargetPos", Magazine.INSTANCE.oldTargetPos);
         //telemetry.addData("i", Magazine.INSTANCE.i);
-        telemetry.addData("desiredColor", Magazine.INSTANCE.desiredColor);
-        telemetry.addData("range", Magazine.INSTANCE.color.getDistance(DistanceUnit.MM));
+        telemetryManager.addData("desiredColor", Magazine.INSTANCE.desiredColor);
+        telemetryManager.addData("range", Magazine.INSTANCE.color.getDistance(DistanceUnit.MM));
 
         //telemetry.addData("targetAngle", NewTurret.INSTANCE.targetAngle);
         //telemetry.addData("motorPower", NewTurret.INSTANCE.controller.calculate(NewTurret.INSTANCE.rotationMotor.getState()));
         //telemetry.addData("goal", NewTurret.INSTANCE.controller.getGoal());
         //telemetry.addData("length", NewTurret.INSTANCE.camera.blocks().length);
 
-        telemetry.addData("motif1", Magazine.INSTANCE.motif[0]);
-        telemetry.addData("motif2", Magazine.INSTANCE.motif[1]);
-        telemetry.addData("motif3", Magazine.INSTANCE.motif[2]);
+        telemetryManager.addData("motif1", Magazine.INSTANCE.motif[0]);
+        telemetryManager.addData("motif2", Magazine.INSTANCE.motif[1]);
+        telemetryManager.addData("motif3", Magazine.INSTANCE.motif[2]);
 
     }
 }
