@@ -63,9 +63,9 @@ public class RCStrikeAPose extends AbstractDriveMode {
     public MecanumDriverControlled vroom() {
         return new MecanumDriverControlled(
                 FL, FR, BL, BR,
-                () -> (yController.calculate()),
-                () -> (xController.calculate()),
-                () -> (yawController.calculate())
+                () -> (yController.calculate(new KineticState(pinpoint.getPosY(DistanceUnit.MM)))),
+                () -> (xController.calculate(new KineticState(pinpoint.getPosX(DistanceUnit.MM)))),
+                () -> (yawController.calculate(new KineticState(pinpoint.getHeading(AngleUnit.RADIANS))))
         );
     }
 
