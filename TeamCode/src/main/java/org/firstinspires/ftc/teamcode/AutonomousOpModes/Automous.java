@@ -10,10 +10,14 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemCompo
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 import org.firstinspires.ftc.teamcode.RobotStuff.pedrojson.Callbacks;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import PedroJSON.main.PathLoader;
 
-@Autonomous(name = "Automous")
+@Autonomous(name = "Automous3")
 public class Automous extends RoyallyFuckedUpMode {
+    InputStream inputStream;
     PathLoader loader;
     Follower follower;
     Callbacks callbacks;
@@ -31,12 +35,16 @@ public class Automous extends RoyallyFuckedUpMode {
     public void onInit() {
         super.onInit();
 
+        try {
+            inputStream = hardwareMap.appContext.getAssets().open("Automous.json");
+        } catch (IOException ignored) {
+        }
         telemetry.addLine("1");
         follower = Constants.createFollower(hardwareMap);
         telemetry.addLine("1");
         callbacks = new Callbacks(this);
         telemetry.addLine("1");
-        loader = new PathLoader("org\\firstinspires\\ftc\\teamcode\\RobotStuff\\pedrojson\\Data\\Automous.json", follower, this, callbacks, 1);
+        loader = new PathLoader(inputStream, follower, this, callbacks, 1);
         telemetry.addLine("1");
         loader.Parse();
         telemetry.addLine("1");

@@ -1,19 +1,17 @@
 package org.firstinspires.ftc.teamcode.TestingOpModes;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
+import org.json.JSONObject;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 @Autonomous(name = "When I Need A Plumber")
 public class Locktite extends RoyallyFuckedUpMode {
-    File iKnowAGuy;
-    ObjectMapper theGuy;
-    JsonNode funnyPaper;
+    JSONObject funnyPaper;
 
     public Locktite() {
         super();
@@ -22,14 +20,34 @@ public class Locktite extends RoyallyFuckedUpMode {
     @Override
     public void onInit() {
         super.onInit();
-        iKnowAGuy = new File("org/firstinspires/ftc/teamcode/RobotStuff/pedrojson/Data/test.json");
-        theGuy = new ObjectMapper();
+        
         try {
-            funnyPaper = theGuy.readTree(iKnowAGuy);
-            telemetry.addData("number", funnyPaper.path("number").asDouble());
+            // Access file from assets folder using hardwareMap context
+            InputStream inputStream = hardwareMap.appContext.getAssets().open("test.json");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            
+            // Read the entire file as text
+            StringBuilder jsonText = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                jsonText.append(line);
+            }
+            reader.close();
+            
+            // Parse with Android's native JSON parser
+            funnyPaper = new JSONObject(jsonText.toString());
+            
+            telemetry.addData("number", funnyPaper.getDouble("number"));
+            telemetry.addData("Status", "File loaded successfully!");
             telemetry.update();
-        } catch (IOException e) {
-            throw new RuntimeException("fuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuckfuck");
+            
+        } catch (Exception e) {
+            // Handle error gracefully without crashing
+            telemetry.addData("ERROR", "File read failed");
+            telemetry.addData("Exception", e.getClass().getSimpleName());
+            telemetry.addData("Message", e.getMessage() != null ? e.getMessage() : "No message");
+            telemetry.update();
+            e.printStackTrace();
         }
     }
 

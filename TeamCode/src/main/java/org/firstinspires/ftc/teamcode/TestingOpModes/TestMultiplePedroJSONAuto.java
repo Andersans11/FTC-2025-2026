@@ -30,9 +30,9 @@ public class TestMultiplePedroJSONAuto extends RoyallyFuckedUpMode {
 
         // TODO: Create Files
 
-        base = new PathLoader(new File("org/firstinspires/ftc/teamcode/RobotStuff/pedrojson/Data/base.json"), follower, this, callbacks, 1);
-        outcome1 = new PathLoader(new File("org/firstinspires/ftc/teamcode/RobotStuff/pedrojson/Data/outcome1.json"), follower, this, callbacks, 1);
-        outcome2 = new PathLoader(new File("org/firstinspires/ftc/teamcode/RobotStuff/pedrojson/Data/outcome2.json"), follower, this, callbacks, 1);
+        //base = new PathLoader("base.json", follower, this, callbacks, 1);
+        //outcome1 = new PathLoader("outcome1.json", follower, this, callbacks, 1);
+        //outcome2 = new PathLoader("outcome2.json", follower, this, callbacks, 1);
 
         base.Parse();
         outcome1.Parse();

@@ -10,10 +10,14 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemCompo
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 import org.firstinspires.ftc.teamcode.RobotStuff.pedrojson.Callbacks;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import PedroJSON.main.PathLoader;
 
 @Autonomous(name = "Automous Ultra Pro Max Masters Edition Plus")
 public class SuperAuto extends RoyallyFuckedUpMode {
+    InputStream FC, TC, MC, BC, GC, PC;
     PathLoader base, top, middle, bottom, gate, park;
     Follower follower;
     Callbacks callbacks;
@@ -36,15 +40,26 @@ public class SuperAuto extends RoyallyFuckedUpMode {
     public void onInit() {
         super.onInit();
 
+        try {
+            FC = hardwareMap.appContext.getAssets().open("FirstCycle.json");
+            TC = hardwareMap.appContext.getAssets().open("TopCycle.json");
+            MC = hardwareMap.appContext.getAssets().open("MiddleCycle.json");
+            BC = hardwareMap.appContext.getAssets().open("BottomCycle.json");
+            GC = hardwareMap.appContext.getAssets().open("GateCycle.json");
+            PC = hardwareMap.appContext.getAssets().open("ParkCycle.json");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         follower = Constants.createFollower(hardwareMap);
         callbacks = new Callbacks(this);
 
-        base = new PathLoader(  "org/firstinspires/ftc/teamcode/RobotStuff/pedrojson/Data/SuperAuto/FirstCycle",  follower, this, callbacks, 1);
-        top = new PathLoader(   "org/firstinspires/ftc/teamcode/RobotStuff/pedrojson/Data/SuperAuto/TopCycle",    follower, this, callbacks, 1);
-        middle = new PathLoader("org/firstinspires/ftc/teamcode/RobotStuff/pedrojson/Data/SuperAuto/MiddleCycle", follower, this, callbacks, 1);
-        bottom = new PathLoader("org/firstinspires/ftc/teamcode/RobotStuff/pedrojson/Data/SuperAuto/BottomCycle", follower, this, callbacks, 1);
-        gate = new PathLoader(  "org/firstinspires/ftc/teamcode/RobotStuff/pedrojson/Data/SuperAuto/GateCycle",   follower, this, callbacks, 1);
-        park = new PathLoader(  "org/firstinspires/ftc/teamcode/RobotStuff/pedrojson/Data/SuperAuto/Park",        follower, this, callbacks, 1);
+        base = new PathLoader(  FC,  follower, this, callbacks, 1);
+        top = new PathLoader(   TC,    follower, this, callbacks, 1);
+        middle = new PathLoader(MC, follower, this, callbacks, 1);
+        bottom = new PathLoader(BC, follower, this, callbacks, 1);
+        gate = new PathLoader(  GC,   follower, this, callbacks, 1);
+        park = new PathLoader(  PC,        follower, this, callbacks, 1);
 
         P2.dpadUp().whenBecomesTrue(() -> {
             doTop = true;
