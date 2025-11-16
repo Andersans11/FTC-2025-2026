@@ -116,7 +116,7 @@ public class Turret implements IAmBetterSubsystem {
     }
 
     public Command autoControl() {
-        return new InstantCommand(() -> mode = TurretMode.TAG_TRACKING);
+        return new InstantCommand(() -> mode = TurretMode.RECOVERY);
     }
 
     public Command zero() {

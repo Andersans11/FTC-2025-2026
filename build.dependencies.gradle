@@ -21,7 +21,7 @@ dependencies {
 
     implementation "com.pedropathing:ftc:${pedropathing_version}"
     implementation "com.pedropathing:telemetry:${pedropathing_tele_version}"
-    implementation "io.github.andersans11:pedrojson-loader:${pedrojson_version}"
+    //implementation 'io.github.andersans11:pedrojson-loader:2.3.2-alpha'
 
     implementation "com.bylazar:fullpanels:${panels_version}"
 

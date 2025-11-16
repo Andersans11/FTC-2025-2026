@@ -21,16 +21,16 @@ public class Constants {
             .mass(9.888314)
             .forwardZeroPowerAcceleration(-65.5397)
             .lateralZeroPowerAcceleration(-87.0747)
-            .useSecondaryTranslationalPIDF(false)
-            .useSecondaryHeadingPIDF(false)
-            .useSecondaryDrivePIDF(false)
+            .useSecondaryTranslationalPIDF(true)
+            .useSecondaryHeadingPIDF(true)
+            .useSecondaryDrivePIDF(true)
             .centripetalScaling(0.0005)
             .translationalPIDFCoefficients(new PIDFCoefficients(0.15,0,0.01,0))
             .headingPIDFCoefficients(new PIDFCoefficients(2,0,0.1,0))
-            .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.1, 0, 0, 0.6, 0))
+            .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.085, 0, 0.005, 0.6, 0))
             .secondaryTranslationalPIDFCoefficients(new PIDFCoefficients(0.15,0,0.007,0))
-            .secondaryHeadingPIDFCoefficients(new PIDFCoefficients(2, 0, 0.1, 0))
-            .secondaryDrivePIDFCoefficients(new FilteredPIDFCoefficients(0.1, 0, 0, 0.6, 0));
+            .secondaryHeadingPIDFCoefficients(new PIDFCoefficients(1, 0, 0.1, 0))
+            .secondaryDrivePIDFCoefficients(new FilteredPIDFCoefficients(0.01, 0, 0.0025, 0.6, 0));
 
     public static MecanumConstants driveConstants = new MecanumConstants()
             .leftFrontMotorName("FLDRIVE")

@@ -14,10 +14,10 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Perseus;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.Magazine;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 import org.firstinspires.ftc.teamcode.RobotStuff.pedrojson.Callbacks;
-
-import PedroJSON.main.PathLoader;
+import org.firstinspires.ftc.teamcode.TestingOpModes.Drawing;
 
 @Autonomous(name = "Automous2")
 public class Automous2 extends RoyallyFuckedUpMode {
@@ -41,6 +41,8 @@ public class Automous2 extends RoyallyFuckedUpMode {
     public void onInit() {
         super.onInit();
 
+        Drawing.init();
+
         telemetry.addLine("1");
         follower = Constants.createFollower(hardwareMap);
         telemetry.addLine("1");
@@ -48,26 +50,31 @@ public class Automous2 extends RoyallyFuckedUpMode {
         telemetry.addLine("1");
         Turret.INSTANCE.initPoseUpdater(this);
 
-        startingPose = new Pose(0, 0);
-        scoringPose = new Pose(-50, 0);
+        startingPose = new Pose(72, 72);
+        scoringPose = new Pose(22, 72);
 
-        Magazine.INSTANCE.setSlotContent(0, Utils.ArtifactTypes.PURPLE);
-        Magazine.INSTANCE.setSlotContent(1, Utils.ArtifactTypes.PURPLE);
-        Magazine.INSTANCE.setSlotContent(2, Utils.ArtifactTypes.GREEN);
+        Magazine.INSTANCE.setSlotContent(0, Utils.ArtifactTypes.PURPLE).schedule();
+        Magazine.INSTANCE.setSlotContent(1, Utils.ArtifactTypes.PURPLE).schedule();
+        Magazine.INSTANCE.setSlotContent(2, Utils.ArtifactTypes.GREEN).schedule();
 
         path = follower.pathBuilder()
                 .addPath(new Path(new BezierLine(startingPose, scoringPose)))
-                .setConstantHeadingInterpolation(90)
-                .addParametricCallback(0.2, Turret.INSTANCE.AutoControl())
-                .addParametricCallback(1, Perseus.INSTANCE.shootMotif())
+                .setConstantHeadingInterpolation(0)
+                .addParametricCallback(0, () -> Magazine.INSTANCE.setMode(1).schedule())
+                .addParametricCallback(0.25, () -> Turret.INSTANCE.autoControl().schedule())
+                .addParametricCallback(1, () -> Perseus.INSTANCE.shootMotif().schedule())
                 .build();
         follower.setStartingPose(startingPose);
+        follower.setMaxPower(0.75);
+        Shooter.INSTANCE.resetKicker().schedule();
+        path.resetCallbacks();
     }
 
     @Override
     public void onWaitForStart() {
         telemetry.update();
         Turret.INSTANCE.periodic();
+        Magazine.INSTANCE.periodic();
     }
 
     @Override
@@ -86,5 +93,7 @@ public class Automous2 extends RoyallyFuckedUpMode {
         telemetry.addData("Active", Magazine.INSTANCE.activeSlot);
         telemetry.addData("Mode", Magazine.INSTANCE.mode);
         telemetry.addData("desiredColor", Magazine.INSTANCE.desiredColor);
+        telemetry.addData("isBusy", follower.isBusy());
+        Drawing.drawDebug(follower);
     }
 }
