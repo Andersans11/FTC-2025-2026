@@ -1,0 +1,69 @@
+{
+  "pathChains": [
+    {
+      "id": null,
+      "paths": [
+        {
+          "id": 0,
+          "type": "LINEAR",
+          "start": {
+            "x": 24,
+            "y": 120
+          },
+          "end": {
+            "x": 60,
+            "y": 84
+          },
+          "control1": null,
+          "control2": null,
+          "interpolation": {
+            "type": "LINEAR",
+            "heading1": 135,
+            "heading2": 180
+          },
+          "zpam": 0,
+          "maxPower": 0,
+          "callbacks": [
+            {
+              "type": "PARAMETRIC",
+              "t": 1,
+              "runnable": "shootMotif"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "curves": [
+    {
+      "type": "line",
+      "points": [
+        {
+          "x": 24,
+          "y": 120
+        },
+        {
+          "x": 60,
+          "y": 84
+        }
+      ],
+      "color": "#007bff",
+      "lineWidth": 2,
+      "isComplete": true,
+      "actions": [
+        {
+          "id": 1762649660042.5676,
+          "type": "PARAMETRIC",
+          "t": 1,
+          "runnable": "shootMotif"
+        }
+      ],
+      "startHeading": 135,
+      "endHeading": 180,
+      "headingInterpolation": "LINEAR",
+      "zeroPowerAccelMultiplier": 0,
+      "maxPower": 0
+    }
+  ],
+  "groups": []
+}

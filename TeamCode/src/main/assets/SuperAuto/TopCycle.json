@@ -1,0 +1,150 @@
+{
+  "pathChains": [
+    {
+      "id": null,
+      "paths": [
+        {
+          "id": 0,
+          "type": "LINEAR",
+          "start": {
+            "x": 60,
+            "y": 84
+          },
+          "end": {
+            "x": 16,
+            "y": 84
+          },
+          "control1": null,
+          "control2": null,
+          "interpolation": {
+            "type": "CONSTANT",
+            "heading1": 180,
+            "heading2": 180
+          },
+          "zpam": 0,
+          "maxPower": 0.5,
+          "callbacks": [
+            {
+              "type": "PARAMETRIC",
+              "t": 0,
+              "runnable": "intake"
+            },
+            {
+              "type": "PARAMETRIC",
+              "t": 1,
+              "runnable": "idle"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": null,
+      "paths": [
+        {
+          "id": 1,
+          "type": "LINEAR",
+          "start": {
+            "x": 16,
+            "y": 84
+          },
+          "end": {
+            "x": 60,
+            "y": 84
+          },
+          "control1": null,
+          "control2": null,
+          "interpolation": {
+            "type": "CONSTANT",
+            "heading1": 180,
+            "heading2": 135
+          },
+          "zpam": 0,
+          "maxPower": 0,
+          "callbacks": [
+            {
+              "type": "PARAMETRIC",
+              "t": 1,
+              "runnable": "shootMotif"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "curves": [
+    {
+      "type": "line",
+      "points": [
+        {
+          "x": 60,
+          "y": 84
+        },
+        {
+          "x": 16,
+          "y": 84
+        }
+      ],
+      "color": "#007bff",
+      "lineWidth": 2,
+      "isComplete": true,
+      "actions": [
+        {
+          "id": 1762649748409.2593,
+          "type": "PARAMETRIC",
+          "t": 0,
+          "runnable": "intake"
+        },
+        {
+          "id": 1762649757993.7322,
+          "type": "PARAMETRIC",
+          "t": 1,
+          "runnable": "idle"
+        }
+      ],
+      "startHeading": 180,
+      "endHeading": 180,
+      "headingInterpolation": "CONSTANT",
+      "zeroPowerAccelMultiplier": 0,
+      "maxPower": 0.5,
+      "clickSequence": [
+        "left",
+        "left"
+      ]
+    },
+    {
+      "type": "line",
+      "points": [
+        {
+          "x": 16,
+          "y": 84
+        },
+        {
+          "x": 60,
+          "y": 84
+        }
+      ],
+      "color": "#007bff",
+      "lineWidth": 2,
+      "isComplete": true,
+      "actions": [
+        {
+          "id": 1762649768975.0608,
+          "type": "PARAMETRIC",
+          "t": 1,
+          "runnable": "shootMotif"
+        }
+      ],
+      "startHeading": 180,
+      "endHeading": 135,
+      "headingInterpolation": "CONSTANT",
+      "zeroPowerAccelMultiplier": 0,
+      "maxPower": 0,
+      "clickSequence": [
+        "left",
+        "left"
+      ]
+    }
+  ],
+  "groups": []
+}
