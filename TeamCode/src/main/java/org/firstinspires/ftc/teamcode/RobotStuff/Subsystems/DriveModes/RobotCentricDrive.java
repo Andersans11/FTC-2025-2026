@@ -10,7 +10,6 @@ import dev.nextftc.hardware.driving.MecanumDriverControlled;
 public class RobotCentricDrive extends AbstractDriveMode {
 
     public static final RobotCentricDrive INSTANCE = new RobotCentricDrive();
-    MecanumDriverControlled vroom;
 
     @Override
     public void preStart() {
