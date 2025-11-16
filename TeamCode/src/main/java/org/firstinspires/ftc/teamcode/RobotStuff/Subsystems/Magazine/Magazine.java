@@ -9,6 +9,8 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.HardwareConfigs.ServoExF
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.IAmBetterSubsystem;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Intake;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 
 import dev.nextftc.core.commands.Command;
@@ -34,6 +36,8 @@ public class Magazine implements IAmBetterSubsystem {
     int shotsFired;
     public Utils.ArtifactTypes desiredColor = Utils.ArtifactTypes.PURPLE;
     boolean usingSec = false;
+    Command[] toStop;
+    Command[] toStart;
 
     Utils.ArtifactTypes colorQueue = Utils.ArtifactTypes.NONE;
 
@@ -75,7 +79,16 @@ public class Magazine implements IAmBetterSubsystem {
     }
 
     @Override
-    public void preStart() {}
+    public void preStart() {
+        this.toStop = new Command[]{
+                Shooter.INSTANCE.spinDown(), // stop shooter when intaking
+                Intake.INSTANCE.slowIdle() // slow intake when shooting to keep balls from falling out
+        };
+        this.toStart = new Command[]{
+                Intake.INSTANCE.idle(),
+                Shooter.INSTANCE.idle()
+        };
+    }
 
     @Override
     public void periodic() {
@@ -181,7 +194,9 @@ public class Magazine implements IAmBetterSubsystem {
                 else desiredColor = motif[0];
                 shotsFired = 0;
                 this.mode = mode;
-                })
+                }),
+            this.toStop[mode],
+            this.toStart[mode]
         );
     }
     public Utils.ArtifactTypes getSlotColor(int slot) {
