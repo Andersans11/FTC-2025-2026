@@ -56,13 +56,13 @@ public class RoyallyFuckedUpMode extends NextFTCOpMode {
 
     @Override
     public void onUpdate() {
-        deltaTime = RobotConfig.getDelta();
-
-        telemetryManager.addData("deltatime (ms)", TimeUnit.MILLISECONDS.convert(deltaTime, TimeUnit.NANOSECONDS));
-
         if (isUpdating) {
             telemetryManager.update(super.telemetry);
             isUpdating = false;
         } else isUpdating = true;
+
+        deltaTime = RobotConfig.getDelta();
+
+        telemetryManager.addData("deltatime (ms)", TimeUnit.MILLISECONDS.convert(deltaTime, TimeUnit.NANOSECONDS));
     }
 }

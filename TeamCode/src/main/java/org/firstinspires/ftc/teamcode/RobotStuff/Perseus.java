@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.delays.Delay;
+import dev.nextftc.core.commands.groups.ParallelGroup;
 import dev.nextftc.core.commands.groups.SequentialGroup;
 import dev.nextftc.core.commands.utility.InstantCommand;
 import dev.nextftc.core.commands.utility.NullCommand;
@@ -144,6 +145,13 @@ public class Perseus extends BetterSubsystemGroup {
         return new SequentialGroup(
                 Magazine.INSTANCE.setMode(1),
                 new Delay(0.25),
+                Intake.INSTANCE.idle()
+        );
+    }
+
+    public Command onStart() {
+        return new ParallelGroup(
+                Shooter.INSTANCE.resetKicker(),
                 Intake.INSTANCE.idle()
         );
     }

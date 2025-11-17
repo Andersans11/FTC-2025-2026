@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems;
 
+import androidx.annotation.NonNull;
+
 import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
@@ -199,6 +201,18 @@ public class Magazine implements IAmBetterSubsystem {
         return slots[slot].content;
     }
 
+    public String getMotifStr() {
+        return motif[0].toString().toLowerCase() + ", "
+                + motif[1].toString().toLowerCase() + ", "
+                + motif[2].toString().toLowerCase();
+    }
+
+    public String getContentStr() {
+        return slots[0].toString().toLowerCase() + ", "
+                + slots[1].toString().toLowerCase() + ", "
+                + slots[2].toString().toLowerCase();
+    }
+
     static class MagazineSlot {
         public Utils.ArtifactTypes content;
         public double offset;
@@ -206,6 +220,12 @@ public class Magazine implements IAmBetterSubsystem {
         public MagazineSlot(double offset) {
             this.offset = offset;
             this.content = Utils.ArtifactTypes.NONE;
+        }
+
+        @NonNull
+        @Override
+        public String toString() {
+            return this.content.toString().toLowerCase();
         }
     }
 }
