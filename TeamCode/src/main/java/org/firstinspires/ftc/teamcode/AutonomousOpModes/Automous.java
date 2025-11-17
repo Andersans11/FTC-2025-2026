@@ -39,23 +39,23 @@ public class Automous extends RoyallyFuckedUpMode {
             inputStream = hardwareMap.appContext.getAssets().open("Automous.json");
         } catch (IOException ignored) {
         }
-        telemetry.addLine("1");
+        telemetryManager.addLine("1");
         follower = Constants.createFollower(hardwareMap);
-        telemetry.addLine("1");
+        telemetryManager.addLine("1");
         callbacks = new Callbacks(this);
-        telemetry.addLine("1");
-        loader = new PathLoader(inputStream, follower, this, callbacks, 1);
-        telemetry.addLine("1");
+        telemetryManager.addLine("1");
+        loader = new PathLoader(inputStream, follower, follower.pathBuilder(), this, callbacks, 1);
+        telemetryManager.addLine("1");
         loader.Parse();
-        telemetry.addLine("1");
+        telemetryManager.addLine("1");
         Turret.INSTANCE.setPosition(-90).schedule();
-        telemetry.addLine("1");
+        telemetryManager.addLine("1");
         Turret.INSTANCE.initPoseUpdater(this);
     }
 
     @Override
     public void onWaitForStart() {
-        telemetry.update();
+        telemetryManager.update();
         Turret.INSTANCE.periodic();
     }
 

@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemCompo
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
-import org.firstinspires.ftc.teamcode.TestingOpModes.Drawing;
+import org.firstinspires.ftc.teamcode.RobotStuff.Misc.Drawing;
 
 @Autonomous(name = "Automous2")
 public class Automous2 extends RoyallyFuckedUpMode {
@@ -41,11 +41,11 @@ public class Automous2 extends RoyallyFuckedUpMode {
 
         Drawing.init();
 
-        telemetry.addLine("1");
+        telemetryManager.addLine("1");
         follower = Constants.createFollower(hardwareMap);
-        telemetry.addLine("1");
+        telemetryManager.addLine("1");
         Turret.INSTANCE.setPosition(-90).schedule();
-        telemetry.addLine("1");
+        telemetryManager.addLine("1");
         Turret.INSTANCE.initPoseUpdater(this);
 
         startingPose = new Pose(72, 72);
@@ -70,7 +70,7 @@ public class Automous2 extends RoyallyFuckedUpMode {
 
     @Override
     public void onWaitForStart() {
-        telemetry.update();
+        telemetryManager.update();
         Turret.INSTANCE.periodic();
         Magazine.INSTANCE.periodic();
     }
@@ -85,13 +85,13 @@ public class Automous2 extends RoyallyFuckedUpMode {
     public void onUpdate() {
         super.onUpdate();
         follower.update();
-        telemetry.addData("0", Magazine.INSTANCE.getSlotColor(0));
-        telemetry.addData("1", Magazine.INSTANCE.getSlotColor(1));
-        telemetry.addData("2", Magazine.INSTANCE.getSlotColor(2));
-        telemetry.addData("Active", Magazine.INSTANCE.activeSlot);
-        telemetry.addData("Mode", Magazine.INSTANCE.mode);
-        telemetry.addData("desiredColor", Magazine.INSTANCE.desiredColor);
-        telemetry.addData("isBusy", follower.isBusy());
+        telemetryManager.addData("0", Magazine.INSTANCE.getSlotColor(0));
+        telemetryManager.addData("1", Magazine.INSTANCE.getSlotColor(1));
+        telemetryManager.addData("2", Magazine.INSTANCE.getSlotColor(2));
+        telemetryManager.addData("Active", Magazine.INSTANCE.activeSlot);
+        telemetryManager.addData("Mode", Magazine.INSTANCE.mode);
+        telemetryManager.addData("desiredColor", Magazine.INSTANCE.desiredColor);
+        telemetryManager.addData("isBusy", follower.isBusy());
         Drawing.drawDebug(follower);
     }
 }
