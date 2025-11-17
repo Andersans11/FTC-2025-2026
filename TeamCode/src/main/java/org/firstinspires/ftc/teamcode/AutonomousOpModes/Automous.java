@@ -44,7 +44,7 @@ public class Automous extends RoyallyFuckedUpMode {
         telemetry.addLine("1");
         callbacks = new Callbacks(this);
         telemetry.addLine("1");
-        loader = new PathLoader(inputStream, follower, this, callbacks, 1);
+        loader = new PathLoader(inputStream, follower, follower.pathBuilder(), this, callbacks, 1);
         telemetry.addLine("1");
         loader.Parse();
         telemetry.addLine("1");

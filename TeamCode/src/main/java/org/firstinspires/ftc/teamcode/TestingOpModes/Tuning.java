@@ -8,12 +8,10 @@ import static org.firstinspires.ftc.teamcode.TestingOpModes.Tuning.stopRobot;
 import static org.firstinspires.ftc.teamcode.TestingOpModes.Tuning.telemetryM;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
+import org.firstinspires.ftc.teamcode.RobotStuff.Misc.Drawing;
 
 import com.bylazar.configurables.PanelsConfigurables;
 import com.bylazar.configurables.annotations.Configurable;
-import com.bylazar.field.FieldManager;
-import com.bylazar.field.PanelsField;
-import com.bylazar.field.Style;
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.follower.Follower;

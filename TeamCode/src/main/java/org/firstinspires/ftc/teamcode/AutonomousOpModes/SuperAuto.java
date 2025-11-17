@@ -54,12 +54,12 @@ public class SuperAuto extends RoyallyFuckedUpMode {
         follower = Constants.createFollower(hardwareMap);
         callbacks = new Callbacks(this);
 
-        base = new PathLoader(  FC,  follower, this, callbacks, 1);
-        top = new PathLoader(   TC,    follower, this, callbacks, 1);
-        middle = new PathLoader(MC, follower, this, callbacks, 1);
-        bottom = new PathLoader(BC, follower, this, callbacks, 1);
-        gate = new PathLoader(  GC,   follower, this, callbacks, 1);
-        park = new PathLoader(  PC,        follower, this, callbacks, 1);
+        base = new PathLoader(   FC, follower, follower.pathBuilder(), this, callbacks, 1);
+        top = new PathLoader(    TC, follower, follower.pathBuilder(), this, callbacks, 1);
+        middle = new PathLoader( MC, follower, follower.pathBuilder(), this, callbacks, 1);
+        bottom = new PathLoader( BC, follower, follower.pathBuilder(), this, callbacks, 1);
+        gate = new PathLoader(   GC, follower, follower.pathBuilder(), this, callbacks, 1);
+        park = new PathLoader(   PC, follower, follower.pathBuilder(), this, callbacks, 1);
 
         P2.dpadUp().whenBecomesTrue(() -> {
             doTop = true;
