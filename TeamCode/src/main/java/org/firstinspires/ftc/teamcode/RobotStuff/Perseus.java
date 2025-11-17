@@ -41,41 +41,10 @@ public class Perseus extends BetterSubsystemGroup {
         );
     }
 
-    public Utils.ArtifactTypes[] PPG = new Utils.ArtifactTypes[] {
-            Utils.ArtifactTypes.PURPLE,
-            Utils.ArtifactTypes.PURPLE,
-            Utils.ArtifactTypes.GREEN
-    };
-    public Utils.ArtifactTypes[] GPP = new Utils.ArtifactTypes[] {
-            Utils.ArtifactTypes.GREEN,
-            Utils.ArtifactTypes.PURPLE,
-            Utils.ArtifactTypes.PURPLE
-    };
-    public Utils.ArtifactTypes[] PGP = new Utils.ArtifactTypes[] {
-            Utils.ArtifactTypes.PURPLE,
-            Utils.ArtifactTypes.GREEN,
-            Utils.ArtifactTypes.PURPLE
-    };
-
-    @Override
-    public void initialize() {
-        super.initialize();
-    }
-
     @Override
     public void initSystem() {
         super.initSystem();
         follower = Constants.createFollower(RobotConfig.getHardwareMap());
-    }
-
-    @Override
-    public void preStart() {
-        super.preStart();
-    }
-
-    @Override
-    public void periodic() {
-        super.periodic();
     }
 
     //  ------------------------- COMMANDS --------------------------- //

@@ -49,6 +49,22 @@ public class Turret implements IAmBetterSubsystem {
 
     public Follower poseUpdater;
 
+    public Utils.ArtifactTypes[] PPG = new Utils.ArtifactTypes[] {
+            Utils.ArtifactTypes.PURPLE,
+            Utils.ArtifactTypes.PURPLE,
+            Utils.ArtifactTypes.GREEN
+    };
+    public Utils.ArtifactTypes[] GPP = new Utils.ArtifactTypes[] {
+            Utils.ArtifactTypes.GREEN,
+            Utils.ArtifactTypes.PURPLE,
+            Utils.ArtifactTypes.PURPLE
+    };
+    public Utils.ArtifactTypes[] PGP = new Utils.ArtifactTypes[] {
+            Utils.ArtifactTypes.PURPLE,
+            Utils.ArtifactTypes.GREEN,
+            Utils.ArtifactTypes.PURPLE
+    };
+
     // ------------------------- CONFIG ------------------------------- //
     public static double kP = 0.005;
     public static double kI = 0.0;
@@ -219,23 +235,11 @@ public class Turret implements IAmBetterSubsystem {
         pose = poseUpdater.getPose();
 
         if (camera.blocks(3).length != 0) {
-            Magazine.INSTANCE.motif = new Utils.ArtifactTypes[]{
-                    Utils.ArtifactTypes.GREEN,
-                    Utils.ArtifactTypes.PURPLE,
-                    Utils.ArtifactTypes.PURPLE
-            };
+            Magazine.INSTANCE.motif = GPP;
         } else if (camera.blocks(4).length != 0) {
-            Magazine.INSTANCE.motif = new Utils.ArtifactTypes[]{
-                    Utils.ArtifactTypes.PURPLE,
-                    Utils.ArtifactTypes.GREEN,
-                    Utils.ArtifactTypes.PURPLE
-            };
+            Magazine.INSTANCE.motif = PGP;
         } else if (camera.blocks(5).length != 0) {
-            Magazine.INSTANCE.motif = new Utils.ArtifactTypes[]{
-                    Utils.ArtifactTypes.PURPLE,
-                    Utils.ArtifactTypes.PURPLE,
-                    Utils.ArtifactTypes.GREEN
-            };
+            Magazine.INSTANCE.motif = PPG;
         }
     }
 }
