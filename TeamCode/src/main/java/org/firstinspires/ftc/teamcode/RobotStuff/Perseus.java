@@ -77,6 +77,9 @@ public class Perseus extends BetterSubsystemGroup {
         super.periodic();
     }
 
+    public static double motifShootingSpeed = 0.2;
+    public static double shootingSpeed = 0.1;
+
     //  ------------------------- COMMANDS --------------------------- //
 
     public Command shootSingle(Utils.ArtifactTypes color) {
@@ -85,7 +88,7 @@ public class Perseus extends BetterSubsystemGroup {
                     new InstantCommand(() -> this.isShooting = true),
                     Magazine.INSTANCE.setDesiredColor(color),
                     Shooter.INSTANCE.spinUp(),
-                    new Delay(0.25),
+                    new Delay(shootingSpeed),
                     Shooter.INSTANCE.shoot(),
                     Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.NONE),
                     Shooter.INSTANCE.idle(),
@@ -99,11 +102,10 @@ public class Perseus extends BetterSubsystemGroup {
     public Command shootSingleMotif(int i) {
         return new SequentialGroup(
                 Magazine.INSTANCE.setDesiredColor(i),
-                Shooter.INSTANCE.spinUp(),
-                new Delay(0.25),
+                new Delay(shootingSpeed),
                 Shooter.INSTANCE.shoot(),
-                Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.NONE),
-                Shooter.INSTANCE.idle()
+                new Delay(shootingSpeed),
+                Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.NONE)
         );
     }
 
@@ -128,9 +130,9 @@ public class Perseus extends BetterSubsystemGroup {
                     new InstantCommand(() -> this.isMotifShooting = true),
                     Shooter.INSTANCE.spinUp(),
                     shootSingleMotif(0),
-                    new Delay(0.3),
+                    new Delay(motifShootingSpeed),
                     shootSingleMotif(1),
-                    new Delay(0.3),
+                    new Delay(motifShootingSpeed),
                     shootSingleMotif(2),
                     Shooter.INSTANCE.idle(),
                     new InstantCommand(() -> this.isMotifShooting = false)

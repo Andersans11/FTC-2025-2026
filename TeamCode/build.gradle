@@ -29,5 +29,5 @@ android {
 
 dependencies {
     implementation project(':FtcRobotController')
-    implementation files("lib/pedrojson-loader-1.0.4-alpha.jar")
+    implementation files("lib/pedrojson-loader-local.jar")
 }
