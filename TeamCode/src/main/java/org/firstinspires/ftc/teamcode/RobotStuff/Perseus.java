@@ -47,7 +47,7 @@ public class Perseus extends BetterSubsystemGroup {
         follower = Constants.createFollower(RobotConfig.getHardwareMap());
     }
 
-    public static double motifShootingSpeed = 0.2;
+    public static double motifShootingSpeed = 0.15;
     public static double shootingSpeed = 0.1;
 
     //  ------------------------- COMMANDS --------------------------- //
