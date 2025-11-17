@@ -28,14 +28,16 @@ public class FullTest extends RoyallyFuckedUpMode {
         super.onInit();
         Turret.INSTANCE.initPoseUpdater(this);
 
-        P1.rightTrigger().atLeast(0.1).whenBecomesTrue(Perseus.INSTANCE.intake());
-        P1.rightTrigger().atLeast(0.1).whenBecomesFalse(Perseus.INSTANCE.stopIntake());
+        P1.rightTrigger().atLeast(0.1)
+                .whenBecomesTrue(Perseus.INSTANCE.intake())
+                .whenBecomesFalse(Perseus.INSTANCE.stopIntake());
 
         P1.dpadUp().whenBecomesTrue(Turret.INSTANCE.setRedAlliance(false));
         P1.dpadDown().whenBecomesTrue(Turret.INSTANCE.setRedAlliance(true));
 
-        P1.rightBumper().whenBecomesTrue(Perseus.INSTANCE.outtake());
-        P1.rightBumper().whenBecomesFalse(Perseus.INSTANCE.stopIntake());
+        P1.rightBumper()
+                .whenBecomesTrue(Perseus.INSTANCE.outtake())
+                .whenBecomesFalse(Perseus.INSTANCE.stopIntake());
 
         P2.dpadLeft().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.GREEN));
         P2.dpadRight().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.PURPLE));
