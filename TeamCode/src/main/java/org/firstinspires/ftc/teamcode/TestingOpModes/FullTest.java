@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.TestingOpModes;
 
+import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -39,6 +40,8 @@ public class FullTest extends RoyallyFuckedUpMode {
                 .whenBecomesTrue(Perseus.INSTANCE.outtake())
                 .whenBecomesFalse(Perseus.INSTANCE.stopIntake());
 
+        P1.leftBumper().whenBecomesTrue(Perseus.INSTANCE.updateHoodPos());
+
         P2.dpadLeft().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.GREEN));
         P2.dpadRight().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.PURPLE));
 
@@ -70,6 +73,10 @@ public class FullTest extends RoyallyFuckedUpMode {
     @Override
     public void onUpdate() {
         super.onUpdate();
+        HuskyLens.Block[] blocks = Turret.INSTANCE.camera.blocks(1);
+
+        telemetryManager.addData("tagX", blocks != null ? blocks[0].x : "no blocks found");
+        telemetryManager.addData("tagY", blocks != null ? blocks[0].y : "no blocks found");
 
         telemetryManager.addData("0", Magazine.INSTANCE.getSlotColor(0));
         telemetryManager.addData("1", Magazine.INSTANCE.getSlotColor(1));

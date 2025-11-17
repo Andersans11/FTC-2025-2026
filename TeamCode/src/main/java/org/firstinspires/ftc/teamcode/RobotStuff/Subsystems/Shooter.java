@@ -4,6 +4,7 @@ import com.bylazar.configurables.annotations.Configurable;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 
+import dev.nextftc.bindings.Range;
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.delays.Delay;
 import dev.nextftc.core.commands.groups.SequentialGroup;
@@ -22,6 +23,7 @@ public class Shooter implements IAmBetterSubsystem {
     MotorGroup shooters;
     ServoEx hood;
     ServoEx kicker;
+    Range hoodSupp;
 
     // ------------------------ CONFIG ------------------------ //
     public static double shootingSpeed = 0.1;

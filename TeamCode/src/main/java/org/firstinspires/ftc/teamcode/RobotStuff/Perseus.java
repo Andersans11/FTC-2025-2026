@@ -30,6 +30,7 @@ public class Perseus extends BetterSubsystemGroup {
 
     boolean isShooting = false;
     boolean isMotifShooting = false;
+    public static double hoodToPos = 0.5;
 
     private Perseus() {
         super(
@@ -97,6 +98,10 @@ public class Perseus extends BetterSubsystemGroup {
         } else {
             return new NullCommand();
         }
+    }
+
+    public Command updateHoodPos() {
+        return Shooter.INSTANCE.setHoodPos(hoodToPos);
     }
 
     public Command shootSingleMotif(int i) {
