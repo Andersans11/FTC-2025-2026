@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.RobotCentricDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.Magazine;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
 
 @TeleOp(name = "Test Magazine", group = Utils.OpModeGroups.TESTING)
 public class TestMagazine extends RoyallyFuckedUpMode {

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
+package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems;
 
 import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.util.Timer;
@@ -8,10 +8,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.HardwareConfigs.ServoExFullRange;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.IAmBetterSubsystem;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Intake;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.delays.Delay;
@@ -22,7 +18,7 @@ import dev.nextftc.core.commands.utility.InstantCommand;
 public class Magazine implements IAmBetterSubsystem {
 
     public static final Magazine INSTANCE = new Magazine();
-    MagSlot[] slots;
+    MagazineSlot[] slots;
     public int activeSlot; // slot that receives the next ball
     public ServoExFullRange[] servos;
     public ColorRangeSensor color;
@@ -56,10 +52,10 @@ public class Magazine implements IAmBetterSubsystem {
 
     @Override
     public void initSystem() {
-        this.slots = new MagSlot[] {
-                new MagSlot(off0), // this slot starts in front of intake
-                new MagSlot(off1),
-                new MagSlot(off2)
+        this.slots = new MagazineSlot[] {
+                new MagazineSlot(off0), // this slot starts in front of intake
+                new MagazineSlot(off1),
+                new MagazineSlot(off2)
         };
         this.activeSlot = 0;
 
@@ -201,5 +197,15 @@ public class Magazine implements IAmBetterSubsystem {
     }
     public Utils.ArtifactTypes getSlotColor(int slot) {
         return slots[slot].content;
+    }
+
+    static class MagazineSlot {
+        public Utils.ArtifactTypes content;
+        public double offset;
+
+        public MagazineSlot(double offset) {
+            this.offset = offset;
+            this.content = Utils.ArtifactTypes.NONE;
+        }
     }
 }

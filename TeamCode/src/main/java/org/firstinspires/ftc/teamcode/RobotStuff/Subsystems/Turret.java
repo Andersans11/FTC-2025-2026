@@ -10,8 +10,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
-import org.firstinspires.ftc.teamcode.RobotStuff.Perseus;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.Magazine;
 
 import dev.nextftc.control.ControlSystem;
 import dev.nextftc.control.KineticState;

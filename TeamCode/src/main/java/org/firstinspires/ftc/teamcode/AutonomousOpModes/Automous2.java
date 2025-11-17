@@ -5,7 +5,6 @@ import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.Path;
 import com.pedropathing.paths.PathChain;
-import com.pedropathing.paths.callbacks.ParametricCallback;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
@@ -13,10 +12,9 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Perseus;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.Magazine;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
-import org.firstinspires.ftc.teamcode.RobotStuff.pedrojson.Callbacks;
 import org.firstinspires.ftc.teamcode.TestingOpModes.Drawing;
 
 @Autonomous(name = "Automous2")

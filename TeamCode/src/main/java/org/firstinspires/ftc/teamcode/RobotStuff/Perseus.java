@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemGroup;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Intake;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.Magazine;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 
