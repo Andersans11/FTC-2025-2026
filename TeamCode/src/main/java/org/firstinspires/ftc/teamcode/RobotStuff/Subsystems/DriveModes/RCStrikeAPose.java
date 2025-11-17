@@ -5,6 +5,7 @@ import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Sensitivities;
 
 import dev.nextftc.control.ControlSystem;
@@ -39,7 +40,7 @@ public class RCStrikeAPose extends AbstractDriveMode {
     public static double goToHeading = 0;
 
     @Override
-    public void initSystem() {
+    public void initialize() {
         xController = ControlSystem.builder()
                 .posPid(kPx, kIx, kDx).build();
         yController = ControlSystem.builder()
@@ -49,6 +50,11 @@ public class RCStrikeAPose extends AbstractDriveMode {
                         feedback -> feedback.posPid(kPh, kIh, kDh)
                 )
                 .build();
+    }
+
+    @Override
+    public void initSystem() {
+        pinpoint = RobotConfig.Pinpoint;
     }
 
     @Override
