@@ -40,7 +40,9 @@ public class RCStrikeAPose extends AbstractDriveMode {
     public static double goToHeading = 0;
 
     @Override
-    public void initialize() {
+    public void initSystem() {
+        super.initSystem();
+
         xController = ControlSystem.builder()
                 .posPid(kPx, kIx, kDx).build();
         yController = ControlSystem.builder()
@@ -50,10 +52,7 @@ public class RCStrikeAPose extends AbstractDriveMode {
                         feedback -> feedback.posPid(kPh, kIh, kDh)
                 )
                 .build();
-    }
 
-    @Override
-    public void initSystem() {
         pinpoint = RobotConfig.Pinpoint;
     }
 
