@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 
 import dev.nextftc.hardware.impl.MotorEx;
 
-@TeleOp(name = "Reset Encoders", group = Utils.UTILITY)
+@TeleOp(name = "Reset Encoders", group = Utils.OpModeGroups.UTILITY)
 public class Reset_Encoders extends RoyallyFuckedUpMode {
 
     public Reset_Encoders() {}

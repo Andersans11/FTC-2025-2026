@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 
 import dev.nextftc.core.commands.groups.ParallelGroup;
 
-@TeleOp(name = "TwoAndOnlyOpMode", group = Utils.PRIORITY_PRIORITY)
+@TeleOp(name = "TwoAndOnlyOpMode", group = Utils.OpModeGroups.PRIORITY_PRIORITY)
 public class Comp_OpMode extends RoyallyFuckedUpMode {
 
     public Comp_OpMode() {

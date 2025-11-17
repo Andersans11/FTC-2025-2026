@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.RobotCentricDrive;
 
-@TeleOp(name = "Basic Mecanum Drive", group = Utils.WORKING)
+@TeleOp(name = "Basic Mecanum Drive", group = Utils.OpModeGroups.WORKING)
 public class BasicMecanumDrive extends RoyallyFuckedUpMode {
 
     public BasicMecanumDrive() {

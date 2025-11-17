@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemCompo
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.HoldHeadingPID;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Intake;
 
-@TeleOp(name = "Test Intake", group = Utils.TESTING)
+@TeleOp(name = "Test Intake", group = Utils.OpModeGroups.TESTING)
 public class TestIntake extends RoyallyFuckedUpMode {
 
     public TestIntake() {

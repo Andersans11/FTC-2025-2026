@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemCompo
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.RobotCentricDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 
-@TeleOp(name = "Test: Turret", group = Utils.TESTING)
+@TeleOp(name = "Test: Turret", group = Utils.OpModeGroups.TESTING)
 public class TestTurret extends RoyallyFuckedUpMode {
 
     public TestTurret() {

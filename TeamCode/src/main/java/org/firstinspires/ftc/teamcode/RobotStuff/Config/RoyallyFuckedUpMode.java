@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.RobotStuff.Config;
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.DeltaTimer;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
 
@@ -24,6 +25,9 @@ public class RoyallyFuckedUpMode extends NextFTCOpMode {
     }
 
     protected long deltaTime;
+
+    @Deprecated(since = "Panels telemetry was added, use telemetryManager instead.")
+    protected Telemetry telemetry;
 
     protected TelemetryManager telemetryManager = PanelsTelemetry.INSTANCE.getTelemetry();
 
@@ -57,7 +61,7 @@ public class RoyallyFuckedUpMode extends NextFTCOpMode {
         telemetryManager.addData("deltatime (ms)", TimeUnit.MILLISECONDS.convert(deltaTime, TimeUnit.NANOSECONDS));
 
         if (isUpdating) {
-            telemetryManager.update(telemetry);
+            telemetryManager.update(super.telemetry);
             isUpdating = false;
         } else isUpdating = true;
     }

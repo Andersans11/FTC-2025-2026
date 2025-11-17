@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.HoldHeadingPID;
 
-@TeleOp(name = "Lock Yaw", group = Utils.TESTING)
+@TeleOp(name = "Lock Yaw", group = Utils.OpModeGroups.TESTING)
 public class HoldHeadingTest extends RoyallyFuckedUpMode {
 
     public HoldHeadingTest() {

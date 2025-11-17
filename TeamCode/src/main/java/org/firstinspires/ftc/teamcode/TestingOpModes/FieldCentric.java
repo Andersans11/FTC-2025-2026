@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.FieldCentricDrive;
 
-@TeleOp(name = "Basic FC Drive", group = Utils.TESTING)
+@TeleOp(name = "Basic FC Drive", group = Utils.OpModeGroups.TESTING)
 public class FieldCentric extends RoyallyFuckedUpMode {
 
 

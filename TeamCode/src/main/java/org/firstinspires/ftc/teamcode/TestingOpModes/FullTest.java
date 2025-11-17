@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.Magazine;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 
-@TeleOp(name = "Test: Full", group = Utils.PRIORITY)
+@TeleOp(name = "Test: Full", group = Utils.OpModeGroups.PRIORITY)
 public class FullTest extends RoyallyFuckedUpMode {
 
     public FullTest() {

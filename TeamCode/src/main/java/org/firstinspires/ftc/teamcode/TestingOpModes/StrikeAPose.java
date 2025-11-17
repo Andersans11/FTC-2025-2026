@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemCompo
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.RCStrikeAPose;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.RobotCentricDrive;
 
-@TeleOp(name = "strike a pose", group = Utils.TESTING)
+@TeleOp(name = "strike a pose", group = Utils.OpModeGroups.TESTING)
 public class StrikeAPose extends RoyallyFuckedUpMode {
 
     public StrikeAPose() {

@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.RobotCent
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.Magazine;
 
-@TeleOp(name = "Test Magazine", group = Utils.TESTING)
+@TeleOp(name = "Test Magazine", group = Utils.OpModeGroups.TESTING)
 public class TestMagazine extends RoyallyFuckedUpMode {
 
     int i = 0;

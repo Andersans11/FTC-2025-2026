@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 
-@TeleOp(name = "Test: Hold Position", group = Utils.TESTING)
+@TeleOp(name = "Test: Hold Position", group = Utils.OpModeGroups.TESTING)
 public class TestHoldPos extends OpMode {
     Follower follower;
 
