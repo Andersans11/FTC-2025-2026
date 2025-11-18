@@ -36,7 +36,6 @@ public class TestTurret extends RoyallyFuckedUpMode {
         super.onUpdate();
 
         super.telemetry.addData("targetAngle", Turret.INSTANCE.targetAngle);
-        super.telemetry.addData("motorPower", Turret.INSTANCE.controller.calculate(Turret.INSTANCE.rotationMotor.getState()));
         super.telemetry.addData("goal", Turret.INSTANCE.controller.getGoal());
         super.telemetry.addData("length", Turret.INSTANCE.camera.blocks().length);
         super.telemetry.addData("waugh", Turret.INSTANCE.waugh());

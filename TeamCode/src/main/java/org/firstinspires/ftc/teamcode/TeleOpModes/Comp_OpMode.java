@@ -54,9 +54,8 @@ public class Comp_OpMode extends RoyallyFuckedUpMode {
 
         P2.dpadUp().whenBecomesTrue(Shooter.INSTANCE.resetKicker());
 
-        P2.leftBumper().whenBecomesTrue(Magazine.INSTANCE.incShotsFired());
-
-        P2.dpadDown().whenBecomesTrue(new ParallelGroup(Turret.INSTANCE.autoControl(), Turret.INSTANCE.zero()));
+        P2.leftTrigger().atLeast(0.1).whenBecomesTrue(Magazine.INSTANCE.incShotsFired());
+        P2.leftBumper().whenBecomesTrue(Turret.INSTANCE.zero());
     }
 
     @Override
@@ -69,12 +68,6 @@ public class Comp_OpMode extends RoyallyFuckedUpMode {
     public void onUpdate() {
         super.onUpdate();
 
-        P2.leftStickX().update();
-
-        if (Math.abs(P2.leftStickX().get()) >= 0.1) {
-            Turret.INSTANCE.changePosition(P2.leftStickX().get() * 10);
-        }
-
         telemetryManager.addData("0", Magazine.INSTANCE.getSlotColor(0));
         telemetryManager.addData("1", Magazine.INSTANCE.getSlotColor(1));
         telemetryManager.addData("2", Magazine.INSTANCE.getSlotColor(2));
@@ -82,5 +75,7 @@ public class Comp_OpMode extends RoyallyFuckedUpMode {
         telemetryManager.addData("Mode", Magazine.INSTANCE.mode);
         telemetryManager.addData("desiredColor", Magazine.INSTANCE.desiredColor);
         telemetryManager.addData("shotsFired", Magazine.INSTANCE.shotsFired);
+        telemetryManager.addData("turret", Turret.INSTANCE.rotationMotor.getPower());
+        telemetryManager.addData("isOn", Turret.INSTANCE.limitSwitch.isPressed());
     }
 }

@@ -6,14 +6,17 @@ import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
+import com.qualcomm.hardware.rev.RevTouchSensor;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import dev.nextftc.bindings.Button;
 import dev.nextftc.bindings.Range;
@@ -41,6 +44,7 @@ public class RobotConfig {
     public static MotorConfig ShootMotor2;
     public static MotorConfig TurretRotation;
     public static MotorConfig IntakeMotor;
+    public static TouchSensor LimitSwitch;
 
     public static FullServoConfig CarouselCR1;
     public static FullServoConfig CarouselCR2;
@@ -101,6 +105,8 @@ public class RobotConfig {
         IntakeCS = hardwareMap.get(ColorRangeSensor.class, "COLOR");
 
         camera = hardwareMap.get(HuskyLens.class, "HUSKYLENS");
+
+        LimitSwitch = hardwareMap.get(TouchSensor.class, "LIMIT");
 
         FLDrive = new MotorConfig(
                 hardwareMap,

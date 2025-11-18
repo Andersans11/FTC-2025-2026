@@ -62,6 +62,8 @@ public class FullTest extends RoyallyFuckedUpMode {
         P2.leftBumper().whenTrue(Turret.INSTANCE.changePosition(-0.5));
 
         P2.dpadDown().whenBecomesTrue(Turret.INSTANCE.autoControl());
+
+        P1.triangle().whenBecomesTrue(Perseus.INSTANCE.updateHoodPos());
     }
 
     @Override
@@ -73,10 +75,15 @@ public class FullTest extends RoyallyFuckedUpMode {
     @Override
     public void onUpdate() {
         super.onUpdate();
-        HuskyLens.Block[] blocks = Turret.INSTANCE.camera.blocks(1);
+        try {
+            HuskyLens.Block[] blocks = Turret.INSTANCE.camera.blocks(1);
 
-        telemetryManager.addData("tagX", blocks != null ? blocks[0].x : "no blocks found");
-        telemetryManager.addData("tagY", blocks != null ? blocks[0].y : "no blocks found");
+            telemetryManager.addData("tagX", blocks != null ? blocks[0].x : "no blocks found");
+            telemetryManager.addData("tagY", blocks != null ? blocks[0].y : "no blocks found");
+        } catch (RuntimeException e) {
+            telemetryManager.addData("tagX", "no blocks found");
+            telemetryManager.addData("tagY", "no blocks found");
+        }
 
         telemetryManager.addData("0", Magazine.INSTANCE.getSlotColor(0));
         telemetryManager.addData("1", Magazine.INSTANCE.getSlotColor(1));

@@ -135,6 +135,7 @@ public class Perseus extends BetterSubsystemGroup {
             return new SequentialGroup(
                     new InstantCommand(() -> this.isMotifShooting = true),
                     Shooter.INSTANCE.spinUp(),
+                    new Delay(0.25),
                     shootSingleMotif(0),
                     new Delay(motifShootingSpeed),
                     shootSingleMotif(1),

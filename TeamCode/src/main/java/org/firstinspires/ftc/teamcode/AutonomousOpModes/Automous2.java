@@ -49,7 +49,7 @@ public class Automous2 extends RoyallyFuckedUpMode {
         Turret.INSTANCE.initPoseUpdater(this);
 
         startingPose = new Pose(72, 72);
-        scoringPose = new Pose(22, 72);
+        scoringPose = new Pose(7, 72);
 
         Magazine.INSTANCE.setSlotContent(0, Utils.ArtifactTypes.PURPLE).schedule();
         Magazine.INSTANCE.setSlotContent(1, Utils.ArtifactTypes.PURPLE).schedule();
@@ -59,13 +59,11 @@ public class Automous2 extends RoyallyFuckedUpMode {
                 .addPath(new Path(new BezierLine(startingPose, scoringPose)))
                 .setConstantHeadingInterpolation(0)
                 .addParametricCallback(0, () -> Magazine.INSTANCE.setMode(1).schedule())
-                .addParametricCallback(0.25, () -> Turret.INSTANCE.autoControl().schedule())
-                .addParametricCallback(1, () -> Perseus.INSTANCE.shootMotif().schedule())
+                .addParametricCallback(0.5, () -> Turret.INSTANCE.autoControl().schedule())
                 .build();
         follower.setStartingPose(startingPose);
-        follower.setMaxPower(0.75);
+        follower.setMaxPower(0.5);
         Shooter.INSTANCE.resetKicker().schedule();
-        path.resetCallbacks();
     }
 
     @Override
@@ -79,19 +77,34 @@ public class Automous2 extends RoyallyFuckedUpMode {
     public void onStartButtonPressed() {
         super.onStartButtonPressed();
         follower.followPath(path);
+        Perseus.INSTANCE.start().schedule();
     }
 
     @Override
     public void onUpdate() {
         super.onUpdate();
         follower.update();
-        telemetry.addData("0", Magazine.INSTANCE.getSlotColor(0));
-        telemetry.addData("1", Magazine.INSTANCE.getSlotColor(1));
-        telemetry.addData("2", Magazine.INSTANCE.getSlotColor(2));
-        telemetry.addData("Active", Magazine.INSTANCE.activeSlot);
-        telemetry.addData("Mode", Magazine.INSTANCE.mode);
-        telemetry.addData("desiredColor", Magazine.INSTANCE.desiredColor);
-        telemetry.addData("isBusy", follower.isBusy());
+        telemetryManager.addData("0", Magazine.INSTANCE.getSlotColor(0));
+        telemetryManager.addData("1", Magazine.INSTANCE.getSlotColor(1));
+        telemetryManager.addData("2", Magazine.INSTANCE.getSlotColor(2));
+        telemetryManager.addData("Active", Magazine.INSTANCE.activeSlot);
+        telemetryManager.addData("Mode", Magazine.INSTANCE.mode);
+        telemetryManager.addData("desiredColor", Magazine.INSTANCE.desiredColor);
+        telemetryManager.addData("shotsFired", Magazine.INSTANCE.shotsFired);
+        telemetryManager.addData("turretMode", Turret.INSTANCE.mode);
+        telemetryManager.addData("turret", Turret.INSTANCE.rotationMotor.getCurrentPosition());
+        telemetryManager.addData("target", Turret.INSTANCE.controller.getGoal());
         Drawing.drawDebug(follower);
+
+        switch (outcomeState) {
+            case 0:
+                if (!follower.isBusy()) {
+                    outcomeState = 1;
+                    Perseus.INSTANCE.shootMotif().schedule();
+                }
+                break;
+            case 1:
+                break;
+        }
     }
 }
