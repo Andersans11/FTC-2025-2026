@@ -215,7 +215,7 @@ public class Turret implements IAmBetterSubsystem {
                 controller.setGoal(new KineticState(degreesToTicks(Math.max(-90, Math.min(90, targetAngle)))));
                 break;
         }
-        rotationMotor.setPower(controller.calculate(rotationMotor.getState()));
+        rotationMotor.setPower(Math.max(-0.75, Math.min(0.75, controller.calculate(rotationMotor.getState()))));
         poseUpdater.update();
         oldPose = pose;
         pose = poseUpdater.getPose();
@@ -224,16 +224,25 @@ public class Turret implements IAmBetterSubsystem {
             Magazine.INSTANCE.motif = new Utils.ArtifactTypes[]{
                     Utils.ArtifactTypes.GREEN,
                     Utils.ArtifactTypes.PURPLE,
+                    Utils.ArtifactTypes.PURPLE,
+                    Utils.ArtifactTypes.GREEN,
+                    Utils.ArtifactTypes.PURPLE,
                     Utils.ArtifactTypes.PURPLE
             };
         } else if (camera.blocks(4).length != 0) {
             Magazine.INSTANCE.motif = new Utils.ArtifactTypes[]{
                     Utils.ArtifactTypes.PURPLE,
                     Utils.ArtifactTypes.GREEN,
+                    Utils.ArtifactTypes.PURPLE,
+                    Utils.ArtifactTypes.PURPLE,
+                    Utils.ArtifactTypes.GREEN,
                     Utils.ArtifactTypes.PURPLE
             };
         } else if (camera.blocks(5).length != 0) {
             Magazine.INSTANCE.motif = new Utils.ArtifactTypes[]{
+                    Utils.ArtifactTypes.PURPLE,
+                    Utils.ArtifactTypes.PURPLE,
+                    Utils.ArtifactTypes.GREEN,
                     Utils.ArtifactTypes.PURPLE,
                     Utils.ArtifactTypes.PURPLE,
                     Utils.ArtifactTypes.GREEN

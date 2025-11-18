@@ -110,7 +110,8 @@ public class Perseus extends BetterSubsystemGroup {
                 new Delay(shootingSpeed),
                 Shooter.INSTANCE.shoot(),
                 new Delay(shootingSpeed),
-                Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.NONE)
+                Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.NONE),
+                Magazine.INSTANCE.setDesiredColor(i + 1)
         );
     }
 
@@ -149,9 +150,8 @@ public class Perseus extends BetterSubsystemGroup {
 
     public Command start() {
         return new SequentialGroup(
-                Magazine.INSTANCE.setMode(1),
-                new Delay(0.25),
-                Intake.INSTANCE.idle()
+                Intake.INSTANCE.idle(),
+                Shooter.INSTANCE.resetKicker()
         );
     }
 }

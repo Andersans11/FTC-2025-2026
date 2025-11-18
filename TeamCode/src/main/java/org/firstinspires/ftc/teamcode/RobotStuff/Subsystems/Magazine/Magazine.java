@@ -29,11 +29,15 @@ public class Magazine implements IAmBetterSubsystem {
     public Utils.ArtifactTypes[] motif = new Utils.ArtifactTypes[] {
             Utils.ArtifactTypes.PURPLE,
             Utils.ArtifactTypes.PURPLE,
+            Utils.ArtifactTypes.GREEN,
+            Utils.ArtifactTypes.PURPLE,
+            Utils.ArtifactTypes.PURPLE,
             Utils.ArtifactTypes.GREEN
     };
-    int shotsFired;
+    public int shotsFired = 0;
     public Utils.ArtifactTypes desiredColor = Utils.ArtifactTypes.PURPLE;
     boolean usingSec = false;
+    public double turretOff = 0;
 
     Utils.ArtifactTypes colorQueue = Utils.ArtifactTypes.NONE;
 
@@ -42,11 +46,11 @@ public class Magazine implements IAmBetterSubsystem {
     public static double off0 = 0;
     public static double off1 = 120;
     public static double off2 = 240;
-    public static double off = 17;
+    public static double off = 42;
     public static double dist = 110;
     public static double dist2 = 400;
     public int it = 0;
-    public int mode;
+    public int mode = 0;
 
     public Timer timer;
 
@@ -67,9 +71,9 @@ public class Magazine implements IAmBetterSubsystem {
 
         this.color = RobotConfig.IntakeCS;
 
-        servos[0].setPosition((targetPos + off) / 355);
-        servos[1].setPosition((targetPos + off) / 355);
-        servos[2].setPosition((targetPos + off) / 355);
+        servos[0].setPosition(slots[0].offset);
+        servos[1].setPosition(slots[0].offset);
+        servos[2].setPosition(slots[0].offset);
 
         timer = new Timer();
     }
@@ -80,7 +84,7 @@ public class Magazine implements IAmBetterSubsystem {
     @Override
     public void periodic() {
 
-        targetPos = ((180 + Turret.INSTANCE.targetAngle) * mode) + slots[activeSlot].offset;
+        targetPos = ((180 + Turret.INSTANCE.targetAngle + turretOff) * mode) + slots[activeSlot].offset;
 
         if (targetPos != oldTargetPos) {
             while (targetPos + off >= 355) {
@@ -166,11 +170,18 @@ public class Magazine implements IAmBetterSubsystem {
         return new InstantCommand(() -> this.desiredColor = desiredColor);
     }
 
+    public Command incShotsFired() {
+        return new InstantCommand(() -> {
+            shotsFired++;
+            if (shotsFired == 3) shotsFired = 0;
+        });
+    }
+
     /**
      * Sets the desired color to that of the next motif Artifact
      **/
     public Command setDesiredColor(int i) {
-        return new InstantCommand(() -> this.desiredColor = motif[i]);
+        return new InstantCommand(() -> this.desiredColor = motif[i + shotsFired]);
     }
 
     public Command setMode(int mode) {
@@ -178,8 +189,7 @@ public class Magazine implements IAmBetterSubsystem {
             new Delay(0.25),
             new InstantCommand(() -> {
                 if (mode == 0) desiredColor = Utils.ArtifactTypes.NONE;
-                else desiredColor = motif[0];
-                shotsFired = 0;
+                else desiredColor = motif[shotsFired];
                 this.mode = mode;
                 })
         );
