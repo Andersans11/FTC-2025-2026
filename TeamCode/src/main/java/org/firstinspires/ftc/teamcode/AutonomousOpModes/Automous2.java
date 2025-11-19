@@ -84,16 +84,16 @@ public class Automous2 extends RoyallyFuckedUpMode {
     public void onUpdate() {
         super.onUpdate();
         follower.update();
-        telemetryManager.addData("0", Magazine.INSTANCE.getSlotColor(0));
-        telemetryManager.addData("1", Magazine.INSTANCE.getSlotColor(1));
-        telemetryManager.addData("2", Magazine.INSTANCE.getSlotColor(2));
-        telemetryManager.addData("Active", Magazine.INSTANCE.activeSlot);
-        telemetryManager.addData("Mode", Magazine.INSTANCE.mode);
-        telemetryManager.addData("desiredColor", Magazine.INSTANCE.desiredColor);
-        telemetryManager.addData("shotsFired", Magazine.INSTANCE.shotsFired);
-        telemetryManager.addData("turretMode", Turret.INSTANCE.mode);
-        telemetryManager.addData("turret", Turret.INSTANCE.rotationMotor.getCurrentPosition());
-        telemetryManager.addData("target", Turret.INSTANCE.controller.getGoal());
+        addData("0", Magazine.INSTANCE.getSlotColor(0));
+        addData("1", Magazine.INSTANCE.getSlotColor(1));
+        addData("2", Magazine.INSTANCE.getSlotColor(2));
+        addData("Active", Magazine.INSTANCE.activeSlot);
+        addData("Mode", Magazine.INSTANCE.mode);
+        addData("desiredColor", Magazine.INSTANCE.desiredColor);
+        addData("shotsFired", Magazine.INSTANCE.shotsFired);
+        addData("turretMode", Turret.INSTANCE.mode);
+        addData("turret", Turret.INSTANCE.rotationMotor.getCurrentPosition());
+        addData("target", Turret.INSTANCE.controller.getGoal());
         Drawing.drawDebug(follower);
 
         switch (outcomeState) {

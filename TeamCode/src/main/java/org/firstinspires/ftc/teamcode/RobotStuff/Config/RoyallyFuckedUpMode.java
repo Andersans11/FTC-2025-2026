@@ -25,7 +25,7 @@ public class RoyallyFuckedUpMode extends NextFTCOpMode {
 
     protected long deltaTime;
 
-    protected TelemetryManager telemetryManager = PanelsTelemetry.INSTANCE.getTelemetry();
+    TelemetryManager telemetryManager = PanelsTelemetry.INSTANCE.getTelemetry();
 
     protected GamepadEx P1 = new GamepadEx(() -> this.gamepad1);
     protected GamepadEx P2 = new GamepadEx(() -> this.gamepad2);
@@ -50,11 +50,23 @@ public class RoyallyFuckedUpMode extends NextFTCOpMode {
         }
     }
 
+    public void addData(String key, Object value) {
+        if (isUpdating) {
+            telemetryManager.addData(key, value);
+        }
+    }
+
+    public void addLine(String line) {
+        if (isUpdating) {
+            telemetryManager.addLine(line);
+        }
+    }
+
     @Override
     public void onUpdate() {
         deltaTime = RobotConfig.getDelta();
 
-        telemetryManager.addData("deltatime (ms)", TimeUnit.MILLISECONDS.convert(deltaTime, TimeUnit.NANOSECONDS));
+        addData("deltatime (ms)", TimeUnit.MILLISECONDS.convert(deltaTime, TimeUnit.NANOSECONDS));
 
         if (isUpdating) {
             telemetryManager.update(telemetry);

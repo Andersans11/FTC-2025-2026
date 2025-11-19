@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.TestingOpModes;
 
+
+import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -10,13 +12,21 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Perseus;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.RobotCentricDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.Magazine;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 
-@TeleOp(name = "Test: Full", group = Utils.PRIORITY)
-public class FullTest extends RoyallyFuckedUpMode {
+import kotlin.Pair;
 
-    public FullTest() {
+@Configurable
+@TeleOp(name = "Pitch Recording", group = Utils.PRIORITY)
+public class PitchRecording extends RoyallyFuckedUpMode {
+
+
+    boolean outputValues = false;
+    Pair<Double, Double>[] values = new Pair[] {};
+    public static double hoodPos = 0.45;
+
+    public PitchRecording() {
         super();
         addSubsystemComponents(
                 new BetterSubsystemComponent(RobotCentricDrive.INSTANCE),
@@ -27,6 +37,7 @@ public class FullTest extends RoyallyFuckedUpMode {
     @Override
     public void onInit() {
         super.onInit();
+
         Turret.INSTANCE.initPoseUpdater(this);
 
         P1.rightTrigger().atLeast(0.1)
@@ -63,7 +74,9 @@ public class FullTest extends RoyallyFuckedUpMode {
 
         P2.dpadDown().whenBecomesTrue(Turret.INSTANCE.autoControl());
 
-        P1.triangle().whenBecomesTrue(Perseus.INSTANCE.updateHoodPos());
+        P1.y().whenBecomesTrue(Shooter.INSTANCE.setHoodPos(hoodPos));
+
+        P1.a().whenBecomesTrue(() -> this.outputValues = !this.outputValues);
     }
 
     @Override
@@ -85,25 +98,24 @@ public class FullTest extends RoyallyFuckedUpMode {
             addData("tagY", "no blocks found");
         }
 
-        addData("0", Magazine.INSTANCE.getSlotColor(0));
-        addData("1", Magazine.INSTANCE.getSlotColor(1));
-        addData("2", Magazine.INSTANCE.getSlotColor(2));
-        addData("Active", Magazine.INSTANCE.activeSlot);
-        addData("Mode", Magazine.INSTANCE.mode);
-        //telemetry.addData("targetPos", Magazine.INSTANCE.targetPos);
-        //telemetry.addData("oldTargetPos", Magazine.INSTANCE.oldTargetPos);
-        //telemetry.addData("i", Magazine.INSTANCE.i);
-        addData("desiredColor", Magazine.INSTANCE.desiredColor);
-        addData("range", Magazine.INSTANCE.color.getDistance(DistanceUnit.MM));
+        if (!outputValues) {
+            addData("0", Magazine.INSTANCE.getSlotColor(0));
+            addData("1", Magazine.INSTANCE.getSlotColor(1));
+            addData("2", Magazine.INSTANCE.getSlotColor(2));
+            addData("Active", Magazine.INSTANCE.activeSlot);
+            addData("Mode", Magazine.INSTANCE.mode);
 
-        //telemetry.addData("targetAngle", NewTurret.INSTANCE.targetAngle);
-        //telemetry.addData("motorPower", NewTurret.INSTANCE.controller.calculate(NewTurret.INSTANCE.rotationMotor.getState()));
-        //telemetry.addData("goal", NewTurret.INSTANCE.controller.getGoal());
-        //telemetry.addData("length", NewTurret.INSTANCE.camera.blocks().length);
+            addData("desiredColor", Magazine.INSTANCE.desiredColor);
+            addData("range", Magazine.INSTANCE.color.getDistance(DistanceUnit.MM));
 
-        addData("motif1", Magazine.INSTANCE.motif[0]);
-        addData("motif2", Magazine.INSTANCE.motif[1]);
-        addData("motif3", Magazine.INSTANCE.motif[2]);
+            addData("motif1", Magazine.INSTANCE.motif[0]);
+            addData("motif2", Magazine.INSTANCE.motif[1]);
+            addData("motif3", Magazine.INSTANCE.motif[2]);
+        } else {
+            for (Pair<Double, Double> pair : values) {
+                addData(pair.component1().toString(), pair.component2().toString());
+            }
+        }
 
     }
 }

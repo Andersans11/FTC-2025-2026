@@ -37,15 +37,15 @@ public class Locktite extends RoyallyFuckedUpMode {
             // Parse with Android's native JSON parser
             funnyPaper = new JSONObject(jsonText.toString());
             
-            telemetry.addData("number", funnyPaper.getDouble("number"));
-            telemetry.addData("Status", "File loaded successfully!");
+            addData("number", funnyPaper.getDouble("number"));
+            addData("Status", "File loaded successfully!");
             telemetry.update();
             
         } catch (Exception e) {
             // Handle error gracefully without crashing
-            telemetry.addData("ERROR", "File read failed");
-            telemetry.addData("Exception", e.getClass().getSimpleName());
-            telemetry.addData("Message", e.getMessage() != null ? e.getMessage() : "No message");
+            addData("ERROR", "File read failed");
+            addData("Exception", e.getClass().getSimpleName());
+            addData("Message", e.getMessage() != null ? e.getMessage() : "No message");
             telemetry.update();
             e.printStackTrace();
         }

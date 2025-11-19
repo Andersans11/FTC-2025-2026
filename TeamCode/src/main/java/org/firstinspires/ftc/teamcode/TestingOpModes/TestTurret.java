@@ -35,10 +35,10 @@ public class TestTurret extends RoyallyFuckedUpMode {
     public void onUpdate() {
         super.onUpdate();
 
-        super.telemetry.addData("targetAngle", Turret.INSTANCE.targetAngle);
-        super.telemetry.addData("goal", Turret.INSTANCE.controller.getGoal());
-        super.telemetry.addData("length", Turret.INSTANCE.camera.blocks().length);
-        super.telemetry.addData("waugh", Turret.INSTANCE.waugh());
-        super.telemetry.addData("timer", Turret.INSTANCE.timer.getElapsedTimeSeconds());
+        addData("targetAngle", Turret.INSTANCE.targetAngle);
+        addData("goal", Turret.INSTANCE.controller.getGoal());
+        addData("length", Turret.INSTANCE.camera.blocks().length);
+        addData("waugh", Turret.INSTANCE.waugh());
+        addData("timer", Turret.INSTANCE.timer.getElapsedTimeSeconds());
     }
 }

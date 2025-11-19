@@ -37,15 +37,15 @@ public class TestMagazine extends RoyallyFuckedUpMode {
     
     @Override
     public void onUpdate() {
-        telemetry.addData("0", Magazine.INSTANCE.getSlotColor(0));
-        telemetry.addData("1", Magazine.INSTANCE.getSlotColor(1));
-        telemetry.addData("2", Magazine.INSTANCE.getSlotColor(2));
-        telemetry.addData("Active", Magazine.INSTANCE.activeSlot);
-        telemetry.addData("Mode", Magazine.INSTANCE.mode);
-        telemetry.addData("targetPos", Magazine.INSTANCE.targetPos);
-        telemetry.addData("oldTargetPos", Magazine.INSTANCE.oldTargetPos);
-        telemetry.addData("i", Magazine.INSTANCE.it);
-        telemetry.addData("desiredColor", Magazine.INSTANCE.desiredColor);
+        addData("0", Magazine.INSTANCE.getSlotColor(0));
+        addData("1", Magazine.INSTANCE.getSlotColor(1));
+        addData("2", Magazine.INSTANCE.getSlotColor(2));
+        addData("Active", Magazine.INSTANCE.activeSlot);
+        addData("Mode", Magazine.INSTANCE.mode);
+        addData("targetPos", Magazine.INSTANCE.targetPos);
+        addData("oldTargetPos", Magazine.INSTANCE.oldTargetPos);
+        addData("i", Magazine.INSTANCE.it);
+        addData("desiredColor", Magazine.INSTANCE.desiredColor);
 
         super.onUpdate();
     }

@@ -4,6 +4,7 @@ import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.telemetry.TelemetryManager;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
 
 @Configurable
 public class YawPID {
@@ -19,13 +20,13 @@ public class YawPID {
     double integral;
     double derivative;
 
-    TelemetryManager telemetry;
+    RoyallyFuckedUpMode opMode;
 
     public final String pidName;
     public static boolean DEBUG = false;
 
-    public YawPID(TelemetryManager telemetry, String pidName) {
-        this.telemetry = telemetry;
+    public YawPID(RoyallyFuckedUpMode opMode, String pidName) {
+        this.opMode = opMode;
         this.pidName = pidName;
     }
 
@@ -57,13 +58,13 @@ public class YawPID {
             P = (error * secondarykP);
             I = (integral * secondarykI);
             D = (derivative * secondarykD);
-            telemetry.addLine("Using secondary PID");
+            opMode.addLine("Using secondary PID");
         }
         else {
             P = (error * kP);
             I = (integral * kI);
             D = (derivative * kD);
-            telemetry.addLine("Using primary PID");
+            opMode.addLine("Using primary PID");
         }
         yawTelemetry(error, derivative, targetPos, currentPos, lastError);
         return P + I + D;
@@ -82,15 +83,15 @@ public class YawPID {
     }
 
     public void yawTelemetry(double error, double derivative, double targetPos, double currentPos, double lastError) {
-        telemetry.addData("target radians:", targetPos);
-        telemetry.addData("current radians:", currentPos);
+        opMode.addData("target radians:", targetPos);
+        opMode.addData("current radians:", currentPos);
         if (DEBUG) {
-            telemetry.addData("error:", error);
-            telemetry.addData("derivative:", derivative);
-            telemetry.addData("last error:", lastError);
-            telemetry.addData("P:", P);
-            telemetry.addData("I:", I);
-            telemetry.addData("D:", D);
+            opMode.addData("error:", error);
+            opMode.addData("derivative:", derivative);
+            opMode.addData("last error:", lastError);
+            opMode.addData("P:", P);
+            opMode.addData("I:", I);
+            opMode.addData("D:", D);
         }
     }
 }

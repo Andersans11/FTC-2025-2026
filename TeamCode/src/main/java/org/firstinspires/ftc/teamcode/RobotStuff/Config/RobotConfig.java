@@ -79,10 +79,6 @@ public class RobotConfig {
     public static RoyallyFuckedUpMode getOpMode() {
         return opMode;
     }
-
-    public static TelemetryManager getTelemetry() {
-        return opMode.telemetryManager;
-    }
     public static long getDelta() {
         return deltaTimer.getDelta();
     }
@@ -92,6 +88,7 @@ public class RobotConfig {
     public static GamepadEx player2() {
         return p2;
     }
+
     public static HardwareMap getHardwareMap() {
         return hardwareMap;
     }

@@ -49,7 +49,7 @@ public class HoldHeadingPID extends AbstractDriveMode {
     public void initSystem() {
         super.initSystem();
 
-        HeadingPID = new YawPID(telemetry, "HeadingPID");
+        HeadingPID = new YawPID(opMode, "HeadingPID");
         HeadingPID.setSecondary(true);
 
         pinpoint = RobotConfig.Pinpoint;
@@ -99,17 +99,17 @@ public class HoldHeadingPID extends AbstractDriveMode {
     }
 
     public void runTelemetry() {
-        telemetry.addLine("================================");
-        telemetry.addData("current heading (radians)", getHeadingRad());
-        telemetry.addData("target heading (radians)", targetRad);
+        opMode.addLine("================================");
+        opMode.addData("current heading (radians)", getHeadingRad());
+        opMode.addData("target heading (radians)", targetRad);
 
         if (DEBUGMODE) {
             differences.add((float) Math.abs(targetRad - getHeadingRad()));
 
-            telemetry.addData("target - current difference", differences.lastAdded());
-            telemetry.addData("average difference", differences.getCollectiveAverage());
-            telemetry.addData("maximum difference", differences.getMax());
-            telemetry.addData("minimum difference", differences.getMin());
+            opMode.addData("target - current difference", differences.lastAdded());
+            opMode.addData("average difference", differences.getCollectiveAverage());
+            opMode.addData("maximum difference", differences.getMax());
+            opMode.addData("minimum difference", differences.getMin());
         }
     }
 

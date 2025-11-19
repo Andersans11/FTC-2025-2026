@@ -10,14 +10,14 @@ import dev.nextftc.hardware.impl.MotorEx;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Sensitivities;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.IAmBetterSubsystem;
 
 
 public abstract class AbstractDriveMode implements IAmBetterSubsystem {
 
-    NextFTCOpMode opMode;
-    TelemetryManager telemetry;
+    RoyallyFuckedUpMode opMode;
     Range forwardSupp;
     Range strafeSupp;
     Range turnSupp;
@@ -38,8 +38,6 @@ public abstract class AbstractDriveMode implements IAmBetterSubsystem {
     @Override
     public void initSystem() {
         this.opMode = RobotConfig.getOpMode();
-
-        this.telemetry = RobotConfig.getTelemetry();
 
         this.FL = RobotConfig.FLDrive.motor.brakeMode();
         this.FR = RobotConfig.FRDrive.motor.brakeMode();
