@@ -217,7 +217,7 @@ public class Turret implements IAmBetterSubsystem {
     public void manualUpdate() {
         rotationMotor.setPower(controller.calculate(rotationMotor.getState()));
     }
-
+    public static double masterK = 0.05;
     public static double linearM = 0.006;
     public static double logA = 0.01;
     public static double logB = 1.25;
@@ -233,18 +233,20 @@ public class Turret implements IAmBetterSubsystem {
      * @return the servo power
      */
     public double calcHoodPos(int tagY) {
+        double result;
         // https://www.desmos.com/calculator/haqezh5eac
         if (tagY < 0 || tagY > 240) {
             return 0.0; // this shouldn't be possible but it should be taken into account anyways
         }
 
         if (tagY < 85.30149) { // 0 < x < 85.30149
-            return linearM * tagY; // f(x) = 0.006x
+            result = linearM * tagY; // f(x) = 0.006x
         } else if (85.30149 <= tagY && tagY <= 126) { // 85.30149 <= x <= 126
-            return logA * (Math.log10(tagY - logH) / Math.log10(logB)) + logK; // f(x) = 0.01 * (log(tagY - 84) / log(1.25)) + 0.5
+            result = logA * (Math.log10(tagY - logH) / Math.log10(logB)) + logK; // f(x) = 0.01 * (log(tagY - 84) / log(1.25)) + 0.5
         } else { // 126 < x <= 240
-            return quadA * ((tagY - quadH) * (tagY - quadH)) + quadK; // f(x) = -0.0000464(tagY - 172)^2 + 0.686
+            result = quadA * ((tagY - quadH) * (tagY - quadH)) + quadK; // f(x) = -0.0000464(tagY - 172)^2 + 0.686
         }
+        return result + masterK;
     }
 
     /**
