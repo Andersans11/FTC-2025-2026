@@ -32,15 +32,15 @@ public class Shooter implements IAmBetterSubsystem {
     @Override
     public void initSystem() {
         shooterMotors = new MotorEx[] {
-                RobotConfig.ShootMotor1.motor,
-                RobotConfig.ShootMotor2.motor
+                RobotConfig.ShootMotor1.getMotor(),
+                RobotConfig.ShootMotor2.getMotor()
         };
         shooters = new MotorGroup(
                 shooterMotors[0],
                 shooterMotors[1]
         );
-        hood = RobotConfig.HoodServo.servo;
-        kicker = RobotConfig.Kicker.servo;
+        hood = RobotConfig.HoodServo.getServo();
+        kicker = RobotConfig.Kicker.getServo();
     }
 
     @Override

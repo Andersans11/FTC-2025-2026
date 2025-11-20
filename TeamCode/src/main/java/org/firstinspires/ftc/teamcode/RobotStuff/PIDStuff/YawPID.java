@@ -47,6 +47,13 @@ public class YawPID {
         this.useSecondPID = useSecondPID;
     }
 
+    /**
+     * run the PID
+     * @param targetPos the target yaw
+     * @param currentPos the actual yaw
+     * @param deltaTimeNano the update time in nano seconds
+     * @return the power
+     */
     public double lockYaw(double targetPos, double currentPos, long deltaTimeNano) {
         lastError = error;
         error = angleFix(targetPos - currentPos);

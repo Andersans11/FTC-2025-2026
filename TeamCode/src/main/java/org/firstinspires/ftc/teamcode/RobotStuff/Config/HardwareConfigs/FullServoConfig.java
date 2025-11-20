@@ -4,15 +4,15 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Hardware.ServoExFullRange;
+
 public class FullServoConfig {
 
-    public String name;
-    public Servo.Direction direction;
-    public ServoExFullRange servo;
-    HardwareMap hardwareMap;
+    String name;
+    Servo.Direction direction;
+    ServoExFullRange servo;
 
     public FullServoConfig(HardwareMap hardwareMap, String name, Servo.Direction direction) {
-        this.hardwareMap = hardwareMap;
         this.name = name;
         this.direction = direction;
 
@@ -24,6 +24,8 @@ public class FullServoConfig {
         });
     }
 
-
+    public String getName() { return name; }
+    public ServoExFullRange getServo() { return servo; }
+    public Servo.Direction getDirection() { return direction; }
 
 }

@@ -30,6 +30,7 @@ public class Perseus extends BetterSubsystemGroup {
 
     boolean isShooting = false;
     boolean isMotifShooting = false;
+    boolean isSingleMotifShooting = false;
     public static double hoodToPos = 0.5;
 
     private Perseus() {
@@ -83,10 +84,15 @@ public class Perseus extends BetterSubsystemGroup {
 
     //  ------------------------- COMMANDS --------------------------- //
 
+    /**
+     * safely shoot a single artifact of a specified color, while also preventing an ArrayDeque error
+     * @param color the color of artifact to shoot
+     * @return a SequentialGroup that shoots a single artifact, or a NullCommand if the robot is already shooting
+     */
     public Command shootSingle(Utils.ArtifactTypes color) {
         if (!isShooting) {
+            this.isShooting = true;
             return new SequentialGroup(
-                    new InstantCommand(() -> this.isShooting = true),
                     Magazine.INSTANCE.setDesiredColor(color),
                     Shooter.INSTANCE.spinUp(),
                     new Delay(shootingSpeed),
@@ -104,15 +110,26 @@ public class Perseus extends BetterSubsystemGroup {
         return Shooter.INSTANCE.setHoodPos(hoodToPos);
     }
 
+    /**
+     * used in shootMotif to shoot a single artifact depending on the motif
+     * @param i the index of the slot
+     * @return a SequentialGroup that shoots a single artifact, or a NullCommand if the robot is already shooting
+     */
     public Command shootSingleMotif(int i) {
-        return new SequentialGroup(
-                Magazine.INSTANCE.setDesiredColor(i),
-                new Delay(shootingSpeed),
-                Shooter.INSTANCE.shoot(),
-                new Delay(shootingSpeed),
-                Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.NONE),
-                Magazine.INSTANCE.setDesiredColor(i + 1)
-        );
+        if (!isSingleMotifShooting) {
+            this.isSingleMotifShooting = true;
+            return new SequentialGroup(
+                    Magazine.INSTANCE.setDesiredColor(i),
+                    new Delay(shootingSpeed),
+                    Shooter.INSTANCE.shoot(),
+                    new Delay(shootingSpeed),
+                    Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.NONE),
+                    Magazine.INSTANCE.setDesiredColor(i + 1),
+                    new InstantCommand(() -> this.isSingleMotifShooting = false)
+            );
+        } else {
+            return new NullCommand();
+        }
     }
 
     public Command intake() {
@@ -130,10 +147,14 @@ public class Perseus extends BetterSubsystemGroup {
         return Intake.INSTANCE.idle();
     }
 
+    /**
+     * Shoots a motif
+     * @return a SequentialGroup that shoots a motif, or a NullCommand if the robot is already shooting
+     */
     public Command shootMotif() {
         if (!isMotifShooting) {
+            this.isMotifShooting = true;
             return new SequentialGroup(
-                    new InstantCommand(() -> this.isMotifShooting = true),
                     Shooter.INSTANCE.spinUp(),
                     new Delay(0.25),
                     shootSingleMotif(0),

@@ -5,7 +5,7 @@ import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.HardwareConfigs.ServoExFullRange;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Hardware.ServoExFullRange;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.IAmBetterSubsystem;
@@ -64,9 +64,9 @@ public class Magazine implements IAmBetterSubsystem {
         this.activeSlot = 0;
 
         servos = new ServoExFullRange[]{
-                RobotConfig.CarouselCR1.servo,
-                RobotConfig.CarouselCR2.servo,
-                RobotConfig.CarouselCR3.servo
+                RobotConfig.CarouselCR1.getServo(),
+                RobotConfig.CarouselCR2.getServo(),
+                RobotConfig.CarouselCR3.getServo()
         };
 
         this.color = RobotConfig.IntakeCS;

@@ -9,37 +9,20 @@ import dev.nextftc.hardware.impl.MotorEx;
 
 public class MotorConfig {
 
-    public String name;
-    public Direction direction;
-    public ZeroPowerBehavior zeroPowerBehavior;
-    public MotorEx motor;
+    String name;
+    Direction direction;
+    MotorEx motor;
 
-    HardwareMap hardwareMap;
-
-    public double encoderPPR;
-
-    public MotorConfig(HardwareMap hardwareMap, String motorName, Direction direction, ZeroPowerBehavior zeroPowerBehavior, double encoderPPR) {
-        this.hardwareMap = hardwareMap;
-        this.name = motorName;
-        this.direction = direction;
-        this.zeroPowerBehavior = zeroPowerBehavior;
-        this.encoderPPR = encoderPPR;
-
-        this.motor = new MotorEx(() -> {
-            DcMotorEx tempMotor = hardwareMap.get(DcMotorEx.class, name);
-
-            tempMotor.setDirection(direction);
-            tempMotor.setZeroPowerBehavior(zeroPowerBehavior);
-            return tempMotor;
-        });
-    }
-
+    /**
+     * a way to easily create and use a MotorEx
+     * @param hardwareMap the HardwareMap to get the motor from
+     * @param motorName the name to search for in the hardwareMap
+     * @param direction the direction for the motor to rotate in
+     * @param zeroPowerBehavior the ZeroPowerBehavior for the motor to use
+     */
     public MotorConfig(HardwareMap hardwareMap, String motorName, Direction direction, ZeroPowerBehavior zeroPowerBehavior) {
-        this.hardwareMap = hardwareMap;
         this.name = motorName;
         this.direction = direction;
-        this.zeroPowerBehavior = zeroPowerBehavior;
-
         this.motor = new MotorEx(() -> {
             DcMotorEx temp = hardwareMap.get(DcMotorEx.class, name);
 
@@ -48,4 +31,8 @@ public class MotorConfig {
             return temp;
         });
     }
+
+    public String getName() { return name; }
+    public MotorEx getMotor() { return motor; }
+    public Direction getDirection() { return direction; }
 }

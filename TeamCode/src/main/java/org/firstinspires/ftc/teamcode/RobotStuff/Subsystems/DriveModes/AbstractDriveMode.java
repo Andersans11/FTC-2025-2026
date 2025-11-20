@@ -39,10 +39,10 @@ public abstract class AbstractDriveMode implements IAmBetterSubsystem {
     public void initSystem() {
         this.opMode = RobotConfig.getOpMode();
 
-        this.FL = RobotConfig.FLDrive.motor.brakeMode();
-        this.FR = RobotConfig.FRDrive.motor.brakeMode();
-        this.BL = RobotConfig.BLDrive.motor.brakeMode();
-        this.BR = RobotConfig.BRDrive.motor.brakeMode();
+        this.FL = RobotConfig.FLDrive.getMotor();
+        this.FR = RobotConfig.FRDrive.getMotor();
+        this.BL = RobotConfig.BLDrive.getMotor();
+        this.BR = RobotConfig.BRDrive.getMotor();
 
         this.forwardSupp = RobotConfig.player1().leftStickY().negate();
         this.strafeSupp = RobotConfig.player1().leftStickX();
