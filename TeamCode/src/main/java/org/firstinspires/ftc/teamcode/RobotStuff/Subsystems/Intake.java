@@ -24,7 +24,7 @@ public class Intake implements IAmBetterSubsystem {
 
     @Override
     public void initSystem() {
-        intake = RobotConfig.IntakeMotor.motor;
+        intake = RobotConfig.IntakeMotor.getMotor();
     }
 
     @Override

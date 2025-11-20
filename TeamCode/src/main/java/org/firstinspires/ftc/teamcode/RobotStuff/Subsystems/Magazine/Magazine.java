@@ -64,9 +64,9 @@ public class Magazine implements IAmBetterSubsystem {
         this.activeSlot = 0;
 
         servos = new ServoExFullRange[]{
-                RobotConfig.CarouselCR1.servo,
-                RobotConfig.CarouselCR2.servo,
-                RobotConfig.CarouselCR3.servo
+                RobotConfig.CarouselCR1.getServo(),
+                RobotConfig.CarouselCR2.getServo(),
+                RobotConfig.CarouselCR3.getServo()
         };
 
         this.color = RobotConfig.IntakeCS;

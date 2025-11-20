@@ -84,8 +84,8 @@ public class RTPAxon {
 
     // construct from a CRServoConfig for ease of use
     public RTPAxon(CRServoConfig config) {
-        this(config.servo, config.encoder);
-        if (config.direction == DcMotorSimple.Direction.FORWARD) {
+        this(config.getServo(), config.getEncoder());
+        if (config.getDirection() == DcMotorSimple.Direction.FORWARD) {
             this.direction = Direction.FORWARD;
         } else {
             this.direction = Direction.REVERSE;

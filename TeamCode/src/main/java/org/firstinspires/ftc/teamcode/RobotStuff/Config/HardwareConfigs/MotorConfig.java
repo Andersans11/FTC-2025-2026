@@ -9,9 +9,9 @@ import dev.nextftc.hardware.impl.MotorEx;
 
 public class MotorConfig {
 
-    public String name;
-    public Direction direction;
-    public MotorEx motor;
+    String name;
+    Direction direction;
+    MotorEx motor;
 
     /**
      * a way to easily create and use a MotorEx

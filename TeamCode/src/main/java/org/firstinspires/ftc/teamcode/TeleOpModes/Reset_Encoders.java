@@ -18,7 +18,7 @@ public class Reset_Encoders extends RoyallyFuckedUpMode {
     @Override
     public void onInit() {
         super.onInit();
-        rotationMotor = RobotConfig.TurretRotation.motor;
+        rotationMotor = RobotConfig.TurretRotation.getMotor();
         rotationMotor.zero();
         stop();
     }

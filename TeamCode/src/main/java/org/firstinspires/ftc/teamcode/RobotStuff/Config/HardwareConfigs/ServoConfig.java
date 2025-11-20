@@ -7,9 +7,9 @@ import dev.nextftc.hardware.impl.ServoEx;
 
 public class ServoConfig {
 
-    public String name;
-    public Servo.Direction direction;
-    public ServoEx servo;
+    String name;
+    Servo.Direction direction;
+    ServoEx servo;
 
     /**
      * A way to easily create and use a ServoEx

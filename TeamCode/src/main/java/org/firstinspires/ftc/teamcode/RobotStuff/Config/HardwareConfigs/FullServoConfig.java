@@ -8,9 +8,9 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.Hardware.ServoExFullRang
 
 public class FullServoConfig {
 
-    public String name;
-    public Servo.Direction direction;
-    public ServoExFullRange servo;
+    String name;
+    Servo.Direction direction;
+    ServoExFullRange servo;
 
     public FullServoConfig(HardwareMap hardwareMap, String name, Servo.Direction direction) {
         this.name = name;

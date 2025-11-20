@@ -121,7 +121,7 @@ public class Turret implements IAmBetterSubsystem {
 
     @Override
     public void initSystem() {
-        this.rotationMotor = RobotConfig.TurretRotation.motor;
+        this.rotationMotor = RobotConfig.TurretRotation.getMotor();
         camera = new HuskyLens(RobotConfig.camera.getDeviceClient());
         camera.selectAlgorithm(HuskyLens.Algorithm.TAG_RECOGNITION);
         limitSwitch = RobotConfig.LimitSwitch;

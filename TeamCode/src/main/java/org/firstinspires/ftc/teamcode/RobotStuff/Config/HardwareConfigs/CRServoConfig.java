@@ -10,10 +10,10 @@ import dev.nextftc.hardware.impl.CRServoEx;
 
 public class CRServoConfig {
 
-    public String name;
-    public DcMotorSimple.Direction direction;
-    public CRServoEx servo;
-    public AnalogInput encoder;
+    String name;
+    DcMotorSimple.Direction direction;
+    CRServoEx servo;
+    AnalogInput encoder;
 
     /**
      * a way to easily create and use a CRServoEx
