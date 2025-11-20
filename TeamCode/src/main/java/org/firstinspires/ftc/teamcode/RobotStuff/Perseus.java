@@ -30,7 +30,6 @@ public class Perseus extends BetterSubsystemGroup {
 
     boolean isShooting = false;
     boolean isMotifShooting = false;
-    boolean isSingleMotifShooting = false;
     public static double hoodToPos = 0.5;
 
     private Perseus() {
@@ -116,20 +115,14 @@ public class Perseus extends BetterSubsystemGroup {
      * @return a SequentialGroup that shoots a single artifact, or a NullCommand if the robot is already shooting
      */
     public Command shootSingleMotif(int i) {
-        if (!isSingleMotifShooting) {
-            this.isSingleMotifShooting = true;
-            return new SequentialGroup(
-                    Magazine.INSTANCE.setDesiredColor(i),
-                    new Delay(shootingSpeed),
-                    Shooter.INSTANCE.shoot(),
-                    new Delay(shootingSpeed),
-                    Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.NONE),
-                    Magazine.INSTANCE.setDesiredColor(i + 1),
-                    new InstantCommand(() -> this.isSingleMotifShooting = false)
-            );
-        } else {
-            return new NullCommand();
-        }
+        return new SequentialGroup(
+                Magazine.INSTANCE.setDesiredColor(i),
+                new Delay(shootingSpeed),
+                Shooter.INSTANCE.shoot(),
+                new Delay(shootingSpeed),
+                Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.NONE),
+                Magazine.INSTANCE.setDesiredColor(i + 1)
+        );
     }
 
     public Command intake() {
@@ -153,8 +146,8 @@ public class Perseus extends BetterSubsystemGroup {
      */
     public Command shootMotif() {
         if (!isMotifShooting) {
-            this.isMotifShooting = true;
             return new SequentialGroup(
+                    new InstantCommand(() -> this.isMotifShooting = true),
                     Shooter.INSTANCE.spinUp(),
                     new Delay(0.25),
                     shootSingleMotif(0),
@@ -173,7 +166,8 @@ public class Perseus extends BetterSubsystemGroup {
     public Command start() {
         return new SequentialGroup(
                 Intake.INSTANCE.idle(),
-                Shooter.INSTANCE.resetKicker()
+                Shooter.INSTANCE.resetKicker(),
+                Turret.INSTANCE.resetHood()
         );
     }
 }

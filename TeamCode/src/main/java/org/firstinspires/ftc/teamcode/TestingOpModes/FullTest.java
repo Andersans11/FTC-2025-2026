@@ -42,11 +42,12 @@ public class FullTest extends RoyallyFuckedUpMode {
 
         P1.leftBumper().whenBecomesTrue(Perseus.INSTANCE.updateHoodPos());
 
-        P2.dpadLeft().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.GREEN));
-        P2.dpadRight().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.PURPLE));
-
         P1.dpadLeft().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.GREEN));
         P1.dpadRight().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.PURPLE));
+
+
+        P2.dpadLeft().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.GREEN));
+        P2.dpadRight().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.PURPLE));
 
         P2.cross().whenBecomesTrue(Perseus.INSTANCE.shootSingle(Utils.ArtifactTypes.GREEN));
         P2.circle().whenBecomesTrue(Perseus.INSTANCE.shootSingle(Utils.ArtifactTypes.PURPLE));
@@ -62,28 +63,17 @@ public class FullTest extends RoyallyFuckedUpMode {
         P2.leftBumper().whenTrue(Turret.INSTANCE.changePosition(-0.5));
 
         P2.dpadDown().whenBecomesTrue(Turret.INSTANCE.autoControl());
-
-        P1.triangle().whenBecomesTrue(Perseus.INSTANCE.updateHoodPos());
     }
 
     @Override
     public void onStartButtonPressed() {
         super.onStartButtonPressed();
-        Perseus.INSTANCE.start();
+        Perseus.INSTANCE.start().schedule();
     }
 
     @Override
     public void onUpdate() {
         super.onUpdate();
-        try {
-            HuskyLens.Block[] blocks = Turret.INSTANCE.camera.blocks(1);
-
-            addData("tagX", blocks != null ? blocks[0].x : "no blocks found");
-            addData("tagY", blocks != null ? blocks[0].y : "no blocks found");
-        } catch (RuntimeException e) {
-            addData("tagX", "no blocks found");
-            addData("tagY", "no blocks found");
-        }
 
         addData("0", Magazine.INSTANCE.getSlotColor(0));
         addData("1", Magazine.INSTANCE.getSlotColor(1));

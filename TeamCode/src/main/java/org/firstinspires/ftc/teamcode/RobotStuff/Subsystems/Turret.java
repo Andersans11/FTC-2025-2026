@@ -21,6 +21,8 @@ import dev.nextftc.core.commands.groups.SequentialGroup;
 import dev.nextftc.core.commands.utility.InstantCommand;
 import dev.nextftc.core.commands.utility.NullCommand;
 import dev.nextftc.hardware.impl.MotorEx;
+import dev.nextftc.hardware.impl.ServoEx;
+import dev.nextftc.hardware.positionable.SetPosition;
 import dev.nextftc.hardware.powerable.SetPower;
 import kotlin.Pair;
 import dev.nextftc.hardware.powerable.SetPower;
@@ -53,7 +55,8 @@ public class Turret implements IAmBetterSubsystem {
         MANUAL_POWER
     }
 
-    double waluigiWaugh;
+    double hoodTargetPos;
+    Pair<Integer, Integer> waluigi;
 
     boolean isZeroing = false;
 
@@ -120,7 +123,7 @@ public class Turret implements IAmBetterSubsystem {
 
     @Override
     public void initSystem() {
-        this.rotationMotor = RobotConfig.TurretRotation.motor;
+        this.rotationMotor = RobotConfig.TurretRotation.getMotor();
         camera = new HuskyLens(RobotConfig.camera.getDeviceClient());
         camera.selectAlgorithm(HuskyLens.Algorithm.TAG_RECOGNITION);
         limitSwitch = RobotConfig.LimitSwitch;
@@ -131,6 +134,10 @@ public class Turret implements IAmBetterSubsystem {
 
     }
 
+    /**
+     * zeroes the turret using
+     * @return a sequential group that zeroes the turret
+     */
     public Command zero() {
         return new SequentialGroup(
                 new InstantCommand(() -> {
@@ -150,6 +157,10 @@ public class Turret implements IAmBetterSubsystem {
         );
     }
 
+    public Command resetHood() {
+        return Shooter.INSTANCE.setHoodPos(0.5);
+    }
+
     public Command resetPID() {
         return new InstantCommand(() -> controller = ControlSystem.builder()
                 .posPid(kP, kI, kD)
@@ -157,6 +168,11 @@ public class Turret implements IAmBetterSubsystem {
         );
     }
 
+    /**
+     * directly set the target position for the turret motor (within limits)
+     * @param pos position to set the motor to
+     * @return an InstantCommand that sets the position
+     */
     public Command setPosition(double pos) {
         return new InstantCommand(() -> {
             mode = TurretMode.MANUAL_PID;
@@ -165,6 +181,11 @@ public class Turret implements IAmBetterSubsystem {
         });
     }
 
+    /**
+     * change the current target angle by a given pos
+     * @param pos the pos to change the target angle by
+     * @return an InstantCommand that changes the target angle by the given pos
+     */
     public Command changePosition(double pos) {
         return new InstantCommand(() -> {
             mode = TurretMode.MANUAL_PID;
@@ -192,26 +213,62 @@ public class Turret implements IAmBetterSubsystem {
     }
     public double ticksToDegrees(double ticks) {return ticks / 751.8 * 360 / 8;}
 
-    public double waugh() { // yes, this is how we get the tag x position
-        try {
-            if (isRedAlliance) {
-                return camera.blocks(1)[0].x;
-            } else {
-                return camera.blocks(2)[0].x;
-            }
-        } catch (RuntimeException reeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee) {
-            return 69420;
-        }
-    }
 
     public void manualUpdate() {
         rotationMotor.setPower(controller.calculate(rotationMotor.getState()));
     }
 
+    public static double linearM = 0.006;
+    public static double logA = 0.01;
+    public static double logB = 1.25;
+    public static double logH = 84;
+    public static double logK = 0.5;
+    public static double quadA = -0.0000464;
+    public static double quadH = 172;
+    public static double quadK = 0.686;
+
+    /**
+     * calculate the optimal hood servo position using a piecewise function
+     * @param tagY the y position of the tag in the camera's coordinate system
+     * @return the servo power
+     */
+    public double calcHoodPos(int tagY) {
+        // https://www.desmos.com/calculator/haqezh5eac
+        if (tagY < 0 || tagY > 240) {
+            return 0.0; // this shouldn't be possible but it should be taken into account anyways
+        }
+
+        if (tagY < 85.30149) { // 0 < x < 85.30149
+            return linearM * tagY; // f(x) = 0.006x
+        } else if (85.30149 <= tagY && tagY <= 126) { // 85.30149 <= x <= 126
+            return logA * (Math.log10(tagY - logH) / Math.log10(logB)) + logK; // f(x) = 0.01 * (log(tagY - 84) / log(1.25)) + 0.5
+        } else { // 126 < x <= 240
+            return quadA * ((tagY - quadH) * (tagY - quadH)) + quadK; // f(x) = -0.0000464(tagY - 172)^2 + 0.686
+        }
+    }
+
+    /**
+     * Safely get the tag x and y position, return a dummy value if the tag is not found
+     * @return a Pair containing the x and y positions, or dummy values
+     */
+    public Pair<Integer, Integer> waugh() { // yes, this is how we get the tag x and y position
+        try {
+            HuskyLens.Block tag;
+            if (isRedAlliance) {
+                tag = camera.blocks(1)[0];
+            } else {
+                tag = camera.blocks(2)[0];
+            }
+            return new Pair<>(tag.x, tag.y);
+        } catch (RuntimeException reeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee) {
+            return new Pair<>(69420, 42069);
+        }
+    }
+
 
     @Override
     public void periodic() {
-        waluigiWaugh = waugh();
+        waluigi = waugh();
 
         if (Magazine.INSTANCE.mode == 0 && !isZeroing) {
             mode = TurretMode.MANUAL_PID;
@@ -220,8 +277,9 @@ public class Turret implements IAmBetterSubsystem {
         
         switch (mode) {
             case TAG_TRACKING:
-                if (waluigiWaugh != 69420) {
-                    targetAngle = ticksToDegrees(rotationMotor.getCurrentPosition() - off) - (a * (waluigiWaugh - 160));
+                if (waluigi.component1() != 69420) {
+                    targetAngle = ticksToDegrees(rotationMotor.getCurrentPosition() - off) - (a * (waluigi.component1() - 160));
+                    hoodTargetPos = calcHoodPos(waluigi.component2());
                     timer.resetTimer();
                 } else if (timer.getElapsedTimeSeconds() >= 1) {
                     mode = TurretMode.RECOVERY;
@@ -229,13 +287,15 @@ public class Turret implements IAmBetterSubsystem {
                     double deltaHeading = pose.getHeading() - oldPose.getHeading();
                     targetAngle = targetAngle - Math.toDegrees(deltaHeading);
                 }
+                Shooter.INSTANCE.setHoodPos(hoodTargetPos).schedule();
                 controller.setGoal(new KineticState(off + degreesToTicks(Math.max(-90, Math.min(90, targetAngle)))));
                 rotationMotor.setPower(Math.max(-0.75, Math.min(0.75, controller.calculate(rotationMotor.getState()))));
                 break;
             case RECOVERY:
                 //if (isSweeping) {
-                    if (waluigiWaugh != 69420) {
-                        targetAngle = ticksToDegrees(rotationMotor.getCurrentPosition()) - (a * (waluigiWaugh - 160));
+                    if (waluigi.component1() != 69420) {
+                        targetAngle = ticksToDegrees(rotationMotor.getCurrentPosition()) - (a * (waluigi.component1() - 160));
+                        hoodTargetPos = calcHoodPos(waluigi.component2());
                         timer.resetTimer();
                         mode = TurretMode.TAG_TRACKING;
                         started = false;
