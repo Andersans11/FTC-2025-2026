@@ -21,6 +21,7 @@ import dev.nextftc.core.commands.groups.SequentialGroup;
 import dev.nextftc.core.commands.utility.InstantCommand;
 import dev.nextftc.core.commands.utility.NullCommand;
 import dev.nextftc.hardware.impl.MotorEx;
+import dev.nextftc.hardware.impl.ServoEx;
 import dev.nextftc.hardware.powerable.SetPower;
 import kotlin.Pair;
 
@@ -30,6 +31,7 @@ public class Turret implements IAmBetterSubsystem {
     public static final Turret INSTANCE = new Turret();
 
     public MotorEx rotationMotor;
+    public ServoEx hoodServo;
     public HuskyLens camera;
     public TouchSensor limitSwitch;
     public boolean isRedAlliance = true;
@@ -52,7 +54,6 @@ public class Turret implements IAmBetterSubsystem {
         MANUAL_POWER
     }
 
-    double waluigiWaugh;
     double hoodTargetPos;
     Pair<Integer, Integer> waluigi;
 
@@ -122,6 +123,7 @@ public class Turret implements IAmBetterSubsystem {
     @Override
     public void initSystem() {
         this.rotationMotor = RobotConfig.TurretRotation.getMotor();
+        this.hoodServo = RobotConfig.HoodServo.getServo();
         camera = new HuskyLens(RobotConfig.camera.getDeviceClient());
         camera.selectAlgorithm(HuskyLens.Algorithm.TAG_RECOGNITION);
         limitSwitch = RobotConfig.LimitSwitch;
@@ -278,7 +280,7 @@ public class Turret implements IAmBetterSubsystem {
         switch (mode) {
             case TAG_TRACKING:
                 if (waluigi.component1() != 69420) {
-                    targetAngle = ticksToDegrees(rotationMotor.getCurrentPosition() - off) - (a * (waluigiWaugh - 160));
+                    targetAngle = ticksToDegrees(rotationMotor.getCurrentPosition() - off) - (a * (waluigi.component1() - 160));
                     hoodTargetPos = calcHoodPos(waluigi.component2());
                     timer.resetTimer();
                 } else if (timer.getElapsedTimeSeconds() >= 1) {
@@ -288,13 +290,12 @@ public class Turret implements IAmBetterSubsystem {
                     targetAngle = targetAngle - Math.toDegrees(deltaHeading);
                 }
                 controller.setGoal(new KineticState(off + degreesToTicks(Math.max(-90, Math.min(90, targetAngle)))));
-                setHoodPos(hoodTargetPos).schedule();
                 rotationMotor.setPower(Math.max(-0.75, Math.min(0.75, controller.calculate(rotationMotor.getState()))));
                 break;
             case RECOVERY:
                 //if (isSweeping) {
-                    if (waluigiWaugh != 69420) {
-                        targetAngle = ticksToDegrees(rotationMotor.getCurrentPosition()) - (a * (waluigiWaugh - 160));
+                    if (waluigi.component1() != 69420) {
+                        targetAngle = ticksToDegrees(rotationMotor.getCurrentPosition()) - (a * (waluigi.component1() - 160));
                         hoodTargetPos = calcHoodPos(waluigi.component2());
                         timer.resetTimer();
                         mode = TurretMode.TAG_TRACKING;
