@@ -22,6 +22,7 @@ import dev.nextftc.core.commands.utility.InstantCommand;
 import dev.nextftc.core.commands.utility.NullCommand;
 import dev.nextftc.hardware.impl.MotorEx;
 import dev.nextftc.hardware.powerable.SetPower;
+import kotlin.Pair;
 
 @Configurable
 public class Turret implements IAmBetterSubsystem {
@@ -33,6 +34,7 @@ public class Turret implements IAmBetterSubsystem {
     public TouchSensor limitSwitch;
     public boolean isRedAlliance = true;
     boolean hasSetAlliance = false;
+    boolean hasGotMotif = false;
     double pitch;
     Pose pose = new Pose(0, 0, 0);
     Pose oldPose = new Pose(0, 0, 0);
@@ -51,6 +53,8 @@ public class Turret implements IAmBetterSubsystem {
     }
 
     double waluigiWaugh;
+    double hoodTargetPos;
+    Pair<Integer, Integer> waluigi;
 
     boolean isZeroing = false;
 
@@ -59,6 +63,33 @@ public class Turret implements IAmBetterSubsystem {
     public TurretMode mode = TurretMode.TAG_TRACKING; //ty waz here ><> <--- fish
 
     public Follower poseUpdater;
+
+    private final Utils.ArtifactTypes[] GPPGPP = new Utils.ArtifactTypes[]{
+            Utils.ArtifactTypes.GREEN,
+            Utils.ArtifactTypes.PURPLE,
+            Utils.ArtifactTypes.PURPLE,
+            Utils.ArtifactTypes.GREEN,
+            Utils.ArtifactTypes.PURPLE,
+            Utils.ArtifactTypes.PURPLE
+    };
+
+    private final Utils.ArtifactTypes[] PGPPGP = new Utils.ArtifactTypes[]{
+            Utils.ArtifactTypes.PURPLE,
+            Utils.ArtifactTypes.GREEN,
+            Utils.ArtifactTypes.PURPLE,
+            Utils.ArtifactTypes.PURPLE,
+            Utils.ArtifactTypes.GREEN,
+            Utils.ArtifactTypes.PURPLE
+    };
+
+    private final Utils.ArtifactTypes[] PPGPPG = new Utils.ArtifactTypes[]{
+            Utils.ArtifactTypes.PURPLE,
+            Utils.ArtifactTypes.PURPLE,
+            Utils.ArtifactTypes.GREEN,
+            Utils.ArtifactTypes.PURPLE,
+            Utils.ArtifactTypes.PURPLE,
+            Utils.ArtifactTypes.GREEN
+    };
 
     // ------------------------- CONFIG ------------------------------- //
     public static double kP = 0.005;
@@ -157,20 +188,26 @@ public class Turret implements IAmBetterSubsystem {
         return new NullCommand();
     }
 
+    public Command setHoodPos(double pos) {
+        return Shooter.INSTANCE.setHoodPos(pos);
+    }
+
     public double degreesToTicks(double degrees) {
         return degrees * 751.8 / 360 * 8;
     }
     public double ticksToDegrees(double ticks) {return ticks / 751.8 * 360 / 8;}
 
-    public double waugh() { // yes, this is how we get the tag x position
+    public Pair<Integer, Integer> waugh() { // yes, this is how we get the tag x position
         try {
             if (isRedAlliance) {
-                return camera.blocks(1)[0].x;
+                HuskyLens.Block tag = camera.blocks(1)[0];
+                return new Pair<>(tag.x, tag.y);
             } else {
-                return camera.blocks(2)[0].x;
+                HuskyLens.Block tag = camera.blocks(2)[0];
+                return new Pair<>(tag.x, tag.y);
             }
         } catch (RuntimeException reeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee) {
-            return 69420;
+            return new Pair<>(69420, 42069);
         }
     }
 
@@ -178,10 +215,33 @@ public class Turret implements IAmBetterSubsystem {
         rotationMotor.setPower(controller.calculate(rotationMotor.getState()));
     }
 
+    public static double linearM = 0.006;
+    public static double logA = 0.01;
+    public static double logB = 1.25;
+    public static double logH = 84;
+    public static double logK = 0.5;
+    public static double quadA = -0.0000464;
+    public static double quadH = 172;
+    public static double quadK = 0.686;
+
+    public double calcHoodPos(int tagY) {
+        if (tagY < 0 || tagY > 240) {
+            return 0.0; // this shouldn't be possible but it should be taken into account anyways
+        }
+
+        if (tagY < 85.30149) { // f(x) = 0.006x
+            return linearM * tagY;
+        } else if (85.30149 <= tagY && tagY <= 126) { // log(x) / log(b) = log base b (x)
+            return logA * (Math.log10(tagY - logH) / Math.log10(logB)) + logK; // f(x) = 0.01 * (log(tagY - 84) / log(1.25)) + 0.5
+        } else { // tagY in range of 126 - 240
+            return quadA * ((tagY - quadH) * (tagY - quadH)) + quadK; // f(x) = -0.0000464(tagY - 172)^2 + 0.686
+        }
+    }
+
 
     @Override
     public void periodic() {
-        waluigiWaugh = waugh();
+        waluigi = waugh();
 
         if (Magazine.INSTANCE.mode == 0 && !isZeroing) {
             mode = TurretMode.MANUAL_PID;
@@ -190,8 +250,9 @@ public class Turret implements IAmBetterSubsystem {
         
         switch (mode) {
             case TAG_TRACKING:
-                if (waluigiWaugh != 69420) {
+                if (waluigi.component1() != 69420) {
                     targetAngle = ticksToDegrees(rotationMotor.getCurrentPosition() - off) - (a * (waluigiWaugh - 160));
+                    hoodTargetPos = calcHoodPos(waluigi.component2());
                     timer.resetTimer();
                 } else if (timer.getElapsedTimeSeconds() >= 1) {
                     mode = TurretMode.RECOVERY;
@@ -200,12 +261,14 @@ public class Turret implements IAmBetterSubsystem {
                     targetAngle = targetAngle - Math.toDegrees(deltaHeading);
                 }
                 controller.setGoal(new KineticState(off + degreesToTicks(Math.max(-90, Math.min(90, targetAngle)))));
+                setHoodPos(hoodTargetPos).schedule();
                 rotationMotor.setPower(Math.max(-0.75, Math.min(0.75, controller.calculate(rotationMotor.getState()))));
                 break;
             case RECOVERY:
                 //if (isSweeping) {
                     if (waluigiWaugh != 69420) {
                         targetAngle = ticksToDegrees(rotationMotor.getCurrentPosition()) - (a * (waluigiWaugh - 160));
+                        hoodTargetPos = calcHoodPos(waluigi.component2());
                         timer.resetTimer();
                         mode = TurretMode.TAG_TRACKING;
                         started = false;
@@ -247,33 +310,17 @@ public class Turret implements IAmBetterSubsystem {
         oldPose = pose;
         pose = poseUpdater.getPose();
 
-        if (camera.blocks(3).length != 0) {
-            Magazine.INSTANCE.motif = new Utils.ArtifactTypes[]{
-                    Utils.ArtifactTypes.GREEN,
-                    Utils.ArtifactTypes.PURPLE,
-                    Utils.ArtifactTypes.PURPLE,
-                    Utils.ArtifactTypes.GREEN,
-                    Utils.ArtifactTypes.PURPLE,
-                    Utils.ArtifactTypes.PURPLE
-            };
-        } else if (camera.blocks(4).length != 0) {
-            Magazine.INSTANCE.motif = new Utils.ArtifactTypes[]{
-                    Utils.ArtifactTypes.PURPLE,
-                    Utils.ArtifactTypes.GREEN,
-                    Utils.ArtifactTypes.PURPLE,
-                    Utils.ArtifactTypes.PURPLE,
-                    Utils.ArtifactTypes.GREEN,
-                    Utils.ArtifactTypes.PURPLE
-            };
-        } else if (camera.blocks(5).length != 0) {
-            Magazine.INSTANCE.motif = new Utils.ArtifactTypes[]{
-                    Utils.ArtifactTypes.PURPLE,
-                    Utils.ArtifactTypes.PURPLE,
-                    Utils.ArtifactTypes.GREEN,
-                    Utils.ArtifactTypes.PURPLE,
-                    Utils.ArtifactTypes.PURPLE,
-                    Utils.ArtifactTypes.GREEN
-            };
+        if (!hasGotMotif) {
+            if (camera.blocks(3).length != 0) {
+                Magazine.INSTANCE.motif = GPPGPP;
+                hasGotMotif = true;
+            } else if (camera.blocks(4).length != 0) {
+                Magazine.INSTANCE.motif = PGPPGP;
+                hasGotMotif = true;
+            } else if (camera.blocks(5).length != 0) {
+                Magazine.INSTANCE.motif = PPGPPG;
+                hasGotMotif = true;
+            }
         }
     }
 }

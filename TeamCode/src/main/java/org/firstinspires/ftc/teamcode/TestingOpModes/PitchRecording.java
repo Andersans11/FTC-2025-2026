@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.TestingOpModes;
 
 import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -15,15 +16,13 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.Magazine;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 
-import kotlin.Pair;
-
+@Disabled
 @Configurable
 @TeleOp(name = "Pitch Recording", group = Utils.PRIORITY)
 public class PitchRecording extends RoyallyFuckedUpMode {
 
 
     boolean outputValues = false;
-    Pair<Double, Double>[] values = new Pair[] {};
     public static double hoodPos = 0.45;
 
     public PitchRecording() {
@@ -53,11 +52,14 @@ public class PitchRecording extends RoyallyFuckedUpMode {
 
         P1.leftBumper().whenBecomesTrue(Perseus.INSTANCE.updateHoodPos());
 
-        P2.dpadLeft().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.GREEN));
-        P2.dpadRight().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.PURPLE));
-
         P1.dpadLeft().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.GREEN));
         P1.dpadRight().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.PURPLE));
+
+        P1.y().whenBecomesTrue(Shooter.INSTANCE.setHoodPos(hoodPos));
+
+
+        P2.dpadLeft().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.GREEN));
+        P2.dpadRight().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.PURPLE));
 
         P2.cross().whenBecomesTrue(Perseus.INSTANCE.shootSingle(Utils.ArtifactTypes.GREEN));
         P2.circle().whenBecomesTrue(Perseus.INSTANCE.shootSingle(Utils.ArtifactTypes.PURPLE));
@@ -73,10 +75,6 @@ public class PitchRecording extends RoyallyFuckedUpMode {
         P2.leftBumper().whenTrue(Turret.INSTANCE.changePosition(-0.5));
 
         P2.dpadDown().whenBecomesTrue(Turret.INSTANCE.autoControl());
-
-        P1.y().whenBecomesTrue(Shooter.INSTANCE.setHoodPos(hoodPos));
-
-        P1.a().whenBecomesTrue(() -> this.outputValues = !this.outputValues);
     }
 
     @Override
@@ -93,29 +91,24 @@ public class PitchRecording extends RoyallyFuckedUpMode {
 
             addData("tagX", blocks != null ? blocks[0].x : "no blocks found");
             addData("tagY", blocks != null ? blocks[0].y : "no blocks found");
+
         } catch (RuntimeException e) {
             addData("tagX", "no blocks found");
             addData("tagY", "no blocks found");
         }
 
-        if (!outputValues) {
-            addData("0", Magazine.INSTANCE.getSlotColor(0));
-            addData("1", Magazine.INSTANCE.getSlotColor(1));
-            addData("2", Magazine.INSTANCE.getSlotColor(2));
-            addData("Active", Magazine.INSTANCE.activeSlot);
-            addData("Mode", Magazine.INSTANCE.mode);
+        addData("0", Magazine.INSTANCE.getSlotColor(0));
+        addData("1", Magazine.INSTANCE.getSlotColor(1));
+        addData("2", Magazine.INSTANCE.getSlotColor(2));
+        addData("Active", Magazine.INSTANCE.activeSlot);
+        addData("Mode", Magazine.INSTANCE.mode);
 
-            addData("desiredColor", Magazine.INSTANCE.desiredColor);
-            addData("range", Magazine.INSTANCE.color.getDistance(DistanceUnit.MM));
+        addData("desiredColor", Magazine.INSTANCE.desiredColor);
+        addData("range", Magazine.INSTANCE.color.getDistance(DistanceUnit.MM));
 
-            addData("motif1", Magazine.INSTANCE.motif[0]);
-            addData("motif2", Magazine.INSTANCE.motif[1]);
-            addData("motif3", Magazine.INSTANCE.motif[2]);
-        } else {
-            for (Pair<Double, Double> pair : values) {
-                addData(pair.component1().toString(), pair.component2().toString());
-            }
-        }
+        addData("motif1", Magazine.INSTANCE.motif[0]);
+        addData("motif2", Magazine.INSTANCE.motif[1]);
+        addData("motif3", Magazine.INSTANCE.motif[2]);
 
     }
 }
