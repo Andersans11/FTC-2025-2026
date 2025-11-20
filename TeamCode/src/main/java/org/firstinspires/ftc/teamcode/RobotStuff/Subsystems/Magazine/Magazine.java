@@ -5,7 +5,7 @@ import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.HardwareConfigs.ServoExFullRange;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Hardware.ServoExFullRange;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.IAmBetterSubsystem;

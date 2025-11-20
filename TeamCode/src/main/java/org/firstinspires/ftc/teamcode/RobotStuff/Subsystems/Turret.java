@@ -132,6 +132,10 @@ public class Turret implements IAmBetterSubsystem {
 
     }
 
+    /**
+     * zeroes the turret using
+     * @return a sequential group that zeroes the turret
+     */
     public Command zero() {
         return new SequentialGroup(
                 new InstantCommand(() -> {
@@ -158,6 +162,11 @@ public class Turret implements IAmBetterSubsystem {
         );
     }
 
+    /**
+     * directly set the target position for the turret motor (within limits)
+     * @param pos position to set the motor to
+     * @return an InstantCommand that sets the position
+     */
     public Command setPosition(double pos) {
         return new InstantCommand(() -> {
             mode = TurretMode.MANUAL_PID;
@@ -166,6 +175,11 @@ public class Turret implements IAmBetterSubsystem {
         });
     }
 
+    /**
+     * change the current target angle by a given pos
+     * @param pos the pos to change the target angle by
+     * @return an InstantCommand that changes the target angle by the given pos
+     */
     public Command changePosition(double pos) {
         return new InstantCommand(() -> {
             mode = TurretMode.MANUAL_PID;
@@ -179,6 +193,10 @@ public class Turret implements IAmBetterSubsystem {
         return new InstantCommand(() -> mode = TurretMode.RECOVERY);
     }
 
+    /**
+     * tf dp you think it does
+     * @param isRed do you really need me to explain this
+     */
     public Command setRedAlliance(boolean isRed) {
         if (!this.hasSetAlliance) {
             this.isRedAlliance = isRed;
@@ -197,7 +215,11 @@ public class Turret implements IAmBetterSubsystem {
     }
     public double ticksToDegrees(double ticks) {return ticks / 751.8 * 360 / 8;}
 
-    public Pair<Integer, Integer> waugh() { // yes, this is how we get the tag x position
+    /**
+     * Safely get the tag x and y position, return a dummy value if the tag is not found
+     * @return a Pair containing the x and y positions, or dummy values
+     */
+    public Pair<Integer, Integer> waugh() { // yes, this is how we get the tag x and y position
         try {
             if (isRedAlliance) {
                 HuskyLens.Block tag = camera.blocks(1)[0];
@@ -224,16 +246,21 @@ public class Turret implements IAmBetterSubsystem {
     public static double quadH = 172;
     public static double quadK = 0.686;
 
+    /**
+     * calculate the optimal hood servo position using a piecewise function
+     * @param tagY the y position of the tag in the camera's coordinate system
+     * @return the servo power
+     */
     public double calcHoodPos(int tagY) {
         if (tagY < 0 || tagY > 240) {
             return 0.0; // this shouldn't be possible but it should be taken into account anyways
         }
 
-        if (tagY < 85.30149) { // f(x) = 0.006x
-            return linearM * tagY;
-        } else if (85.30149 <= tagY && tagY <= 126) { // log(x) / log(b) = log base b (x)
+        if (tagY < 85.30149) { // 0 < x < 85.30149
+            return linearM * tagY; // f(x) = 0.006x
+        } else if (85.30149 <= tagY && tagY <= 126) { // 85.30149 <= x <= 126
             return logA * (Math.log10(tagY - logH) / Math.log10(logB)) + logK; // f(x) = 0.01 * (log(tagY - 84) / log(1.25)) + 0.5
-        } else { // tagY in range of 126 - 240
+        } else { // 126 < x <= 240
             return quadA * ((tagY - quadH) * (tagY - quadH)) + quadK; // f(x) = -0.0000464(tagY - 172)^2 + 0.686
         }
     }

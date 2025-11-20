@@ -66,6 +66,11 @@ public class RobotConfig {
     public static boolean isRedAlliance = false;
 
 
+    /**
+     * initialize the robot config, initializing hardwareMap and setting variables accessed by other classes
+     * @param opMode the opMode for the config to use
+     * @param deltaTimer the DeltaTimer for the config to use, used in other subsystems
+     */
     public static void initConfig(RoyallyFuckedUpMode opMode, DeltaTimer deltaTimer) {
         RobotConfig.opMode = opMode;
         RobotConfig.hardwareMap = opMode.hardwareMap;
@@ -73,7 +78,7 @@ public class RobotConfig {
         RobotConfig.p1 = opMode.P1;
         RobotConfig.p2 = opMode.P2;
 
-        initHardware(hardwareMap);
+        initHardware();
     }
 
     public static RoyallyFuckedUpMode getOpMode() {
@@ -93,7 +98,10 @@ public class RobotConfig {
         return hardwareMap;
     }
 
-    private static void initHardware (HardwareMap hardwareMap) {
+    /**
+     * initialize ALL hardware in the opMode's hardwareMap
+     */
+    private static void initHardware() {
 
         Pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, "PINPOINT");
 

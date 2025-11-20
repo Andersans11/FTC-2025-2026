@@ -10,10 +10,14 @@ public class ServoConfig {
     public String name;
     public Servo.Direction direction;
     public ServoEx servo;
-    HardwareMap hardwareMap;
 
+    /**
+     * A way to easily create and use a ServoEx
+     * @param hardwareMap the HardwareMap to get the servo from
+     * @param name the name of the Servo to look for in
+     * @param direction the direction to set the servo's rotation
+     */
     public ServoConfig(HardwareMap hardwareMap, String name, Servo.Direction direction) {
-        this.hardwareMap = hardwareMap;
         this.name = name;
         this.direction = direction;
 
@@ -25,6 +29,7 @@ public class ServoConfig {
         });
     }
 
-
-
+    public String getName() { return name; }
+    public ServoEx getServo() { return servo; }
+    public Servo.Direction getDirection() { return direction; }
 }
