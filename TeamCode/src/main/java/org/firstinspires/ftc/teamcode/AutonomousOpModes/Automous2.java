@@ -45,6 +45,8 @@ public class Automous2 extends RoyallyFuckedUpMode {
 
         Drawing.init();
 
+        Turret.INSTANCE.setRedAlliance(false).schedule();
+
         telemetry.addLine("1");
         follower = Constants.createFollower(hardwareMap);
         telemetry.addLine("1");

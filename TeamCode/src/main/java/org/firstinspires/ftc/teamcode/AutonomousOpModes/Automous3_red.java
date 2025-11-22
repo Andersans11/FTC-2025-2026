@@ -54,6 +54,8 @@ public class Automous3_red extends RoyallyFuckedUpMode {
 
         Drawing.init();
 
+        Turret.INSTANCE.setRedAlliance(false).schedule();
+
         follower = Constants.createFollower(hardwareMap);
         Turret.INSTANCE.setPosition(90).schedule();
         Turret.INSTANCE.initPoseUpdater(this);
@@ -71,11 +73,11 @@ public class Automous3_red extends RoyallyFuckedUpMode {
 
         firstCycle = follower.pathBuilder()
                 .addPath(new BezierLine(startingPose, scoringPose))
-                .setConstantHeadingInterpolation(Math.toRadians(36))
+                .setConstantHeadingInterpolation(Math.toRadians(47.5))
                 .build();
         secondCycle1 = follower.pathBuilder()
                 .addPath(new BezierLine(scoringPose, intakePose1))
-                .setLinearHeadingInterpolation(Math.toRadians(36), Math.toRadians(0))
+                .setLinearHeadingInterpolation(Math.toRadians(47.5), Math.toRadians(0))
                 .addPath(new BezierLine(intakePose1, intakePose2))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .addParametricCallback(0, () -> {
@@ -91,7 +93,7 @@ public class Automous3_red extends RoyallyFuckedUpMode {
                 .build();
         secondCycle4 = follower.pathBuilder()
                 .addPath(new BezierLine(intakePose2, scoringPose))
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(36))
+                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(47.5))
                 .build();
 
         follower.setStartingPose(startingPose);

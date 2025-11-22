@@ -208,12 +208,10 @@ public class Turret implements IAmBetterSubsystem {
     }
 
     public Command setRedAlliance(boolean isRed) {
-        if (!this.hasSetAlliance) {
+        return new InstantCommand(() -> {
             this.isRedAlliance = isRed;
             this.hasSetAlliance = true;
-        }
-
-        return new NullCommand();
+        });
     }
 
     public double degreesToTicks(double degrees) {
