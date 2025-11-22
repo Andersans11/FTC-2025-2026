@@ -21,7 +21,7 @@ import dev.nextftc.core.commands.delays.WaitUntil;
 import dev.nextftc.core.commands.groups.SequentialGroup;
 import dev.nextftc.core.commands.utility.InstantCommand;
 
-@Autonomous(name = "Automous2")
+@Autonomous(name = "Automous")
 public class Automous2 extends RoyallyFuckedUpMode {
     Follower follower;
 
@@ -82,9 +82,10 @@ public class Automous2 extends RoyallyFuckedUpMode {
                 Perseus.INSTANCE.start(),
                 new InstantCommand(() -> follower.followPath(path)),
                 Magazine.INSTANCE.setMode(1),
-                new WaitUntil(() -> follower.getCurrentTValue() >= 0.5),
+                new WaitUntil(() -> follower.getCurrentTValue() >= 0.75),
                 Turret.INSTANCE.setPosition(0),
-                Turret.INSTANCE.autoControl(),
+                new InstantCommand(() -> Turret.INSTANCE.mode = Turret.TurretMode.RECOVERY),
+                Magazine.INSTANCE.setMode(1),
                 new WaitUntil(() -> !follower.isBusy()),
                 Perseus.INSTANCE.shootMotif()
         ).schedule();

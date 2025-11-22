@@ -36,8 +36,8 @@ public class Turret implements IAmBetterSubsystem {
     public HuskyLens camera;
     public TouchSensor limitSwitch;
     public boolean isRedAlliance = true;
-    boolean hasSetAlliance = false;
-    boolean hasGotMotif = false;
+    public boolean hasSetAlliance = false;
+    public boolean hasGotMotif = false;
     double pitch;
     Pose pose = new Pose(0, 0, 0);
     Pose oldPose = new Pose(0, 0, 0);
@@ -94,9 +94,9 @@ public class Turret implements IAmBetterSubsystem {
     };
 
     // ------------------------- CONFIG ------------------------------- //
-    public static double kP = 0.005;
+    public static double kP = 0.0075;
     public static double kI = 0.0;
-    public static double kD = 0.0;
+    public static double kD = 0.0001;
     public static double a = 0.04;
 
     // --------------------- OPMODE --------------------------------- //
@@ -177,6 +177,14 @@ public class Turret implements IAmBetterSubsystem {
         return new InstantCommand(() -> {
             mode = TurretMode.MANUAL_PID;
             targetAngle = Math.max(-90, Math.min(90, pos));
+            controller.setGoal(new KineticState(off + degreesToTicks(targetAngle)));
+        });
+    }
+
+    public Command setPosition(double turretPos, double hoodPos) {
+        return new InstantCommand(() -> {
+            mode = TurretMode.MANUAL_PID;
+            targetAngle = Math.max(-90, Math.min(90, turretPos));
             controller.setGoal(new KineticState(off + degreesToTicks(targetAngle)));
         });
     }

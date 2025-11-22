@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.AutonomousOpModes;
 
 import com.pedropathing.follower.Follower;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
@@ -15,6 +16,7 @@ import java.io.InputStream;
 
 import PedroJSON.main.PathLoader;
 
+@Disabled
 @Autonomous(name = "Automous3")
 public class Automous extends RoyallyFuckedUpMode {
     InputStream inputStream;

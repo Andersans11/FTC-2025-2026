@@ -64,7 +64,7 @@ public class Shooter implements IAmBetterSubsystem {
         return new SetPosition(kicker, 0);
     }
     public Command resetKicker() {
-        return new SetPosition(kicker, 0.95);
+        return new SetPosition(kicker, 1);
     }
 
     public Command shoot() {

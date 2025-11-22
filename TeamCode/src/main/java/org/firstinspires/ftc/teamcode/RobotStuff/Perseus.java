@@ -27,7 +27,6 @@ public class Perseus extends BetterSubsystemGroup {
 
     public Follower follower;
     public PoseTracker followerTeleOp;
-
     boolean isShooting = false;
     boolean isMotifShooting = false;
     public static double hoodToPos = 0.5;
@@ -79,7 +78,8 @@ public class Perseus extends BetterSubsystemGroup {
     }
 
     public static double motifShootingSpeed = 0.2;
-    public static double shootingSpeed = 0.1;
+    public static double shootingSpeed = 0.15;
+    public static double shootingSpeed2 = 0.25;
 
     //  ------------------------- COMMANDS --------------------------- //
 
@@ -119,7 +119,7 @@ public class Perseus extends BetterSubsystemGroup {
                 Magazine.INSTANCE.setDesiredColor(i),
                 new Delay(shootingSpeed),
                 Shooter.INSTANCE.shoot(),
-                new Delay(shootingSpeed),
+                new Delay(shootingSpeed2),
                 Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.NONE),
                 Magazine.INSTANCE.setDesiredColor(i + 1)
         );
@@ -145,7 +145,6 @@ public class Perseus extends BetterSubsystemGroup {
      * @return a SequentialGroup that shoots a motif, or a NullCommand if the robot is already shooting
      */
     public Command shootMotif() {
-        if (!isMotifShooting) {
             return new SequentialGroup(
                     new InstantCommand(() -> this.isMotifShooting = true),
                     Shooter.INSTANCE.spinUp(),
@@ -158,9 +157,6 @@ public class Perseus extends BetterSubsystemGroup {
                     Shooter.INSTANCE.idle(),
                     new InstantCommand(() -> this.isMotifShooting = false)
             );
-        } else {
-            return new NullCommand();
-        }
     }
 
     public Command start() {

@@ -46,7 +46,7 @@ public class Magazine implements IAmBetterSubsystem {
     public static double off0 = 0;
     public static double off1 = 120;
     public static double off2 = 240;
-    public static double off = 0;
+    public static double off = 17;
     public static double dist = 110;
     public static double dist2 = 400;
     public int it = 0;
@@ -137,7 +137,19 @@ public class Magazine implements IAmBetterSubsystem {
     public Command setActiveSlotContent(Utils.ArtifactTypes content) {
         return new InstantCommand(() -> {
             slots[activeSlot].content = content;
+            colorQueue = Utils.ArtifactTypes.NONE;
         });
+    }
+
+    public int getslotsFilled() {
+        int numberFilled = 0;
+
+        if (slots[0].content != Utils.ArtifactTypes.NONE) numberFilled++;
+        if (slots[1].content != Utils.ArtifactTypes.NONE) numberFilled++;
+        if (slots[2].content != Utils.ArtifactTypes.NONE) numberFilled++;
+
+        return numberFilled;
+
     }
 
     public Command setSlotContent(int slot, Utils.ArtifactTypes content) {
