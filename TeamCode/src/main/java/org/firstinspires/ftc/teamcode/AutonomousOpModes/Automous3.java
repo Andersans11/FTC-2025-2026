@@ -60,7 +60,7 @@ public class Automous3 extends RoyallyFuckedUpMode {
         telemetry.addLine("1");
         follower = Constants.createFollower(hardwareMap);
         telemetry.addLine("1");
-        Turret.INSTANCE.setPosition(-90).schedule();
+        Turret.INSTANCE.setPosition(-55).schedule();
         telemetry.addLine("1");
         Turret.INSTANCE.initPoseUpdater(this);
 
@@ -77,7 +77,7 @@ public class Automous3 extends RoyallyFuckedUpMode {
 
         firstCycle = follower.pathBuilder()
                 .addPath(new BezierLine(startingPose, scoringPose))
-                .setConstantHeadingInterpolation(Math.toRadians(132.5))
+                .setLinearHeadingInterpolation(Math.toRadians(144), Math.toRadians(132.5))
                 .build();
         secondCycle1 = follower.pathBuilder()
                 .addPath(new BezierLine(scoringPose, intakePose1))
