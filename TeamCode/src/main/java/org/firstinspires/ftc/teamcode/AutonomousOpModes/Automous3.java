@@ -147,7 +147,7 @@ public class Automous3 extends RoyallyFuckedUpMode {
                 }),
                 new WaitUntil(() -> Magazine.INSTANCE.getslotsFilled() == 3 || pathTimer.getElapsedTimeSeconds() >= 3.5),
                 new InstantCommand(() -> {
-                    Intake.INSTANCE.stop().schedule();
+                    Intake.INSTANCE.idle().schedule();
                     follower.setMaxPower(0.5);
                     follower.followPath(secondCycle4);
                 }),
