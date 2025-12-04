@@ -80,7 +80,7 @@ public class Automous_9 extends RoyallyFuckedUpMode {
 
         firstCycle = follower.pathBuilder()
                 .addPath(new BezierLine(startingPose, scoringPose))
-                .setConstantHeadingInterpolation(Math.toRadians(132.5))
+                .setLinearHeadingInterpolation(Math.toRadians(144), Math.toRadians(132.5))
                 .build();
         secondCycle1 = follower.pathBuilder()
                 .addPath(new BezierLine(scoringPose, intakePose1_1))
@@ -222,6 +222,7 @@ public class Automous_9 extends RoyallyFuckedUpMode {
         addData("2", Magazine.INSTANCE.getSlotColor(2));
         addData("Active", Magazine.INSTANCE.activeSlot);
         addData("Mode", Magazine.INSTANCE.mode);
+        addData("turretMode", Turret.INSTANCE.mode);
         addData("desiredColor", Magazine.INSTANCE.desiredColor);
         addData("Is Follower Busy", follower.isBusy());
 
