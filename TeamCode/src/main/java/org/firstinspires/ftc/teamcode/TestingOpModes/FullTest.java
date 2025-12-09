@@ -4,6 +4,7 @@ import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Perseus;
@@ -27,7 +28,8 @@ public class FullTest extends RoyallyFuckedUpMode {
     @Override
     public void onInit() {
         super.onInit();
-        Turret.INSTANCE.initPoseUpdater(this);
+
+        Perseus.INSTANCE.initFollower(Constants.createFollower(hardwareMap));
 
         P1.rightTrigger().atLeast(0.1)
                 .whenBecomesTrue(Perseus.INSTANCE.intake())

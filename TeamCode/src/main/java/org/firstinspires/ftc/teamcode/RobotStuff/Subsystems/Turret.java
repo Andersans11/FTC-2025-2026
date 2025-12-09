@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
+import org.firstinspires.ftc.teamcode.RobotStuff.Perseus;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.Magazine;
 
 import dev.nextftc.control.ControlSystem;
@@ -43,7 +44,7 @@ public class Turret implements IAmBetterSubsystem {
     Pose oldPose = new Pose(0, 0, 0);
     public double targetAngle = 0;
     boolean isManualControl = false;
-    boolean isSweeping = true;
+    public boolean isSweeping = true;
     boolean started = false;
     public Timer timer;
     public ControlSystem controller;
@@ -112,13 +113,8 @@ public class Turret implements IAmBetterSubsystem {
         targetAngle = 0;
     }
 
-    public void initPoseUpdater(OpMode opmode) {
-        poseUpdater = Constants.createFollower(opmode.hardwareMap);
-        poseUpdater.setStartingPose(pose);
-    }
-
-    public void initPoseUpdater(Follower follower) {
-        poseUpdater = follower;
+    public void initPoseUpdater() {
+        poseUpdater = Perseus.INSTANCE.follower;
     }
 
     @Override
@@ -127,6 +123,7 @@ public class Turret implements IAmBetterSubsystem {
         camera = new HuskyLens(RobotConfig.camera.getDeviceClient());
         camera.selectAlgorithm(HuskyLens.Algorithm.TAG_RECOGNITION);
         limitSwitch = RobotConfig.LimitSwitch;
+        initPoseUpdater();
     }
 
     @Override
@@ -300,7 +297,7 @@ public class Turret implements IAmBetterSubsystem {
                 rotationMotor.setPower(Math.max(-0.75, Math.min(0.75, controller.calculate(rotationMotor.getState()))));
                 break;
             case RECOVERY:
-                //if (isSweeping) {
+                if (isSweeping) {
                     if (waluigi.component1() != 69420) {
                         targetAngle = ticksToDegrees(rotationMotor.getCurrentPosition()) - (a * (waluigi.component1() - 160));
                         hoodTargetPos = calcHoodPos(waluigi.component2());
@@ -313,7 +310,7 @@ public class Turret implements IAmBetterSubsystem {
                             started = true;
                         }
                     }
-                /*} else {
+                } else {
                     if (pose != oldPose) {
                         if (!isRedAlliance) {
                             targetAngle = Math.toDegrees(Math.atan((144 - pose.getY()) / pose.getX())); // get angle with right triangle rules
@@ -322,17 +319,15 @@ public class Turret implements IAmBetterSubsystem {
                             if (targetAngle < 0) {
                                 targetAngle = targetAngle + 360; // normalize angle
                             }
-                            pitch = (pose.distanceFrom(new Pose(144, 0)) / 144) - 1.25;
                         } else {
                             targetAngle = Math.toDegrees(Math.atan((144 - pose.getY()) / (144 - pose.getX()))); // get angle with right triangle rules
                             targetAngle = targetAngle - pose.getHeading(); // account for robot heading
                             if (targetAngle < 0) {
                                 targetAngle = targetAngle + 360; // normalize angle
                             }
-                            pitch = (pose.distanceFrom(new Pose(144, 144)) / 144) - 1.25;
                         }
                     }
-                }*/
+                }
                 controller.setGoal(new KineticState(off + degreesToTicks(Math.max(-90, Math.min(90, targetAngle)))));
                 rotationMotor.setPower(Math.max(-0.75, Math.min(0.75, controller.calculate(rotationMotor.getState()))));
                 break;

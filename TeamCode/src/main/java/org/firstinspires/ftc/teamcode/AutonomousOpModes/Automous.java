@@ -52,7 +52,6 @@ public class Automous extends RoyallyFuckedUpMode {
         telemetry.addLine("1");
         Turret.INSTANCE.setPosition(-90).schedule();
         telemetry.addLine("1");
-        Turret.INSTANCE.initPoseUpdater(this);
     }
 
     @Override

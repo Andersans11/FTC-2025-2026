@@ -62,7 +62,6 @@ public class Automous3 extends RoyallyFuckedUpMode {
         telemetry.addLine("1");
         Turret.INSTANCE.setPosition(-90).schedule();
         telemetry.addLine("1");
-        Turret.INSTANCE.initPoseUpdater(this);
 
         startingPose = new Pose(28, 131, Math.toRadians(144));
         scoringPose = new Pose(60, 84);

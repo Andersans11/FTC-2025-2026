@@ -58,7 +58,6 @@ public class Automous3_red extends RoyallyFuckedUpMode {
 
         follower = Constants.createFollower(hardwareMap);
         Turret.INSTANCE.setPosition(90).schedule();
-        Turret.INSTANCE.initPoseUpdater(this);
 
         startingPose = new Pose(28, 131, Math.toRadians(144)).mirror();
         scoringPose = new Pose(60, 84).mirror();

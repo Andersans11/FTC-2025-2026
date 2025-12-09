@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
 import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Hardware.ServoExFullRange;
@@ -24,6 +25,7 @@ public class Magazine implements IAmBetterSubsystem {
     public int activeSlot; // slot that receives the next ball
     public ServoExFullRange[] servos;
     public ColorRangeSensor color;
+    public DistanceSensor range;
     public double targetPos = 0;
     public double oldTargetPos = 0;
     public Utils.ArtifactTypes[] motif = new Utils.ArtifactTypes[] {
@@ -39,7 +41,7 @@ public class Magazine implements IAmBetterSubsystem {
     boolean usingSec = false;
     public double turretOff = 0;
 
-    Utils.ArtifactTypes colorQueue = Utils.ArtifactTypes.NONE;
+    public Utils.ArtifactTypes colorQueue = Utils.ArtifactTypes.NONE;
 
     // ------------------------------ CONFIG ----------------------------- //
 
@@ -47,10 +49,11 @@ public class Magazine implements IAmBetterSubsystem {
     public static double off1 = 120;
     public static double off2 = 240;
     public static double off = 2;
-    public static double dist = 110;
-    public static double dist2 = 400;
+    public static double dist = 60;
     public int it = 0;
     public int mode = 0;
+
+    public boolean hasBall;
 
     public Timer timer;
 
@@ -70,6 +73,7 @@ public class Magazine implements IAmBetterSubsystem {
         };
 
         this.color = RobotConfig.IntakeCS;
+        this.range = RobotConfig.IntakeDS;
 
         servos[0].setPosition(slots[0].offset);
         servos[1].setPosition(slots[0].offset);
@@ -137,7 +141,7 @@ public class Magazine implements IAmBetterSubsystem {
     public Command setActiveSlotContent(Utils.ArtifactTypes content) {
         return new InstantCommand(() -> {
             slots[activeSlot].content = content;
-            colorQueue = Utils.ArtifactTypes.NONE;
+            colorQueue = content;
         });
     }
 
@@ -159,18 +163,15 @@ public class Magazine implements IAmBetterSubsystem {
     }
 
     public void getColor() {
-        if (color.getDistance(DistanceUnit.MM) <= dist) { // Range now
+        if (color.getDistance(DistanceUnit.MM) <= dist || range.getDistance(DistanceUnit.MM) <= dist) { // Range now
             if ((color.red() + color.blue()) / 2 < color.green()) {
+                setActiveSlotContent(Utils.ArtifactTypes.GREEN).schedule();
                 colorQueue = Utils.ArtifactTypes.GREEN;
             } else {
+                setActiveSlotContent(Utils.ArtifactTypes.PURPLE).schedule();
                 colorQueue = Utils.ArtifactTypes.PURPLE;
             }
-            timer.resetTimer();
-        } else if (color.getDistance(DistanceUnit.MM) <= dist2) {
-            timer.resetTimer();
-        } else if (colorQueue != Utils.ArtifactTypes.NONE && timer.getElapsedTimeSeconds() >= 0.25) {
-            setActiveSlotContent(colorQueue).schedule();
-            colorQueue = Utils.ArtifactTypes.NONE;
+            hasBall = true;
         }
     }
 

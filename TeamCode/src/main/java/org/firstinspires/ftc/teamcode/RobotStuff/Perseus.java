@@ -2,8 +2,14 @@ package org.firstinspires.ftc.teamcode.RobotStuff;
 
 import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.follower.Follower;
+import com.pedropathing.geometry.Pose;
 import com.pedropathing.localization.PoseTracker;
+import com.pedropathing.util.Timer;
+import com.qualcomm.robotcore.hardware.PwmControl;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 
+import org.firstinspires.ftc.robotcore.external.Const;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
@@ -14,6 +20,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.Magazine;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 
+import dev.nextftc.control.KineticState;
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.delays.Delay;
 import dev.nextftc.core.commands.groups.SequentialGroup;
@@ -30,6 +37,15 @@ public class Perseus extends BetterSubsystemGroup {
     boolean isShooting = false;
     boolean isMotifShooting = false;
     public static double hoodToPos = 0.5;
+    public ServoImplEx indicator;
+    public Timer indTimer;
+    public Timer ballTimer;
+    public Pose currentPose;
+    public static double offX;
+    public static double offY;
+    public static double offTheta;
+    boolean indCycle;
+    double currentPWM = 0;
 
     private Perseus() {
         super(
@@ -64,7 +80,16 @@ public class Perseus extends BetterSubsystemGroup {
     @Override
     public void initSystem() {
         super.initSystem();
-        follower = Constants.createFollower(RobotConfig.getHardwareMap());
+        indicator = RobotConfig.Indicator;
+        indTimer = new Timer();
+        ballTimer = new Timer();
+        indicator.setPwmRange(new PwmControl.PwmRange(500, 2500));
+        indicator.setPwmEnable();
+    }
+
+    public void initFollower(Follower follower) {
+        this.follower = follower;
+        this.follower.setStartingPose(currentPose);
     }
 
     @Override
@@ -75,6 +100,7 @@ public class Perseus extends BetterSubsystemGroup {
     @Override
     public void periodic() {
         super.periodic();
+        currentPose = follower.getPose();
     }
 
     public static double motifShootingSpeed = 0.2;
@@ -82,6 +108,97 @@ public class Perseus extends BetterSubsystemGroup {
     public static double shootingSpeed2 = 0.25;
 
     //  ------------------------- COMMANDS --------------------------- //
+
+    public void runIndicator() {
+        switch (Magazine.INSTANCE.mode) {
+            case 0:
+                if (Magazine.INSTANCE.hasBall) {
+                    switch (Magazine.INSTANCE.colorQueue) {
+                        case PURPLE:
+                            if (indTimer.getElapsedTimeSeconds() >= 0.5) {
+                                if (indCycle) {
+                                    setIndicator(1900);
+                                    indCycle = false;
+                                } else {
+                                    setIndicator(0);
+                                    indCycle = true;
+                                }
+                                indTimer.resetTimer();
+                            }
+                            break;
+                        case GREEN:
+                            if (indTimer.getElapsedTimeSeconds() >= 0.5) {
+                                if (indCycle) {
+                                    setIndicator(1450);
+                                    indCycle = false;
+                                } else {
+                                    setIndicator(0);
+                                    indCycle = true;
+                                }
+                                indTimer.resetTimer();
+                            }
+                            break;
+                    }
+
+                    if (ballTimer.getElapsedTimeSeconds() >= 3) {
+                        Magazine.INSTANCE.hasBall = false;
+                        ballTimer.resetTimer();
+                    }
+                } else if (Intake.INSTANCE.intake.getPower() >= 0.8) {
+                    if (indTimer.getElapsedTimeSeconds() >= 0.25) {
+                        if (indCycle) {
+                            setIndicator(1700);
+                            indCycle = false;
+                        } else {
+                            setIndicator(0);
+                            indCycle = true;
+                        }
+                        indTimer.resetTimer();
+                    }
+                } else setIndicator(1700);
+                break;
+            case 1:
+                if (isShooting || isMotifShooting) {
+                    if (indTimer.getElapsedTimeSeconds() >= 0.25) {
+                        if (indCycle) {
+                            setIndicator(1100);
+                            indCycle = false;
+                        } else {
+                            setIndicator(0);
+                            indCycle = true;
+                        }
+                        indTimer.resetTimer();
+                    }
+                } else if (Turret.INSTANCE.controller.isWithinTolerance(new KineticState(2.5))) {
+                    if (indTimer.getElapsedTimeSeconds() >= 0.5) {
+                        if (indCycle) {
+                            setIndicator(1200);
+                            indCycle = false;
+                        } else {
+                            setIndicator(0);
+                            indCycle = true;
+                        }
+                        indTimer.resetTimer();
+                    }
+                } else setIndicator(1300);
+        }
+    }
+
+    public void setIndicator(double PWM) {
+        if (PWM != currentPWM) {
+            indicator.setPosition(PWMToPower(PWM));
+            currentPWM = PWM;
+        }
+    }
+
+    public double PWMToPower(double PWM) {
+        return (PWM - 500) / 2000;
+    }
+
+    public Command resetFollower() {
+        return new InstantCommand(() ->
+            follower.setPose(new Pose(offX, offY, offTheta)));
+    }
 
     /**
      * safely shoot a single artifact of a specified color, while also preventing an ArrayDeque error

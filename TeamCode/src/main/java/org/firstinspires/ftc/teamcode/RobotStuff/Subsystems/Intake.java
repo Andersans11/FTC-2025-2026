@@ -12,7 +12,7 @@ import dev.nextftc.hardware.powerable.SetPower;
 public class Intake implements IAmBetterSubsystem {
 
     public static final Intake INSTANCE = new Intake();
-    MotorEx intake;
+    public MotorEx intake;
 
     // ---------------------------- CONFIG -------------------------- //
     public static double intakeSpeed = 1;

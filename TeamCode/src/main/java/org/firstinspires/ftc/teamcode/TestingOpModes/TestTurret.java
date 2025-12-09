@@ -22,7 +22,6 @@ public class TestTurret extends RoyallyFuckedUpMode {
     @Override
     public void onInit() {
         super.onInit();
-        Turret.INSTANCE.initPoseUpdater(this);
 
         //P1.dpadDown().whenBecomesTrue(NewTurret.INSTANCE.setPosition(0));
         //P1.dpadRight().whenBecomesTrue(NewTurret.INSTANCE.setPosition(90));

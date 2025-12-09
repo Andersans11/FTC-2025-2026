@@ -37,8 +37,6 @@ public class PitchRecording extends RoyallyFuckedUpMode {
     public void onInit() {
         super.onInit();
 
-        Turret.INSTANCE.initPoseUpdater(this);
-
         P1.rightTrigger().atLeast(0.1)
                 .whenBecomesTrue(Perseus.INSTANCE.intake())
                 .whenBecomesFalse(Perseus.INSTANCE.stopIntake());

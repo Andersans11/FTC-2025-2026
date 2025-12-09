@@ -16,6 +16,7 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import dev.nextftc.bindings.Button;
@@ -50,6 +51,7 @@ public class RobotConfig {
     public static FullServoConfig CarouselCR2;
     public static FullServoConfig CarouselCR3;
     public static ServoConfig HoodServo;
+    public static ServoImplEx Indicator;
 
     public static ServoConfig Kicker;
 
@@ -103,9 +105,11 @@ public class RobotConfig {
      */
     private static void initHardware() {
 
+        Indicator = hardwareMap.get(ServoImplEx.class, "INDICATOR");
+
         Pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, "PINPOINT");
 
-        //IntakeDS = hardwareMap.get(DistanceSensor.class, "Dis");
+        IntakeDS = hardwareMap.get(DistanceSensor.class, "DISTANCE");
 
         IntakeCS = hardwareMap.get(ColorRangeSensor.class, "COLOR");
 

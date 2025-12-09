@@ -50,8 +50,6 @@ public class Automous3_Kisen extends RoyallyFuckedUpMode {
 
         pathTimer = new Timer();
 
-        Turret.INSTANCE.initPoseUpdater(follower);
-
         Drawing.init();
 
 
