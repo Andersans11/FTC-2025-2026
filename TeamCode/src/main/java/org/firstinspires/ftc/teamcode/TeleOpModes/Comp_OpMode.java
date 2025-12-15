@@ -8,11 +8,9 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Perseus;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.RobotCentricDrive;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.Magazine;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.PoseTrackingTurret;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
-
-import dev.nextftc.core.commands.groups.ParallelGroup;
 
 @TeleOp(name = "TwoAndOnlyOpMode", group = Utils.PRIORITY_PRIORITY)
 public class Comp_OpMode extends RoyallyFuckedUpMode {
@@ -33,8 +31,8 @@ public class Comp_OpMode extends RoyallyFuckedUpMode {
         P1.rightTrigger().atLeast(0.1).whenBecomesTrue(Perseus.INSTANCE.intake());
         P1.rightTrigger().atLeast(0.1).whenBecomesFalse(Perseus.INSTANCE.stopIntake());
 
-        P1.dpadUp().whenBecomesTrue(Turret.INSTANCE.setRedAlliance(false));
-        P1.dpadDown().whenBecomesTrue(Turret.INSTANCE.setRedAlliance(true));
+        P1.dpadUp().whenBecomesTrue(PoseTrackingTurret.INSTANCE.setRedAlliance(false));
+        P1.dpadDown().whenBecomesTrue(PoseTrackingTurret.INSTANCE.setRedAlliance(true));
 
         P1.rightBumper().whenBecomesTrue(Perseus.INSTANCE.outtake());
         P1.rightBumper().whenBecomesFalse(Perseus.INSTANCE.stopIntake());
@@ -56,7 +54,7 @@ public class Comp_OpMode extends RoyallyFuckedUpMode {
         P2.dpadUp().whenBecomesTrue(Shooter.INSTANCE.resetKicker());
 
         P2.leftTrigger().atLeast(0.1).whenBecomesTrue(Magazine.INSTANCE.incShotsFired());
-        P2.leftBumper().whenBecomesTrue(Turret.INSTANCE.zero());
+        P2.leftBumper().whenBecomesTrue(PoseTrackingTurret.INSTANCE.zero());
     }
 
     @Override
@@ -76,7 +74,7 @@ public class Comp_OpMode extends RoyallyFuckedUpMode {
         addData("Mode", Magazine.INSTANCE.mode);
         addData("desiredColor", Magazine.INSTANCE.desiredColor);
         addData("shotsFired", Magazine.INSTANCE.shotsFired);
-        addData("turret", Turret.INSTANCE.rotationMotor.getPower());
-        addData("isOn", Turret.INSTANCE.limitSwitch.isPressed());
+        addData("turret", PoseTrackingTurret.INSTANCE.rotationMotor.getPower());
+        addData("isOn", PoseTrackingTurret.INSTANCE.limitSwitch.isPressed());
     }
 }

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
+package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems;
 
 import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.util.Timer;
@@ -9,8 +9,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Hardware.ServoExFullRange;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.IAmBetterSubsystem;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.delays.Delay;
@@ -21,21 +23,15 @@ import dev.nextftc.core.commands.utility.InstantCommand;
 public class Magazine implements IAmBetterSubsystem {
 
     public static final Magazine INSTANCE = new Magazine();
-    MagSlot[] slots;
+    List<MagSlot> slots;
+
     public int activeSlot; // slot that receives the next ball
     public ServoExFullRange[] servos;
     public ColorRangeSensor color;
     public DistanceSensor range;
     public double targetPos = 0;
     public double oldTargetPos = 0;
-    public Utils.ArtifactTypes[] motif = new Utils.ArtifactTypes[] {
-            Utils.ArtifactTypes.PURPLE,
-            Utils.ArtifactTypes.PURPLE,
-            Utils.ArtifactTypes.GREEN,
-            Utils.ArtifactTypes.PURPLE,
-            Utils.ArtifactTypes.PURPLE,
-            Utils.ArtifactTypes.GREEN
-    };
+    public Utils.ArtifactTypes[] motif = Utils.PPGPPG;
     public int shotsFired = 0;
     public Utils.ArtifactTypes desiredColor = Utils.ArtifactTypes.PURPLE;
     boolean usingSec = false;
@@ -59,11 +55,11 @@ public class Magazine implements IAmBetterSubsystem {
 
     @Override
     public void initSystem() {
-        this.slots = new MagSlot[] {
+        this.slots = Arrays.asList(
                 new MagSlot(off0), // this slot starts in front of intake
                 new MagSlot(off1),
                 new MagSlot(off2)
-        };
+        );
         this.activeSlot = 0;
 
         servos = new ServoExFullRange[]{
@@ -75,9 +71,9 @@ public class Magazine implements IAmBetterSubsystem {
         this.color = RobotConfig.IntakeCS;
         this.range = RobotConfig.IntakeDS;
 
-        servos[0].setPosition(slots[0].offset);
-        servos[1].setPosition(slots[0].offset);
-        servos[2].setPosition(slots[0].offset);
+        servos[0].setPosition(slots.get(0).offset);
+        servos[1].setPosition(slots.get(0).offset);
+        servos[2].setPosition(slots.get(0).offset);
 
         timer = new Timer();
     }
@@ -88,7 +84,7 @@ public class Magazine implements IAmBetterSubsystem {
     @Override
     public void periodic() {
 
-        targetPos = ((180 + Turret.INSTANCE.targetAngle + turretOff) * mode) + slots[activeSlot].offset;
+        targetPos = ((180 + PoseTrackingTurret.INSTANCE.targetYaw + turretOff) * mode) + slots.get(activeSlot).offset;
 
         if (targetPos != oldTargetPos) {
             while (targetPos + off >= 355) {
@@ -99,7 +95,7 @@ public class Magazine implements IAmBetterSubsystem {
             servos[2].setPosition((targetPos + off) / 355);
             oldTargetPos = targetPos;
         }
-        if (slots[activeSlot].content != desiredColor) changeActiveSlot().schedule();
+        if (slots.get(activeSlot).content != desiredColor) changeActiveSlot().schedule();
 
         getColor();
     }
@@ -107,30 +103,21 @@ public class Magazine implements IAmBetterSubsystem {
     // -------------------- COMMANDS / METHODS ------------------------ //
     public Command changeActiveSlot() {
         return new InstantCommand(() -> {
-            boolean foundOne = false;
-            if (slots[0].content == desiredColor) {
-                activeSlot = 0;
-                foundOne = true;
-            } else if (slots[1].content == desiredColor) {
-                activeSlot = 1;
-                foundOne = true;
-            } else if (slots[2].content == desiredColor) {
-                activeSlot = 2;
-                foundOne = true;
-            } else if (desiredColor == Utils.ArtifactTypes.GREEN || desiredColor == Utils.ArtifactTypes.PURPLE) {
-                if (slots[0].content == Utils.ArtifactTypes.GREEN || slots[0].content == Utils.ArtifactTypes.PURPLE) {
-                    activeSlot = 0;
-                    foundOne = true;
-                } else if (slots[1].content == Utils.ArtifactTypes.GREEN || slots[1].content == Utils.ArtifactTypes.PURPLE) {
-                    activeSlot = 1;
-                    foundOne = true;
-                } else if (slots[2].content == Utils.ArtifactTypes.GREEN || slots[2].content == Utils.ArtifactTypes.PURPLE) {
-                    activeSlot = 2;
-                    foundOne = true;
-                }
-                this.it++;
+            AtomicBoolean foundOne = new AtomicBoolean(false);
+            slots.forEach(magSlot -> {
+                foundOne.compareAndSet(!magSlot.hasColor(desiredColor), true);
+                activeSlot = slots.indexOf(magSlot);
+            });
+            // for each slot, check if it has desired color, then invert
+            // if it has the color, the inversion makes it false, and since false matches the initial value of false, it sets it to true
+            if (!foundOne.get()) {
+                slots.forEach(magSlot -> {
+                    foundOne.compareAndSet(!magSlot.hasColor(desiredColor), true);
+                    activeSlot = slots.indexOf(magSlot);
+                });
             }
-            if (!foundOne) {
+
+            if (!foundOne.get()) {
                 if (mode == 0) setMode(1).schedule();
                 else setMode(0).schedule();
             }
@@ -140,26 +127,22 @@ public class Magazine implements IAmBetterSubsystem {
 
     public Command setActiveSlotContent(Utils.ArtifactTypes content) {
         return new InstantCommand(() -> {
-            slots[activeSlot].content = content;
+            slots.get(activeSlot).setContent(content);
             colorQueue = content;
         });
     }
 
-    public int getslotsFilled() {
+    public int getSlotsFilled() {
         int numberFilled = 0;
 
-        if (slots[0].content != Utils.ArtifactTypes.NONE) numberFilled++;
-        if (slots[1].content != Utils.ArtifactTypes.NONE) numberFilled++;
-        if (slots[2].content != Utils.ArtifactTypes.NONE) numberFilled++;
+        for (MagSlot slot : slots) if (slot.hasArtifact()) numberFilled++;
 
         return numberFilled;
 
     }
 
     public Command setSlotContent(int slot, Utils.ArtifactTypes content) {
-        return new InstantCommand(() -> {
-            slots[slot].content = content;
-        });
+        return new InstantCommand(() -> slots.get(slot).setContent(content));
     }
 
     public void getColor() {
@@ -208,6 +191,30 @@ public class Magazine implements IAmBetterSubsystem {
         );
     }
     public Utils.ArtifactTypes getSlotColor(int slot) {
-        return slots[slot].content;
+        return slots.get(slot).content;
+    }
+
+    public static class MagSlot {
+
+        double offset;
+        Utils.ArtifactTypes content;
+
+        public MagSlot(double offset) {
+            this.offset = offset;
+
+            this.content = Utils.ArtifactTypes.NONE;
+        }
+
+        public boolean hasArtifact() {
+            return this.content != Utils.ArtifactTypes.NONE;
+        }
+
+        public boolean hasColor(Utils.ArtifactTypes color) {
+            return hasArtifact() && this.content == color;
+        }
+
+        public void setContent(Utils.ArtifactTypes content) {
+            this.content = content;
+        }
     }
 }

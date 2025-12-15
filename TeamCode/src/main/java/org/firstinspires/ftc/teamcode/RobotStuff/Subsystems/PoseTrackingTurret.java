@@ -1,17 +1,18 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems;
 
+import static org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils.GPPGPP;
+import static org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils.PGPPGP;
+import static org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils.PPGPPG;
+
 import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
-import com.pedropathing.util.Timer;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.Magazine;
 
 import dev.nextftc.control.ControlSystem;
 import dev.nextftc.control.KineticState;
@@ -21,7 +22,6 @@ import dev.nextftc.core.commands.groups.SequentialGroup;
 import dev.nextftc.core.commands.utility.InstantCommand;
 import dev.nextftc.hardware.impl.MotorEx;
 import dev.nextftc.hardware.powerable.SetPower;
-import kotlin.Pair;
 
 @Configurable
 public class PoseTrackingTurret implements IAmBetterSubsystem {
@@ -60,32 +60,6 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
 
     public TurretMode mode = TurretMode.POSE_TRACKING;
     public Follower poseUpdater;
-    private final Utils.ArtifactTypes[] GPPGPP = new Utils.ArtifactTypes[]{
-            Utils.ArtifactTypes.GREEN,
-            Utils.ArtifactTypes.PURPLE,
-            Utils.ArtifactTypes.PURPLE,
-            Utils.ArtifactTypes.GREEN,
-            Utils.ArtifactTypes.PURPLE,
-            Utils.ArtifactTypes.PURPLE
-    };
-
-    private final Utils.ArtifactTypes[] PGPPGP = new Utils.ArtifactTypes[]{
-            Utils.ArtifactTypes.PURPLE,
-            Utils.ArtifactTypes.GREEN,
-            Utils.ArtifactTypes.PURPLE,
-            Utils.ArtifactTypes.PURPLE,
-            Utils.ArtifactTypes.GREEN,
-            Utils.ArtifactTypes.PURPLE
-    };
-
-    private final Utils.ArtifactTypes[] PPGPPG = new Utils.ArtifactTypes[]{
-            Utils.ArtifactTypes.PURPLE,
-            Utils.ArtifactTypes.PURPLE,
-            Utils.ArtifactTypes.GREEN,
-            Utils.ArtifactTypes.PURPLE,
-            Utils.ArtifactTypes.PURPLE,
-            Utils.ArtifactTypes.GREEN
-    };
 
     // ------------------------- CONFIG ------------------------------- //
     public static double kP = 0.0075;

@@ -6,18 +6,14 @@ import com.pedropathing.geometry.Pose;
 import com.pedropathing.localization.PoseTracker;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.hardware.PwmControl;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
-
-import org.firstinspires.ftc.robotcore.external.Const;
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemGroup;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Intake;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.Magazine;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.PoseTrackingTurret;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 
 import dev.nextftc.control.KineticState;
@@ -50,27 +46,11 @@ public class Perseus extends BetterSubsystemGroup {
     private Perseus() {
         super(
                 Magazine.INSTANCE,
-                Turret.INSTANCE,
+                PoseTrackingTurret.INSTANCE,
                 Intake.INSTANCE,
                 Shooter.INSTANCE
         );
     }
-
-    public Utils.ArtifactTypes[] PPG = new Utils.ArtifactTypes[] {
-            Utils.ArtifactTypes.PURPLE,
-            Utils.ArtifactTypes.PURPLE,
-            Utils.ArtifactTypes.GREEN
-    };
-    public Utils.ArtifactTypes[] GPP = new Utils.ArtifactTypes[] {
-            Utils.ArtifactTypes.GREEN,
-            Utils.ArtifactTypes.PURPLE,
-            Utils.ArtifactTypes.PURPLE
-    };
-    public Utils.ArtifactTypes[] PGP = new Utils.ArtifactTypes[] {
-            Utils.ArtifactTypes.PURPLE,
-            Utils.ArtifactTypes.GREEN,
-            Utils.ArtifactTypes.PURPLE
-    };
 
     @Override
     public void initialize() {
@@ -110,69 +90,12 @@ public class Perseus extends BetterSubsystemGroup {
     //  ------------------------- COMMANDS --------------------------- //
 
     public void runIndicator() {
-        switch (Magazine.INSTANCE.mode) {
-            case 0:
-                if (Magazine.INSTANCE.hasBall) {
-                    switch (Magazine.INSTANCE.colorQueue) {
-                        case PURPLE:
-                            if (indTimer.getElapsedTimeSeconds() >= 0.5) {
-                                if (indCycle) {
-                                    setIndicator(1900);
-                                    indCycle = false;
-                                } else {
-                                    setIndicator(0);
-                                    indCycle = true;
-                                }
-                                indTimer.resetTimer();
-                            }
-                            break;
-                        case GREEN:
-                            if (indTimer.getElapsedTimeSeconds() >= 0.5) {
-                                if (indCycle) {
-                                    setIndicator(1450);
-                                    indCycle = false;
-                                } else {
-                                    setIndicator(0);
-                                    indCycle = true;
-                                }
-                                indTimer.resetTimer();
-                            }
-                            break;
-                    }
-
-                    if (ballTimer.getElapsedTimeSeconds() >= 3) {
-                        Magazine.INSTANCE.hasBall = false;
-                        ballTimer.resetTimer();
-                    }
-                } else if (Intake.INSTANCE.intake.getPower() >= 0.8) {
-                    if (indTimer.getElapsedTimeSeconds() >= 0.25) {
-                        if (indCycle) {
-                            setIndicator(1700);
-                            indCycle = false;
-                        } else {
-                            setIndicator(0);
-                            indCycle = true;
-                        }
-                        indTimer.resetTimer();
-                    }
-                } else setIndicator(1700);
-                break;
-            case 1:
-                if (isShooting || isMotifShooting) {
-                    if (indTimer.getElapsedTimeSeconds() >= 0.25) {
-                        if (indCycle) {
-                            setIndicator(1100);
-                            indCycle = false;
-                        } else {
-                            setIndicator(0);
-                            indCycle = true;
-                        }
-                        indTimer.resetTimer();
-                    }
-                } else if (Turret.INSTANCE.controller.isWithinTolerance(new KineticState(2.5))) {
+        if (Magazine.INSTANCE.mode == 0) {
+            if (Magazine.INSTANCE.hasBall) {
+                if (Magazine.INSTANCE.colorQueue == Utils.ArtifactTypes.PURPLE) {
                     if (indTimer.getElapsedTimeSeconds() >= 0.5) {
                         if (indCycle) {
-                            setIndicator(1200);
+                            setIndicator(1900);
                             indCycle = false;
                         } else {
                             setIndicator(0);
@@ -180,7 +103,58 @@ public class Perseus extends BetterSubsystemGroup {
                         }
                         indTimer.resetTimer();
                     }
-                } else setIndicator(1300);
+                } else {
+                    if (indTimer.getElapsedTimeSeconds() >= 0.5) {
+                        if (indCycle) {
+                            setIndicator(1450);
+                            indCycle = false;
+                        } else {
+                            setIndicator(0);
+                            indCycle = true;
+                        }
+                        indTimer.resetTimer();
+                    }
+                }
+                if (ballTimer.getElapsedTimeSeconds() >= 3) {
+                    Magazine.INSTANCE.hasBall = false;
+                    ballTimer.resetTimer();
+                }
+            } else if (Intake.INSTANCE.intake.getPower() >= 0.8) {
+                if (indTimer.getElapsedTimeSeconds() >= 0.25) {
+                    if (indCycle) {
+                        setIndicator(1700);
+                        indCycle = false;
+                    } else {
+                        setIndicator(0);
+                        indCycle = true;
+                    }
+                    indTimer.resetTimer();
+                }
+            } else setIndicator(1700);
+        } else {
+            if (isShooting || isMotifShooting) {
+                if (indTimer.getElapsedTimeSeconds() >= 0.25) {
+                    if (indCycle) {
+                        setIndicator(1100);
+                        indCycle = false;
+                    } else {
+                        setIndicator(0);
+                        indCycle = true;
+                    }
+                    indTimer.resetTimer();
+                }
+            } else if (PoseTrackingTurret.INSTANCE.controller.isWithinTolerance(new KineticState(2.5))) {
+                if (indTimer.getElapsedTimeSeconds() >= 0.5) {
+                    if (indCycle) {
+                        setIndicator(1200);
+                        indCycle = false;
+                    } else {
+                        setIndicator(0);
+                        indCycle = true;
+                    }
+                    indTimer.resetTimer();
+                }
+            } else setIndicator(1300);
         }
     }
 
@@ -207,8 +181,8 @@ public class Perseus extends BetterSubsystemGroup {
      */
     public Command shootSingle(Utils.ArtifactTypes color) {
         if (!isShooting) {
-            this.isShooting = true;
             return new SequentialGroup(
+                    new InstantCommand(() -> this.isShooting = true),
                     Magazine.INSTANCE.setDesiredColor(color),
                     Shooter.INSTANCE.spinUp(),
                     new Delay(shootingSpeed),
@@ -280,7 +254,7 @@ public class Perseus extends BetterSubsystemGroup {
         return new SequentialGroup(
                 Intake.INSTANCE.idle(),
                 Shooter.INSTANCE.resetKicker(),
-                Turret.INSTANCE.resetHood()
+                PoseTrackingTurret.INSTANCE.resetHood()
         );
     }
 }

@@ -5,7 +5,7 @@ import com.bylazar.telemetry.TelemetryManager;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.DeltaTimer;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.PoseTrackingTurret;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -45,8 +45,8 @@ public class RoyallyFuckedUpMode extends NextFTCOpMode {
     @Override
     public void onInit() {
         RobotConfig.initConfig(this, new DeltaTimer());
-        Turret.INSTANCE.hasGotMotif = false;
-        Turret.INSTANCE.hasSetAlliance = false;
+        PoseTrackingTurret.INSTANCE.hasGotMotif = false;
+        PoseTrackingTurret.INSTANCE.hasSetAlliance = false;
 
         for (BetterSubsystemComponent sys : this.subsystems) {
             sys.initSubsystem();

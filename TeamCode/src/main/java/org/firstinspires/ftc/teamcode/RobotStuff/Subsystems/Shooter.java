@@ -23,7 +23,6 @@ public class Shooter implements IAmBetterSubsystem {
     MotorGroup shooters;
     ServoEx hood;
     ServoEx kicker;
-    Range hoodSupp;
 
     // ------------------------ CONFIG ------------------------ //
     public static double shootingSpeed = 0.1;
