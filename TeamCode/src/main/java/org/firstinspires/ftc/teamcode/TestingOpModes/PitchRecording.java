@@ -59,7 +59,7 @@ public class PitchRecording extends RoyallyFuckedUpMode {
 
         P2.rightBumper().whenBecomesTrue(Turret.INSTANCE.switchMode());
 
-        P2.dpadDown().whenBecomesTrue(Artemis.INSTANCE.resetFollower());1
+        P2.dpadDown().whenBecomesTrue(Artemis.INSTANCE.resetFollower());
     }
 
     @Override
