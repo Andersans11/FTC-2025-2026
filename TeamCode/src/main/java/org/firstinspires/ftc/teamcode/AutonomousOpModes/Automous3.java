@@ -4,6 +4,7 @@ import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
+import com.pedropathing.paths.Path;
 import com.pedropathing.paths.PathChain;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -15,9 +16,9 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Misc.Drawing;
 import org.firstinspires.ftc.teamcode.RobotStuff.Perseus;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Intake;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.PoseTrackingTurret;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.Magazine;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 
 import dev.nextftc.core.commands.delays.WaitUntil;
 import dev.nextftc.core.commands.groups.SequentialGroup;
@@ -54,12 +55,12 @@ public class Automous3 extends RoyallyFuckedUpMode {
 
         Drawing.init();
 
-        PoseTrackingTurret.INSTANCE.setRedAlliance(false).schedule();
+        Turret.INSTANCE.setRedAlliance(false).schedule();
 
         telemetry.addLine("1");
         follower = Constants.createFollower(hardwareMap);
         telemetry.addLine("1");
-        PoseTrackingTurret.INSTANCE.setPosition(-90).schedule();
+        Turret.INSTANCE.setPosition(-90).schedule();
         telemetry.addLine("1");
 
         startingPose = new Pose(28, 131, Math.toRadians(144));
@@ -106,7 +107,7 @@ public class Automous3 extends RoyallyFuckedUpMode {
     @Override
     public void onWaitForStart() {
         telemetry.update();
-        PoseTrackingTurret.INSTANCE.periodic();
+        Turret.INSTANCE.periodic();
         Magazine.INSTANCE.periodic();
     }
 
@@ -119,10 +120,10 @@ public class Automous3 extends RoyallyFuckedUpMode {
                 new InstantCommand(() -> follower.followPath(firstCycle)),
                 Magazine.INSTANCE.setMode(1),
                 new WaitUntil(() -> follower.getPathCompletion() >= 0.5),
-                new InstantCommand(() -> PoseTrackingTurret.INSTANCE.hasGotMotif = false),
-                new WaitUntil(() -> PoseTrackingTurret.INSTANCE.hasGotMotif),
-                PoseTrackingTurret.INSTANCE.setPosition(0),
-                PoseTrackingTurret.INSTANCE.autoControl(),
+                new InstantCommand(() -> Turret.INSTANCE.hasGotMotif = false),
+                new WaitUntil(() -> Turret.INSTANCE.hasGotMotif),
+                Turret.INSTANCE.setPosition(0),
+                Turret.INSTANCE.autoControl(),
                 Magazine.INSTANCE.setMode(0),
                 new WaitUntil(() -> !follower.isBusy()),
                 new InstantCommand(() -> pathTimer.resetTimer()),
@@ -133,17 +134,17 @@ public class Automous3 extends RoyallyFuckedUpMode {
                     follower.followPath(secondCycle1);
                     pathTimer.resetTimer();
                 }),
-                new WaitUntil(() -> Magazine.INSTANCE.getSlotsFilled() == 1 || pathTimer.getElapsedTimeSeconds() >= 5),
+                new WaitUntil(() -> Magazine.INSTANCE.getslotsFilled() == 1 || pathTimer.getElapsedTimeSeconds() >= 5),
                 new InstantCommand(() -> {
                     follower.followPath(secondCycle2);
                     pathTimer.resetTimer();
                 }),
-                new WaitUntil(() -> Magazine.INSTANCE.getSlotsFilled() == 2 || pathTimer.getElapsedTimeSeconds() >= 3.5),
+                new WaitUntil(() -> Magazine.INSTANCE.getslotsFilled() == 2 || pathTimer.getElapsedTimeSeconds() >= 3.5),
                 new InstantCommand(() -> {
                     follower.followPath(secondCycle3);
                     pathTimer.resetTimer();
                 }),
-                new WaitUntil(() -> Magazine.INSTANCE.getSlotsFilled() == 3 || pathTimer.getElapsedTimeSeconds() >= 3.5),
+                new WaitUntil(() -> Magazine.INSTANCE.getslotsFilled() == 3 || pathTimer.getElapsedTimeSeconds() >= 3.5),
                 new InstantCommand(() -> {
                     Intake.INSTANCE.idle().schedule();
                     follower.setMaxPower(0.5);

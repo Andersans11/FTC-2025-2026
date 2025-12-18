@@ -15,9 +15,9 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Misc.Drawing;
 import org.firstinspires.ftc.teamcode.RobotStuff.Perseus;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Intake;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.PoseTrackingTurret;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.Magazine;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 
 import dev.nextftc.core.commands.delays.WaitUntil;
 import dev.nextftc.core.commands.groups.SequentialGroup;
@@ -54,10 +54,10 @@ public class Automous3_red extends RoyallyFuckedUpMode {
 
         Drawing.init();
 
-        PoseTrackingTurret.INSTANCE.setRedAlliance(false).schedule();
+        Turret.INSTANCE.setRedAlliance(false).schedule();
 
         follower = Constants.createFollower(hardwareMap);
-        PoseTrackingTurret.INSTANCE.setPosition(90).schedule();
+        Turret.INSTANCE.setPosition(90).schedule();
 
         startingPose = new Pose(28, 131, Math.toRadians(144)).mirror();
         scoringPose = new Pose(60, 84).mirror();
@@ -103,7 +103,7 @@ public class Automous3_red extends RoyallyFuckedUpMode {
     @Override
     public void onWaitForStart() {
         telemetry.update();
-        PoseTrackingTurret.INSTANCE.periodic();
+        Turret.INSTANCE.periodic();
         Magazine.INSTANCE.periodic();
     }
 
@@ -116,10 +116,10 @@ public class Automous3_red extends RoyallyFuckedUpMode {
                 new InstantCommand(() -> follower.followPath(firstCycle)),
                 Magazine.INSTANCE.setMode(1),
                 new WaitUntil(() -> follower.getPathCompletion() >= 0.5),
-                new InstantCommand(() -> PoseTrackingTurret.INSTANCE.hasGotMotif = false),
-                new WaitUntil(() -> PoseTrackingTurret.INSTANCE.hasGotMotif),
-                PoseTrackingTurret.INSTANCE.setPosition(0),
-                PoseTrackingTurret.INSTANCE.autoControl(),
+                new InstantCommand(() -> Turret.INSTANCE.hasGotMotif = false),
+                new WaitUntil(() -> Turret.INSTANCE.hasGotMotif),
+                Turret.INSTANCE.setPosition(0),
+                Turret.INSTANCE.autoControl(),
                 Magazine.INSTANCE.setMode(0),
                 new WaitUntil(() -> !follower.isBusy()),
                 new InstantCommand(() -> pathTimer.resetTimer()),
@@ -130,17 +130,17 @@ public class Automous3_red extends RoyallyFuckedUpMode {
                     follower.followPath(secondCycle1);
                     pathTimer.resetTimer();
                 }),
-                new WaitUntil(() -> Magazine.INSTANCE.getSlotsFilled() == 1 || pathTimer.getElapsedTimeSeconds() >= 5),
+                new WaitUntil(() -> Magazine.INSTANCE.getslotsFilled() == 1 || pathTimer.getElapsedTimeSeconds() >= 5),
                 new InstantCommand(() -> {
                     follower.followPath(secondCycle2);
                     pathTimer.resetTimer();
                 }),
-                new WaitUntil(() -> Magazine.INSTANCE.getSlotsFilled() == 2 || pathTimer.getElapsedTimeSeconds() >= 3.5),
+                new WaitUntil(() -> Magazine.INSTANCE.getslotsFilled() == 2 || pathTimer.getElapsedTimeSeconds() >= 3.5),
                 new InstantCommand(() -> {
                     follower.followPath(secondCycle3);
                     pathTimer.resetTimer();
                 }),
-                new WaitUntil(() -> Magazine.INSTANCE.getSlotsFilled() == 3 || pathTimer.getElapsedTimeSeconds() >= 3.5),
+                new WaitUntil(() -> Magazine.INSTANCE.getslotsFilled() == 3 || pathTimer.getElapsedTimeSeconds() >= 3.5),
                 new InstantCommand(() -> {
                     Intake.INSTANCE.idle().schedule();
                     follower.setMaxPower(0.5);

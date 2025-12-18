@@ -12,9 +12,9 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Perseus;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.PoseTrackingTurret;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.Magazine;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.Drawing;
 
 import dev.nextftc.core.commands.delays.WaitUntil;
@@ -45,12 +45,12 @@ public class Automous2 extends RoyallyFuckedUpMode {
 
         Drawing.init();
 
-        PoseTrackingTurret.INSTANCE.setRedAlliance(false).schedule();
+        Turret.INSTANCE.setRedAlliance(false).schedule();
 
         telemetry.addLine("1");
         follower = Constants.createFollower(hardwareMap);
         telemetry.addLine("1");
-        PoseTrackingTurret.INSTANCE.setPosition(-90).schedule();
+        Turret.INSTANCE.setPosition(-90).schedule();
         telemetry.addLine("1");
 
         startingPose = new Pose(72, 72);
@@ -72,7 +72,7 @@ public class Automous2 extends RoyallyFuckedUpMode {
     @Override
     public void onWaitForStart() {
         telemetry.update();
-        PoseTrackingTurret.INSTANCE.periodic();
+        Turret.INSTANCE.periodic();
         Magazine.INSTANCE.periodic();
     }
 
@@ -84,8 +84,8 @@ public class Automous2 extends RoyallyFuckedUpMode {
                 new InstantCommand(() -> follower.followPath(path)),
                 Magazine.INSTANCE.setMode(1),
                 new WaitUntil(() -> follower.getCurrentTValue() >= 0.75),
-                PoseTrackingTurret.INSTANCE.setPosition(0),
-                new InstantCommand(() -> PoseTrackingTurret.INSTANCE.mode = PoseTrackingTurret.TurretMode.POSE_TRACKING),
+                Turret.INSTANCE.setPosition(0),
+                new InstantCommand(() -> Turret.INSTANCE.mode = Turret.TurretMode.RECOVERY),
                 Magazine.INSTANCE.setMode(1),
                 new WaitUntil(() -> !follower.isBusy()),
                 Perseus.INSTANCE.shootMotif()
@@ -104,9 +104,9 @@ public class Automous2 extends RoyallyFuckedUpMode {
         addData("Mode", Magazine.INSTANCE.mode);
         addData("desiredColor", Magazine.INSTANCE.desiredColor);
         addData("shotsFired", Magazine.INSTANCE.shotsFired);
-        addData("turretMode", PoseTrackingTurret.INSTANCE.mode);
-        addData("turret", PoseTrackingTurret.INSTANCE.rotationMotor.getCurrentPosition());
-        addData("target", PoseTrackingTurret.INSTANCE.controller.getGoal());
+        addData("turretMode", Turret.INSTANCE.mode);
+        addData("turret", Turret.INSTANCE.rotationMotor.getCurrentPosition());
+        addData("target", Turret.INSTANCE.controller.getGoal());
 
         Drawing.drawDebug(follower);
     }

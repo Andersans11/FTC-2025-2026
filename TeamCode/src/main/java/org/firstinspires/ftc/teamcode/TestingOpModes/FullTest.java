@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.TestingOpModes;
 
+import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -9,8 +10,8 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Perseus;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.RobotCentricDrive;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.PoseTrackingTurret;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.Magazine;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 
 @TeleOp(name = "Test: Full", group = Utils.PRIORITY)
@@ -34,8 +35,8 @@ public class FullTest extends RoyallyFuckedUpMode {
                 .whenBecomesTrue(Perseus.INSTANCE.intake())
                 .whenBecomesFalse(Perseus.INSTANCE.stopIntake());
 
-        P1.dpadUp().whenBecomesTrue(PoseTrackingTurret.INSTANCE.setRedAlliance(false));
-        P1.dpadDown().whenBecomesTrue(PoseTrackingTurret.INSTANCE.setRedAlliance(true));
+        P1.dpadUp().whenBecomesTrue(Turret.INSTANCE.setRedAlliance(false));
+        P1.dpadDown().whenBecomesTrue(Turret.INSTANCE.setRedAlliance(true));
 
         P1.rightBumper()
                 .whenBecomesTrue(Perseus.INSTANCE.outtake())
@@ -60,10 +61,10 @@ public class FullTest extends RoyallyFuckedUpMode {
 
         P2.dpadUp().whenBecomesTrue(Shooter.INSTANCE.resetKicker());
 
-        P2.rightBumper().whenTrue(PoseTrackingTurret.INSTANCE.changePosition(0.5));
-        P2.leftBumper().whenTrue(PoseTrackingTurret.INSTANCE.changePosition(-0.5));
+        P2.rightBumper().whenTrue(Turret.INSTANCE.changePosition(0.5));
+        P2.leftBumper().whenTrue(Turret.INSTANCE.changePosition(-0.5));
 
-        P2.dpadDown().whenBecomesTrue(PoseTrackingTurret.INSTANCE.autoControl());
+        P2.dpadDown().whenBecomesTrue(Turret.INSTANCE.autoControl());
     }
 
     @Override

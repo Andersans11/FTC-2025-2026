@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Perseus;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.PoseTrackingTurret;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 import org.firstinspires.ftc.teamcode.RobotStuff.pedrojson.Callbacks;
 
 import java.io.IOException;
@@ -50,14 +50,14 @@ public class Automous extends RoyallyFuckedUpMode {
         telemetry.addLine("1");
         loader.Parse();
         telemetry.addLine("1");
-        PoseTrackingTurret.INSTANCE.setPosition(-90).schedule();
+        Turret.INSTANCE.setPosition(-90).schedule();
         telemetry.addLine("1");
     }
 
     @Override
     public void onWaitForStart() {
         telemetry.update();
-        PoseTrackingTurret.INSTANCE.periodic();
+        Turret.INSTANCE.periodic();
     }
 
     @Override

@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Perseus;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.PoseTrackingTurret;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 import org.firstinspires.ftc.teamcode.RobotStuff.pedrojson.Callbacks;
 
 import java.io.IOException;
@@ -89,14 +89,14 @@ public class SuperAuto extends RoyallyFuckedUpMode {
         bottom.Parse();
         gate.Parse();
 
-        PoseTrackingTurret.INSTANCE.setPosition(90);
+        Turret.INSTANCE.setPosition(90);
     }
 
     @Override
     public void onWaitForStart() {
         super.onWaitForStart();
 
-        PoseTrackingTurret.INSTANCE.manualUpdate();
+        Turret.INSTANCE.manualUpdate();
 
         telemetry.addData("doTop", doTop);
         telemetry.addData("doMiddle", doMiddle);

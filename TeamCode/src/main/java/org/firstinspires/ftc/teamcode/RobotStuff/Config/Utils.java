@@ -16,31 +16,4 @@ public class Utils {
         PURPLE,
         NONE
     }
-
-    public static final Utils.ArtifactTypes[] GPPGPP = new Utils.ArtifactTypes[]{
-            Utils.ArtifactTypes.GREEN,
-            Utils.ArtifactTypes.PURPLE,
-            Utils.ArtifactTypes.PURPLE,
-            Utils.ArtifactTypes.GREEN,
-            Utils.ArtifactTypes.PURPLE,
-            Utils.ArtifactTypes.PURPLE
-    };
-
-    public static final Utils.ArtifactTypes[] PGPPGP = new Utils.ArtifactTypes[]{
-            Utils.ArtifactTypes.PURPLE,
-            Utils.ArtifactTypes.GREEN,
-            Utils.ArtifactTypes.PURPLE,
-            Utils.ArtifactTypes.PURPLE,
-            Utils.ArtifactTypes.GREEN,
-            Utils.ArtifactTypes.PURPLE
-    };
-
-    public static final Utils.ArtifactTypes[] PPGPPG = new Utils.ArtifactTypes[]{
-            Utils.ArtifactTypes.PURPLE,
-            Utils.ArtifactTypes.PURPLE,
-            Utils.ArtifactTypes.GREEN,
-            Utils.ArtifactTypes.PURPLE,
-            Utils.ArtifactTypes.PURPLE,
-            Utils.ArtifactTypes.GREEN
-    };
 }
