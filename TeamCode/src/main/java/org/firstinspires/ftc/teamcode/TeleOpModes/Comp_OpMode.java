@@ -2,17 +2,14 @@ package org.firstinspires.ftc.teamcode.TeleOpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
-import org.firstinspires.ftc.teamcode.RobotStuff.Perseus;
+import org.firstinspires.ftc.teamcode.RobotStuff.Artemis;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.RobotCentricDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.Magazine;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
-
-import dev.nextftc.core.commands.groups.ParallelGroup;
 
 @TeleOp(name = "TwoAndOnlyOpMode", group = Utils.PRIORITY_PRIORITY)
 public class Comp_OpMode extends RoyallyFuckedUpMode {
@@ -21,23 +18,23 @@ public class Comp_OpMode extends RoyallyFuckedUpMode {
         super();
         addSubsystemComponents(
                 new BetterSubsystemComponent(RobotCentricDrive.INSTANCE),
-                new BetterSubsystemComponent(Perseus.INSTANCE)
+                new BetterSubsystemComponent(Artemis.INSTANCE)
         );
     }
 
     @Override
     public void onInit() {
         super.onInit();
-        Perseus.INSTANCE.initFollower(Constants.createFollower(hardwareMap));
+        Artemis.INSTANCE.initFollower(hardwareMap);
 
-        P1.rightTrigger().atLeast(0.1).whenBecomesTrue(Perseus.INSTANCE.intake());
-        P1.rightTrigger().atLeast(0.1).whenBecomesFalse(Perseus.INSTANCE.stopIntake());
+        P1.rightTrigger().atLeast(0.1).whenBecomesTrue(Artemis.INSTANCE.intake());
+        P1.rightTrigger().atLeast(0.1).whenBecomesFalse(Artemis.INSTANCE.stopIntake());
 
         P1.dpadUp().whenBecomesTrue(Turret.INSTANCE.setRedAlliance(false));
         P1.dpadDown().whenBecomesTrue(Turret.INSTANCE.setRedAlliance(true));
 
-        P1.rightBumper().whenBecomesTrue(Perseus.INSTANCE.outtake());
-        P1.rightBumper().whenBecomesFalse(Perseus.INSTANCE.stopIntake());
+        P1.rightBumper().whenBecomesTrue(Artemis.INSTANCE.outtake());
+        P1.rightBumper().whenBecomesFalse(Artemis.INSTANCE.stopIntake());
 
         P2.dpadLeft().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.GREEN));
         P2.dpadRight().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.PURPLE));
@@ -45,10 +42,10 @@ public class Comp_OpMode extends RoyallyFuckedUpMode {
         P1.dpadLeft().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.GREEN));
         P1.dpadRight().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.PURPLE));
 
-        P2.cross().whenBecomesTrue(Perseus.INSTANCE.shootSingle(Utils.ArtifactTypes.GREEN));
-        P2.circle().whenBecomesTrue(Perseus.INSTANCE.shootSingle(Utils.ArtifactTypes.PURPLE));
+        P2.cross().whenBecomesTrue(Artemis.INSTANCE.shootSingle(Utils.ArtifactTypes.GREEN));
+        P2.circle().whenBecomesTrue(Artemis.INSTANCE.shootSingle(Utils.ArtifactTypes.PURPLE));
 
-        P2.rightTrigger().atLeast(0.1).whenBecomesTrue(Perseus.INSTANCE.shootMotif());
+        P2.rightTrigger().atLeast(0.1).whenBecomesTrue(Artemis.INSTANCE.shootMotif());
 
         P2.square().whenBecomesTrue(Magazine.INSTANCE.setMode(0));
         P2.triangle().whenBecomesTrue(Magazine.INSTANCE.setMode(1));
@@ -57,12 +54,16 @@ public class Comp_OpMode extends RoyallyFuckedUpMode {
 
         P2.leftTrigger().atLeast(0.1).whenBecomesTrue(Magazine.INSTANCE.incShotsFired());
         P2.leftBumper().whenBecomesTrue(Turret.INSTANCE.zero());
+
+        P2.rightBumper().whenBecomesTrue(Turret.INSTANCE.switchMode());
+
+        P2.dpadDown().whenBecomesTrue(Artemis.INSTANCE.resetFollower());
     }
 
     @Override
     public void onStartButtonPressed() {
         super.onStartButtonPressed();
-        Perseus.INSTANCE.start().schedule();
+        Artemis.INSTANCE.start().schedule();
     }
 
     @Override

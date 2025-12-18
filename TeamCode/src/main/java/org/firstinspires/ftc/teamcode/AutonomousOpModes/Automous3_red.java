@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.Drawing;
-import org.firstinspires.ftc.teamcode.RobotStuff.Perseus;
+import org.firstinspires.ftc.teamcode.RobotStuff.Artemis;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.Magazine;
@@ -42,7 +42,7 @@ public class Automous3_red extends RoyallyFuckedUpMode {
     public Automous3_red() {
         super();
         addSubsystemComponents(
-                new BetterSubsystemComponent(Perseus.INSTANCE)
+                new BetterSubsystemComponent(Artemis.INSTANCE)
         );
     }
 
@@ -80,7 +80,7 @@ public class Automous3_red extends RoyallyFuckedUpMode {
                 .addPath(new BezierLine(intakePose1, intakePose2))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .addParametricCallback(0, () -> {
-                    Perseus.INSTANCE.intake().schedule();
+                    Artemis.INSTANCE.intake().schedule();
                     follower.setMaxPower(0.25);
                 })
                 .build();
@@ -111,7 +111,7 @@ public class Automous3_red extends RoyallyFuckedUpMode {
     public void onStartButtonPressed() {
         super.onStartButtonPressed();
         new SequentialGroup(
-                Perseus.INSTANCE.start(),
+                Artemis.INSTANCE.start(),
                 Shooter.INSTANCE.idle(),
                 new InstantCommand(() -> follower.followPath(firstCycle)),
                 Magazine.INSTANCE.setMode(1),
@@ -124,7 +124,7 @@ public class Automous3_red extends RoyallyFuckedUpMode {
                 new WaitUntil(() -> !follower.isBusy()),
                 new InstantCommand(() -> pathTimer.resetTimer()),
                 new WaitUntil(() -> pathTimer.getElapsedTimeSeconds() >= 1),
-                Perseus.INSTANCE.shootMotif(),
+                Artemis.INSTANCE.shootMotif(),
                 new WaitUntil(() -> Magazine.INSTANCE.mode == 0),
                 new InstantCommand(() -> {
                     follower.followPath(secondCycle1);
@@ -150,7 +150,7 @@ public class Automous3_red extends RoyallyFuckedUpMode {
                 //Intake.INSTANCE.idle(),
                 new InstantCommand(() -> pathTimer.resetTimer()),
                 new WaitUntil(() -> pathTimer.getElapsedTimeSeconds() >= 1),
-                Perseus.INSTANCE.shootMotif()
+                Artemis.INSTANCE.shootMotif()
         ).schedule();
     }
 

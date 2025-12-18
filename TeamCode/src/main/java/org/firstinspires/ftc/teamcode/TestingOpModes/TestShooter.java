@@ -14,7 +14,6 @@ public class TestShooter extends RoyallyFuckedUpMode {
     public TestShooter() {
         super();
         addSubsystemComponents(
-                new BetterSubsystemComponent(HoldHeadingPID.INSTANCE),
                 new BetterSubsystemComponent(Shooter.INSTANCE)
         );
     }
@@ -23,7 +22,7 @@ public class TestShooter extends RoyallyFuckedUpMode {
     public void onInit() {
         super.onInit();
 
-        P1.triangle().whenBecomesTrue(Shooter.INSTANCE::shoot);
+        P1.triangle().whenBecomesTrue(Shooter.INSTANCE.shoot());
     }
 
     @Override

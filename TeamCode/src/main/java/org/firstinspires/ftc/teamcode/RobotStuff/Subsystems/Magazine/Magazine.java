@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.RobotStuff.Artemis;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Hardware.ServoExFullRange;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
@@ -27,7 +28,7 @@ public class Magazine implements IAmBetterSubsystem {
     public ColorRangeSensor color;
     public DistanceSensor range;
     public double targetPos = 0;
-    public double oldTargetPos = 0;
+    public double oldTargetPos = 180;
     public Utils.ArtifactTypes[] motif = new Utils.ArtifactTypes[] {
             Utils.ArtifactTypes.PURPLE,
             Utils.ArtifactTypes.PURPLE,
@@ -41,6 +42,10 @@ public class Magazine implements IAmBetterSubsystem {
     boolean usingSec = false;
     public double turretOff = 0;
 
+    public double r = 0;
+    public double g = 0;
+    public double b = 0;
+
     public Utils.ArtifactTypes colorQueue = Utils.ArtifactTypes.NONE;
 
     // ------------------------------ CONFIG ----------------------------- //
@@ -48,7 +53,7 @@ public class Magazine implements IAmBetterSubsystem {
     public static double off0 = 0;
     public static double off1 = 120;
     public static double off2 = 240;
-    public static double off = 2;
+    public static double off = 90;
     public static double dist = 60;
     public int it = 0;
     public int mode = 0;
@@ -75,10 +80,6 @@ public class Magazine implements IAmBetterSubsystem {
         this.color = RobotConfig.IntakeCS;
         this.range = RobotConfig.IntakeDS;
 
-        servos[0].setPosition(slots[0].offset);
-        servos[1].setPosition(slots[0].offset);
-        servos[2].setPosition(slots[0].offset);
-
         timer = new Timer();
     }
 
@@ -88,7 +89,7 @@ public class Magazine implements IAmBetterSubsystem {
     @Override
     public void periodic() {
 
-        targetPos = ((180 + Turret.INSTANCE.targetAngle + turretOff) * mode) + slots[activeSlot].offset;
+        targetPos = (180 * mode) + slots[activeSlot].offset;
 
         if (targetPos != oldTargetPos) {
             while (targetPos + off >= 355) {
@@ -101,7 +102,7 @@ public class Magazine implements IAmBetterSubsystem {
         }
         if (slots[activeSlot].content != desiredColor) changeActiveSlot().schedule();
 
-        getColor();
+        if (mode == 0) getColor();
     }
 
     // -------------------- COMMANDS / METHODS ------------------------ //
@@ -132,7 +133,7 @@ public class Magazine implements IAmBetterSubsystem {
             }
             if (!foundOne) {
                 if (mode == 0) setMode(1).schedule();
-                else setMode(0).schedule();
+                else if (Artemis.INSTANCE.isMotifShooting) setMode(0).schedule();
             }
         });
     }
@@ -163,8 +164,8 @@ public class Magazine implements IAmBetterSubsystem {
     }
 
     public void getColor() {
-        if (color.getDistance(DistanceUnit.MM) <= dist || range.getDistance(DistanceUnit.MM) <= dist) { // Range now
-            if ((color.red() + color.blue()) / 2 < color.green()) {
+        if ((color.getDistance(DistanceUnit.MM) <= dist || range.getDistance(DistanceUnit.MM) <= dist) && timer.getElapsedTimeSeconds() >= 1) { // Range now
+            if (((color.red() + color.blue()) / 2) + 7 < color.green()) {
                 setActiveSlotContent(Utils.ArtifactTypes.GREEN).schedule();
                 colorQueue = Utils.ArtifactTypes.GREEN;
             } else {
@@ -172,6 +173,10 @@ public class Magazine implements IAmBetterSubsystem {
                 colorQueue = Utils.ArtifactTypes.PURPLE;
             }
             hasBall = true;
+            timer.resetTimer();
+            r = color.red();
+            g = color.green();
+            b = color.blue();
         }
     }
 

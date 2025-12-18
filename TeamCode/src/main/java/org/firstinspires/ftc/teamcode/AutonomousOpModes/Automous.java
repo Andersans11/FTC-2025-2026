@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
-import org.firstinspires.ftc.teamcode.RobotStuff.Perseus;
+import org.firstinspires.ftc.teamcode.RobotStuff.Artemis;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 import org.firstinspires.ftc.teamcode.RobotStuff.pedrojson.Callbacks;
@@ -29,7 +29,7 @@ public class Automous extends RoyallyFuckedUpMode {
     public Automous() {
         super();
         addSubsystemComponents(
-                new BetterSubsystemComponent(Perseus.INSTANCE)
+                new BetterSubsystemComponent(Artemis.INSTANCE)
         );
     }
 

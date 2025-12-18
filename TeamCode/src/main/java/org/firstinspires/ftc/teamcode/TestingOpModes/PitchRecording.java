@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.TestingOpModes;
 
 
 import com.bylazar.configurables.annotations.Configurable;
+import com.pedropathing.follower.Follower;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -9,7 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
-import org.firstinspires.ftc.teamcode.RobotStuff.Perseus;
+import org.firstinspires.ftc.teamcode.RobotStuff.Artemis;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.RobotCentricDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.Magazine;
@@ -29,56 +30,53 @@ public class PitchRecording extends RoyallyFuckedUpMode {
         super();
         addSubsystemComponents(
                 new BetterSubsystemComponent(RobotCentricDrive.INSTANCE),
-                new BetterSubsystemComponent(Perseus.INSTANCE)
+                new BetterSubsystemComponent(Artemis.INSTANCE)
         );
     }
 
     @Override
     public void onInit() {
-        super.onInit();
+        P1.leftBumper().whenBecomesTrue(Artemis.INSTANCE.updateHoodPos());
 
-        P1.rightTrigger().atLeast(0.1)
-                .whenBecomesTrue(Perseus.INSTANCE.intake())
-                .whenBecomesFalse(Perseus.INSTANCE.stopIntake());
+        Artemis.INSTANCE.initFollower(hardwareMap);
+
+        P1.rightTrigger().atLeast(0.1).whenBecomesTrue(Artemis.INSTANCE.intake());
+        P1.rightTrigger().atLeast(0.1).whenBecomesFalse(Artemis.INSTANCE.stopIntake());
 
         P1.dpadUp().whenBecomesTrue(Turret.INSTANCE.setRedAlliance(false));
         P1.dpadDown().whenBecomesTrue(Turret.INSTANCE.setRedAlliance(true));
 
-        P1.rightBumper()
-                .whenBecomesTrue(Perseus.INSTANCE.outtake())
-                .whenBecomesFalse(Perseus.INSTANCE.stopIntake());
-
-        P1.leftBumper().whenBecomesTrue(Perseus.INSTANCE.updateHoodPos());
-
-        P1.dpadLeft().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.GREEN));
-        P1.dpadRight().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.PURPLE));
-
-        P1.y().whenBecomesTrue(Shooter.INSTANCE.setHoodPos(hoodPos));
-
+        P1.rightBumper().whenBecomesTrue(Artemis.INSTANCE.outtake());
+        P1.rightBumper().whenBecomesFalse(Artemis.INSTANCE.stopIntake());
 
         P2.dpadLeft().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.GREEN));
         P2.dpadRight().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.PURPLE));
 
-        P2.cross().whenBecomesTrue(Perseus.INSTANCE.shootSingle(Utils.ArtifactTypes.GREEN));
-        P2.circle().whenBecomesTrue(Perseus.INSTANCE.shootSingle(Utils.ArtifactTypes.PURPLE));
+        P1.dpadLeft().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.GREEN));
+        P1.dpadRight().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.PURPLE));
 
-        P2.rightTrigger().atLeast(0.1).whenBecomesTrue(Perseus.INSTANCE.shootMotif());
+        P2.cross().whenBecomesTrue(Artemis.INSTANCE.shootSingle(Utils.ArtifactTypes.GREEN));
+        P2.circle().whenBecomesTrue(Artemis.INSTANCE.shootSingle(Utils.ArtifactTypes.PURPLE));
+
+        P2.rightTrigger().atLeast(0.1).whenBecomesTrue(Artemis.INSTANCE.shootMotif());
 
         P2.square().whenBecomesTrue(Magazine.INSTANCE.setMode(0));
         P2.triangle().whenBecomesTrue(Magazine.INSTANCE.setMode(1));
 
         P2.dpadUp().whenBecomesTrue(Shooter.INSTANCE.resetKicker());
 
-        P2.rightBumper().whenTrue(Turret.INSTANCE.changePosition(0.5));
-        P2.leftBumper().whenTrue(Turret.INSTANCE.changePosition(-0.5));
+        P2.leftTrigger().atLeast(0.1).whenBecomesTrue(Magazine.INSTANCE.incShotsFired());
+        P2.leftBumper().whenBecomesTrue(Turret.INSTANCE.zero());
 
-        P2.dpadDown().whenBecomesTrue(Turret.INSTANCE.autoControl());
+        P2.rightBumper().whenBecomesTrue(Turret.INSTANCE.switchMode());
+
+        P2.dpadDown().whenBecomesTrue(Artemis.INSTANCE.resetFollower());
     }
 
     @Override
     public void onStartButtonPressed() {
         super.onStartButtonPressed();
-        Perseus.INSTANCE.start();
+        Artemis.INSTANCE.start();
     }
 
     @Override
@@ -94,6 +92,8 @@ public class PitchRecording extends RoyallyFuckedUpMode {
             addData("tagX", "no blocks found");
             addData("tagY", "no blocks found");
         }
+
+        addData("distance", Math.sqrt(Math.pow((144 - Artemis.INSTANCE.currentPose.getX()), 2) + Math.pow((144 - Artemis.INSTANCE.currentPose.getY()), 2)));
 
         addData("0", Magazine.INSTANCE.getSlotColor(0));
         addData("1", Magazine.INSTANCE.getSlotColor(1));

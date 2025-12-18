@@ -6,6 +6,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.RobotCentricDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.Magazine;
 
 @TeleOp(name = "Test Magazine", group = Utils.TESTING)
@@ -17,7 +18,8 @@ public class TestMagazine extends RoyallyFuckedUpMode {
         super();
         addSubsystemComponents(
                 new BetterSubsystemComponent(RobotCentricDrive.INSTANCE),
-                new BetterSubsystemComponent(Magazine.INSTANCE)
+                new BetterSubsystemComponent(Magazine.INSTANCE),
+                new BetterSubsystemComponent(Intake.INSTANCE)
         );
     }
 
@@ -33,6 +35,7 @@ public class TestMagazine extends RoyallyFuckedUpMode {
 
         P1.rightBumper().whenBecomesTrue(Magazine.INSTANCE.setMode(0));
         P1.leftBumper().whenBecomesTrue(Magazine.INSTANCE.setMode(1));
+        Intake.INSTANCE.idle().schedule();
     }
     
     @Override
@@ -46,6 +49,9 @@ public class TestMagazine extends RoyallyFuckedUpMode {
         addData("oldTargetPos", Magazine.INSTANCE.oldTargetPos);
         addData("i", Magazine.INSTANCE.it);
         addData("desiredColor", Magazine.INSTANCE.desiredColor);
+        addData("r", Magazine.INSTANCE.r);
+        addData("g", Magazine.INSTANCE.g);
+        addData("b", Magazine.INSTANCE.b);
 
         super.onUpdate();
     }

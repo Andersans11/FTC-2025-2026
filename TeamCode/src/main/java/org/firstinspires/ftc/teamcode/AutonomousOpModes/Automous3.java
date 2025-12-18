@@ -4,7 +4,6 @@ import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
-import com.pedropathing.paths.Path;
 import com.pedropathing.paths.PathChain;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -13,7 +12,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.Drawing;
-import org.firstinspires.ftc.teamcode.RobotStuff.Perseus;
+import org.firstinspires.ftc.teamcode.RobotStuff.Artemis;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.Magazine;
@@ -43,7 +42,7 @@ public class Automous3 extends RoyallyFuckedUpMode {
     public Automous3() {
         super();
         addSubsystemComponents(
-                new BetterSubsystemComponent(Perseus.INSTANCE)
+                new BetterSubsystemComponent(Artemis.INSTANCE)
         );
     }
 
@@ -70,10 +69,6 @@ public class Automous3 extends RoyallyFuckedUpMode {
         intakePose3 = new Pose(intake2, 84);
         intakePose4 = new Pose(16, 84);
 
-        Magazine.INSTANCE.setSlotContent(0, Utils.ArtifactTypes.PURPLE).schedule();
-        Magazine.INSTANCE.setSlotContent(1, Utils.ArtifactTypes.PURPLE).schedule();
-        Magazine.INSTANCE.setSlotContent(2, Utils.ArtifactTypes.GREEN).schedule();
-
         firstCycle = follower.pathBuilder()
                 .addPath(new BezierLine(startingPose, scoringPose))
                 .setConstantHeadingInterpolation(Math.toRadians(132.5))
@@ -84,7 +79,7 @@ public class Automous3 extends RoyallyFuckedUpMode {
                 .addPath(new BezierLine(intakePose1, intakePose2))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
                 .addParametricCallback(0, () -> {
-                    Perseus.INSTANCE.intake().schedule();
+                    Artemis.INSTANCE.intake().schedule();
                     follower.setMaxPower(0.25);
                 })
                 .build();
@@ -115,7 +110,7 @@ public class Automous3 extends RoyallyFuckedUpMode {
     public void onStartButtonPressed() {
         super.onStartButtonPressed();
         new SequentialGroup(
-                Perseus.INSTANCE.start(),
+                Artemis.INSTANCE.start(),
                 Shooter.INSTANCE.idle(),
                 new InstantCommand(() -> follower.followPath(firstCycle)),
                 Magazine.INSTANCE.setMode(1),
@@ -128,7 +123,7 @@ public class Automous3 extends RoyallyFuckedUpMode {
                 new WaitUntil(() -> !follower.isBusy()),
                 new InstantCommand(() -> pathTimer.resetTimer()),
                 new WaitUntil(() -> pathTimer.getElapsedTimeSeconds() >= 1),
-                Perseus.INSTANCE.shootMotif(),
+                Artemis.INSTANCE.shootMotif(),
                 new WaitUntil(() -> Magazine.INSTANCE.mode == 0),
                 new InstantCommand(() -> {
                     follower.followPath(secondCycle1);
@@ -154,7 +149,7 @@ public class Automous3 extends RoyallyFuckedUpMode {
                 //Intake.INSTANCE.idle(),
                 new InstantCommand(() -> pathTimer.resetTimer()),
                 new WaitUntil(() -> pathTimer.getElapsedTimeSeconds() >= 1),
-                Perseus.INSTANCE.shootMotif()
+                Artemis.INSTANCE.shootMotif()
         ).schedule();
     }
 

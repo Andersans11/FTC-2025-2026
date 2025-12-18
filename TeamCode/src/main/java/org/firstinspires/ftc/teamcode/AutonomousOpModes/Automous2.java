@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
-import org.firstinspires.ftc.teamcode.RobotStuff.Perseus;
+import org.firstinspires.ftc.teamcode.RobotStuff.Artemis;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.Magazine;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
@@ -35,7 +35,7 @@ public class Automous2 extends RoyallyFuckedUpMode {
     public Automous2() {
         super();
         addSubsystemComponents(
-                new BetterSubsystemComponent(Perseus.INSTANCE)
+                new BetterSubsystemComponent(Artemis.INSTANCE)
         );
     }
 
@@ -80,7 +80,7 @@ public class Automous2 extends RoyallyFuckedUpMode {
     public void onStartButtonPressed() {
         super.onStartButtonPressed();
         new SequentialGroup(
-                Perseus.INSTANCE.start(),
+                Artemis.INSTANCE.start(),
                 new InstantCommand(() -> follower.followPath(path)),
                 Magazine.INSTANCE.setMode(1),
                 new WaitUntil(() -> follower.getCurrentTValue() >= 0.75),
@@ -88,7 +88,7 @@ public class Automous2 extends RoyallyFuckedUpMode {
                 new InstantCommand(() -> Turret.INSTANCE.mode = Turret.TurretMode.RECOVERY),
                 Magazine.INSTANCE.setMode(1),
                 new WaitUntil(() -> !follower.isBusy()),
-                Perseus.INSTANCE.shootMotif()
+                Artemis.INSTANCE.shootMotif()
         ).schedule();
     }
 

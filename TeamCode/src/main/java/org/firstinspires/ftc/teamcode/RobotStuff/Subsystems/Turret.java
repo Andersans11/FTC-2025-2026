@@ -1,17 +1,14 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems;
 
 import com.bylazar.configurables.annotations.Configurable;
-import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.util.Timer;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
-import org.firstinspires.ftc.teamcode.RobotStuff.Perseus;
+import org.firstinspires.ftc.teamcode.RobotStuff.Artemis;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.Magazine;
 
 import dev.nextftc.control.ControlSystem;
@@ -22,11 +19,8 @@ import dev.nextftc.core.commands.groups.SequentialGroup;
 import dev.nextftc.core.commands.utility.InstantCommand;
 import dev.nextftc.core.commands.utility.NullCommand;
 import dev.nextftc.hardware.impl.MotorEx;
-import dev.nextftc.hardware.impl.ServoEx;
-import dev.nextftc.hardware.positionable.SetPosition;
 import dev.nextftc.hardware.powerable.SetPower;
 import kotlin.Pair;
-import dev.nextftc.hardware.powerable.SetPower;
 
 @Configurable
 public class Turret implements IAmBetterSubsystem {
@@ -44,7 +38,7 @@ public class Turret implements IAmBetterSubsystem {
     Pose oldPose = new Pose(0, 0, 0);
     public double targetAngle = 0;
     boolean isManualControl = false;
-    public boolean isSweeping = true;
+    public static boolean isSweeping = false;
     boolean started = false;
     public Timer timer;
     public ControlSystem controller;
@@ -65,7 +59,8 @@ public class Turret implements IAmBetterSubsystem {
 
     public TurretMode mode = TurretMode.TAG_TRACKING; //ty waz here ><> <--- fish
 
-    public Follower poseUpdater;
+    public static double minLim = -45;
+    public static double maxLim = 40;
 
     private final Utils.ArtifactTypes[] GPPGPP = new Utils.ArtifactTypes[]{
             Utils.ArtifactTypes.GREEN,
@@ -95,9 +90,9 @@ public class Turret implements IAmBetterSubsystem {
     };
 
     // ------------------------- CONFIG ------------------------------- //
-    public static double kP = 0.0075;
+    public static double kP = 0.0005;
     public static double kI = 0.0;
-    public static double kD = 0.0001;
+    public static double kD = 0.00002;
     public static double a = 0.04;
 
     // --------------------- OPMODE --------------------------------- //
@@ -113,17 +108,12 @@ public class Turret implements IAmBetterSubsystem {
         targetAngle = 0;
     }
 
-    public void initPoseUpdater() {
-        poseUpdater = Perseus.INSTANCE.follower;
-    }
-
     @Override
     public void initSystem() {
         this.rotationMotor = RobotConfig.TurretRotation.getMotor();
         camera = new HuskyLens(RobotConfig.camera.getDeviceClient());
         camera.selectAlgorithm(HuskyLens.Algorithm.TAG_RECOGNITION);
         limitSwitch = RobotConfig.LimitSwitch;
-        initPoseUpdater();
     }
 
     @Override
@@ -173,7 +163,7 @@ public class Turret implements IAmBetterSubsystem {
     public Command setPosition(double pos) {
         return new InstantCommand(() -> {
             mode = TurretMode.MANUAL_PID;
-            targetAngle = Math.max(-90, Math.min(90, pos));
+            targetAngle = Math.max(minLim, Math.min(maxLim, pos));
             controller.setGoal(new KineticState(off + degreesToTicks(targetAngle)));
         });
     }
@@ -181,7 +171,7 @@ public class Turret implements IAmBetterSubsystem {
     public Command setPosition(double turretPos, double hoodPos) {
         return new InstantCommand(() -> {
             mode = TurretMode.MANUAL_PID;
-            targetAngle = Math.max(-90, Math.min(90, turretPos));
+            targetAngle = Math.max(minLim, Math.min(maxLim, turretPos));
             controller.setGoal(new KineticState(off + degreesToTicks(targetAngle)));
         });
     }
@@ -195,7 +185,7 @@ public class Turret implements IAmBetterSubsystem {
         return new InstantCommand(() -> {
             mode = TurretMode.MANUAL_PID;
             targetAngle = targetAngle + pos;
-            targetAngle = Math.max(-90, Math.min(90, targetAngle));
+            targetAngle = Math.max(minLim, Math.min(maxLim, targetAngle));
             controller.setGoal(new KineticState(off + degreesToTicks(targetAngle)));
         });
     }
@@ -212,9 +202,12 @@ public class Turret implements IAmBetterSubsystem {
     }
 
     public double degreesToTicks(double degrees) {
-        return degrees * 751.8 / 360 * 8;
+        return degrees * 8000 / 360 * 5;
     }
-    public double ticksToDegrees(double ticks) {return ticks / 751.8 * 360 / 8;}
+
+    public double ticksToDegrees(double ticks) {
+        return ticks / 8000 * 360 / 5;
+    }
 
 
     public void manualUpdate() {
@@ -271,6 +264,12 @@ public class Turret implements IAmBetterSubsystem {
     }
 
 
+    public Command switchMode() {
+        if (mode == TurretMode.TAG_TRACKING) return new InstantCommand(() -> mode = TurretMode.RECOVERY);
+        else if (mode == TurretMode.RECOVERY) return new InstantCommand(() -> mode = TurretMode.TAG_TRACKING);
+        return new NullCommand();
+    }
+
     @Override
     public void periodic() {
         waluigi = waugh();
@@ -278,7 +277,7 @@ public class Turret implements IAmBetterSubsystem {
         if (Magazine.INSTANCE.mode == 0 && !isZeroing) {
             mode = TurretMode.MANUAL_PID;
             targetAngle = 0;
-        } else if (Magazine.INSTANCE.mode == 1 && mode == TurretMode.MANUAL_PID && !isZeroing) mode = TurretMode.RECOVERY;
+        } else if (Magazine.INSTANCE.mode == 1 && mode == TurretMode.MANUAL_PID && !isZeroing) mode = TurretMode.TAG_TRACKING;
         
         switch (mode) {
             case TAG_TRACKING:
@@ -286,15 +285,15 @@ public class Turret implements IAmBetterSubsystem {
                     targetAngle = ticksToDegrees(rotationMotor.getCurrentPosition() - off) - (a * (waluigi.component1() - 160));
                     hoodTargetPos = calcHoodPos(waluigi.component2());
                     timer.resetTimer();
-                } else if (timer.getElapsedTimeSeconds() >= 1) {
-                    mode = TurretMode.RECOVERY;
+                //} else if (timer.getElapsedTimeSeconds() >= 1) {
+                    //mode = TurretMode.RECOVERY;
                 } else {
-                    double deltaHeading = pose.getHeading() - oldPose.getHeading();
+                    double deltaHeading = (pose.getHeading()) - oldPose.getHeading();
                     targetAngle = targetAngle - Math.toDegrees(deltaHeading);
                 }
                 Shooter.INSTANCE.setHoodPos(hoodTargetPos).schedule();
-                controller.setGoal(new KineticState(off + degreesToTicks(Math.max(-90, Math.min(90, targetAngle)))));
-                rotationMotor.setPower(Math.max(-0.75, Math.min(0.75, controller.calculate(rotationMotor.getState()))));
+                controller.setGoal(new KineticState(off + degreesToTicks(Math.max(minLim, Math.min(maxLim, targetAngle)))));
+                rotationMotor.setPower(controller.calculate(rotationMotor.getState()));
                 break;
             case RECOVERY:
                 if (isSweeping) {
@@ -328,17 +327,15 @@ public class Turret implements IAmBetterSubsystem {
                         }
                     }
                 }
-                controller.setGoal(new KineticState(off + degreesToTicks(Math.max(-90, Math.min(90, targetAngle)))));
-                rotationMotor.setPower(Math.max(-0.75, Math.min(0.75, controller.calculate(rotationMotor.getState()))));
+                controller.setGoal(new KineticState(off + degreesToTicks(Math.max(minLim, Math.min(maxLim, targetAngle)))));
+                rotationMotor.setPower(controller.calculate(rotationMotor.getState()));
                 break;
             case MANUAL_PID:
-                rotationMotor.setPower(Math.max(-0.75, Math.min(0.75, controller.calculate(rotationMotor.getState()))));
+                rotationMotor.setPower(controller.calculate(rotationMotor.getState()));
                 break;
         }
-
-        poseUpdater.update();
         oldPose = pose;
-        pose = poseUpdater.getPose();
+        pose = Artemis.INSTANCE.currentPose;
 
         if (!hasGotMotif) {
             if (camera.blocks(3).length != 0) {

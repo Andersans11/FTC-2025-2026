@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.pedrojson;
 
-import org.firstinspires.ftc.teamcode.RobotStuff.Perseus;
+import org.firstinspires.ftc.teamcode.RobotStuff.Artemis;
 
 import dev.nextftc.ftc.NextFTCOpMode;
 
@@ -17,13 +17,13 @@ public class Callbacks extends PedroJSON.main.Callback {
 
         switch (identifier) {
             case "shootMotif":
-                codeToRun = () -> Perseus.INSTANCE.shootMotif().schedule();
+                codeToRun = () -> Artemis.INSTANCE.shootMotif().schedule();
                 break;
             case "intake":
-                codeToRun = () -> Perseus.INSTANCE.intake().schedule();
+                codeToRun = () -> Artemis.INSTANCE.intake().schedule();
                 break;
             case "idle":
-                codeToRun = () -> Perseus.INSTANCE.stopIntake().schedule();
+                codeToRun = () -> Artemis.INSTANCE.stopIntake().schedule();
                 break;
         }
 

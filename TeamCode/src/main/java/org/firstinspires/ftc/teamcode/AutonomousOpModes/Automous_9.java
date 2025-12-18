@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.Drawing;
-import org.firstinspires.ftc.teamcode.RobotStuff.Perseus;
+import org.firstinspires.ftc.teamcode.RobotStuff.Artemis;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.Magazine;
@@ -42,7 +42,7 @@ public class Automous_9 extends RoyallyFuckedUpMode {
     public Automous_9() {
         super();
         addSubsystemComponents(
-                new BetterSubsystemComponent(Perseus.INSTANCE)
+                new BetterSubsystemComponent(Artemis.INSTANCE)
         );
     }
 
@@ -61,7 +61,7 @@ public class Automous_9 extends RoyallyFuckedUpMode {
         telemetry.addLine("1");
         Turret.INSTANCE.setPosition(-90).schedule();
         telemetry.addLine("1");
-        Perseus.INSTANCE.initFollower(Constants.createFollower(hardwareMap));
+        Artemis.INSTANCE.initFollower(hardwareMap);
 
         startingPose = new Pose(28, 131, Math.toRadians(144));
         scoringPose = new Pose(60, 84);
@@ -88,7 +88,7 @@ public class Automous_9 extends RoyallyFuckedUpMode {
                 .addPath(new BezierLine(intakePose1_1, intakePose1_2))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
                 .addParametricCallback(0, () -> {
-                    Perseus.INSTANCE.intake().schedule();
+                    Artemis.INSTANCE.intake().schedule();
                     follower.setMaxPower(0.5);
                 })
                 .build();
@@ -110,7 +110,7 @@ public class Automous_9 extends RoyallyFuckedUpMode {
                 .addPath(new BezierLine(intakePose2_1, intakePose2_2))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
                 .addParametricCallback(0, () -> {
-                    Perseus.INSTANCE.intake().schedule();
+                    Artemis.INSTANCE.intake().schedule();
                     follower.setMaxPower(0.5);
                 })
                 .build();
@@ -141,7 +141,7 @@ public class Automous_9 extends RoyallyFuckedUpMode {
     public void onStartButtonPressed() {
         super.onStartButtonPressed();
         new SequentialGroup(
-                Perseus.INSTANCE.start(),
+                Artemis.INSTANCE.start(),
                 Shooter.INSTANCE.idle(),
                 new InstantCommand(() -> follower.followPath(firstCycle)),
                 Magazine.INSTANCE.setMode(1),
@@ -154,7 +154,7 @@ public class Automous_9 extends RoyallyFuckedUpMode {
                 new WaitUntil(() -> !follower.isBusy()),
                 new InstantCommand(() -> pathTimer.resetTimer()),
                 new WaitUntil(() -> pathTimer.getElapsedTimeSeconds() >= 1),
-                Perseus.INSTANCE.shootMotif(),
+                Artemis.INSTANCE.shootMotif(),
                 new WaitUntil(() -> Magazine.INSTANCE.mode == 0),
                 new InstantCommand(() -> {
                     follower.followPath(secondCycle1);
@@ -181,7 +181,7 @@ public class Automous_9 extends RoyallyFuckedUpMode {
                 Intake.INSTANCE.idle(),
                 new InstantCommand(() -> pathTimer.resetTimer()),
                 new WaitUntil(() -> pathTimer.getElapsedTimeSeconds() >= 1),
-                Perseus.INSTANCE.shootMotif(),
+                Artemis.INSTANCE.shootMotif(),
                 new WaitUntil(() -> Magazine.INSTANCE.mode == 0),
                 new InstantCommand(() -> {
                     follower.followPath(thirdCycle1);
@@ -208,7 +208,7 @@ public class Automous_9 extends RoyallyFuckedUpMode {
                 //Intake.INSTANCE.idle(),
                 new InstantCommand(() -> pathTimer.resetTimer()),
                 new WaitUntil(() -> pathTimer.getElapsedTimeSeconds() >= 1),
-                Perseus.INSTANCE.shootMotif()
+                Artemis.INSTANCE.shootMotif()
         ).schedule();
     }
 

@@ -44,9 +44,9 @@ public abstract class AbstractDriveMode implements IAmBetterSubsystem {
         this.BL = RobotConfig.BLDrive.getMotor();
         this.BR = RobotConfig.BRDrive.getMotor();
 
-        this.forwardSupp = RobotConfig.player1().leftStickY().negate();
+        this.forwardSupp = RobotConfig.player1().leftStickY();
         this.strafeSupp = RobotConfig.player1().leftStickX();
-        this.turnSupp = RobotConfig.player1().rightStickX();
+        this.turnSupp = RobotConfig.player1().rightStickX().negate();
         this.slowmodeSupp = RobotConfig.player1().leftTrigger().atLeast(Sensitivities.p1LTThreshold);
 
         this.slowmodeSupp.whenTrue(() -> Sensitivities.driveModifier = Sensitivities.slowmodeModifier)

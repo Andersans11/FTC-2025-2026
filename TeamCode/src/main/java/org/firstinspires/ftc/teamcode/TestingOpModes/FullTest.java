@@ -1,76 +1,70 @@
 package org.firstinspires.ftc.teamcode.TestingOpModes;
 
-import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
-import org.firstinspires.ftc.teamcode.RobotStuff.Perseus;
+import org.firstinspires.ftc.teamcode.RobotStuff.Artemis;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.RobotCentricDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.Magazine;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 
-@TeleOp(name = "Test: Full", group = Utils.PRIORITY)
+@TeleOp(name = "Test: Full", group = Utils.PRIORITY_PRIORITY)
 public class FullTest extends RoyallyFuckedUpMode {
 
     public FullTest() {
         super();
         addSubsystemComponents(
                 new BetterSubsystemComponent(RobotCentricDrive.INSTANCE),
-                new BetterSubsystemComponent(Perseus.INSTANCE)
+                new BetterSubsystemComponent(Artemis.INSTANCE)
         );
     }
 
     @Override
     public void onInit() {
         super.onInit();
+        Artemis.INSTANCE.initFollower(hardwareMap);
 
-        Perseus.INSTANCE.initFollower(Constants.createFollower(hardwareMap));
-
-        P1.rightTrigger().atLeast(0.1)
-                .whenBecomesTrue(Perseus.INSTANCE.intake())
-                .whenBecomesFalse(Perseus.INSTANCE.stopIntake());
+        P1.rightTrigger().atLeast(0.1).whenBecomesTrue(Artemis.INSTANCE.intake());
+        P1.rightTrigger().atLeast(0.1).whenBecomesFalse(Artemis.INSTANCE.stopIntake());
 
         P1.dpadUp().whenBecomesTrue(Turret.INSTANCE.setRedAlliance(false));
         P1.dpadDown().whenBecomesTrue(Turret.INSTANCE.setRedAlliance(true));
 
-        P1.rightBumper()
-                .whenBecomesTrue(Perseus.INSTANCE.outtake())
-                .whenBecomesFalse(Perseus.INSTANCE.stopIntake());
-
-        P1.leftBumper().whenBecomesTrue(Perseus.INSTANCE.updateHoodPos());
-
-        P1.dpadLeft().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.GREEN));
-        P1.dpadRight().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.PURPLE));
-
+        P1.rightBumper().whenBecomesTrue(Artemis.INSTANCE.outtake());
+        P1.rightBumper().whenBecomesFalse(Artemis.INSTANCE.stopIntake());
 
         P2.dpadLeft().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.GREEN));
         P2.dpadRight().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.PURPLE));
 
-        P2.cross().whenBecomesTrue(Perseus.INSTANCE.shootSingle(Utils.ArtifactTypes.GREEN));
-        P2.circle().whenBecomesTrue(Perseus.INSTANCE.shootSingle(Utils.ArtifactTypes.PURPLE));
+        P1.dpadLeft().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.GREEN));
+        P1.dpadRight().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.PURPLE));
 
-        P2.rightTrigger().atLeast(0.1).whenBecomesTrue(Perseus.INSTANCE.shootMotif());
+        P2.cross().whenBecomesTrue(Artemis.INSTANCE.shootSingle(Utils.ArtifactTypes.GREEN));
+        P2.circle().whenBecomesTrue(Artemis.INSTANCE.shootSingle(Utils.ArtifactTypes.PURPLE));
+
+        P2.rightTrigger().atLeast(0.1).whenBecomesTrue(Artemis.INSTANCE.shootMotif());
 
         P2.square().whenBecomesTrue(Magazine.INSTANCE.setMode(0));
         P2.triangle().whenBecomesTrue(Magazine.INSTANCE.setMode(1));
 
         P2.dpadUp().whenBecomesTrue(Shooter.INSTANCE.resetKicker());
 
-        P2.rightBumper().whenTrue(Turret.INSTANCE.changePosition(0.5));
-        P2.leftBumper().whenTrue(Turret.INSTANCE.changePosition(-0.5));
+        P2.leftTrigger().atLeast(0.1).whenBecomesTrue(Magazine.INSTANCE.incShotsFired());
+        P2.leftBumper().whenBecomesTrue(Turret.INSTANCE.zero());
 
-        P2.dpadDown().whenBecomesTrue(Turret.INSTANCE.autoControl());
+        P2.rightBumper().whenBecomesTrue(Turret.INSTANCE.switchMode());
+
+        P2.dpadDown().whenBecomesTrue(Artemis.INSTANCE.resetFollower());
     }
 
     @Override
     public void onStartButtonPressed() {
         super.onStartButtonPressed();
-        Perseus.INSTANCE.start().schedule();
+        Artemis.INSTANCE.start().schedule();
     }
 
     @Override
@@ -82,20 +76,14 @@ public class FullTest extends RoyallyFuckedUpMode {
         addData("2", Magazine.INSTANCE.getSlotColor(2));
         addData("Active", Magazine.INSTANCE.activeSlot);
         addData("Mode", Magazine.INSTANCE.mode);
-        //telemetry.addData("targetPos", Magazine.INSTANCE.targetPos);
-        //telemetry.addData("oldTargetPos", Magazine.INSTANCE.oldTargetPos);
-        //telemetry.addData("i", Magazine.INSTANCE.i);
         addData("desiredColor", Magazine.INSTANCE.desiredColor);
-        addData("range", Magazine.INSTANCE.color.getDistance(DistanceUnit.MM));
-
-        //telemetry.addData("targetAngle", NewTurret.INSTANCE.targetAngle);
-        //telemetry.addData("motorPower", NewTurret.INSTANCE.controller.calculate(NewTurret.INSTANCE.rotationMotor.getState()));
-        //telemetry.addData("goal", NewTurret.INSTANCE.controller.getGoal());
-        //telemetry.addData("length", NewTurret.INSTANCE.camera.blocks().length);
-
-        addData("motif1", Magazine.INSTANCE.motif[0]);
-        addData("motif2", Magazine.INSTANCE.motif[1]);
-        addData("motif3", Magazine.INSTANCE.motif[2]);
-
+        addData("shotsFired", Magazine.INSTANCE.shotsFired);
+        addData("TurretMode", Turret.INSTANCE.mode);
+        addData("dist", Magazine.INSTANCE.color.getDistance(DistanceUnit.MM));
+        addData("dist", Magazine.INSTANCE.range.getDistance(DistanceUnit.MM));
+        addData("TurretGoal", Turret.INSTANCE.targetAngle);
+        addData("waugh", Turret.INSTANCE.waugh());
+        addData("TurretPos", Turret.INSTANCE.ticksToDegrees(Turret.INSTANCE.rotationMotor.getCurrentPosition()));
+        addData("Pose", Math.toDegrees(Artemis.INSTANCE.currentPose.getHeading()));
     }
 }

@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.TestingOpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
@@ -22,10 +23,11 @@ public class TestTurret extends RoyallyFuckedUpMode {
     @Override
     public void onInit() {
         super.onInit();
+        Turret.INSTANCE.mode = Turret.TurretMode.MANUAL_PID;
 
-        //P1.dpadDown().whenBecomesTrue(NewTurret.INSTANCE.setPosition(0));
-        //P1.dpadRight().whenBecomesTrue(NewTurret.INSTANCE.setPosition(90));
-        //P1.dpadLeft().whenBecomesTrue(NewTurret.INSTANCE.setPosition(-90));
+        P1.dpadDown().whenBecomesTrue(Turret.INSTANCE.setPosition(0));
+        P1.dpadRight().whenBecomesTrue(Turret.INSTANCE.setPosition(45));
+        P1.dpadLeft().whenBecomesTrue(Turret.INSTANCE.setPosition(-45));
         //P1.dpadUp().whenBecomesTrue(NewTurret.INSTANCE.resetPID());
     }
 

@@ -5,11 +5,10 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.localization.PoseTracker;
 import com.pedropathing.util.Timer;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PwmControl;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
-import org.firstinspires.ftc.robotcore.external.Const;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
@@ -22,32 +21,33 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 
 import dev.nextftc.control.KineticState;
 import dev.nextftc.core.commands.Command;
+import dev.nextftc.core.commands.conditionals.IfElseCommand;
 import dev.nextftc.core.commands.delays.Delay;
 import dev.nextftc.core.commands.groups.SequentialGroup;
 import dev.nextftc.core.commands.utility.InstantCommand;
 import dev.nextftc.core.commands.utility.NullCommand;
 
 @Configurable
-public class Perseus extends BetterSubsystemGroup {
+public class Artemis extends BetterSubsystemGroup {
 
-    public static final Perseus INSTANCE = new Perseus();
+    public static final Artemis INSTANCE = new Artemis();
 
     public Follower follower;
     public PoseTracker followerTeleOp;
     boolean isShooting = false;
-    boolean isMotifShooting = false;
+    public boolean isMotifShooting = false;
     public static double hoodToPos = 0.5;
     public ServoImplEx indicator;
     public Timer indTimer;
     public Timer ballTimer;
-    public Pose currentPose;
-    public static double offX;
-    public static double offY;
-    public static double offTheta;
+    public Pose currentPose = new Pose(0, 0, 0);
+    public static double offX = 9;
+    public static double offY = 9;
+    public static double offTheta = 90;
     boolean indCycle;
     double currentPWM = 0;
 
-    private Perseus() {
+    private Artemis() {
         super(
                 Magazine.INSTANCE,
                 Turret.INSTANCE,
@@ -55,6 +55,20 @@ public class Perseus extends BetterSubsystemGroup {
                 Shooter.INSTANCE
         );
     }
+
+    public enum IndicatorMode {
+        INTAKE_IDLE,
+        INTAKE_ACTIVE,
+        HAS_BALL,
+        SHOOTING_IDLE,
+        SHOOTING_TRACKING,
+        SHOOTING_TRACKED,
+        SHOOTING_ACTIVE,
+        INIT,
+        INIT_DONE
+    }
+
+    public IndicatorMode indMode = IndicatorMode.INIT;
 
     public Utils.ArtifactTypes[] PPG = new Utils.ArtifactTypes[] {
             Utils.ArtifactTypes.PURPLE,
@@ -87,8 +101,8 @@ public class Perseus extends BetterSubsystemGroup {
         indicator.setPwmEnable();
     }
 
-    public void initFollower(Follower follower) {
-        this.follower = follower;
+    public void initFollower(HardwareMap hardwareMap) {
+        this.follower = Constants.createFollower(hardwareMap);
         this.follower.setStartingPose(currentPose);
     }
 
@@ -100,87 +114,45 @@ public class Perseus extends BetterSubsystemGroup {
     @Override
     public void periodic() {
         super.periodic();
+        follower.updatePose();
         currentPose = follower.getPose();
+        runIndicator();
     }
 
     public static double motifShootingSpeed = 0.2;
     public static double shootingSpeed = 0.15;
-    public static double shootingSpeed2 = 0.25;
+    public static double shootingSpeed2 = 0.1;
 
     //  ------------------------- COMMANDS --------------------------- //
 
     public void runIndicator() {
-        switch (Magazine.INSTANCE.mode) {
-            case 0:
-                if (Magazine.INSTANCE.hasBall) {
-                    switch (Magazine.INSTANCE.colorQueue) {
-                        case PURPLE:
-                            if (indTimer.getElapsedTimeSeconds() >= 0.5) {
-                                if (indCycle) {
-                                    setIndicator(1900);
-                                    indCycle = false;
-                                } else {
-                                    setIndicator(0);
-                                    indCycle = true;
-                                }
-                                indTimer.resetTimer();
-                            }
-                            break;
-                        case GREEN:
-                            if (indTimer.getElapsedTimeSeconds() >= 0.5) {
-                                if (indCycle) {
-                                    setIndicator(1450);
-                                    indCycle = false;
-                                } else {
-                                    setIndicator(0);
-                                    indCycle = true;
-                                }
-                                indTimer.resetTimer();
-                            }
-                            break;
-                    }
-
-                    if (ballTimer.getElapsedTimeSeconds() >= 3) {
-                        Magazine.INSTANCE.hasBall = false;
-                        ballTimer.resetTimer();
-                    }
-                } else if (Intake.INSTANCE.intake.getPower() >= 0.8) {
-                    if (indTimer.getElapsedTimeSeconds() >= 0.25) {
-                        if (indCycle) {
-                            setIndicator(1700);
-                            indCycle = false;
-                        } else {
-                            setIndicator(0);
-                            indCycle = true;
-                        }
-                        indTimer.resetTimer();
-                    }
-                } else setIndicator(1700);
+        switch (indMode) {
+            case INIT:
+                setIndicator(1300);
                 break;
-            case 1:
-                if (isShooting || isMotifShooting) {
-                    if (indTimer.getElapsedTimeSeconds() >= 0.25) {
-                        if (indCycle) {
-                            setIndicator(1100);
-                            indCycle = false;
-                        } else {
-                            setIndicator(0);
-                            indCycle = true;
-                        }
-                        indTimer.resetTimer();
+            case INIT_DONE:
+                setIndicator(1500);
+                break;
+            case INTAKE_IDLE:
+                setIndicator(1650);
+                break;
+            case INTAKE_ACTIVE:
+                if (indTimer.getElapsedTimeSeconds() >= 0.25) {
+                    if (indCycle) {
+                        setIndicator(1650);
+                        indCycle = false;
+                    } else {
+                        setIndicator(0);
+                        indCycle = true;
                     }
-                } else if (Turret.INSTANCE.controller.isWithinTolerance(new KineticState(2.5))) {
-                    if (indTimer.getElapsedTimeSeconds() >= 0.5) {
-                        if (indCycle) {
-                            setIndicator(1200);
-                            indCycle = false;
-                        } else {
-                            setIndicator(0);
-                            indCycle = true;
-                        }
-                        indTimer.resetTimer();
-                    }
-                } else setIndicator(1300);
+                    indTimer.resetTimer();
+                }
+                break;
+            case HAS_BALL:
+                switch (Magazine.INSTANCE.colorQueue) {
+                    case PURPLE:
+
+                }
         }
     }
 
@@ -196,8 +168,10 @@ public class Perseus extends BetterSubsystemGroup {
     }
 
     public Command resetFollower() {
-        return new InstantCommand(() ->
-            follower.setPose(new Pose(offX, offY, offTheta)));
+        if (Turret.INSTANCE.isRedAlliance) return new InstantCommand(() ->
+            follower.setPose(new Pose(offX, offY, Math.toRadians(offTheta))));
+        else return new InstantCommand(() ->
+                follower.setPose(new Pose(offX + 54, offY, Math.toRadians(offTheta))));
     }
 
     /**
@@ -228,23 +202,22 @@ public class Perseus extends BetterSubsystemGroup {
 
     /**
      * used in shootMotif to shoot a single artifact depending on the motif
-     * @param i the index of the slot
+     * @param i the index of the motif
      * @return a SequentialGroup that shoots a single artifact, or a NullCommand if the robot is already shooting
      */
     public Command shootSingleMotif(int i) {
-        return new SequentialGroup(
-                Magazine.INSTANCE.setDesiredColor(i),
-                new Delay(shootingSpeed),
-                Shooter.INSTANCE.shoot(),
-                new Delay(shootingSpeed2),
-                Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.NONE),
-                Magazine.INSTANCE.setDesiredColor(i + 1)
-        );
+            return new SequentialGroup(
+                    Magazine.INSTANCE.setDesiredColor(i),
+                    new Delay(shootingSpeed),
+                    Shooter.INSTANCE.shoot(),
+                    new Delay(shootingSpeed2),
+                    Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.NONE),
+                    Magazine.INSTANCE.setDesiredColor(i + 1)
+            );
     }
 
     public Command intake() {
         return new SequentialGroup(
-                Magazine.INSTANCE.setMode(0),
                 Intake.INSTANCE.start()
         );
     }
@@ -265,7 +238,7 @@ public class Perseus extends BetterSubsystemGroup {
             return new SequentialGroup(
                     new InstantCommand(() -> this.isMotifShooting = true),
                     Shooter.INSTANCE.spinUp(),
-                    new Delay(0.25),
+                    new Delay(0.5),
                     shootSingleMotif(0),
                     new Delay(motifShootingSpeed),
                     shootSingleMotif(1),

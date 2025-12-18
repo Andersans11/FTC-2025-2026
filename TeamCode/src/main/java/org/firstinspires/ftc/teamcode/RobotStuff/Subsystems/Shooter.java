@@ -26,7 +26,9 @@ public class Shooter implements IAmBetterSubsystem {
     Range hoodSupp;
 
     // ------------------------ CONFIG ------------------------ //
-    public static double shootingSpeed = 0.1;
+    public static double shootingSpeed = 0.3;
+    public static double kickerPos1 = 0.15;
+    public static double kickerPos0 = 0.825;
 
     // --------------------- OPMODE -------------------------- //
     @Override
@@ -61,10 +63,10 @@ public class Shooter implements IAmBetterSubsystem {
         return new SetPower(shooters, -0.25);
     }
     public Command kick() {
-        return new SetPosition(kicker, 0);
+        return new SetPosition(kicker, kickerPos1);
     }
     public Command resetKicker() {
-        return new SetPosition(kicker, 1);
+        return new SetPosition(kicker, kickerPos0);
     }
 
     public Command shoot() {
