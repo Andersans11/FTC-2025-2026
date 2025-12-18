@@ -33,6 +33,7 @@ public class Turret implements IAmBetterSubsystem {
     public boolean isRedAlliance = true;
     public boolean hasSetAlliance = false;
     public boolean hasGotMotif = false;
+    public static boolean isTesting = false;
     double pitch;
     Pose pose = new Pose(0, 0, 0);
     Pose oldPose = new Pose(0, 0, 0);
@@ -145,7 +146,7 @@ public class Turret implements IAmBetterSubsystem {
     }
 
     public Command resetHood() {
-        return Shooter.INSTANCE.setHoodPos(0.5);
+        return Shooter.INSTANCE.setHoodPos(hoodToPos);
     }
 
     public Command resetPID() {
@@ -213,6 +214,8 @@ public class Turret implements IAmBetterSubsystem {
     public void manualUpdate() {
         rotationMotor.setPower(controller.calculate(rotationMotor.getState()));
     }
+
+    public static double hoodToPos = 0.21;
     public static double masterK = 0.05;
     public static double linearM = 0.006;
     public static double logA = 0.01;
@@ -283,7 +286,7 @@ public class Turret implements IAmBetterSubsystem {
             case TAG_TRACKING:
                 if (waluigi.component1() != 69420) {
                     targetAngle = ticksToDegrees(rotationMotor.getCurrentPosition() - off) - (a * (waluigi.component1() - 160));
-                    hoodTargetPos = calcHoodPos(waluigi.component2());
+                    hoodTargetPos = hoodToPos;
                     timer.resetTimer();
                 //} else if (timer.getElapsedTimeSeconds() >= 1) {
                     //mode = TurretMode.RECOVERY;

@@ -1,30 +1,20 @@
 package org.firstinspires.ftc.teamcode.TestingOpModes;
 
-
-import com.bylazar.configurables.annotations.Configurable;
-import com.pedropathing.follower.Follower;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.RobotStuff.Artemis;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
-import org.firstinspires.ftc.teamcode.RobotStuff.Artemis;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.RobotCentricDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.Magazine;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 
-@Disabled
-@Configurable
-@TeleOp(name = "Pitch Recording", group = Utils.PRIORITY)
+@TeleOp(name = "Pitch Recording", group = Utils.PRIORITY_PRIORITY)
 public class PitchRecording extends RoyallyFuckedUpMode {
-
-
-    boolean outputValues = false;
-    public static double hoodPos = 0.45;
 
     public PitchRecording() {
         super();
@@ -36,8 +26,7 @@ public class PitchRecording extends RoyallyFuckedUpMode {
 
     @Override
     public void onInit() {
-        P1.leftBumper().whenBecomesTrue(Artemis.INSTANCE.updateHoodPos());
-
+        super.onInit();
         Artemis.INSTANCE.initFollower(hardwareMap);
 
         P1.rightTrigger().atLeast(0.1).whenBecomesTrue(Artemis.INSTANCE.intake());
@@ -70,18 +59,19 @@ public class PitchRecording extends RoyallyFuckedUpMode {
 
         P2.rightBumper().whenBecomesTrue(Turret.INSTANCE.switchMode());
 
-        P2.dpadDown().whenBecomesTrue(Artemis.INSTANCE.resetFollower());
+        P2.dpadDown().whenBecomesTrue(Artemis.INSTANCE.resetFollower());1
     }
 
     @Override
     public void onStartButtonPressed() {
         super.onStartButtonPressed();
-        Artemis.INSTANCE.start();
+        Artemis.INSTANCE.start().schedule();
     }
 
     @Override
     public void onUpdate() {
         super.onUpdate();
+
         try {
             HuskyLens.Block[] blocks = Turret.INSTANCE.camera.blocks(1);
 
@@ -93,20 +83,15 @@ public class PitchRecording extends RoyallyFuckedUpMode {
             addData("tagY", "no blocks found");
         }
 
-        addData("distance", Math.sqrt(Math.pow((144 - Artemis.INSTANCE.currentPose.getX()), 2) + Math.pow((144 - Artemis.INSTANCE.currentPose.getY()), 2)));
-
+        addData("target", RobotConfig.HoodServo.getServo().getPosition());
         addData("0", Magazine.INSTANCE.getSlotColor(0));
         addData("1", Magazine.INSTANCE.getSlotColor(1));
         addData("2", Magazine.INSTANCE.getSlotColor(2));
         addData("Active", Magazine.INSTANCE.activeSlot);
         addData("Mode", Magazine.INSTANCE.mode);
-
         addData("desiredColor", Magazine.INSTANCE.desiredColor);
-        addData("range", Magazine.INSTANCE.color.getDistance(DistanceUnit.MM));
-
-        addData("motif1", Magazine.INSTANCE.motif[0]);
-        addData("motif2", Magazine.INSTANCE.motif[1]);
-        addData("motif3", Magazine.INSTANCE.motif[2]);
-
+        addData("shotsFired", Magazine.INSTANCE.shotsFired);
+        addData("turret", Turret.INSTANCE.rotationMotor.getPower());
+        addData("isOn", Turret.INSTANCE.limitSwitch.isPressed());
     }
 }

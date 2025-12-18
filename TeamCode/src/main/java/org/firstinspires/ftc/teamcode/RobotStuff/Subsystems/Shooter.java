@@ -11,6 +11,7 @@ import dev.nextftc.core.commands.groups.SequentialGroup;
 import dev.nextftc.hardware.controllable.MotorGroup;
 import dev.nextftc.hardware.impl.MotorEx;
 import dev.nextftc.hardware.impl.ServoEx;
+import dev.nextftc.hardware.positionable.ServoGroup;
 import dev.nextftc.hardware.positionable.SetPosition;
 import dev.nextftc.hardware.powerable.SetPower;
 
@@ -20,8 +21,9 @@ public class Shooter implements IAmBetterSubsystem {
     public static final Shooter INSTANCE = new Shooter();
 
     MotorEx[] shooterMotors;
-    MotorGroup shooters;
+    ServoGroup hoodServos;
     ServoEx hood;
+    MotorGroup shooters;
     ServoEx kicker;
     Range hoodSupp;
 
@@ -40,6 +42,10 @@ public class Shooter implements IAmBetterSubsystem {
         shooters = new MotorGroup(
                 shooterMotors[0],
                 shooterMotors[1]
+        );
+        hoodServos = new ServoGroup(
+                RobotConfig.HoodServo.getServo(),
+                RobotConfig.HoodServo2.getServo()
         );
         hood = RobotConfig.HoodServo.getServo();
         kicker = RobotConfig.Kicker.getServo();
@@ -60,7 +66,7 @@ public class Shooter implements IAmBetterSubsystem {
         return new SetPower(shooters, 0);
     }
     public Command idle() {
-        return new SetPower(shooters, -0.25);
+        return new SetPower(shooters, -0.35);
     }
     public Command kick() {
         return new SetPosition(kicker, kickerPos1);

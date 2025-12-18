@@ -51,6 +51,7 @@ public class RobotConfig {
     public static FullServoConfig CarouselCR2;
     public static FullServoConfig CarouselCR3;
     public static ServoConfig HoodServo;
+    public static ServoConfig HoodServo2;
     public static ServoImplEx Indicator;
 
     public static ServoConfig Kicker;
@@ -189,6 +190,11 @@ public class RobotConfig {
                 hardwareMap,
                 "HOOD",
                 Servo.Direction.FORWARD
+        );
+        HoodServo2 = new ServoConfig(
+                hardwareMap,
+                "HOOD2",
+                Servo.Direction.REVERSE
         );
     }
 }

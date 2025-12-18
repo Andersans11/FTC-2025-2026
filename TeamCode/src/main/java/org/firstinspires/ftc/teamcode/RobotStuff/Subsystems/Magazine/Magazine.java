@@ -53,7 +53,7 @@ public class Magazine implements IAmBetterSubsystem {
     public static double off0 = 0;
     public static double off1 = 120;
     public static double off2 = 240;
-    public static double off = 90;
+    public static double off = 145;
     public static double dist = 60;
     public int it = 0;
     public int mode = 0;

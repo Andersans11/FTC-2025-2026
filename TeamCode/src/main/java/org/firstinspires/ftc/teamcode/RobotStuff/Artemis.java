@@ -36,7 +36,6 @@ public class Artemis extends BetterSubsystemGroup {
     public PoseTracker followerTeleOp;
     boolean isShooting = false;
     public boolean isMotifShooting = false;
-    public static double hoodToPos = 0.5;
     public ServoImplEx indicator;
     public Timer indTimer;
     public Timer ballTimer;
@@ -46,7 +45,6 @@ public class Artemis extends BetterSubsystemGroup {
     public static double offTheta = 90;
     boolean indCycle;
     double currentPWM = 0;
-
     private Artemis() {
         super(
                 Magazine.INSTANCE,
@@ -196,10 +194,6 @@ public class Artemis extends BetterSubsystemGroup {
         }
     }
 
-    public Command updateHoodPos() {
-        return Shooter.INSTANCE.setHoodPos(hoodToPos);
-    }
-
     /**
      * used in shootMotif to shoot a single artifact depending on the motif
      * @param i the index of the motif
@@ -238,7 +232,7 @@ public class Artemis extends BetterSubsystemGroup {
             return new SequentialGroup(
                     new InstantCommand(() -> this.isMotifShooting = true),
                     Shooter.INSTANCE.spinUp(),
-                    new Delay(0.5),
+                    new Delay(0.55),
                     shootSingleMotif(0),
                     new Delay(motifShootingSpeed),
                     shootSingleMotif(1),
@@ -253,6 +247,7 @@ public class Artemis extends BetterSubsystemGroup {
         return new SequentialGroup(
                 Intake.INSTANCE.idle(),
                 Shooter.INSTANCE.resetKicker(),
+                Shooter.INSTANCE.idle(),
                 Turret.INSTANCE.resetHood()
         );
     }
