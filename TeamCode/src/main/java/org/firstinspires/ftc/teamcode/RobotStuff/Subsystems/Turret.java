@@ -39,7 +39,7 @@ public class Turret implements IAmBetterSubsystem {
     Pose oldPose = new Pose(0, 0, 0);
     public double targetAngle = 0;
     boolean isManualControl = false;
-    public static boolean isSweeping = false;
+    public static boolean isSweeping = true;
     boolean started = false;
     public Timer timer;
     public ControlSystem controller;
@@ -57,6 +57,8 @@ public class Turret implements IAmBetterSubsystem {
     boolean isZeroing = false;
 
     public double off = 0;
+
+    public static double hoodPos = 0.21;
 
     public TurretMode mode = TurretMode.TAG_TRACKING; //ty waz here ><> <--- fish
 
@@ -232,7 +234,7 @@ public class Turret implements IAmBetterSubsystem {
      * @return the servo power
      */
     public double calcHoodPos(int tagY) {
-        double result;
+        /*double result;
         // https://www.desmos.com/calculator/haqezh5eac
         if (tagY < 0 || tagY > 240) {
             return 0.0; // this shouldn't be possible but it should be taken into account anyways
@@ -245,7 +247,15 @@ public class Turret implements IAmBetterSubsystem {
         } else { // 126 < x <= 240
             result = quadA * ((tagY - quadH) * (tagY - quadH)) + quadK; // f(x) = -0.0000464(tagY - 172)^2 + 0.686
         }
-        return result + masterK;
+        return result + masterK;*/
+        return hoodPos;
+    }
+
+    public Command hoodPos(boolean b) {
+        return new InstantCommand(() -> {
+                if (b) hoodPos = hoodPos + 0.005;
+                else hoodPos = hoodPos - 0.005;
+        });
     }
 
     /**
@@ -288,8 +298,8 @@ public class Turret implements IAmBetterSubsystem {
                     targetAngle = ticksToDegrees(rotationMotor.getCurrentPosition() - off) - (a * (waluigi.component1() - 160));
                     hoodTargetPos = hoodToPos;
                     timer.resetTimer();
-                //} else if (timer.getElapsedTimeSeconds() >= 1) {
-                    //mode = TurretMode.RECOVERY;
+                } else if (timer.getElapsedTimeSeconds() >= 2.5) {
+                    mode = TurretMode.RECOVERY;
                 } else {
                     double deltaHeading = (pose.getHeading()) - oldPose.getHeading();
                     targetAngle = targetAngle - Math.toDegrees(deltaHeading);

@@ -50,14 +50,11 @@ public class Comp_OpMode extends RoyallyFuckedUpMode {
         P2.square().whenBecomesTrue(Magazine.INSTANCE.setMode(0));
         P2.triangle().whenBecomesTrue(Magazine.INSTANCE.setMode(1));
 
-        P2.dpadUp().whenBecomesTrue(Shooter.INSTANCE.resetKicker());
+        P2.dpadUp().whenBecomesTrue(Turret.INSTANCE.hoodPos(true));
+        P2.dpadDown().whenBecomesTrue(Turret.INSTANCE.hoodPos(false));
 
         P2.leftTrigger().atLeast(0.1).whenBecomesTrue(Magazine.INSTANCE.incShotsFired());
         P2.leftBumper().whenBecomesTrue(Turret.INSTANCE.zero());
-
-        P2.rightBumper().whenBecomesTrue(Turret.INSTANCE.switchMode());
-
-        P2.dpadDown().whenBecomesTrue(Artemis.INSTANCE.resetFollower());
     }
 
     @Override

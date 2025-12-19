@@ -42,12 +42,13 @@ public class Automous3_Kisen extends RoyallyFuckedUpMode {
     public void onInit() {
         super.onInit();
 
+        Artemis.INSTANCE.initFollower(hardwareMap);
+
         follower = Constants.createFollower(hardwareMap);
 
         pathTimer = new Timer();
 
         Drawing.init();
-
 
         startingPose = new Pose(0,0, Math.toRadians(0));
         pose1 = new Pose(24,0);
@@ -56,9 +57,6 @@ public class Automous3_Kisen extends RoyallyFuckedUpMode {
 
         path1 = follower.pathBuilder()
                 .addPath(new BezierLine(startingPose, pose1))
-                .addPath(new BezierLine(pose1, pose2))
-                .addPath(new BezierLine(pose2, pose3))
-                .addPath(new BezierLine(pose3, startingPose))
                 .build();
 
 

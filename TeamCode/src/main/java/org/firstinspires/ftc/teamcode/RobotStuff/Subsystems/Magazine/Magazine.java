@@ -53,7 +53,7 @@ public class Magazine implements IAmBetterSubsystem {
     public static double off0 = 0;
     public static double off1 = 120;
     public static double off2 = 240;
-    public static double off = 145;
+    public static double off = 28;
     public static double dist = 60;
     public int it = 0;
     public int mode = 0;
@@ -164,7 +164,7 @@ public class Magazine implements IAmBetterSubsystem {
     }
 
     public void getColor() {
-        if ((color.getDistance(DistanceUnit.MM) <= dist || range.getDistance(DistanceUnit.MM) <= dist) && timer.getElapsedTimeSeconds() >= 1) { // Range now
+        if (color.getDistance(DistanceUnit.MM) <= dist && timer.getElapsedTimeSeconds() >= 1) { // Range now
             if (((color.red() + color.blue()) / 2) + 7 < color.green()) {
                 setActiveSlotContent(Utils.ArtifactTypes.GREEN).schedule();
                 colorQueue = Utils.ArtifactTypes.GREEN;
