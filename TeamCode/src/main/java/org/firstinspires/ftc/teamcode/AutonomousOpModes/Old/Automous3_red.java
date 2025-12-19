@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.AutonomousOpModes;
+package org.firstinspires.ftc.teamcode.AutonomousOpModes.Old;
 
 import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.follower.Follower;
@@ -24,22 +24,22 @@ import dev.nextftc.core.commands.groups.SequentialGroup;
 import dev.nextftc.core.commands.utility.InstantCommand;
 
 @Configurable
-@Autonomous(name = "Automous: 9 - Red")
-public class Automous_9_red extends RoyallyFuckedUpMode {
+@Autonomous(name = "Automous 6 - Red")
+public class Automous3_red extends RoyallyFuckedUpMode {
     Follower follower;
 
     int outcomeState = 0;
 
-    PathChain firstCycle, secondCycle1, secondCycle2, secondCycle3, secondCycle4, thirdCycle1, thirdCycle2, thirdCycle3, thirdCycle4;
+    PathChain firstCycle, secondCycle1, secondCycle2, secondCycle3, secondCycle4;
 
     public static double intake1 = 42;
     public static double intake2 = 36;
 
     Timer pathTimer;
 
-    Pose startingPose, scoringPose, intakePose1_1, intakePose1_2, intakePose1_3, intakePose1_4, intakePose2_1, intakePose2_2, intakePose2_3, intakePose2_4;
+    Pose startingPose, scoringPose, intakePose1, intakePose2, intakePose3, intakePose4;
 
-    public Automous_9_red() {
+    public Automous3_red() {
         super();
         addSubsystemComponents(
                 new BetterSubsystemComponent(Artemis.INSTANCE)
@@ -56,23 +56,15 @@ public class Automous_9_red extends RoyallyFuckedUpMode {
 
         Turret.INSTANCE.setRedAlliance(false).schedule();
 
-        telemetry.addLine("1");
         follower = Constants.createFollower(hardwareMap);
-        telemetry.addLine("1");
-        Turret.INSTANCE.setPosition(-90).schedule();
-        telemetry.addLine("1");
-        Artemis.INSTANCE.initFollower(hardwareMap);
+        Turret.INSTANCE.setPosition(90).schedule();
 
         startingPose = new Pose(28, 131, Math.toRadians(144)).mirror();
         scoringPose = new Pose(60, 84).mirror();
-        intakePose1_1 = new Pose(44, 84).mirror();
-        intakePose1_2 = new Pose(intake1, 84).mirror();
-        intakePose1_3 = new Pose(intake2, 84).mirror();
-        intakePose1_4 = new Pose(16, 84).mirror();
-        intakePose2_1 = new Pose(44, 60).mirror();
-        intakePose2_2 = new Pose(intake1, 60).mirror();
-        intakePose2_3 = new Pose(intake2, 60).mirror();
-        intakePose2_4 = new Pose(9, 60).mirror();
+        intakePose1 = new Pose(44, 84).mirror();
+        intakePose2 = new Pose(intake1, 84).mirror();
+        intakePose3 = new Pose(intake2, 84).mirror();
+        intakePose4 = new Pose(16, 84).mirror();
 
         Magazine.INSTANCE.setSlotContent(0, Utils.ArtifactTypes.PURPLE).schedule();
         Magazine.INSTANCE.setSlotContent(1, Utils.ArtifactTypes.PURPLE).schedule();
@@ -83,50 +75,28 @@ public class Automous_9_red extends RoyallyFuckedUpMode {
                 .setConstantHeadingInterpolation(Math.toRadians(47.5))
                 .build();
         secondCycle1 = follower.pathBuilder()
-                .addPath(new BezierLine(scoringPose, intakePose1_1))
+                .addPath(new BezierLine(scoringPose, intakePose1))
                 .setLinearHeadingInterpolation(Math.toRadians(47.5), Math.toRadians(0))
-                .addPath(new BezierLine(intakePose1_1, intakePose1_2))
+                .addPath(new BezierLine(intakePose1, intakePose2))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .addParametricCallback(0, () -> {
                     Artemis.INSTANCE.intake().schedule();
-                    follower.setMaxPower(0.5);
+                    follower.setMaxPower(0.25);
                 })
                 .build();
-
         secondCycle2 = follower.pathBuilder()
-                .addPath(new BezierLine(intakePose1_2, intakePose1_3))
+                .addPath(new BezierLine(intakePose2, intakePose3))
                 .build();
         secondCycle3 = follower.pathBuilder()
-                .addPath(new BezierLine(intakePose1_3, intakePose1_4))
+                .addPath(new BezierLine(intakePose3, intakePose4))
                 .build();
         secondCycle4 = follower.pathBuilder()
-                .addPath(new BezierLine(intakePose1_4, scoringPose))
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(47.5))
-                .build();
-
-        thirdCycle1 = follower.pathBuilder()
-                .addPath(new BezierLine(scoringPose, intakePose2_1))
-                .setLinearHeadingInterpolation(Math.toRadians(47.5), Math.toRadians(0))
-                .addPath(new BezierLine(intakePose2_1, intakePose2_2))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
-                .addParametricCallback(0, () -> {
-                    Artemis.INSTANCE.intake().schedule();
-                    follower.setMaxPower(0.5);
-                })
-                .build();
-        thirdCycle2 = follower.pathBuilder()
-                .addPath(new BezierLine(intakePose2_2, intakePose2_3))
-                .build();
-        thirdCycle3 = follower.pathBuilder()
-                .addPath(new BezierLine(intakePose2_3, intakePose2_4))
-                .build();
-        thirdCycle4 = follower.pathBuilder()
-                .addPath(new BezierLine(intakePose2_4, scoringPose))
+                .addPath(new BezierLine(intakePose2, scoringPose))
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(47.5))
                 .build();
 
         follower.setStartingPose(startingPose);
-        follower.setMaxPower(0.75);
+        follower.setMaxPower(0.5);
         Shooter.INSTANCE.resetKicker().schedule();
     }
 
@@ -173,36 +143,8 @@ public class Automous_9_red extends RoyallyFuckedUpMode {
                 new WaitUntil(() -> Magazine.INSTANCE.getslotsFilled() == 3 || pathTimer.getElapsedTimeSeconds() >= 3.5),
                 new InstantCommand(() -> {
                     Intake.INSTANCE.idle().schedule();
-                    Magazine.INSTANCE.setMode(1);
-                    follower.setMaxPower(0.75);
+                    follower.setMaxPower(0.5);
                     follower.followPath(secondCycle4);
-                }),
-                new WaitUntil(() -> !follower.isBusy()),
-                Intake.INSTANCE.idle(),
-                new InstantCommand(() -> pathTimer.resetTimer()),
-                new WaitUntil(() -> pathTimer.getElapsedTimeSeconds() >= 1),
-                Artemis.INSTANCE.shootMotif(),
-                new WaitUntil(() -> Magazine.INSTANCE.mode == 0),
-                new InstantCommand(() -> {
-                    follower.followPath(thirdCycle1);
-                    pathTimer.resetTimer();
-                }),
-                new WaitUntil(() -> Magazine.INSTANCE.getslotsFilled() == 1 || pathTimer.getElapsedTimeSeconds() >= 5),
-                new InstantCommand(() -> {
-                    follower.followPath(thirdCycle2);
-                    pathTimer.resetTimer();
-                }),
-                new WaitUntil(() -> Magazine.INSTANCE.getslotsFilled() == 2 || pathTimer.getElapsedTimeSeconds() >= 3.5),
-                new InstantCommand(() -> {
-                    follower.followPath(thirdCycle3);
-                    pathTimer.resetTimer();
-                }),
-                new WaitUntil(() -> Magazine.INSTANCE.getslotsFilled() == 3 || pathTimer.getElapsedTimeSeconds() >= 3.5),
-                new InstantCommand(() -> {
-                    Intake.INSTANCE.idle().schedule();
-                    Magazine.INSTANCE.setMode(1);
-                    follower.setMaxPower(0.75);
-                    follower.followPath(thirdCycle4);
                 }),
                 new WaitUntil(() -> !follower.isBusy()),
                 //Intake.INSTANCE.idle(),

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.AutonomousOpModes;
+package org.firstinspires.ftc.teamcode.AutonomousOpModes.Templates;
 
 import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.follower.Follower;
@@ -7,11 +7,12 @@ import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
+import org.firstinspires.ftc.teamcode.RobotStuff.Artemis;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.Drawing;
-import org.firstinspires.ftc.teamcode.RobotStuff.Artemis;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.Magazine;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
@@ -19,9 +20,10 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 import dev.nextftc.core.commands.groups.SequentialGroup;
 import dev.nextftc.core.commands.utility.InstantCommand;
 
+@Disabled
 @Configurable
-@Autonomous(name = "Automous - Kisen")
-public class Automous3_Kisen extends RoyallyFuckedUpMode {
+@Autonomous(name = "Automous - Template")
+public class Automous_Template extends RoyallyFuckedUpMode {
     Follower follower;
 
     PathChain path1;
@@ -31,7 +33,7 @@ public class Automous3_Kisen extends RoyallyFuckedUpMode {
     Pose startingPose;
     Pose pose1, pose2, pose3;
 
-    public Automous3_Kisen() {
+    public Automous_Template() {
         super();
         addSubsystemComponents(
                 new BetterSubsystemComponent(Artemis.INSTANCE)

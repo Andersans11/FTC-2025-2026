@@ -138,6 +138,17 @@ public class Magazine implements IAmBetterSubsystem {
         });
     }
 
+    public Command fillSlots() {
+        return new InstantCommand(() -> {
+            if (slots[0].content == Utils.ArtifactTypes.NONE)
+                slots[0].setContent(Utils.ArtifactTypes.PURPLE);
+            else if (slots[1].content == Utils.ArtifactTypes.NONE)
+                slots[1].setContent(Utils.ArtifactTypes.PURPLE);
+            else if (slots[2].content == Utils.ArtifactTypes.NONE)
+                slots[2].setContent(Utils.ArtifactTypes.PURPLE);
+        });
+    }
+
 
     public Command setActiveSlotContent(Utils.ArtifactTypes content) {
         return new InstantCommand(() -> {
