@@ -42,7 +42,7 @@ public class Automous3_Kisen extends RoyallyFuckedUpMode {
     public void onInit() {
         super.onInit();
 
-        Artemis.INSTANCE.initFollower(hardwareMap);
+        Artemis.INSTANCE.initFollower(hardwareMap, false);
 
         follower = Constants.createFollower(hardwareMap);
 

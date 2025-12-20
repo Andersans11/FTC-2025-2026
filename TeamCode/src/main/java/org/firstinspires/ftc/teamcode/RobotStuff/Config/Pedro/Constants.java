@@ -25,12 +25,12 @@ public class Constants {
             .useSecondaryHeadingPIDF(true)
             .useSecondaryDrivePIDF(true)
             .centripetalScaling(0.0012)
-            .translationalPIDFCoefficients(new PIDFCoefficients(0.15,0,0.01,0))
-            .headingPIDFCoefficients(new PIDFCoefficients(2,0,0.1,0))
-            .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.0075, 0, 0.0025, 0.6, 0))
-            .secondaryTranslationalPIDFCoefficients(new PIDFCoefficients(0.15,0,0.007,0))
-            .secondaryHeadingPIDFCoefficients(new PIDFCoefficients(1, 0, 0.1, 0))
-            .secondaryDrivePIDFCoefficients(new FilteredPIDFCoefficients(0.01, 0, 0.0, 0.6, 0));
+            .translationalPIDFCoefficients(new PIDFCoefficients(0.1,0,0.02,0))
+            .headingPIDFCoefficients(new PIDFCoefficients(2.5,0,0.1,0))
+            .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.012,0,0.0006,0.6,0))
+            .secondaryTranslationalPIDFCoefficients(new PIDFCoefficients(0.2,0,0.01,0))
+            .secondaryHeadingPIDFCoefficients(new PIDFCoefficients(2,0,0.1,0))
+            .secondaryDrivePIDFCoefficients(new FilteredPIDFCoefficients(0.01,0,0,0.6,0));
 
     public static MecanumConstants driveConstants = new MecanumConstants()
             .leftFrontMotorName("FLDRIVE")
@@ -48,7 +48,7 @@ public class Constants {
     public static PinpointConstants localizerConstants = new PinpointConstants()
             .hardwareMapName("PINPOINT")
             .forwardPodY(4.72441)
-            .strafePodX(7.08661)
+            .strafePodX(-7.08661)
             .distanceUnit(DistanceUnit.INCH)
             .encoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD)
             .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD)
@@ -57,7 +57,7 @@ public class Constants {
     public static PathConstraints pathConstraints = new PathConstraints(
             0.995,
             500,
-            1,
+            1.25,
             1
     );
 

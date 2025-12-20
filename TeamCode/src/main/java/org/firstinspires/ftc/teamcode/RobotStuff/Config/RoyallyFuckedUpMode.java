@@ -26,7 +26,7 @@ public class RoyallyFuckedUpMode extends NextFTCOpMode {
 
     protected long deltaTime;
 
-    TelemetryManager telemetryManager = PanelsTelemetry.INSTANCE.getTelemetry();
+    public TelemetryManager telemetryManager = PanelsTelemetry.INSTANCE.getTelemetry();
 
     protected GamepadEx P1 = new GamepadEx(() -> this.gamepad1);
     protected GamepadEx P2 = new GamepadEx(() -> this.gamepad2);

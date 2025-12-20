@@ -217,7 +217,7 @@ public class Turret implements IAmBetterSubsystem {
         rotationMotor.setPower(controller.calculate(rotationMotor.getState()));
     }
 
-    public static double hoodToPos = 0.21;
+    public static double hoodToPos = 0.2;
     public static double masterK = 0.05;
     public static double linearM = 0.006;
     public static double logA = 0.01;

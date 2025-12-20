@@ -22,11 +22,12 @@ public class TestShooter extends RoyallyFuckedUpMode {
     public void onInit() {
         super.onInit();
 
-        P1.triangle().whenBecomesTrue(Shooter.INSTANCE.shoot());
+        P1.triangle().whenBecomesTrue(Shooter.INSTANCE.spinUp());
     }
 
     @Override
     public void onUpdate() {
         super.onUpdate();
+        addData("speed", Shooter.INSTANCE.shooterMotors[0].getVelocity());
     }
 }

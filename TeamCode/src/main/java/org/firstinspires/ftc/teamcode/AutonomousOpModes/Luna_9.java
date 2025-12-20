@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.Drawing;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.Magazine;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 
@@ -27,7 +28,14 @@ public class Luna_9 extends RoyallyFuckedUpMode {
     PathChain score1, interrim1, intake1, score2, interrim2, intake2, score3;
     Timer pathTimer;
     public static double pathPower = 0.75;
-    public static double intakePower = 0.375;
+    public static double intakePower = 0.2;
+
+    public static double intakeStartPos1 = 87;
+    public static double intakeStartPos2 = 63;
+    public static double intakeEndPos1 = 12;
+    public static double intakeEndPos2 = 4;
+
+    Pose currentPose;
 
     public Luna_9() {
         super();
@@ -40,7 +48,7 @@ public class Luna_9 extends RoyallyFuckedUpMode {
     public void onInit() {
         super.onInit();
 
-        Artemis.INSTANCE.initFollower(hardwareMap);
+        Artemis.INSTANCE.initFollower(hardwareMap, false);
 
         follower = Constants.createFollower(hardwareMap);
 
@@ -48,17 +56,12 @@ public class Luna_9 extends RoyallyFuckedUpMode {
 
         Drawing.init();
 
-        Pose starting = new Pose(28, 131, Math.toRadians(54));
         Pose scoring = new Pose(60, 84, Math.toRadians(135));
-        Pose intakeStart1 = new Pose(44, 84, Math.toRadians(180));
-        Pose intakeEnd1 = new Pose(18, 84, Math.toRadians(180));
-        Pose intakeStart2 = new Pose(44, 60, Math.toRadians(180));
-        Pose intakeEnd2 = new Pose(11, 60, Math.toRadians(180));
+        Pose intakeStart1 = new Pose(44, intakeStartPos1, Math.toRadians(180));
+        Pose intakeEnd1 = new Pose(intakeEndPos1, intakeStartPos1, Math.toRadians(180));
+        Pose intakeStart2 = new Pose(44, intakeStartPos2, Math.toRadians(180));
+        Pose intakeEnd2 = new Pose(intakeEndPos2, intakeStartPos2, Math.toRadians(180));
 
-        score1 = follower.pathBuilder()
-                .addPath(new BezierLine(starting, scoring))
-                .setLinearHeadingInterpolation(starting.getHeading(), scoring.getHeading())
-                .build();
         score2 = follower.pathBuilder()
                 .addPath(new BezierLine(intakeEnd1, scoring))
                 .setLinearHeadingInterpolation(intakeEnd1.getHeading(), scoring.getHeading())
@@ -72,7 +75,7 @@ public class Luna_9 extends RoyallyFuckedUpMode {
                 .addPath(new BezierLine(scoring, intakeStart1))
                 .setLinearHeadingInterpolation(scoring.getHeading(), intakeStart1.getHeading())
                 .build();
-        interrim1 = follower.pathBuilder()
+        interrim2 = follower.pathBuilder()
                 .addPath(new BezierLine(scoring, intakeStart2))
                 .setLinearHeadingInterpolation(scoring.getHeading(), intakeStart2.getHeading())
                 .build();
@@ -84,34 +87,65 @@ public class Luna_9 extends RoyallyFuckedUpMode {
                 .addPath(new BezierLine(intakeStart2, intakeEnd2))
                 .build();
 
-        follower.setStartingPose(starting);
+        follower.setStartingPose(scoring);
 
         follower.setMaxPower(pathPower);
 
+        Magazine.INSTANCE.setMode(0).schedule();
+        P1.rightBumper().whenBecomesTrue(Intake.INSTANCE.stop());
+        P1.leftBumper().whenBecomesTrue(new InstantCommand(() ->{
+            score1 = follower.pathBuilder()
+                    .addPath(new BezierLine(follower.getPose(), scoring))
+                    .setLinearHeadingInterpolation(follower.getPose().getHeading(), scoring.getHeading())
+                    .build();
+        }));
+        Artemis.INSTANCE.stopIntake().schedule();
     }
 
     @Override
     public void onWaitForStart() {
-        telemetry.update();
+        currentPose = follower.getPose();
+        addData("0", Magazine.INSTANCE.getSlotColor(0));
+        addData("1", Magazine.INSTANCE.getSlotColor(1));
+        addData("2", Magazine.INSTANCE.getSlotColor(2));
+        addData("Active", Magazine.INSTANCE.activeSlot);
+        addData("Mode", Magazine.INSTANCE.mode);
+        addData("desiredColor", Magazine.INSTANCE.desiredColor);
+        addData("Is Follower Busy", follower.isBusy());
+        addData("x", currentPose.getX());
+        addData("y", currentPose.getY());
+        addData("heading", Math.toDegrees(currentPose.getHeading()));
+        super.telemetryManager.update(telemetry);
         Turret.INSTANCE.periodic();
         Magazine.INSTANCE.periodic();
+        follower.updatePose();
     }
 
     @Override
     public void onStartButtonPressed() {
         super.onStartButtonPressed();
         new SequentialGroup(
+                Artemis.INSTANCE.stopIntake(),
                 new InstantCommand(()-> follower.followPath(score1)),
                 new WaitUntil(() -> !follower.isBusy()),
+                Turret.INSTANCE.setPosition(-45),
+                new WaitUntil(() -> Turret.INSTANCE.hasGotMotif),
+                Turret.INSTANCE.setPosition(0),
+                new InstantCommand(() -> pathTimer.resetTimer()),
+                new WaitUntil(() -> pathTimer.getElapsedTimeSeconds() >= 0.5),
                 Artemis.INSTANCE.shootMotif(),
-                new WaitUntil(() -> Magazine.INSTANCE.mode == 0),
+                new WaitUntil(() -> Magazine.INSTANCE.getslotsFilled() == 0),
+                Magazine.INSTANCE.setMode(0),
                 new InstantCommand(() -> follower.followPath(interrim1)),
                 new WaitUntil(() -> !follower.isBusy()),
+                Artemis.INSTANCE.intake(),
+                Magazine.INSTANCE.setMode(0),
                 new InstantCommand(() -> {
                     follower.setMaxPower(intakePower);
                     follower.followPath(intake1);
                 }),
                 new WaitUntil(() -> !follower.isBusy()),
+                Artemis.INSTANCE.stopIntake(),
                 new InstantCommand(() -> pathTimer.resetTimer()),
                 new WaitUntil(() -> pathTimer.getElapsedTimeSeconds() >= 2.5 || Magazine.INSTANCE.mode == 1),
                 Magazine.INSTANCE.fillSlots(),
@@ -121,14 +155,18 @@ public class Luna_9 extends RoyallyFuckedUpMode {
                 }),
                 new WaitUntil(() -> !follower.isBusy()),
                 Artemis.INSTANCE.shootMotif(),
-                new WaitUntil(() -> Magazine.INSTANCE.mode == 0),
+                new WaitUntil(() -> Magazine.INSTANCE.getslotsFilled() == 0),
+                Magazine.INSTANCE.setMode(0),
                 new InstantCommand(() -> follower.followPath(interrim2)),
                 new WaitUntil(() -> !follower.isBusy()),
+                Artemis.INSTANCE.intake(),
+                Magazine.INSTANCE.setMode(0),
                 new InstantCommand(() -> {
                     follower.setMaxPower(intakePower);
                     follower.followPath(intake2);
                 }),
                 new WaitUntil(() -> !follower.isBusy()),
+                Artemis.INSTANCE.stopIntake(),
                 new InstantCommand(() -> pathTimer.resetTimer()),
                 new WaitUntil(() -> pathTimer.getElapsedTimeSeconds() >= 2.5 || Magazine.INSTANCE.mode == 1),
                 Magazine.INSTANCE.fillSlots(),
@@ -146,6 +184,8 @@ public class Luna_9 extends RoyallyFuckedUpMode {
         super.onUpdate();
         follower.update();
 
+        currentPose = follower.getPose();
+
         addData("0", Magazine.INSTANCE.getSlotColor(0));
         addData("1", Magazine.INSTANCE.getSlotColor(1));
         addData("2", Magazine.INSTANCE.getSlotColor(2));
@@ -153,6 +193,9 @@ public class Luna_9 extends RoyallyFuckedUpMode {
         addData("Mode", Magazine.INSTANCE.mode);
         addData("desiredColor", Magazine.INSTANCE.desiredColor);
         addData("Is Follower Busy", follower.isBusy());
+        addData("x", currentPose.getX());
+        addData("y", currentPose.getY());
+        addData("heading", Math.toDegrees(currentPose.getHeading()));
 
 
         Drawing.drawDebug(follower);

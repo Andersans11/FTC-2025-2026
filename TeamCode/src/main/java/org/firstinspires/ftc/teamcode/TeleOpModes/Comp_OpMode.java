@@ -25,7 +25,7 @@ public class Comp_OpMode extends RoyallyFuckedUpMode {
     @Override
     public void onInit() {
         super.onInit();
-        Artemis.INSTANCE.initFollower(hardwareMap);
+        Artemis.INSTANCE.initFollower(hardwareMap, false);
 
         P1.rightTrigger().atLeast(0.1).whenBecomesTrue(Artemis.INSTANCE.intake());
         P1.rightTrigger().atLeast(0.1).whenBecomesFalse(Artemis.INSTANCE.stopIntake());

@@ -99,9 +99,9 @@ public class Artemis extends BetterSubsystemGroup {
         indicator.setPwmEnable();
     }
 
-    public void initFollower(HardwareMap hardwareMap) {
+    public void initFollower(HardwareMap hardwareMap, boolean customStartingPose) {
         this.follower = Constants.createFollower(hardwareMap);
-        this.follower.setStartingPose(currentPose);
+        if (customStartingPose) this.follower.setStartingPose(currentPose);
     }
 
     @Override
@@ -117,7 +117,7 @@ public class Artemis extends BetterSubsystemGroup {
         runIndicator();
     }
 
-    public static double motifShootingSpeed = 0.2;
+    public static double motifShootingSpeed = 0.4;
     public static double shootingSpeed = 0.15;
     public static double shootingSpeed2 = 0.1;
 
@@ -232,7 +232,7 @@ public class Artemis extends BetterSubsystemGroup {
             return new SequentialGroup(
                     new InstantCommand(() -> this.isMotifShooting = true),
                     Shooter.INSTANCE.spinUp(),
-                    new Delay(0.55),
+                    new Delay(0.75),
                     shootSingleMotif(0),
                     new Delay(motifShootingSpeed),
                     shootSingleMotif(1),

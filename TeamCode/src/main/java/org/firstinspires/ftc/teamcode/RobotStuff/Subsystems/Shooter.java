@@ -5,6 +5,7 @@ import com.bylazar.configurables.annotations.Configurable;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 
 import dev.nextftc.bindings.Range;
+import dev.nextftc.control.ControlSystem;
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.delays.Delay;
 import dev.nextftc.core.commands.groups.SequentialGroup;
@@ -20,7 +21,7 @@ public class Shooter implements IAmBetterSubsystem {
 
     public static final Shooter INSTANCE = new Shooter();
 
-    MotorEx[] shooterMotors;
+    public MotorEx[] shooterMotors;
     ServoGroup hoodServos;
     ServoEx hood;
     MotorGroup shooters;
@@ -60,7 +61,7 @@ public class Shooter implements IAmBetterSubsystem {
 
     // ---------- COMMANDS ---------------------- //
     public Command spinUp() {
-        return new SetPower(shooters, -1);
+        return new SetPower(shooters, -0.9);
     }
     public Command spinDown() {
         return new SetPower(shooters, 0);
