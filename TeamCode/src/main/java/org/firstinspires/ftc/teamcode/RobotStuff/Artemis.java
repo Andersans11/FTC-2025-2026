@@ -15,13 +15,11 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemGroup;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Intake;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.Magazine;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.PoseTrackingTurret;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 
-import dev.nextftc.control.KineticState;
 import dev.nextftc.core.commands.Command;
-import dev.nextftc.core.commands.conditionals.IfElseCommand;
 import dev.nextftc.core.commands.delays.Delay;
 import dev.nextftc.core.commands.groups.SequentialGroup;
 import dev.nextftc.core.commands.utility.InstantCommand;
@@ -48,7 +46,7 @@ public class Artemis extends BetterSubsystemGroup {
     private Artemis() {
         super(
                 Magazine.INSTANCE,
-                Turret.INSTANCE,
+                PoseTrackingTurret.INSTANCE,
                 Intake.INSTANCE,
                 Shooter.INSTANCE
         );
@@ -85,11 +83,6 @@ public class Artemis extends BetterSubsystemGroup {
     };
 
     @Override
-    public void initialize() {
-        super.initialize();
-    }
-
-    @Override
     public void initSystem() {
         super.initSystem();
         indicator = RobotConfig.Indicator;
@@ -101,6 +94,7 @@ public class Artemis extends BetterSubsystemGroup {
 
     public void initFollower(HardwareMap hardwareMap, boolean customStartingPose) {
         this.follower = Constants.createFollower(hardwareMap);
+        PoseTrackingTurret.INSTANCE.initPoseUpdater(this.follower);
         if (customStartingPose) this.follower.setStartingPose(currentPose);
     }
 
@@ -166,7 +160,7 @@ public class Artemis extends BetterSubsystemGroup {
     }
 
     public Command resetFollower() {
-        if (Turret.INSTANCE.isRedAlliance) return new InstantCommand(() ->
+        if (PoseTrackingTurret.INSTANCE.isRed) return new InstantCommand(() ->
             follower.setPose(new Pose(offX, offY, Math.toRadians(offTheta))));
         else return new InstantCommand(() ->
                 follower.setPose(new Pose(offX + 54, offY, Math.toRadians(offTheta))));
@@ -248,7 +242,7 @@ public class Artemis extends BetterSubsystemGroup {
                 Intake.INSTANCE.idle(),
                 Shooter.INSTANCE.resetKicker(),
                 Shooter.INSTANCE.idle(),
-                Turret.INSTANCE.resetHood()
+                PoseTrackingTurret.INSTANCE.resetHood()
         );
     }
 }

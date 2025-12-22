@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Misc.Drawing;
 import org.firstinspires.ftc.teamcode.RobotStuff.Artemis;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Intake;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.Magazine;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 
@@ -130,17 +130,17 @@ public class Automous3_red extends RoyallyFuckedUpMode {
                     follower.followPath(secondCycle1);
                     pathTimer.resetTimer();
                 }),
-                new WaitUntil(() -> Magazine.INSTANCE.getslotsFilled() == 1 || pathTimer.getElapsedTimeSeconds() >= 5),
+                new WaitUntil(() -> Magazine.INSTANCE.getSlotsFilled() == 1 || pathTimer.getElapsedTimeSeconds() >= 5),
                 new InstantCommand(() -> {
                     follower.followPath(secondCycle2);
                     pathTimer.resetTimer();
                 }),
-                new WaitUntil(() -> Magazine.INSTANCE.getslotsFilled() == 2 || pathTimer.getElapsedTimeSeconds() >= 3.5),
+                new WaitUntil(() -> Magazine.INSTANCE.getSlotsFilled() == 2 || pathTimer.getElapsedTimeSeconds() >= 3.5),
                 new InstantCommand(() -> {
                     follower.followPath(secondCycle3);
                     pathTimer.resetTimer();
                 }),
-                new WaitUntil(() -> Magazine.INSTANCE.getslotsFilled() == 3 || pathTimer.getElapsedTimeSeconds() >= 3.5),
+                new WaitUntil(() -> Magazine.INSTANCE.getSlotsFilled() == 3 || pathTimer.getElapsedTimeSeconds() >= 3.5),
                 new InstantCommand(() -> {
                     Intake.INSTANCE.idle().schedule();
                     follower.setMaxPower(0.5);

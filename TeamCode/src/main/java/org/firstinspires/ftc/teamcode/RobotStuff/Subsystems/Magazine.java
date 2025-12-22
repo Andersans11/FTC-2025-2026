@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
+package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems;
 
 import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.util.Timer;
@@ -10,8 +10,6 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Artemis;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Hardware.ServoExFullRange;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.IAmBetterSubsystem;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.delays.Delay;
@@ -53,7 +51,7 @@ public class Magazine implements IAmBetterSubsystem {
     public static double off0 = 0;
     public static double off1 = 120;
     public static double off2 = 240;
-    public static double off = 56;
+    public static double off = 45;
     public static double dist = 60;
     public int it = 0;
     public int mode = 0;
@@ -157,7 +155,7 @@ public class Magazine implements IAmBetterSubsystem {
         });
     }
 
-    public int getslotsFilled() {
+    public int getSlotsFilled() {
         int numberFilled = 0;
 
         if (slots[0].content != Utils.ArtifactTypes.NONE) numberFilled++;
@@ -225,5 +223,33 @@ public class Magazine implements IAmBetterSubsystem {
     }
     public Utils.ArtifactTypes getSlotColor(int slot) {
         return slots[slot].content;
+    }
+
+    public static class MagSlot {
+
+        double offset;
+        Utils.ArtifactTypes content;
+
+        public MagSlot(double offset) {
+            this.offset = offset;
+
+            this.content = Utils.ArtifactTypes.NONE;
+        }
+
+        public double getSlotOffset() {
+            return offset;
+        }
+
+        public void setContent(Utils.ArtifactTypes content) {
+            this.content = content;
+        }
+
+        public boolean hasDesired(Utils.ArtifactTypes desiredColor) {
+            return this.content == desiredColor;
+        }
+
+        public boolean hasContent() {
+            return this.content != Utils.ArtifactTypes.NONE;
+        }
     }
 }

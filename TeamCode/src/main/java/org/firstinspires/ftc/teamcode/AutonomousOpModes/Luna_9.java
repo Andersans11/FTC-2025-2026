@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.Drawing;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Intake;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine.Magazine;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 
 import dev.nextftc.core.commands.delays.WaitUntil;
@@ -134,7 +134,7 @@ public class Luna_9 extends RoyallyFuckedUpMode {
                 new InstantCommand(() -> pathTimer.resetTimer()),
                 new WaitUntil(() -> pathTimer.getElapsedTimeSeconds() >= 0.5),
                 Artemis.INSTANCE.shootMotif(),
-                new WaitUntil(() -> Magazine.INSTANCE.getslotsFilled() == 0),
+                new WaitUntil(() -> Magazine.INSTANCE.getSlotsFilled() == 0),
                 Magazine.INSTANCE.setMode(0),
                 new InstantCommand(() -> follower.followPath(interrim1)),
                 new WaitUntil(() -> !follower.isBusy()),
@@ -155,7 +155,7 @@ public class Luna_9 extends RoyallyFuckedUpMode {
                 }),
                 new WaitUntil(() -> !follower.isBusy()),
                 Artemis.INSTANCE.shootMotif(),
-                new WaitUntil(() -> Magazine.INSTANCE.getslotsFilled() == 0),
+                new WaitUntil(() -> Magazine.INSTANCE.getSlotsFilled() == 0),
                 Magazine.INSTANCE.setMode(0),
                 new InstantCommand(() -> follower.followPath(interrim2)),
                 new WaitUntil(() -> !follower.isBusy()),
