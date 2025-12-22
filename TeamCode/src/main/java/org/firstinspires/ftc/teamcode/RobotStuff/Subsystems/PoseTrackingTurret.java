@@ -36,7 +36,8 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
     Pose oldPose = new Pose(0, 0, 0);
     Pose redPose = new Pose(144, 144);
     Pose bluePose = new Pose(0, 144);
-    Pose shootPose = new Pose(144, 144);
+    public Pose targetPose = new Pose(144, 144);
+    Pose motifPose = new Pose(144, 72);
     double heightDiff = 100 - 50;
     /*
      TODO: these values are not accurate, the actual should be:
@@ -104,6 +105,16 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
         return new InstantCommand(() -> this.mode = TurretMode.IDLE);
     }
 
+    public Command trackMotif() {
+        return new InstantCommand(() -> this.targetPose = motifPose);
+    }
+
+    public Command trackGoal() {
+        return new InstantCommand(() -> {
+            this.targetPose = isRed ? redPose : bluePose;
+        });
+    }
+
     public Command resetPose() {
         return new InstantCommand(() -> {
             Pose newPose = this.isRed ? redPose : bluePose; // red pose blue pose one pose two pose
@@ -163,8 +174,7 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
         return new InstantCommand(() -> {
             if (!hasSetAlliance) {
                 this.isRed = true;
-                this.shootPose = redPose;
-                this.hasSetAlliance = true;
+                this.targetPose = redPose;
             }
         });
     }
@@ -173,8 +183,7 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
         return new InstantCommand(() -> {
             if (!hasSetAlliance) {
                 this.isRed = false;
-                this.shootPose = bluePose;
-                this.hasSetAlliance = true;
+                this.targetPose = bluePose;
             }
         });
     }
@@ -204,13 +213,13 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
         switch (mode) {
             case POSE_TRACKING:
                 targetYaw = // get yaw angle using trig, targetYaw = arctan(opposite/adjacent)
-                        Math.atan((shootPose.getY() - pose.getY()) / (shootPose.getX() - pose.getX()));
+                        Math.atan((targetPose.getY() - pose.getY()) / (targetPose.getX() - pose.getX()));
                 targetYaw = Math.toDegrees(targetYaw - pose.getHeading());
-                double hDistance = pose.distanceFrom(shootPose);
+                double hDistance = pose.distanceFrom(targetPose);
                 targetPitch = Math.toDegrees(Math.atan(heightDiff / hDistance));
                 targetPitch -= hoodAngleOffset;
 
-                controller.setGoal(new KineticState(degreesToTicks(Math.max(minLim, Math.min(maxLim, -targetYaw)))));
+                controller.setGoal(new KineticState(degreesToTicks(Math.max(minLim, Math.min(maxLim, targetYaw)))));
                 rotationMotor.setPower(controller.calculate(rotationMotor.getState()));
                 //Shooter.INSTANCE.setHoodPos(calcHoodPower(targetPitch));
                 break;
@@ -224,14 +233,17 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
             if (camera.blocks(MOTIF_GPP).length != 0) {
                 Magazine.INSTANCE.motif = GPPGPP;
                 Magazine.INSTANCE.setMode(0);
+                trackGoal();
                 hasGotMotif = true;
             } else if (camera.blocks(MOTIF_PGP).length != 0) {
                 Magazine.INSTANCE.motif = PGPPGP;
                 Magazine.INSTANCE.setMode(0);
+                trackGoal();
                 hasGotMotif = true;
             } else if (camera.blocks(MOTIF_PPG).length != 0) {
                 Magazine.INSTANCE.motif = PPGPPG;
                 Magazine.INSTANCE.setMode(0);
+                trackGoal();
                 hasGotMotif = true;
             }
         }

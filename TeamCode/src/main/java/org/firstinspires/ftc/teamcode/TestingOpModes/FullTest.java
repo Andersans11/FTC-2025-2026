@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Artemis;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.RobotCentricDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.PoseTrackingTurret;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 
 @TeleOp(name = "Test: Full", group = Utils.PRIORITY_PRIORITY)
@@ -28,20 +28,26 @@ public class FullTest extends RoyallyFuckedUpMode {
         super.onInit();
         Artemis.INSTANCE.initFollower(hardwareMap, false);
 
+        PoseTrackingTurret.INSTANCE.mode = PoseTrackingTurret.TurretMode.POSE_TRACKING;
+
+        P1.square().whenBecomesTrue(PoseTrackingTurret.INSTANCE.resetPose());
+        P1.circle().whenBecomesTrue(PoseTrackingTurret.INSTANCE.setIdle());
+        P1.cross().whenBecomesTrue(PoseTrackingTurret.INSTANCE.setTracking());
+
         P1.rightTrigger().atLeast(0.1).whenBecomesTrue(Artemis.INSTANCE.intake());
         P1.rightTrigger().atLeast(0.1).whenBecomesFalse(Artemis.INSTANCE.stopIntake());
 
-        P1.dpadUp().whenBecomesTrue(Turret.INSTANCE.setRedAlliance(false));
-        P1.dpadDown().whenBecomesTrue(Turret.INSTANCE.setRedAlliance(true));
+        P1.dpadUp().whenBecomesTrue(PoseTrackingTurret.INSTANCE.setBlueAlliance());
+        P1.dpadDown().whenBecomesTrue(PoseTrackingTurret.INSTANCE.setRedAlliance());
 
         P1.rightBumper().whenBecomesTrue(Artemis.INSTANCE.outtake());
         P1.rightBumper().whenBecomesFalse(Artemis.INSTANCE.stopIntake());
 
-        P2.dpadLeft().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.GREEN));
-        P2.dpadRight().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.PURPLE));
-
         P1.dpadLeft().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.GREEN));
         P1.dpadRight().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.PURPLE));
+
+        P2.dpadLeft().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.GREEN));
+        P2.dpadRight().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.PURPLE));
 
         P2.cross().whenBecomesTrue(Artemis.INSTANCE.shootSingle(Utils.ArtifactTypes.GREEN));
         P2.circle().whenBecomesTrue(Artemis.INSTANCE.shootSingle(Utils.ArtifactTypes.PURPLE));
@@ -54,9 +60,6 @@ public class FullTest extends RoyallyFuckedUpMode {
         P2.dpadUp().whenBecomesTrue(Shooter.INSTANCE.resetKicker());
 
         P2.leftTrigger().atLeast(0.1).whenBecomesTrue(Magazine.INSTANCE.incShotsFired());
-        P2.leftBumper().whenBecomesTrue(Turret.INSTANCE.zero());
-
-        P2.rightBumper().whenBecomesTrue(Turret.INSTANCE.switchMode());
 
         P2.dpadDown().whenBecomesTrue(Artemis.INSTANCE.resetFollower());
     }
@@ -75,15 +78,18 @@ public class FullTest extends RoyallyFuckedUpMode {
         addData("1", Magazine.INSTANCE.getSlotColor(1));
         addData("2", Magazine.INSTANCE.getSlotColor(2));
         addData("Active", Magazine.INSTANCE.activeSlot);
-        addData("Mode", Magazine.INSTANCE.mode);
+        addData("red", PoseTrackingTurret.INSTANCE.isRed);
         addData("desiredColor", Magazine.INSTANCE.desiredColor);
         addData("shotsFired", Magazine.INSTANCE.shotsFired);
-        addData("TurretMode", Turret.INSTANCE.mode);
+        addData("TurretMode", PoseTrackingTurret.INSTANCE.mode);
         addData("dist", Magazine.INSTANCE.color.getDistance(DistanceUnit.MM));
         addData("dist", Magazine.INSTANCE.range.getDistance(DistanceUnit.MM));
-        addData("TurretGoal", Turret.INSTANCE.targetAngle);
-        addData("waugh", Turret.INSTANCE.waugh());
-        addData("TurretPos", Turret.INSTANCE.ticksToDegrees(Turret.INSTANCE.rotationMotor.getCurrentPosition()));
         addData("Pose", Math.toDegrees(Artemis.INSTANCE.currentPose.getHeading()));
+
+        addData("mode", PoseTrackingTurret.INSTANCE.mode);
+        addData("pose", PoseTrackingTurret.INSTANCE.poseUpdater.getPose());
+        addData("targetPose", PoseTrackingTurret.INSTANCE.targetPose);
+        addData("targetYaw", PoseTrackingTurret.INSTANCE.targetYaw);
+        addData("targetPitch", PoseTrackingTurret.INSTANCE.targetPitch);
     }
 }
