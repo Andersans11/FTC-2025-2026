@@ -26,7 +26,7 @@ public class FullTest extends RoyallyFuckedUpMode {
     @Override
     public void onInit() {
         super.onInit();
-        Artemis.INSTANCE.initFollower(hardwareMap, false);
+        Artemis.INSTANCE.initFollower(hardwareMap);
 
         PoseTrackingTurret.INSTANCE.mode = PoseTrackingTurret.TurretMode.POSE_TRACKING;
 
@@ -62,12 +62,15 @@ public class FullTest extends RoyallyFuckedUpMode {
         P2.leftTrigger().atLeast(0.1).whenBecomesTrue(Magazine.INSTANCE.incShotsFired());
 
         P2.dpadDown().whenBecomesTrue(Artemis.INSTANCE.resetFollower());
+
+        Artemis.INSTANCE.indMode = Artemis.IndicatorMode.INIT_DONE;
     }
 
     @Override
     public void onStartButtonPressed() {
         super.onStartButtonPressed();
         Artemis.INSTANCE.start().schedule();
+        Artemis.INSTANCE.indMode = Artemis.IndicatorMode.INTAKE_ACTIVE;
     }
 
     @Override
@@ -85,6 +88,15 @@ public class FullTest extends RoyallyFuckedUpMode {
         addData("dist", Magazine.INSTANCE.color.getDistance(DistanceUnit.MM));
         addData("dist", Magazine.INSTANCE.range.getDistance(DistanceUnit.MM));
         addData("Pose", Math.toDegrees(Artemis.INSTANCE.currentPose.getHeading()));
+
+        addData("indCycle", Artemis.INSTANCE.indCycle);
+        addData("indPWM", Artemis.INSTANCE.currentPWM);
+        addData("indMode", Artemis.INSTANCE.indMode);
+        addData("i", Artemis.INSTANCE.i1);
+        addData("i", Artemis.INSTANCE.i2);
+        addData("i", Artemis.INSTANCE.i3);
+        addData("i", Artemis.INSTANCE.i4);
+        addData("PWM", (Artemis.INSTANCE.indicator.getPosition() * 2000) + 500);
 
         addData("mode", PoseTrackingTurret.INSTANCE.mode);
         addData("pose", PoseTrackingTurret.INSTANCE.poseUpdater.getPose());

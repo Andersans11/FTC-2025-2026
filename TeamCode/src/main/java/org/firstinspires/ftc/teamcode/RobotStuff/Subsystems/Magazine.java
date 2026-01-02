@@ -51,10 +51,12 @@ public class Magazine implements IAmBetterSubsystem {
     public static double off0 = 0;
     public static double off1 = 120;
     public static double off2 = 240;
-    public static double off = 45;
+    public static double off = 64;
     public static double dist = 60;
     public int it = 0;
     public int mode = 0;
+    public int servoToothCount = 30;
+    public int magToothCount = 20;
 
     public boolean hasBall;
 
@@ -93,9 +95,9 @@ public class Magazine implements IAmBetterSubsystem {
             while (targetPos + off >= 355) {
                 targetPos = targetPos - 360;
             }
-            servos[0].setPosition((targetPos + off) / 355);
-            servos[1].setPosition((targetPos + off) / 355);
-            servos[2].setPosition((targetPos + off) / 355);
+            servos[0].setPosition((targetPos + off) / 355 * magToothCount / servoToothCount);
+            servos[1].setPosition((targetPos + off) / 355 * magToothCount / servoToothCount);
+            servos[2].setPosition((targetPos + off) / 355 * magToothCount / servoToothCount);
             oldTargetPos = targetPos;
         }
         if (slots[activeSlot].content != desiredColor) changeActiveSlot().schedule();

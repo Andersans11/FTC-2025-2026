@@ -18,7 +18,9 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.PoseTrackingTurret;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 
+import dev.nextftc.control.KineticState;
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.delays.Delay;
 import dev.nextftc.core.commands.groups.SequentialGroup;
@@ -37,12 +39,16 @@ public class Artemis extends BetterSubsystemGroup {
     public ServoImplEx indicator;
     public Timer indTimer;
     public Timer ballTimer;
-    public Pose currentPose = new Pose(0, 0, 0);
+    public Pose currentPose = new Pose(9, 9, 0);
     public static double offX = 9;
     public static double offY = 9;
     public static double offTheta = 90;
-    boolean indCycle;
-    double currentPWM = 0;
+    public int indCycle = 0;
+    public double currentPWM = 0;
+    public int i1 = 0;
+    public int i2 = 0;
+    public int i3 = 0;
+    public int i4 = 0;
     private Artemis() {
         super(
                 Magazine.INSTANCE,
@@ -92,10 +98,16 @@ public class Artemis extends BetterSubsystemGroup {
         indicator.setPwmEnable();
     }
 
-    public void initFollower(HardwareMap hardwareMap, boolean customStartingPose) {
+    public void initFollower(HardwareMap hardwareMap) {
         this.follower = Constants.createFollower(hardwareMap);
         PoseTrackingTurret.INSTANCE.initPoseUpdater(this.follower);
-        if (customStartingPose) this.follower.setStartingPose(currentPose);
+        this.follower.setStartingPose(currentPose);
+    }
+
+    public void initFollower(HardwareMap hardwareMap, Pose startingPose) {
+        this.follower = Constants.createFollower(hardwareMap);
+        PoseTrackingTurret.INSTANCE.initPoseUpdater(this.follower);
+        this.follower.setStartingPose(currentPose);
     }
 
     @Override
@@ -118,33 +130,175 @@ public class Artemis extends BetterSubsystemGroup {
     //  ------------------------- COMMANDS --------------------------- //
 
     public void runIndicator() {
-        switch (indMode) {
-            case INIT:
-                setIndicator(1300);
-                break;
-            case INIT_DONE:
-                setIndicator(1500);
-                break;
-            case INTAKE_IDLE:
-                setIndicator(1650);
-                break;
-            case INTAKE_ACTIVE:
-                if (indTimer.getElapsedTimeSeconds() >= 0.25) {
-                    if (indCycle) {
-                        setIndicator(1650);
-                        indCycle = false;
-                    } else {
-                        setIndicator(0);
-                        indCycle = true;
-                    }
-                    indTimer.resetTimer();
-                }
-                break;
-            case HAS_BALL:
-                switch (Magazine.INSTANCE.colorQueue) {
-                    case PURPLE:
 
-                }
+        if (Magazine.INSTANCE.mode == 1) {
+            if (isMotifShooting) indMode = IndicatorMode.SHOOTING_ACTIVE;
+            else if (PoseTrackingTurret.INSTANCE.controller.isWithinTolerance(new KineticState(Turret.INSTANCE.degreesToTicks(2)))) indMode = IndicatorMode.SHOOTING_TRACKED;
+            else indMode = IndicatorMode.SHOOTING_TRACKING;
+        } else {
+            if (Magazine.INSTANCE.hasBall) {
+                if (indMode != IndicatorMode.HAS_BALL) ballTimer.resetTimer();
+                indMode = IndicatorMode.HAS_BALL;
+                if (ballTimer.getElapsedTimeSeconds() >= 2) Magazine.INSTANCE.hasBall = false;
+            } else if (Intake.INSTANCE.intake.getPower() >= 0.95) indMode = IndicatorMode.INTAKE_ACTIVE;
+            else indMode = IndicatorMode.INTAKE_IDLE;
+        }
+
+        if (indTimer.getElapsedTimeSeconds() >= 0.25) {
+            indTimer.resetTimer();
+            indCycle++;
+            if (indCycle > 3) indCycle = 0;
+
+            switch (indCycle) {
+                case 0:
+                    switch (indMode) {
+                        case INIT:
+                            setIndicator(1300);
+                            break;
+                        case INIT_DONE:
+                            setIndicator(1500);
+                            break;
+                        case INTAKE_IDLE:
+                            setIndicator(1600);
+                            break;
+                        case INTAKE_ACTIVE:
+                            setIndicator(1600);
+                            break;
+                        case HAS_BALL:
+                            switch (Magazine.INSTANCE.colorQueue) {
+                                case PURPLE:
+                                    setIndicator(1900);
+                                case GREEN:
+                                    setIndicator(1500);
+                            }
+                            break;
+                        case SHOOTING_IDLE:
+                            setIndicator(1300);
+                            break;
+                        case SHOOTING_TRACKING:
+                            setIndicator(1200);
+                            break;
+                        case SHOOTING_TRACKED:
+                            setIndicator(1101);
+                            break;
+                        case SHOOTING_ACTIVE:
+                            setIndicator(1101);
+                            break;
+                    }
+                    i1++;
+                    break;
+                case 1:
+                    switch (indMode) {
+                        case INIT:
+                            setIndicator(1300);
+                            break;
+                        case INIT_DONE:
+                            setIndicator(1500);
+                            break;
+                        case INTAKE_IDLE:
+                            setIndicator(1600);
+                            break;
+                        case INTAKE_ACTIVE:
+                            setIndicator(501);
+                            break;
+                        case HAS_BALL:
+                            switch (Magazine.INSTANCE.colorQueue) {
+                                case PURPLE:
+                                    setIndicator(1900);
+                                case GREEN:
+                                    setIndicator(1500);
+                            }
+                            break;
+                        case SHOOTING_IDLE:
+                            setIndicator(1300);
+                            break;
+                        case SHOOTING_TRACKING:
+                            setIndicator(1200);
+                            break;
+                        case SHOOTING_TRACKED:
+                            setIndicator(1101);
+                            break;
+                        case SHOOTING_ACTIVE:
+                            setIndicator(501);
+                            break;
+                    }
+                    i2++;
+                    break;
+                case 2:
+                    switch (indMode) {
+                        case INIT:
+                            setIndicator(1300);
+                            break;
+                        case INIT_DONE:
+                            setIndicator(1500);
+                            break;
+                        case INTAKE_IDLE:
+                            setIndicator(1600);
+                            break;
+                        case INTAKE_ACTIVE:
+                            setIndicator(1600);
+                            break;
+                        case HAS_BALL:
+                            switch (Magazine.INSTANCE.colorQueue) {
+                                case PURPLE:
+                                    setIndicator(501);
+                                case GREEN:
+                                    setIndicator(501);
+                            }
+                            break;
+                        case SHOOTING_IDLE:
+                            setIndicator(1300);
+                            break;
+                        case SHOOTING_TRACKING:
+                            setIndicator(501);
+                            break;
+                        case SHOOTING_TRACKED:
+                            setIndicator(1101);
+                            break;
+                        case SHOOTING_ACTIVE:
+                            setIndicator(1101);
+                            break;
+                    }
+                    i3++;
+                    break;
+                case 3:
+                    switch (indMode) {
+                        case INIT:
+                            setIndicator(1300);
+                            break;
+                        case INIT_DONE:
+                            setIndicator(1500);
+                            break;
+                        case INTAKE_IDLE:
+                            setIndicator(1600);
+                            break;
+                        case INTAKE_ACTIVE:
+                            setIndicator(501);
+                            break;
+                        case HAS_BALL:
+                            switch (Magazine.INSTANCE.colorQueue) {
+                                case PURPLE:
+                                    setIndicator(501);
+                                case GREEN:
+                                    setIndicator(501);
+                            }
+                            break;
+                        case SHOOTING_IDLE:
+                            setIndicator(1300);
+                            break;
+                        case SHOOTING_TRACKING:
+                            setIndicator(501);
+                            break;
+                        case SHOOTING_TRACKED:
+                            setIndicator(1101);
+                            break;
+                        case SHOOTING_ACTIVE:
+                            setIndicator(501);
+                            break;
+                    }
+                    i4++;
+                    break;
+            }
         }
     }
 

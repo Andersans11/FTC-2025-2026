@@ -22,8 +22,8 @@ import dev.nextftc.core.commands.groups.SequentialGroup;
 import dev.nextftc.core.commands.utility.InstantCommand;
 
 @Configurable
-@Autonomous(name = "Luna - 9")
-public class Luna_9 extends RoyallyFuckedUpMode {
+@Autonomous(name = "Luna Red - 9")
+public class Luna_9_Red extends RoyallyFuckedUpMode {
     Follower follower;
     PathChain score1, interrim1, intake1, score2, interrim2, intake2, score3;
     Timer pathTimer;
@@ -32,12 +32,12 @@ public class Luna_9 extends RoyallyFuckedUpMode {
 
     public static double intakeStartPos1 = 87;
     public static double intakeStartPos2 = 63;
-    public static double intakeEndPos1 = 12;
-    public static double intakeEndPos2 = 4;
+    public static double intakeEndPos1 = 132;
+    public static double intakeEndPos2 = 140;
 
     Pose currentPose;
 
-    public Luna_9() {
+    public Luna_9_Red() {
         super();
         addSubsystemComponents(
                 new BetterSubsystemComponent(Artemis.INSTANCE)
@@ -48,19 +48,19 @@ public class Luna_9 extends RoyallyFuckedUpMode {
     public void onInit() {
         super.onInit();
 
-        Artemis.INSTANCE.initFollower(hardwareMap, false);
-
         follower = Constants.createFollower(hardwareMap);
 
         pathTimer = new Timer();
 
         Drawing.init();
 
-        Pose scoring = new Pose(60, 84, Math.toRadians(135));
-        Pose intakeStart1 = new Pose(44, intakeStartPos1, Math.toRadians(180));
-        Pose intakeEnd1 = new Pose(intakeEndPos1, intakeStartPos1, Math.toRadians(180));
-        Pose intakeStart2 = new Pose(44, intakeStartPos2, Math.toRadians(180));
-        Pose intakeEnd2 = new Pose(intakeEndPos2, intakeStartPos2, Math.toRadians(180));
+        Pose scoring = new Pose(84, 84, Math.toRadians(45));
+        Pose intakeStart1 = new Pose(100, intakeStartPos1, Math.toRadians(0));
+        Pose intakeEnd1 = new Pose(intakeEndPos1, intakeStartPos1, Math.toRadians(0));
+        Pose intakeStart2 = new Pose(100, intakeStartPos2, Math.toRadians(0));
+        Pose intakeEnd2 = new Pose(intakeEndPos2, intakeStartPos2, Math.toRadians(0));
+
+        Artemis.INSTANCE.initFollower(hardwareMap, scoring);
 
         score2 = follower.pathBuilder()
                 .addPath(new BezierLine(intakeEnd1, scoring))
@@ -100,6 +100,8 @@ public class Luna_9 extends RoyallyFuckedUpMode {
                     .build();
         }));
         Artemis.INSTANCE.stopIntake().schedule();
+
+        Turret.INSTANCE.setRedAlliance(true);
     }
 
     @Override
@@ -132,7 +134,9 @@ public class Luna_9 extends RoyallyFuckedUpMode {
                 new WaitUntil(() -> Turret.INSTANCE.hasGotMotif),
                 Turret.INSTANCE.setPosition(0),
                 new InstantCommand(() -> pathTimer.resetTimer()),
+                Magazine.INSTANCE.setMode(0),
                 new WaitUntil(() -> pathTimer.getElapsedTimeSeconds() >= 0.5),
+                Magazine.INSTANCE.setMode(1),
                 Artemis.INSTANCE.shootMotif(),
                 new WaitUntil(() -> Magazine.INSTANCE.getSlotsFilled() == 0),
                 Magazine.INSTANCE.setMode(0),
@@ -144,7 +148,7 @@ public class Luna_9 extends RoyallyFuckedUpMode {
                     follower.setMaxPower(intakePower);
                     follower.followPath(intake1);
                 }),
-                new WaitUntil(() -> !follower.isBusy()),
+                new WaitUntil(() -> !follower.isBusy() || pathTimer.getElapsedTimeSeconds() >= 5),
                 Artemis.INSTANCE.stopIntake(),
                 new InstantCommand(() -> pathTimer.resetTimer()),
                 new WaitUntil(() -> pathTimer.getElapsedTimeSeconds() >= 2.5 || Magazine.INSTANCE.mode == 1),
@@ -165,7 +169,7 @@ public class Luna_9 extends RoyallyFuckedUpMode {
                     follower.setMaxPower(intakePower);
                     follower.followPath(intake2);
                 }),
-                new WaitUntil(() -> !follower.isBusy()),
+                new WaitUntil(() -> !follower.isBusy() || pathTimer.getElapsedTimeSeconds() >= 5),
                 Artemis.INSTANCE.stopIntake(),
                 new InstantCommand(() -> pathTimer.resetTimer()),
                 new WaitUntil(() -> pathTimer.getElapsedTimeSeconds() >= 2.5 || Magazine.INSTANCE.mode == 1),

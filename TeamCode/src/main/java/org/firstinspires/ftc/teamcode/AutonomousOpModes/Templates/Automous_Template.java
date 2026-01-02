@@ -44,7 +44,7 @@ public class Automous_Template extends RoyallyFuckedUpMode {
     public void onInit() {
         super.onInit();
 
-        Artemis.INSTANCE.initFollower(hardwareMap, true);
+        Artemis.INSTANCE.initFollower(hardwareMap);
 
         follower = Constants.createFollower(hardwareMap);
 

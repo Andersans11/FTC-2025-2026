@@ -196,9 +196,9 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
         return ticks / 8000 * 360 / 5;
     }
 
-    public double calcHoodPower(double target) {
-        if (target > 40) return 1;
-        return target / 40;
+    public double calcHoodPower() {
+        //Equation go here
+        return hoodToPos;
     }
 
     @Override
@@ -213,15 +213,13 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
         switch (mode) {
             case POSE_TRACKING:
                 targetYaw = // get yaw angle using trig, targetYaw = arctan(opposite/adjacent)
-                        Math.atan((targetPose.getY() - pose.getY()) / (targetPose.getX() - pose.getX()));
-                targetYaw = Math.toDegrees(targetYaw - pose.getHeading());
-                double hDistance = pose.distanceFrom(targetPose);
-                targetPitch = Math.toDegrees(Math.atan(heightDiff / hDistance));
-                targetPitch -= hoodAngleOffset;
+                        Math.atan(Math.abs(targetPose.getY() - pose.getY()) / Math.abs(targetPose.getX() - pose.getX()));
+                if (isRed) targetYaw = Math.toDegrees(targetYaw - pose.getHeading());
+                else targetYaw = Math.toDegrees(Math.PI - targetYaw - pose.getHeading());
 
                 controller.setGoal(new KineticState(degreesToTicks(Math.max(minLim, Math.min(maxLim, targetYaw)))));
                 rotationMotor.setPower(controller.calculate(rotationMotor.getState()));
-                //Shooter.INSTANCE.setHoodPos(calcHoodPower(targetPitch));
+                Shooter.INSTANCE.setHoodPos(calcHoodPower());
                 break;
             case IDLE:
                 controller.setGoal(new KineticState(0));

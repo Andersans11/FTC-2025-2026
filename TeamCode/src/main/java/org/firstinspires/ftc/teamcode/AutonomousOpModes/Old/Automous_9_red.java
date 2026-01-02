@@ -61,7 +61,7 @@ public class Automous_9_red extends RoyallyFuckedUpMode {
         telemetry.addLine("1");
         Turret.INSTANCE.setPosition(-90).schedule();
         telemetry.addLine("1");
-        Artemis.INSTANCE.initFollower(hardwareMap, false);
+        Artemis.INSTANCE.initFollower(hardwareMap);
 
         startingPose = new Pose(28, 131, Math.toRadians(144)).mirror();
         scoringPose = new Pose(60, 84).mirror();

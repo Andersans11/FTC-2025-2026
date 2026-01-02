@@ -57,7 +57,7 @@ public class Turret implements IAmBetterSubsystem {
 
     public double off = 0;
 
-    public static double hoodPos = 0.21;
+    public static double hoodPos = 0.2;
 
     public TurretMode mode = TurretMode.TAG_TRACKING; //ty waz here ><> <--- fish
 
@@ -295,7 +295,7 @@ public class Turret implements IAmBetterSubsystem {
             case TAG_TRACKING:
                 if (waluigi.component1() != 69420) {
                     targetAngle = ticksToDegrees(rotationMotor.getCurrentPosition() - off) - (a * (waluigi.component1() - 160));
-                    hoodTargetPos = hoodToPos;
+                    hoodTargetPos = hoodPos;
                     timer.resetTimer();
                 } else if (timer.getElapsedTimeSeconds() >= 2.5) {
                     mode = TurretMode.RECOVERY;
