@@ -18,6 +18,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.hardware.TouchSensor;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import dev.nextftc.bindings.Button;
 import dev.nextftc.bindings.Range;
@@ -37,6 +38,7 @@ public class RobotConfig {
 
     public static ColorRangeSensor IntakeCS;
     public static DistanceSensor IntakeDS;
+    public static VoltageSensor VoltageSensor;
     public static MotorConfig FLDrive;
     public static MotorConfig BLDrive;
     public static MotorConfig FRDrive;
@@ -105,6 +107,8 @@ public class RobotConfig {
      * initialize ALL hardware in the opMode's hardwareMap
      */
     private static void initHardware() {
+
+        VoltageSensor = hardwareMap.get(com.qualcomm.robotcore.hardware.VoltageSensor.class, "Control Hub");
 
         Indicator = hardwareMap.get(ServoImplEx.class, "INDICATOR");
 

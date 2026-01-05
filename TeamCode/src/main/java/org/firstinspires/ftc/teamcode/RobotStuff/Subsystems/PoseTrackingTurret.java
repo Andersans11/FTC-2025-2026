@@ -13,6 +13,7 @@ import com.pedropathing.geometry.Pose;
 import com.pedropathing.util.Timer;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Artemis;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
@@ -32,6 +33,7 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
 
     public MotorEx rotationMotor;
     public HuskyLens camera;
+    public VoltageSensor voltageSensor;
     public boolean isRed = true;
     public boolean hasSetAlliance = false;
     public boolean hasGotMotif = false;
@@ -55,6 +57,9 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
     public TurretMode mode = TurretMode.POSE_TRACKING;
     public Follower poseUpdater;
     Timer timer;
+
+    double voltageMid = 12.5;
+    double altPerV = -0.01;
 
     // ------------------------- CONFIG ------------------------------- //
     public static double kP = 0.0005;
@@ -87,6 +92,7 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
         this.rotationMotor = RobotConfig.TurretRotation.getMotor();
         camera = new HuskyLens(RobotConfig.camera.getDeviceClient());
         camera.selectAlgorithm(HuskyLens.Algorithm.TAG_RECOGNITION);
+        voltageSensor = RobotConfig.VoltageSensor;
     }
 
     @Override
@@ -194,9 +200,12 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
     }
 
     public double calcHoodPower(double dist) {
+        double voltageDiff = voltageSensor.getVoltage() - voltageMid;
+        double powerMod = altPerV * voltageDiff;
+
         if (dist >= 100) return 0.78;
         else if (dist <= 25) return 0.85;
-        return -(0.001 * dist) + 0.875;
+        return -(0.001 * dist) + 0.875 + powerMod;
     }
 
     public Pair<Integer, Integer> waugh() { // yes, this is how we get the tag x and y position
