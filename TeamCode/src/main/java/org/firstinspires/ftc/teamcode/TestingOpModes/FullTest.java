@@ -89,15 +89,6 @@ public class FullTest extends RoyallyFuckedUpMode {
         addData("dist", Magazine.INSTANCE.range.getDistance(DistanceUnit.MM));
         addData("Pose", Math.toDegrees(Artemis.INSTANCE.currentPose.getHeading()));
 
-        addData("indCycle", Artemis.INSTANCE.indCycle);
-        addData("indPWM", Artemis.INSTANCE.currentPWM);
-        addData("indMode", Artemis.INSTANCE.indMode);
-        addData("i", Artemis.INSTANCE.i1);
-        addData("i", Artemis.INSTANCE.i2);
-        addData("i", Artemis.INSTANCE.i3);
-        addData("i", Artemis.INSTANCE.i4);
-        addData("PWM", (Artemis.INSTANCE.indicator.getPosition() * 2000) + 500);
-
         addData("mode", PoseTrackingTurret.INSTANCE.mode);
         addData("pose", PoseTrackingTurret.INSTANCE.poseUpdater.getPose());
         addData("targetPose", PoseTrackingTurret.INSTANCE.targetPose);

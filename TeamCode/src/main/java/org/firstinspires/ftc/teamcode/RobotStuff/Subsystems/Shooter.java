@@ -23,7 +23,7 @@ public class Shooter implements IAmBetterSubsystem {
 
     public MotorEx[] shooterMotors;
     ServoGroup hoodServos;
-    ServoEx hood;
+    public ServoEx hood;
     MotorGroup shooters;
     ServoEx kicker;
     Range hoodSupp;
@@ -61,13 +61,13 @@ public class Shooter implements IAmBetterSubsystem {
 
     // ---------- COMMANDS ---------------------- //
     public Command spinUp() {
-        return new SetPower(shooters, -0.9);
+        return new SetPower(shooters, -1);
     }
     public Command spinDown() {
         return new SetPower(shooters, 0);
     }
     public Command idle() {
-        return new SetPower(shooters, -0.35);
+        return new SetPower(shooters, -0.5);
     }
     public Command kick() {
         return new SetPosition(kicker, kickerPos1);

@@ -380,7 +380,7 @@ public class Artemis extends BetterSubsystemGroup {
             return new SequentialGroup(
                     new InstantCommand(() -> this.isMotifShooting = true),
                     Shooter.INSTANCE.spinUp(),
-                    new Delay(0.75),
+                    new Delay(1.25),
                     shootSingleMotif(0),
                     new Delay(motifShootingSpeed),
                     shootSingleMotif(1),
