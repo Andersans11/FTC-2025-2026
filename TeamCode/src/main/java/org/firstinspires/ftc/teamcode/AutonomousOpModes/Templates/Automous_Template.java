@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.Drawing;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.OldTurret;
 
 import dev.nextftc.core.commands.groups.SequentialGroup;
 import dev.nextftc.core.commands.utility.InstantCommand;
@@ -69,7 +69,7 @@ public class Automous_Template extends RoyallyFuckedUpMode {
     @Override
     public void onWaitForStart() {
         telemetry.update();
-        Turret.INSTANCE.periodic();
+        OldTurret.INSTANCE.periodic();
         Magazine.INSTANCE.periodic();
     }
 

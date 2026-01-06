@@ -9,7 +9,6 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemCompo
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.RobotCentricDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.PoseTrackingTurret;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 
 @TeleOp(name = "TwoAndOnlyOpMode", group = Utils.PRIORITY_PRIORITY)
 public class Comp_OpMode extends RoyallyFuckedUpMode {
@@ -39,8 +38,6 @@ public class Comp_OpMode extends RoyallyFuckedUpMode {
         P1.dpadLeft().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.GREEN));
         P1.dpadRight().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.PURPLE));
 
-        P1.square().whenBecomesTrue(PoseTrackingTurret.INSTANCE.resetPose());
-
         P2.dpadLeft().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.GREEN));
         P2.dpadRight().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.PURPLE));
 
@@ -53,12 +50,17 @@ public class Comp_OpMode extends RoyallyFuckedUpMode {
         P2.triangle().whenBecomesTrue(Magazine.INSTANCE.setMode(1));
 
         P2.leftTrigger().atLeast(0.1).whenBecomesTrue(Magazine.INSTANCE.incShotsFired());
+
+        P2.dpadUp().whenBecomesTrue(PoseTrackingTurret.INSTANCE.toggleTrackObelisk());
+
+        Artemis.INSTANCE.indMode = Artemis.IndicatorMode.INIT_DONE;
     }
 
     @Override
     public void onStartButtonPressed() {
         super.onStartButtonPressed();
         Artemis.INSTANCE.start().schedule();
+        Artemis.INSTANCE.indMode = Artemis.IndicatorMode.INTAKE_ACTIVE;
     }
 
     @Override

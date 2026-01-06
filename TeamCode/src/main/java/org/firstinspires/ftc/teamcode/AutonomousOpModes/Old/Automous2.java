@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Artemis;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.OldTurret;
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.Drawing;
 
 import dev.nextftc.core.commands.delays.WaitUntil;
@@ -45,12 +45,12 @@ public class Automous2 extends RoyallyFuckedUpMode {
 
         Drawing.init();
 
-        Turret.INSTANCE.setRedAlliance(false).schedule();
+        OldTurret.INSTANCE.setRedAlliance(false).schedule();
 
         telemetry.addLine("1");
         follower = Constants.createFollower(hardwareMap);
         telemetry.addLine("1");
-        Turret.INSTANCE.setPosition(-90).schedule();
+        OldTurret.INSTANCE.setPosition(-90).schedule();
         telemetry.addLine("1");
 
         startingPose = new Pose(72, 72);
@@ -72,7 +72,7 @@ public class Automous2 extends RoyallyFuckedUpMode {
     @Override
     public void onWaitForStart() {
         telemetry.update();
-        Turret.INSTANCE.periodic();
+        OldTurret.INSTANCE.periodic();
         Magazine.INSTANCE.periodic();
     }
 
@@ -84,8 +84,8 @@ public class Automous2 extends RoyallyFuckedUpMode {
                 new InstantCommand(() -> follower.followPath(path)),
                 Magazine.INSTANCE.setMode(1),
                 new WaitUntil(() -> follower.getCurrentTValue() >= 0.75),
-                Turret.INSTANCE.setPosition(0),
-                new InstantCommand(() -> Turret.INSTANCE.mode = Turret.TurretMode.RECOVERY),
+                OldTurret.INSTANCE.setPosition(0),
+                new InstantCommand(() -> OldTurret.INSTANCE.mode = OldTurret.TurretMode.RECOVERY),
                 Magazine.INSTANCE.setMode(1),
                 new WaitUntil(() -> !follower.isBusy()),
                 Artemis.INSTANCE.shootMotif()
@@ -104,9 +104,9 @@ public class Automous2 extends RoyallyFuckedUpMode {
         addData("Mode", Magazine.INSTANCE.mode);
         addData("desiredColor", Magazine.INSTANCE.desiredColor);
         addData("shotsFired", Magazine.INSTANCE.shotsFired);
-        addData("turretMode", Turret.INSTANCE.mode);
-        addData("turret", Turret.INSTANCE.rotationMotor.getCurrentPosition());
-        addData("target", Turret.INSTANCE.controller.getGoal());
+        addData("turretMode", OldTurret.INSTANCE.mode);
+        addData("turret", OldTurret.INSTANCE.rotationMotor.getCurrentPosition());
+        addData("target", OldTurret.INSTANCE.controller.getGoal());
 
         Drawing.drawDebug(follower);
     }

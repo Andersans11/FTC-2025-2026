@@ -30,7 +30,6 @@ public class FullTest extends RoyallyFuckedUpMode {
 
         PoseTrackingTurret.INSTANCE.mode = PoseTrackingTurret.TurretMode.POSE_TRACKING;
 
-        P1.square().whenBecomesTrue(PoseTrackingTurret.INSTANCE.resetPose());
         P1.circle().whenBecomesTrue(PoseTrackingTurret.INSTANCE.setIdle());
         P1.cross().whenBecomesTrue(PoseTrackingTurret.INSTANCE.setTracking());
 
@@ -63,6 +62,8 @@ public class FullTest extends RoyallyFuckedUpMode {
 
         P2.dpadDown().whenBecomesTrue(Artemis.INSTANCE.resetFollower());
 
+        P2.dpadUp().whenBecomesTrue(PoseTrackingTurret.INSTANCE.toggleTrackObelisk());
+
         Artemis.INSTANCE.indMode = Artemis.IndicatorMode.INIT_DONE;
     }
 
@@ -90,7 +91,6 @@ public class FullTest extends RoyallyFuckedUpMode {
         addData("Pose", Math.toDegrees(Artemis.INSTANCE.currentPose.getHeading()));
 
         addData("mode", PoseTrackingTurret.INSTANCE.mode);
-        addData("pose", PoseTrackingTurret.INSTANCE.poseUpdater.getPose());
         addData("targetPose", PoseTrackingTurret.INSTANCE.targetPose);
         addData("targetYaw", PoseTrackingTurret.INSTANCE.targetYaw);
         addData("targetPitch", PoseTrackingTurret.INSTANCE.targetPitch);
