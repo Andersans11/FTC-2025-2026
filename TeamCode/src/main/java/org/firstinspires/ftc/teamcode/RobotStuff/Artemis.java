@@ -312,10 +312,10 @@ public class Artemis extends BetterSubsystemGroup {
     }
 
     public Command resetFollower() {
-        if (PoseTrackingTurret.INSTANCE.isRed) return new InstantCommand(() ->
-            follower.setPose(new Pose(offX, offY, Math.toRadians(offTheta))));
-        else return new InstantCommand(() ->
-                follower.setPose(new Pose(offX + 54, offY, Math.toRadians(offTheta))));
+        return new InstantCommand(() -> {
+            Pose newPose = PoseTrackingTurret.INSTANCE.isRed() ? new Pose(9, 9, Math.toRadians(90)) : new Pose(135, 9, Math.toRadians(90));
+            follower.setPose(newPose);
+        });
     }
 
     /**

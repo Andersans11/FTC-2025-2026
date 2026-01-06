@@ -63,7 +63,7 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
     public static double kI = 0.0;
     public static double kD = 0.00002;
     public static double hoodToPos = 0.8;
-    public static double voltageMid = 10;
+    public static double voltageMid = 10.5;
     public static double altPerV = -0.01;
 
     // --------------------- OPMODE --------------------------------- //
@@ -114,6 +114,10 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
             this.isLookingForMotif = false;
             this.targetPose = isRed ? redPose : bluePose;
         });
+    }
+
+    public boolean isRed() {
+        return isRed;
     }
 
     public Command resetPID() {
