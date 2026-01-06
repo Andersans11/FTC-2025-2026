@@ -57,14 +57,14 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
     public TurretMode mode = TurretMode.POSE_TRACKING;
     Timer timer;
 
-    double voltageMid = 12.5;
-    double altPerV = -0.01;
 
     // ------------------------- CONFIG ------------------------------- //
     public static double kP = 0.0005;
     public static double kI = 0.0;
     public static double kD = 0.00002;
-    public static double hoodToPos = 0.2;
+    public static double hoodToPos = 0.8;
+    public static double voltageMid = 10;
+    public static double altPerV = -0.01;
 
     // --------------------- OPMODE --------------------------------- //
 
@@ -229,7 +229,7 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
 
                 controller.setGoal(new KineticState(degreesToTicks(Math.max(minLim, Math.min(maxLim, targetYaw)))));
                 rotationMotor.setPower(controller.calculate(rotationMotor.getState()));
-                Shooter.INSTANCE.setHoodPos(calcHoodPower(currentPose.distanceFrom(targetPose)));
+                Shooter.INSTANCE.setHoodPos(calcHoodPower(currentPose.distanceFrom(targetPose))).schedule();
                 break;
             case IDLE:
                 controller.setGoal(new KineticState(0));

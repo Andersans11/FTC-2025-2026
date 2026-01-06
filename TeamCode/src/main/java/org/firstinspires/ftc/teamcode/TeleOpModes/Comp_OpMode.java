@@ -53,6 +53,8 @@ public class Comp_OpMode extends RoyallyFuckedUpMode {
 
         P2.dpadUp().whenBecomesTrue(PoseTrackingTurret.INSTANCE.toggleTrackObelisk());
 
+        P2.dpadDown().whenBecomesTrue(Artemis.INSTANCE.resetFollower());
+
         Artemis.INSTANCE.indMode = Artemis.IndicatorMode.INIT_DONE;
     }
 

@@ -27,7 +27,7 @@ public class PoseTrackingTestMode extends RoyallyFuckedUpMode {
 
         P1.dpadUp().whenBecomesTrue(PoseTrackingTurret.INSTANCE.setBlueAlliance());
         P1.dpadDown().whenBecomesTrue(PoseTrackingTurret.INSTANCE.setRedAlliance());
-        P1.square().whenBecomesTrue(PoseTrackingTurret.INSTANCE.resetPose());
+        //P1.square().whenBecomesTrue(PoseTrackingTurret.INSTANCE.resetPose());
         P1.circle().whenBecomesTrue(PoseTrackingTurret.INSTANCE.setIdle());
         P1.cross().whenBecomesTrue(PoseTrackingTurret.INSTANCE.setTracking());
     }
@@ -36,7 +36,6 @@ public class PoseTrackingTestMode extends RoyallyFuckedUpMode {
     public void onStartButtonPressed() {
         super.onStartButtonPressed();
 
-        PoseTrackingTurret.INSTANCE.initPoseUpdater(this);
     }
 
     @Override
@@ -44,7 +43,6 @@ public class PoseTrackingTestMode extends RoyallyFuckedUpMode {
         super.onUpdate();
 
         addData("mode", PoseTrackingTurret.INSTANCE.mode);
-        addData("pose", PoseTrackingTurret.INSTANCE.poseUpdater.getPose());
         addData("targetYaw", PoseTrackingTurret.INSTANCE.targetYaw);
         addData("targetPitch", PoseTrackingTurret.INSTANCE.targetPitch);
     }

@@ -31,7 +31,7 @@ public class PitchRecording extends RoyallyFuckedUpMode {
 
         PoseTrackingTurret.INSTANCE.mode = PoseTrackingTurret.TurretMode.POSE_TRACKING;
 
-        P1.square().whenBecomesTrue(PoseTrackingTurret.INSTANCE.resetPose());
+        //P1.square().whenBecomesTrue(PoseTrackingTurret.INSTANCE.resetPose());
         P1.circle().whenBecomesTrue(PoseTrackingTurret.INSTANCE.setIdle());
         P1.cross().whenBecomesTrue(PoseTrackingTurret.INSTANCE.setTracking());
 
