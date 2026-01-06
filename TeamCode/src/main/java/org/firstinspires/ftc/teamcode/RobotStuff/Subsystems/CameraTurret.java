@@ -27,9 +27,9 @@ import dev.nextftc.hardware.impl.MotorEx;
 import kotlin.Pair;
 
 @Configurable
-public class PoseTrackingTurret implements IAmBetterSubsystem {
+public class CameraTurret implements IAmBetterSubsystem {
 
-    public static final PoseTrackingTurret INSTANCE = new PoseTrackingTurret();
+    public static final CameraTurret INSTANCE = new CameraTurret();
 
     public MotorEx rotationMotor;
     public HuskyLens camera;
@@ -37,11 +37,11 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
     public boolean isRed = true;
     public boolean hasSetAlliance = false;
     public boolean hasGotMotif = false;
-    public boolean isLookingForMotif = false;
+    Pose pose = new Pose(0, 0, 0);
+    Pose oldPose = new Pose(0, 0, 0);
     Pose redPose = new Pose(144, 144);
     Pose bluePose = new Pose(0, 144);
     public Pose targetPose = new Pose(144, 144);
-    public Pose storedTargetPose = new Pose(144, 144);
     Pose motifPose = new Pose(144, 72);
     public double targetYaw = 0;
     public double targetPitch = 0.0;
@@ -55,16 +55,17 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
 
 
     public TurretMode mode = TurretMode.POSE_TRACKING;
+    public Follower poseUpdater;
     Timer timer;
 
+    double voltageMid = 12.5;
+    double altPerV = -0.02;
 
     // ------------------------- CONFIG ------------------------------- //
     public static double kP = 0.0005;
     public static double kI = 0.0;
     public static double kD = 0.00002;
-    public static double hoodToPos = 0.8;
-    public static double voltageMid = 10;
-    public static double altPerV = -0.01;
+    public static double hoodToPos = 0.2;
 
     // --------------------- OPMODE --------------------------------- //
 
@@ -75,6 +76,15 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
                 .posPid(kP, kI, kD)
                 .build();
         timer = new Timer();
+    }
+
+    public void initPoseUpdater(OpMode opmode) {
+        poseUpdater = Constants.createFollower(opmode.hardwareMap);
+        poseUpdater.setStartingPose(pose);
+    }
+
+    public void initPoseUpdater(Follower follower) {
+        poseUpdater = follower;
     }
 
     @Override
@@ -98,21 +108,20 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
         return new InstantCommand(() -> this.mode = TurretMode.IDLE);
     }
 
-    public Command toggleTrackObelisk() {
-        return new InstantCommand(() -> {
-            if (isLookingForMotif) {
-                this.isLookingForMotif = false;
-                this.targetPose = isRed ? redPose : bluePose;
-            } else {
-                this.isLookingForMotif = true;
-                this.targetPose = motifPose;
-            }
-        });
+    public Command trackMotif() {
+        return new InstantCommand(() -> this.targetPose = motifPose);
     }
+
     public Command trackGoal() {
         return new InstantCommand(() -> {
-            this.isLookingForMotif = false;
             this.targetPose = isRed ? redPose : bluePose;
+        });
+    }
+
+    public Command resetPose() {
+        return new InstantCommand(() -> {
+            Pose newPose = this.isRed ? new Pose(9, 9, Math.toRadians(90)) : new Pose(135, 9, Math.toRadians(90)); // one pose two pose red pose blue pose
+            poseUpdater.setPose(newPose);
         });
     }
 
@@ -196,7 +205,7 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
 
         if (dist >= 100) return 0.78;
         else if (dist <= 25) return 0.85;
-        return -(0.001 * dist) + 0.875 + powerMod;
+        return -(0.001 * dist) + 0.85 + powerMod;
     }
 
     public Pair<Integer, Integer> waugh() { // yes, this is how we get the tag x and y position
@@ -215,25 +224,49 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
 
     public static double a = 0.04;
 
+    boolean started = false;
+
     @Override
     public void periodic() {
+        Pair<Integer, Integer> waluigi = waugh();
 
-        Pose currentPose = Artemis.INSTANCE.currentPose;
+        poseUpdater.update();
+        oldPose = pose;
+        pose = poseUpdater.getPose();
 
+        //if (Magazine.INSTANCE.mode == 0 && mode == TurretMode.POSE_TRACKING) mode = TurretMode.IDLE;
+        //else if (Magazine.INSTANCE.mode == 1 && mode == TurretMode.IDLE) mode = TurretMode.POSE_TRACKING;
+        
         switch (mode) {
             case POSE_TRACKING:
-                targetYaw = // get yaw angle using trig, targetYaw = arctan(opposite/adjacent)
-                        Math.atan(Math.abs(targetPose.getY() - currentPose.getY()) / Math.abs(targetPose.getX() - currentPose.getX()));
-                if (isRed) targetYaw = Math.toDegrees(targetYaw - currentPose.getHeading());
-                else targetYaw = Math.toDegrees(Math.PI - targetYaw - currentPose.getHeading());
-
+                if (waluigi.component1() != 69420) {
+                    targetYaw = ticksToDegrees(rotationMotor.getCurrentPosition()) - (a * (waluigi.component1() - 160));
+                    timer.resetTimer();
+                } else if (timer.getElapsedTimeSeconds() >= 2.5) {
+                    mode = TurretMode.IDLE;
+                } else {
+                    double deltaHeading = (pose.getHeading()) - oldPose.getHeading();
+                    targetYaw = targetYaw - Math.toDegrees(deltaHeading);
+                }
+                Shooter.INSTANCE.hood.setPosition(calcHoodPower(Artemis.INSTANCE.currentPose.distanceFrom(targetPose)));
                 controller.setGoal(new KineticState(degreesToTicks(Math.max(minLim, Math.min(maxLim, targetYaw)))));
                 rotationMotor.setPower(controller.calculate(rotationMotor.getState()));
-                Shooter.INSTANCE.setHoodPos(calcHoodPower(currentPose.distanceFrom(targetPose))).schedule();
                 break;
             case IDLE:
-                controller.setGoal(new KineticState(0));
-                rotationMotor.setPower(controller.calculate(rotationMotor.getState()));
+                if (waluigi.component1() != 69420) {
+                    targetYaw = ticksToDegrees(rotationMotor.getCurrentPosition()) - (a * (waluigi.component1() - 160));
+                    Shooter.INSTANCE.hood.setPosition(calcHoodPower(Artemis.INSTANCE.currentPose.distanceFrom(targetPose)));
+                    timer.resetTimer();
+                    mode = TurretMode.POSE_TRACKING;
+                    started = false;
+                } else {
+                    if (!started) {
+                        targetYaw = 0;
+                        controller.setGoal(new KineticState(degreesToTicks(Math.max(minLim, Math.min(maxLim, targetYaw)))));
+                        started = true;
+                    }
+                    rotationMotor.setPower(controller.calculate(rotationMotor.getState()));
+                }
                 break;
         }
 

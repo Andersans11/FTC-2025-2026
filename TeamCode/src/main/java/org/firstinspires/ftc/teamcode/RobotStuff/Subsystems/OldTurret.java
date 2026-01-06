@@ -22,9 +22,9 @@ import dev.nextftc.hardware.powerable.SetPower;
 import kotlin.Pair;
 
 @Configurable
-public class Turret implements IAmBetterSubsystem {
+public class OldTurret implements IAmBetterSubsystem {
 
-    public static final Turret INSTANCE = new Turret();
+    public static final OldTurret INSTANCE = new OldTurret();
 
     public MotorEx rotationMotor;
     public HuskyLens camera;

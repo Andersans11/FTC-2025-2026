@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.TestingOpModes;
 
-import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Artemis;
@@ -12,7 +11,6 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.RobotCent
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.PoseTrackingTurret;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 
 @TeleOp(name = "Pitch Recording", group = Utils.PRIORITY_PRIORITY)
 public class PitchRecording extends RoyallyFuckedUpMode {
@@ -33,7 +31,7 @@ public class PitchRecording extends RoyallyFuckedUpMode {
 
         PoseTrackingTurret.INSTANCE.mode = PoseTrackingTurret.TurretMode.POSE_TRACKING;
 
-        P1.square().whenBecomesTrue(PoseTrackingTurret.INSTANCE.resetPose());
+        //P1.square().whenBecomesTrue(PoseTrackingTurret.INSTANCE.resetPose());
         P1.circle().whenBecomesTrue(PoseTrackingTurret.INSTANCE.setIdle());
         P1.cross().whenBecomesTrue(PoseTrackingTurret.INSTANCE.setTracking());
 

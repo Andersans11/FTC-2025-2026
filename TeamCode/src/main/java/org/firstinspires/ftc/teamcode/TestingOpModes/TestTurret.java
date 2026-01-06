@@ -2,12 +2,11 @@ package org.firstinspires.ftc.teamcode.TestingOpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.RobotCentricDrive;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.OldTurret;
 
 @TeleOp(name = "Test: Turret", group = Utils.TESTING)
 public class TestTurret extends RoyallyFuckedUpMode {
@@ -15,7 +14,7 @@ public class TestTurret extends RoyallyFuckedUpMode {
     public TestTurret() {
         super();
         addSubsystemComponents(
-                new BetterSubsystemComponent(Turret.INSTANCE),
+                new BetterSubsystemComponent(OldTurret.INSTANCE),
                 new BetterSubsystemComponent(RobotCentricDrive.INSTANCE)
         );
     }
@@ -23,11 +22,11 @@ public class TestTurret extends RoyallyFuckedUpMode {
     @Override
     public void onInit() {
         super.onInit();
-        Turret.INSTANCE.mode = Turret.TurretMode.MANUAL_PID;
+        OldTurret.INSTANCE.mode = OldTurret.TurretMode.MANUAL_PID;
 
-        P1.dpadDown().whenBecomesTrue(Turret.INSTANCE.setPosition(0));
-        P1.dpadRight().whenBecomesTrue(Turret.INSTANCE.setPosition(45));
-        P1.dpadLeft().whenBecomesTrue(Turret.INSTANCE.setPosition(-45));
+        P1.dpadDown().whenBecomesTrue(OldTurret.INSTANCE.setPosition(0));
+        P1.dpadRight().whenBecomesTrue(OldTurret.INSTANCE.setPosition(45));
+        P1.dpadLeft().whenBecomesTrue(OldTurret.INSTANCE.setPosition(-45));
         //P1.dpadUp().whenBecomesTrue(NewTurret.INSTANCE.resetPID());
     }
 
@@ -36,10 +35,10 @@ public class TestTurret extends RoyallyFuckedUpMode {
     public void onUpdate() {
         super.onUpdate();
 
-        addData("targetAngle", Turret.INSTANCE.targetAngle);
-        addData("goal", Turret.INSTANCE.controller.getGoal());
-        addData("length", Turret.INSTANCE.camera.blocks().length);
-        addData("waugh", Turret.INSTANCE.waugh());
-        addData("timer", Turret.INSTANCE.timer.getElapsedTimeSeconds());
+        addData("targetAngle", OldTurret.INSTANCE.targetAngle);
+        addData("goal", OldTurret.INSTANCE.controller.getGoal());
+        addData("length", OldTurret.INSTANCE.camera.blocks().length);
+        addData("waugh", OldTurret.INSTANCE.waugh());
+        addData("timer", OldTurret.INSTANCE.timer.getElapsedTimeSeconds());
     }
 }
