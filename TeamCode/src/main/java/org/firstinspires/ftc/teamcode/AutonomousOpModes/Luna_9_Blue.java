@@ -31,10 +31,10 @@ public class Luna_9_Blue extends RoyallyFuckedUpMode {
     public static double pathPower = 0.75;
     public static double intakePower = 0.2;
 
-    public static double intakeStartPos1 = 87;
-    public static double intakeStartPos2 = 63;
-    public static double intakeEndPos1 = 12;
-    public static double intakeEndPos2 = 4;
+    public static double intakeStartPos1 = 84;
+    public static double intakeStartPos2 = 60;
+    public static double intakeEndPos1 = 17;
+    public static double intakeEndPos2 = 9;
 
     Pose currentPose;
 

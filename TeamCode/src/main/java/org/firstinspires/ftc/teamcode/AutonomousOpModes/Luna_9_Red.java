@@ -31,10 +31,10 @@ public class Luna_9_Red extends RoyallyFuckedUpMode {
     public static double pathPower = 0.75;
     public static double intakePower = 0.2;
 
-    public static double intakeStartPos1 = 87;
-    public static double intakeStartPos2 = 63;
-    public static double intakeEndPos1 = 132;
-    public static double intakeEndPos2 = 140;
+    public static double intakeStartPos1 = 84;
+    public static double intakeStartPos2 = 60;
+    public static double intakeEndPos1 = 127;
+    public static double intakeEndPos2 = 135;
 
     Pose currentPose;
 
@@ -148,7 +148,7 @@ public class Luna_9_Red extends RoyallyFuckedUpMode {
                     follower.setMaxPower(intakePower);
                     follower.followPath(intake1);
                 }),
-                new WaitUntil(() -> !follower.isBusy() || pathTimer.getElapsedTimeSeconds() >= 5),
+                new WaitUntil(() -> !follower.isBusy() || pathTimer.getElapsedTimeSeconds() >= 10),
                 Artemis.INSTANCE.stopIntake(),
                 new InstantCommand(() -> pathTimer.resetTimer()),
                 new WaitUntil(() -> pathTimer.getElapsedTimeSeconds() >= 2.5 || Magazine.INSTANCE.mode == 1),
@@ -169,7 +169,7 @@ public class Luna_9_Red extends RoyallyFuckedUpMode {
                     follower.setMaxPower(intakePower);
                     follower.followPath(intake2);
                 }),
-                new WaitUntil(() -> !follower.isBusy() || pathTimer.getElapsedTimeSeconds() >= 5),
+                new WaitUntil(() -> !follower.isBusy() || pathTimer.getElapsedTimeSeconds() >= 10),
                 Artemis.INSTANCE.stopIntake(),
                 new InstantCommand(() -> pathTimer.resetTimer()),
                 new WaitUntil(() -> pathTimer.getElapsedTimeSeconds() >= 2.5 || Magazine.INSTANCE.mode == 1),
