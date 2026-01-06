@@ -81,6 +81,8 @@ public class PitchRecording extends RoyallyFuckedUpMode {
 
         addData("distance", Artemis.INSTANCE.currentPose.distanceFrom(PoseTrackingTurret.INSTANCE.targetPose));
 
+        addData("tagY", PoseTrackingTurret.INSTANCE.waugh().component2());
+
         addData("target", RobotConfig.HoodServo.getServo().getPosition());
         addData("0", Magazine.INSTANCE.getSlotColor(0));
         addData("1", Magazine.INSTANCE.getSlotColor(1));

@@ -59,7 +59,7 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
     Timer timer;
 
     double voltageMid = 12.5;
-    double altPerV = -0.01;
+    double altPerV = -0.02;
 
     // ------------------------- CONFIG ------------------------------- //
     public static double kP = 0.0005;
@@ -205,7 +205,7 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
 
         if (dist >= 100) return 0.78;
         else if (dist <= 25) return 0.85;
-        return -(0.001 * dist) + 0.875 + powerMod;
+        return -(0.001 * dist) + 0.85 + powerMod;
     }
 
     public Pair<Integer, Integer> waugh() { // yes, this is how we get the tag x and y position
@@ -223,6 +223,8 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
     }
 
     public static double a = 0.04;
+
+    boolean started = false;
 
     @Override
     public void periodic() {
@@ -253,17 +255,16 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
             case IDLE:
                 if (waluigi.component1() != 69420) {
                     targetYaw = ticksToDegrees(rotationMotor.getCurrentPosition()) - (a * (waluigi.component1() - 160));
+                    Shooter.INSTANCE.hood.setPosition(calcHoodPower(Artemis.INSTANCE.currentPose.distanceFrom(targetPose)));
+                    timer.resetTimer();
                     mode = TurretMode.POSE_TRACKING;
+                    started = false;
                 } else {
-                    if (pose != oldPose) {
-                        targetYaw = // get yaw angle using trig, targetYaw = arctan(opposite/adjacent)
-                                Math.atan(Math.abs(targetPose.getY() - pose.getY()) / Math.abs(targetPose.getX() - pose.getX()));
-                        if (isRed) targetYaw = Math.toDegrees(targetYaw - pose.getHeading());
-                        else targetYaw = Math.toDegrees(Math.PI - targetYaw - pose.getHeading());
-
-                        Shooter.INSTANCE.hood.setPosition(calcHoodPower(Artemis.INSTANCE.currentPose.distanceFrom(targetPose)));
+                    if (!started) {
+                        targetYaw = 0;
+                        controller.setGoal(new KineticState(degreesToTicks(Math.max(minLim, Math.min(maxLim, targetYaw)))));
+                        started = true;
                     }
-                    controller.setGoal(new KineticState(degreesToTicks(Math.max(minLim, Math.min(maxLim, targetYaw)))));
                     rotationMotor.setPower(controller.calculate(rotationMotor.getState()));
                 }
                 break;
