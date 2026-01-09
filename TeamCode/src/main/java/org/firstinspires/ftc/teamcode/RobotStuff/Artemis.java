@@ -23,6 +23,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.OldTurret;
 import dev.nextftc.control.KineticState;
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.delays.Delay;
+import dev.nextftc.core.commands.delays.WaitUntil;
 import dev.nextftc.core.commands.groups.SequentialGroup;
 import dev.nextftc.core.commands.utility.InstantCommand;
 import dev.nextftc.core.commands.utility.NullCommand;
@@ -49,6 +50,7 @@ public class Artemis extends BetterSubsystemGroup {
     public int i2 = 0;
     public int i3 = 0;
     public int i4 = 0;
+    public static double speedGoal = 1750;
     private Artemis() {
         super(
                 Magazine.INSTANCE,
@@ -348,7 +350,7 @@ public class Artemis extends BetterSubsystemGroup {
     public Command shootSingleMotif(int i) {
             return new SequentialGroup(
                     Magazine.INSTANCE.setDesiredColor(i),
-                    new Delay(shootingSpeed),
+                    new WaitUntil(() -> Shooter.INSTANCE.shooterMotors[0].getVelocity() >= speedGoal),
                     Shooter.INSTANCE.shoot(),
                     new Delay(shootingSpeed2),
                     Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.NONE),
@@ -378,11 +380,8 @@ public class Artemis extends BetterSubsystemGroup {
             return new SequentialGroup(
                     new InstantCommand(() -> this.isMotifShooting = true),
                     Shooter.INSTANCE.spinUp(),
-                    new Delay(1.25),
                     shootSingleMotif(0),
-                    new Delay(motifShootingSpeed),
                     shootSingleMotif(1),
-                    new Delay(motifShootingSpeed),
                     shootSingleMotif(2),
                     Shooter.INSTANCE.idle(),
                     new InstantCommand(() -> this.isMotifShooting = false)
