@@ -65,6 +65,7 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
     public static double hoodToPos = 0.8;
     public static double voltageMid = 10.5;
     public static double altPerV = -0.01;
+    public static double farHoodPos = 0.79;
 
     // --------------------- OPMODE --------------------------------- //
 
@@ -95,7 +96,7 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
     }
 
     public Command setTracking() {
-        return new InstantCommand(() -> this.mode = TurretMode.IDLE);
+        return new InstantCommand(() -> this.mode = TurretMode.POSE_TRACKING);
     }
 
     public Command toggleTrackObelisk() {
@@ -139,14 +140,16 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
      */
     public Command setPosition(double pos) {
         return new InstantCommand(() -> {
-            targetYaw = Math.max(-90, Math.min(90, pos));
+            mode = TurretMode.IDLE;
+            targetYaw = Math.max(minLim, Math.min(maxLim, pos));
             controller.setGoal(new KineticState(degreesToTicks(targetYaw)));
         });
     }
 
-    public Command setPosition(double turretPos, double hoodPos) {
+    public Command setPosition(double pos, double hoodPos) {
         return new InstantCommand(() -> {
-            targetYaw = Math.max(-90, Math.min(90, turretPos));
+            mode = TurretMode.IDLE;
+            targetYaw = Math.max(minLim, Math.min(maxLim, pos));
             controller.setGoal(new KineticState(degreesToTicks(targetYaw)));
         });
     }
@@ -198,9 +201,9 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
         double voltageDiff = voltageSensor.getVoltage() - voltageMid;
         double powerMod = altPerV * voltageDiff;
 
-        if (dist >= 100) return 0.78;
-        else if (dist <= 25) return 0.85;
-        return -(0.001 * dist) + 0.875 + powerMod;
+        if (dist >= 100) return farHoodPos;
+        else if (dist <= 25) return 0.86;
+        return -(0.001 * dist) + 0.88 + powerMod;
     }
 
     public Pair<Integer, Integer> waugh() { // yes, this is how we get the tag x and y position
@@ -236,7 +239,6 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
                 Shooter.INSTANCE.setHoodPos(calcHoodPower(currentPose.distanceFrom(targetPose))).schedule();
                 break;
             case IDLE:
-                controller.setGoal(new KineticState(0));
                 rotationMotor.setPower(controller.calculate(rotationMotor.getState()));
                 break;
         }
