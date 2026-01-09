@@ -8,6 +8,8 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
 
+import dev.nextftc.hardware.impl.ServoEx;
+
 @Configurable
 @Autonomous(name = "When I Need A Plumber")
 public class Locktite extends RoyallyFuckedUpMode {
@@ -16,20 +18,14 @@ public class Locktite extends RoyallyFuckedUpMode {
         super();
     }
 
-    ServoImplEx servo;
-    int PWM = 1650;
-    int oldPWM = 0;
-    public static int upperPWM = 1600;
-    public static int lowerPWM = 500;
+    ServoEx servo;
+    public static double power = 0.0;
+    double oldPower = 0.0;
 
     @Override
     public void onInit() {
         super.onInit();
-        servo = RobotConfig.Indicator;
-        servo.setPwmRange(new PwmControl.PwmRange(500, 2500));
-
-        P1.dpadUp().whenBecomesTrue(() -> PWM = upperPWM);
-        P1.dpadDown().whenBecomesTrue(() -> PWM = lowerPWM);
+        servo = RobotConfig.Kicker.getServo();
     }
 
     @Override
@@ -45,14 +41,9 @@ public class Locktite extends RoyallyFuckedUpMode {
     @Override
     public void onUpdate() {
         super.onUpdate();
-        if (PWM != oldPWM) {
-            servo.setPosition(PWMToPower(PWM));
-            oldPWM = PWM;
+        if (power != oldPower) {
+            servo.setPosition(power);
+            oldPower = power;
         }
-        addData("PWM", servo.getPosition());
-    }
-
-    public double PWMToPower(double PWM) {
-        return (PWM - 500) / 2000;
     }
 }

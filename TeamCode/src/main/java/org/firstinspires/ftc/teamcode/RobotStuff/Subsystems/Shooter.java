@@ -4,11 +4,14 @@ import com.bylazar.configurables.annotations.Configurable;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 
+import java.util.ArrayList;
+
 import dev.nextftc.bindings.Range;
 import dev.nextftc.control.ControlSystem;
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.delays.Delay;
 import dev.nextftc.core.commands.groups.SequentialGroup;
+import dev.nextftc.core.commands.utility.InstantCommand;
 import dev.nextftc.hardware.controllable.MotorGroup;
 import dev.nextftc.hardware.impl.MotorEx;
 import dev.nextftc.hardware.impl.ServoEx;
@@ -30,8 +33,10 @@ public class Shooter implements IAmBetterSubsystem {
 
     // ------------------------ CONFIG ------------------------ //
     public static double shootingSpeed = 0.3;
-    public static double kickerPos1 = 0.15;
-    public static double kickerPos0 = 0.825;
+    public static double kickerPos1 = 0.725;
+    public static double kickerPos0 = 0.975;
+
+    public double speeds = 0;
 
     // --------------------- OPMODE -------------------------- //
     @Override
@@ -79,6 +84,7 @@ public class Shooter implements IAmBetterSubsystem {
     public Command shoot() {
         return new SequentialGroup(
                 this.kick(),
+                new InstantCommand(() -> speeds = shooterMotors[0].getVelocity()),
                 new SequentialGroup(
                         new Delay(shootingSpeed),
                         this.resetKicker()

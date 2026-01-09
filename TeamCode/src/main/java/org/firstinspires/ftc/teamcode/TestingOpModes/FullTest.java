@@ -95,5 +95,7 @@ public class FullTest extends RoyallyFuckedUpMode {
         addData("targetYaw", PoseTrackingTurret.INSTANCE.targetYaw);
         addData("targetPitch", PoseTrackingTurret.INSTANCE.targetPitch);
         addData("volt", PoseTrackingTurret.INSTANCE.voltageSensor.getVoltage());
+
+        addData("speed", Shooter.INSTANCE.speeds);
     }
 }
