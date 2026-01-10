@@ -35,6 +35,8 @@ public class Comp_OpMode extends RoyallyFuckedUpMode {
         P1.rightBumper().whenBecomesTrue(Artemis.INSTANCE.outtake());
         P1.rightBumper().whenBecomesFalse(Artemis.INSTANCE.stopIntake());
 
+        P1.cross().whenBecomesTrue(PoseTrackingTurret.INSTANCE.setTracking());
+
         P1.dpadLeft().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.GREEN));
         P1.dpadRight().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.PURPLE));
 
@@ -54,6 +56,8 @@ public class Comp_OpMode extends RoyallyFuckedUpMode {
         P2.dpadUp().whenBecomesTrue(PoseTrackingTurret.INSTANCE.toggleTrackObelisk());
 
         P2.dpadDown().whenBecomesTrue(Artemis.INSTANCE.resetFollower());
+
+        P2.leftBumper().whenBecomesTrue(Magazine.INSTANCE.fixModeOffset());
 
         Artemis.INSTANCE.indMode = Artemis.IndicatorMode.INIT_DONE;
     }

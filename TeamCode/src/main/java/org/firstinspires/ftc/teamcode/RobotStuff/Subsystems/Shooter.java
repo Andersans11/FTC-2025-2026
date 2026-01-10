@@ -32,9 +32,9 @@ public class Shooter implements IAmBetterSubsystem {
     Range hoodSupp;
 
     // ------------------------ CONFIG ------------------------ //
-    public static double shootingSpeed = 0.3;
-    public static double kickerPos1 = 0.725;
-    public static double kickerPos0 = 0.975;
+    public static double shootingSpeed = 0.5;
+    public static double kickerPos1 = 0.15;
+    public static double kickerPos0 = 0.825;
 
     public double speeds = 0;
 

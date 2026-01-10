@@ -39,6 +39,7 @@ public class Magazine implements IAmBetterSubsystem {
     public Utils.ArtifactTypes desiredColor = Utils.ArtifactTypes.PURPLE;
     boolean usingSec = false;
     public double turretOff = 0;
+    public boolean changedOffset = false;
 
     public double r = 0;
     public double g = 0;
@@ -49,9 +50,9 @@ public class Magazine implements IAmBetterSubsystem {
     // ------------------------------ CONFIG ----------------------------- //
 
     public static double off0 = 0;
-    public static double off1 = 120;
+    public static double off1 = 125;
     public static double off2 = 240;
-    public static double off = 64;
+    public static double off = 73;
     public static double dist = 60;
     public int it = 0;
     public int mode = 0;
@@ -91,13 +92,16 @@ public class Magazine implements IAmBetterSubsystem {
 
         targetPos = (180 * mode) + slots[activeSlot].offset;
 
+        double offestOffset = changedOffset ? 60 : 0;
+        double offsetActual = off + offestOffset;
+
         if (targetPos != oldTargetPos) {
-            while (targetPos + off >= 355) {
+            while (targetPos + offsetActual >= 355) {
                 targetPos = targetPos - 360;
             }
-            servos[0].setPosition((targetPos + off) / 355 * magToothCount / servoToothCount);
-            servos[1].setPosition((targetPos + off) / 355 * magToothCount / servoToothCount);
-            servos[2].setPosition((targetPos + off) / 355 * magToothCount / servoToothCount);
+            servos[0].setPosition((targetPos + offsetActual) / 355 * magToothCount / servoToothCount);
+            servos[1].setPosition((targetPos + offsetActual) / 355 * magToothCount / servoToothCount);
+            servos[2].setPosition((targetPos + offsetActual) / 355 * magToothCount / servoToothCount);
             oldTargetPos = targetPos;
         }
         if (slots[activeSlot].content != desiredColor) changeActiveSlot().schedule();
@@ -155,6 +159,10 @@ public class Magazine implements IAmBetterSubsystem {
             slots[activeSlot].content = content;
             colorQueue = content;
         });
+    }
+
+    public Command fixModeOffset() {
+        return new InstantCommand(() -> changedOffset = !changedOffset);
     }
 
     public int getSlotsFilled() {

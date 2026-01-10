@@ -102,7 +102,7 @@ public class Luna_9_Red extends RoyallyFuckedUpMode {
                     .build();
         }));
         P2.square().whenBecomesTrue(Magazine.INSTANCE.setMode(0));
-        P2.dpadUp().whenBecomesTrue(PoseTrackingTurret.INSTANCE.setBlueAlliance());
+        P2.dpadUp().whenBecomesTrue(PoseTrackingTurret.INSTANCE.setRedAlliance());
         Artemis.INSTANCE.stopIntake().schedule();
     }
 
@@ -141,6 +141,7 @@ public class Luna_9_Red extends RoyallyFuckedUpMode {
                 Magazine.INSTANCE.setMode(1),
                 Artemis.INSTANCE.shootMotif(),
                 new WaitUntil(() -> Magazine.INSTANCE.getSlotsFilled() == 0),
+                PoseTrackingTurret.INSTANCE.setPosition(0),
                 Magazine.INSTANCE.setMode(0),
                 new InstantCommand(() -> follower.followPath(interrim1)),
                 new WaitUntil(() -> !follower.isBusy()),
@@ -149,12 +150,14 @@ public class Luna_9_Red extends RoyallyFuckedUpMode {
                 new InstantCommand(() -> {
                     follower.setMaxPower(intakePower);
                     follower.followPath(intake1);
+                    pathTimer.resetTimer();
                 }),
                 new WaitUntil(() -> !follower.isBusy() || pathTimer.getElapsedTimeSeconds() >= 10),
-                Artemis.INSTANCE.stopIntake(),
                 new InstantCommand(() -> pathTimer.resetTimer()),
                 new WaitUntil(() -> pathTimer.getElapsedTimeSeconds() >= 2.5 || Magazine.INSTANCE.mode == 1),
                 Magazine.INSTANCE.fillSlots(),
+                Artemis.INSTANCE.stopIntake(),
+                PoseTrackingTurret.INSTANCE.setTracking(),
                 new InstantCommand(() -> {
                     follower.setMaxPower(pathPower);
                     follower.followPath(score2);
@@ -162,6 +165,7 @@ public class Luna_9_Red extends RoyallyFuckedUpMode {
                 new WaitUntil(() -> !follower.isBusy()),
                 Artemis.INSTANCE.shootMotif(),
                 new WaitUntil(() -> Magazine.INSTANCE.getSlotsFilled() == 0),
+                PoseTrackingTurret.INSTANCE.setPosition(0),
                 Magazine.INSTANCE.setMode(0),
                 new InstantCommand(() -> follower.followPath(interrim2)),
                 new WaitUntil(() -> !follower.isBusy()),
@@ -170,7 +174,13 @@ public class Luna_9_Red extends RoyallyFuckedUpMode {
                 new InstantCommand(() -> {
                     follower.setMaxPower(intakePower);
                     follower.followPath(intake2);
-                })
+                    pathTimer.resetTimer();
+                }),
+                new WaitUntil(() -> !follower.isBusy() || pathTimer.getElapsedTimeSeconds() >= 10),
+                new InstantCommand(() -> pathTimer.resetTimer()),
+                new WaitUntil(() -> pathTimer.getElapsedTimeSeconds() >= 2.5 || Magazine.INSTANCE.mode == 1),
+                Artemis.INSTANCE.stopIntake(),
+                PoseTrackingTurret.INSTANCE.setTracking()
         ).schedule();
     }
 

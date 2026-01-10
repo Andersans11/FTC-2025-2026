@@ -22,7 +22,7 @@ import dev.nextftc.core.commands.groups.SequentialGroup;
 import dev.nextftc.core.commands.utility.InstantCommand;
 
 @Configurable
-@Autonomous(name = "Luna Blue - Close")
+@Autonomous(name = "Luna Blue - Far")
 public class Luna_Far_Blue extends RoyallyFuckedUpMode {
     Follower follower;
     PathChain obelisk1, score1, interrim1, intake1, score2, interrim2, intake2, score3;
@@ -32,7 +32,7 @@ public class Luna_Far_Blue extends RoyallyFuckedUpMode {
 
     public static double intakeStartPos1 = 36;
     public static double intakeStartPos2 = 60;
-    public static double intakeEndPos1 = 17;
+    public static double intakeEndPos1 = 10;
     public static double intakeEndPos2 = 10;
 
     Pose currentPose;
@@ -52,7 +52,7 @@ public class Luna_Far_Blue extends RoyallyFuckedUpMode {
 
         pathTimer = new Timer();
 
-        Drawing.init();
+        Drawing.init(); // <>< fish
 
         Pose scoring = new Pose(60, 12, Math.toRadians(90));
         Pose obelisk = new Pose(60, 60, Math.toRadians(90));

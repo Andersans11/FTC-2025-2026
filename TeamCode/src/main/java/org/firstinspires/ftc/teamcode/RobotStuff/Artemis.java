@@ -123,7 +123,7 @@ public class Artemis extends BetterSubsystemGroup {
 
     public static double motifShootingSpeed = 0.4;
     public static double shootingSpeed = 0.15;
-    public static double shootingSpeed2 = 0.1;
+    public static double shootingSpeed2 = 0.2;
 
     //  ------------------------- COMMANDS --------------------------- //
 

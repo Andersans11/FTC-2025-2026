@@ -203,7 +203,7 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
 
         if (dist >= 100) return farHoodPos;
         else if (dist <= 25) return 0.86;
-        return -(0.001 * dist) + 0.88 + powerMod;
+        return -(0.001 * dist) + 0.865 + powerMod;
     }
 
     public Pair<Integer, Integer> waugh() { // yes, this is how we get the tag x and y position
