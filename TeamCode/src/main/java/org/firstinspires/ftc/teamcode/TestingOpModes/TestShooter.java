@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.HoldHeadingPID;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.VPIDShooter;
 
 @TeleOp(name = "Test Shooter", group = Utils.TESTING)
 public class TestShooter extends RoyallyFuckedUpMode {
@@ -14,7 +15,7 @@ public class TestShooter extends RoyallyFuckedUpMode {
     public TestShooter() {
         super();
         addSubsystemComponents(
-                new BetterSubsystemComponent(Shooter.INSTANCE)
+                new BetterSubsystemComponent(VPIDShooter.INSTANCE)
         );
     }
 
@@ -22,12 +23,14 @@ public class TestShooter extends RoyallyFuckedUpMode {
     public void onInit() {
         super.onInit();
 
-        P1.triangle().whenBecomesTrue(Shooter.INSTANCE.spinUp());
+        P1.triangle().whenBecomesTrue(VPIDShooter.INSTANCE.spinUp());
+        P1.square().whenBecomesTrue(VPIDShooter.INSTANCE.idle());
+        P1.circle().whenBecomesTrue(VPIDShooter.INSTANCE.resetPID());
     }
 
     @Override
     public void onUpdate() {
         super.onUpdate();
-        addData("speed", Shooter.INSTANCE.shooterMotors[0].getVelocity());
+        addData("speed", VPIDShooter.INSTANCE.shooters.getState().getVelocity());
     }
 }

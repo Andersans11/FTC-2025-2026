@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemCompo
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.PoseTrackingTurret;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.VPIDShooter;
 
 import dev.nextftc.core.commands.delays.WaitUntil;
 import dev.nextftc.core.commands.groups.SequentialGroup;
@@ -54,7 +55,7 @@ public class Luna_Far_Blue extends RoyallyFuckedUpMode {
 
         Drawing.init(); // <>< fish
 
-        Pose scoring = new Pose(60, 12, Math.toRadians(90));
+        Pose scoring = new Pose(60, 18, Math.toRadians(90));
         Pose obelisk = new Pose(60, 60, Math.toRadians(90));
         Pose intakeStart1 = new Pose(44, intakeStartPos1, Math.toRadians(180));
         Pose intakeEnd1 = new Pose(intakeEndPos1, intakeStartPos1, Math.toRadians(180));
@@ -131,6 +132,7 @@ public class Luna_Far_Blue extends RoyallyFuckedUpMode {
         super.onStartButtonPressed();
         new SequentialGroup(
                 Artemis.INSTANCE.stopIntake(),
+                VPIDShooter.INSTANCE.idle(),
                 new InstantCommand(() -> follower.followPath(obelisk1)),
                 new WaitUntil(() -> !follower.isBusy()),
                 PoseTrackingTurret.INSTANCE.setPosition(0),

@@ -28,10 +28,10 @@ public class VPIDShooter implements IAmBetterSubsystem {
     ServoEx kicker;
 
     // ------------------------ CONFIG ------------------------ //
-    public static double shootingSpeed = 0.3;
+    public static double shootingSpeed = 0.5;
     public static double kickerPos1 = 0.15;
     public static double kickerPos0 = 0.825;
-    public static double kP = 0.001;
+    public static double kP = 0.0075;
     public static double kI = 0.0;
     public static double kD = 0.0;
 
@@ -60,18 +60,19 @@ public class VPIDShooter implements IAmBetterSubsystem {
     @Override
     public void periodic() {
         shooters.setPower(-controller.calculate(shooters.getState()));
+
     }
 
 
     // ---------- COMMANDS ---------------------- //
     public Command spinUp() {
-        return setGoal(1750);
+        return setGoal(1500);
     }
     public Command spinDown() {
         return setGoal(0);
     }
     public Command idle() {
-        return setGoal(400);
+        return setGoal(750);
     }
 
     public Command setGoal(double vel) {

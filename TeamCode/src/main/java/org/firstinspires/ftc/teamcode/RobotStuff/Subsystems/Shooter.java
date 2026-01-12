@@ -35,6 +35,7 @@ public class Shooter implements IAmBetterSubsystem {
     public static double shootingSpeed = 0.5;
     public static double kickerPos1 = 0.15;
     public static double kickerPos0 = 0.825;
+    public static double shootPower = 0.8;
 
     public double speeds = 0;
 
@@ -66,7 +67,7 @@ public class Shooter implements IAmBetterSubsystem {
 
     // ---------- COMMANDS ---------------------- //
     public Command spinUp() {
-        return new SetPower(shooters, -1);
+        return new SetPower(shooters, -shootPower);
     }
     public Command spinDown() {
         return new SetPower(shooters, 0);

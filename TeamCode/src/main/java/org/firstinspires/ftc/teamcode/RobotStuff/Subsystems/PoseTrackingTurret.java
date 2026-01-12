@@ -38,10 +38,9 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
     public boolean hasSetAlliance = false;
     public boolean hasGotMotif = false;
     public boolean isLookingForMotif = false;
-    Pose redPose = new Pose(144, 144);
-    Pose bluePose = new Pose(0, 144);
-    public Pose targetPose = new Pose(144, 144);
-    public Pose storedTargetPose = new Pose(144, 144);
+    Pose redPose = new Pose(136, 136);
+    Pose bluePose = new Pose(8, 136);
+    public Pose targetPose = new Pose(136, 136);
     Pose motifPose = new Pose(144, 72);
     public double targetYaw = 0;
     public double targetPitch = 0.0;
@@ -129,7 +128,7 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
     }
 
     public Command resetHood() {
-        return Shooter.INSTANCE.setHoodPos(hoodToPos);
+        return VPIDShooter.INSTANCE.setHoodPos(hoodToPos);
     }
 
 
@@ -201,8 +200,8 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
         double voltageDiff = voltageSensor.getVoltage() - voltageMid;
         double powerMod = altPerV * voltageDiff;
 
-        if (dist >= 100) return farHoodPos;
-        else if (dist <= 25) return 0.86;
+        if (dist >= 100) return farHoodPos + powerMod;
+        else if (dist <= 25) return 0.86 + powerMod;
         return -(0.001 * dist) + 0.865 + powerMod;
     }
 
@@ -236,7 +235,7 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
 
                 controller.setGoal(new KineticState(degreesToTicks(Math.max(minLim, Math.min(maxLim, targetYaw)))));
                 rotationMotor.setPower(controller.calculate(rotationMotor.getState()));
-                Shooter.INSTANCE.setHoodPos(calcHoodPower(currentPose.distanceFrom(targetPose))).schedule();
+                VPIDShooter.INSTANCE.setHoodPos(calcHoodPower(currentPose.distanceFrom(targetPose))).schedule();
                 break;
             case IDLE:
                 rotationMotor.setPower(controller.calculate(rotationMotor.getState()));
