@@ -38,8 +38,8 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
     public boolean hasSetAlliance = false;
     public boolean hasGotMotif = false;
     public boolean isLookingForMotif = false;
-    Pose redPose = new Pose(136, 136);
-    Pose bluePose = new Pose(8, 136);
+    Pose redPose = new Pose(138, 138);
+    Pose bluePose = new Pose(6, 138);
     public Pose targetPose = new Pose(136, 136);
     Pose motifPose = new Pose(144, 72);
     public double targetYaw = 0;
@@ -64,7 +64,7 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
     public static double hoodToPos = 0.8;
     public static double voltageMid = 10.5;
     public static double altPerV = -0.01;
-    public static double farHoodPos = 0.79;
+    public static double farHoodPos = 0.85;
 
     // --------------------- OPMODE --------------------------------- //
 
@@ -128,7 +128,7 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
     }
 
     public Command resetHood() {
-        return VPIDShooter.INSTANCE.setHoodPos(hoodToPos);
+        return Shooter.INSTANCE.setHoodPos(hoodToPos);
     }
 
 
@@ -202,7 +202,7 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
 
         if (dist >= 100) return farHoodPos + powerMod;
         else if (dist <= 25) return 0.86 + powerMod;
-        return -(0.001 * dist) + 0.865 + powerMod;
+        return -(0.001 * dist) + 0.875 + powerMod;
     }
 
     public Pair<Integer, Integer> waugh() { // yes, this is how we get the tag x and y position
@@ -235,7 +235,7 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
 
                 controller.setGoal(new KineticState(degreesToTicks(Math.max(minLim, Math.min(maxLim, targetYaw)))));
                 rotationMotor.setPower(controller.calculate(rotationMotor.getState()));
-                VPIDShooter.INSTANCE.setHoodPos(calcHoodPower(currentPose.distanceFrom(targetPose))).schedule();
+                Shooter.INSTANCE.setHoodPos(calcHoodPower(currentPose.distanceFrom(targetPose))).schedule();
                 break;
             case IDLE:
                 rotationMotor.setPower(controller.calculate(rotationMotor.getState()));

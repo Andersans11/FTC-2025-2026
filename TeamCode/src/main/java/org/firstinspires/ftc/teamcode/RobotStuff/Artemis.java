@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemGroup
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.PoseTrackingTurret;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.VPIDShooter;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.OldTurret;
 
 import dev.nextftc.control.KineticState;
@@ -54,7 +54,7 @@ public class Artemis extends BetterSubsystemGroup {
                 Magazine.INSTANCE,
                 PoseTrackingTurret.INSTANCE,
                 Intake.INSTANCE,
-                VPIDShooter.INSTANCE
+                Shooter.INSTANCE
         );
     }
 
@@ -121,7 +121,7 @@ public class Artemis extends BetterSubsystemGroup {
         runIndicator();
     }
 
-    public static double motifShootingSpeed = 0.4;
+    public static double motifShootingSpeed = 0.2;
     public static double shootingSpeed = 0.15;
     public static double shootingSpeed2 = 0.2;
 
@@ -328,11 +328,11 @@ public class Artemis extends BetterSubsystemGroup {
             this.isShooting = true;
             return new SequentialGroup(
                     Magazine.INSTANCE.setDesiredColor(color),
-                    VPIDShooter.INSTANCE.spinUp(),
+                    Shooter.INSTANCE.spinUp(),
                     new Delay(shootingSpeed),
-                    VPIDShooter.INSTANCE.shoot(),
+                    Shooter.INSTANCE.shoot(),
                     Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.NONE),
-                    VPIDShooter.INSTANCE.idle(),
+                    Shooter.INSTANCE.idle(),
                     new InstantCommand(() -> this.isShooting = false)
             );
         } else {
@@ -349,7 +349,7 @@ public class Artemis extends BetterSubsystemGroup {
             return new SequentialGroup(
                     Magazine.INSTANCE.setDesiredColor(i),
                     new Delay(shootingSpeed),
-                    VPIDShooter.INSTANCE.shoot(),
+                    Shooter.INSTANCE.shoot(),
                     new Delay(shootingSpeed2),
                     Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.NONE),
                     Magazine.INSTANCE.setDesiredColor(i + 1)
@@ -377,14 +377,14 @@ public class Artemis extends BetterSubsystemGroup {
     public Command shootMotif() {
             return new SequentialGroup(
                     new InstantCommand(() -> this.isMotifShooting = true),
-                    VPIDShooter.INSTANCE.spinUp(),
+                    Shooter.INSTANCE.spinUp(),
                     new Delay(1.25),
                     shootSingleMotif(0),
                     new Delay(motifShootingSpeed),
                     shootSingleMotif(1),
                     new Delay(motifShootingSpeed),
                     shootSingleMotif(2),
-                    VPIDShooter.INSTANCE.idle(),
+                    Shooter.INSTANCE.idle(),
                     new InstantCommand(() -> this.isMotifShooting = false)
             );
     }
@@ -392,8 +392,8 @@ public class Artemis extends BetterSubsystemGroup {
     public Command start() {
         return new SequentialGroup(
                 Intake.INSTANCE.idle(),
-                VPIDShooter.INSTANCE.resetKicker(),
-                VPIDShooter.INSTANCE.idle(),
+                Shooter.INSTANCE.resetKicker(),
+                Shooter.INSTANCE.idle(),
                 PoseTrackingTurret.INSTANCE.resetHood()
         );
     }

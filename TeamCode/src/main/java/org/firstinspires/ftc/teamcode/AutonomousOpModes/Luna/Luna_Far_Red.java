@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemCompo
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.PoseTrackingTurret;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.VPIDShooter;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 
 import dev.nextftc.core.commands.delays.WaitUntil;
 import dev.nextftc.core.commands.groups.SequentialGroup;
@@ -132,7 +132,7 @@ public class Luna_Far_Red extends RoyallyFuckedUpMode {
         super.onStartButtonPressed();
         new SequentialGroup(
                 Artemis.INSTANCE.stopIntake(),
-                VPIDShooter.INSTANCE.idle(),
+                Shooter.INSTANCE.idle(),
                 new InstantCommand(() -> follower.followPath(obelisk1)),
                 new WaitUntil(() -> !follower.isBusy()),
                 PoseTrackingTurret.INSTANCE.setPosition(0),

@@ -36,9 +36,7 @@ public class Magazine implements IAmBetterSubsystem {
             Utils.ArtifactTypes.GREEN
     };
     public int shotsFired = 0;
-    public Utils.ArtifactTypes desiredColor = Utils.ArtifactTypes.PURPLE;
-    boolean usingSec = false;
-    public double turretOff = 0;
+    public Utils.ArtifactTypes desiredColor = Utils.ArtifactTypes.NONE;
     public boolean changedOffset = false;
 
     public double r = 0;
@@ -52,7 +50,7 @@ public class Magazine implements IAmBetterSubsystem {
     public static double off0 = 0;
     public static double off1 = 125;
     public static double off2 = 240;
-    public static double off = 73;
+    public static double off = 62;
     public static double dist = 60;
     public int it = 0;
     public int mode = 0;
@@ -137,7 +135,7 @@ public class Magazine implements IAmBetterSubsystem {
             }
             if (!foundOne) {
                 if (mode == 0) setMode(1).schedule();
-                else if (Artemis.INSTANCE.isMotifShooting) setMode(0).schedule();
+                else if (!Artemis.INSTANCE.isMotifShooting) setMode(0).schedule();
             }
         });
     }

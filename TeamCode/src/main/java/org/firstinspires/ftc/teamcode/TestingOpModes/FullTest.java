@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemCompo
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.RobotCentricDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.PoseTrackingTurret;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.VPIDShooter;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 
 @TeleOp(name = "Test: Full", group = Utils.PRIORITY_PRIORITY)
 public class FullTest extends RoyallyFuckedUpMode {
@@ -56,7 +56,7 @@ public class FullTest extends RoyallyFuckedUpMode {
         P2.square().whenBecomesTrue(Magazine.INSTANCE.setMode(0));
         P2.triangle().whenBecomesTrue(Magazine.INSTANCE.setMode(1));
 
-        P2.dpadUp().whenBecomesTrue(VPIDShooter.INSTANCE.resetKicker());
+        P2.dpadUp().whenBecomesTrue(Shooter.INSTANCE.resetKicker());
 
         P2.leftTrigger().atLeast(0.1).whenBecomesTrue(Magazine.INSTANCE.incShotsFired());
 

@@ -28,7 +28,7 @@ public class VPIDShooter implements IAmBetterSubsystem {
     ServoEx kicker;
 
     // ------------------------ CONFIG ------------------------ //
-    public static double shootingSpeed = 0.5;
+    public static double shootingSpeed = 0.1;
     public static double kickerPos1 = 0.15;
     public static double kickerPos0 = 0.825;
     public static double kP = 0.0075;
@@ -66,7 +66,7 @@ public class VPIDShooter implements IAmBetterSubsystem {
 
     // ---------- COMMANDS ---------------------- //
     public Command spinUp() {
-        return setGoal(1500);
+        return setGoal(2000);
     }
     public Command spinDown() {
         return setGoal(0);
