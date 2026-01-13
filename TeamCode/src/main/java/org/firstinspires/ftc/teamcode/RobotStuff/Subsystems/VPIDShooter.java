@@ -86,6 +86,7 @@ public class VPIDShooter implements IAmBetterSubsystem {
     public Command resetPID() {
         return new InstantCommand(() -> this.controller = ControlSystem.builder()
                 .velPid(kP, kI, kD)
+                .basicFF(kV, kA, kS)
                 .build());
     }
     public Command kick() {
