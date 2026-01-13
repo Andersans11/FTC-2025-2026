@@ -128,7 +128,7 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
     }
 
     public Command resetHood() {
-        return Shooter.INSTANCE.setHoodPos(hoodToPos);
+        return VPIDShooter.INSTANCE.setHoodPos(hoodToPos);
     }
 
 
@@ -235,7 +235,7 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
 
                 controller.setGoal(new KineticState(degreesToTicks(Math.max(minLim, Math.min(maxLim, targetYaw)))));
                 rotationMotor.setPower(controller.calculate(rotationMotor.getState()));
-                Shooter.INSTANCE.setHoodPos(calcHoodPower(currentPose.distanceFrom(targetPose))).schedule();
+                VPIDShooter.INSTANCE.setHoodPos(calcHoodPower(currentPose.distanceFrom(targetPose))).schedule();
                 break;
             case IDLE:
                 rotationMotor.setPower(controller.calculate(rotationMotor.getState()));

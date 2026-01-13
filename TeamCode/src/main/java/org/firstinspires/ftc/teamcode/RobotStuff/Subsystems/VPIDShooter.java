@@ -34,6 +34,9 @@ public class VPIDShooter implements IAmBetterSubsystem {
     public static double kP = 0.0075;
     public static double kI = 0.0;
     public static double kD = 0.0;
+    public static double kS = 0.0;
+    public static double kV = 0.20;
+    public static double kA = 7.76;
 
     // --------------------- OPMODE -------------------------- //
     @Override
@@ -51,6 +54,7 @@ public class VPIDShooter implements IAmBetterSubsystem {
 
         controller = ControlSystem.builder()
                 .velPid(kP, kI, kD)
+                .basicFF(kV, kA, kS)
                 .build();
     }
 

@@ -9,8 +9,6 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemCompo
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.RobotCentricDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.PoseTrackingTurret;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.VPIDShooter;
 
 @TeleOp(name = "TwoAndOnlyOpMode", group = Utils.PRIORITY_PRIORITY)
 public class Comp_OpMode extends RoyallyFuckedUpMode {
