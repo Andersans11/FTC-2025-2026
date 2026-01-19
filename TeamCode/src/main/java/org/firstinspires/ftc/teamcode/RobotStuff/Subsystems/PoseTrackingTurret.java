@@ -8,15 +8,12 @@ import static org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils.PGPPGP;
 import static org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils.PPGPPG;
 
 import com.bylazar.configurables.annotations.Configurable;
-import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.util.Timer;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Artemis;
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 
 import dev.nextftc.control.ControlSystem;
@@ -38,8 +35,8 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
     public boolean hasSetAlliance = false;
     public boolean hasGotMotif = false;
     public boolean isLookingForMotif = false;
-    Pose redPose = new Pose(138, 138);
-    Pose bluePose = new Pose(6, 138);
+    Pose redPose = new Pose(136, 136);
+    Pose bluePose = new Pose(8, 136);
     public Pose targetPose = new Pose(136, 136);
     Pose motifPose = new Pose(144, 72);
     public double targetYaw = 0;
@@ -62,9 +59,9 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
     public static double kI = 0.0;
     public static double kD = 0.00002;
     public static double hoodToPos = 0.8;
-    public static double voltageMid = 10.5;
-    public static double altPerV = -0.01;
-    public static double farHoodPos = 0.85;
+    public static double farHoodPos = 0.84;
+    public static double closeHoodPos = 0.9;
+    public boolean isFar;
 
     // --------------------- OPMODE --------------------------------- //
 
@@ -96,6 +93,15 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
 
     public Command setTracking() {
         return new InstantCommand(() -> this.mode = TurretMode.POSE_TRACKING);
+    }
+
+    public boolean isInZone(Pose currentPose) {
+        double x = currentPose.getX();
+        double y = currentPose.getY();
+        if (
+                (((y >= -x + 144) && (y >= x)) ||
+                ((y <= -x + 96) && (y <= x - 48)))
+            )
     }
 
     public Command toggleTrackObelisk() {
@@ -197,12 +203,17 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
     }
 
     public double calcHoodPower(double dist) {
-        double voltageDiff = voltageSensor.getVoltage() - voltageMid;
-        double powerMod = altPerV * voltageDiff;
 
-        if (dist >= 100) return farHoodPos + powerMod;
-        else if (dist <= 25) return 0.86 + powerMod;
-        return -(0.001 * dist) + 0.875 + powerMod;
+        if (dist >= 100) {
+            isFar = true;
+            return farHoodPos;
+        }
+        else if (dist <= 25) {
+            isFar = false;
+            return 0.86;
+        }
+        isFar = false;
+        return -(0.001 * dist) + closeHoodPos;
     }
 
     public Pair<Integer, Integer> waugh() { // yes, this is how we get the tag x and y position

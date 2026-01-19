@@ -4,7 +4,6 @@ import com.bylazar.configurables.annotations.Configurable;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 
-import dev.nextftc.bindings.Range;
 import dev.nextftc.control.ControlSystem;
 import dev.nextftc.control.KineticState;
 import dev.nextftc.core.commands.Command;
@@ -28,15 +27,17 @@ public class VPIDShooter implements IAmBetterSubsystem {
     ServoEx kicker;
 
     // ------------------------ CONFIG ------------------------ //
-    public static double shootingSpeed = 0.1;
-    public static double kickerPos1 = 0.15;
-    public static double kickerPos0 = 0.825;
-    public static double kP = 0.0075;
+    public static double shootingSpeed = 0.15;
+    public static double shootPower = 1950;
+    public static double shootPowerLess = 1750;
+    public static double kickerPos1 = 0.65;
+    public static double kickerPos0 = 1;
+    public static double kP = 0.01;
     public static double kI = 0.0;
     public static double kD = 0.0;
     public static double kS = 0.0;
-    public static double kV = 0.20;
-    public static double kA = 7.76;
+    public static double kV = 0.00035;
+    public static double kA = 1;
 
     // --------------------- OPMODE -------------------------- //
     @Override
@@ -63,20 +64,23 @@ public class VPIDShooter implements IAmBetterSubsystem {
 
     @Override
     public void periodic() {
-        shooters.setPower(-controller.calculate(shooters.getState()));
+        shooters.setPower(controller.calculate(shooters.getState()));
 
     }
 
 
     // ---------- COMMANDS ---------------------- //
     public Command spinUp() {
-        return setGoal(2000);
+        return new InstantCommand(() -> setGoal(-(PoseTrackingTurret.INSTANCE.isFar ? VPIDShooter.shootPower : VPIDShooter.shootPowerLess)).schedule());
+    }
+    public Command spinUpLess() {
+        return new InstantCommand(() -> setGoal(-shootPowerLess).schedule());
     }
     public Command spinDown() {
         return setGoal(0);
     }
     public Command idle() {
-        return setGoal(750);
+        return setGoal(-750);
     }
 
     public Command setGoal(double vel) {
@@ -99,10 +103,9 @@ public class VPIDShooter implements IAmBetterSubsystem {
     public Command shoot() {
         return new SequentialGroup(
                 this.kick(),
-                new SequentialGroup(
-                        new Delay(shootingSpeed),
-                        this.resetKicker()
-                )
+                new Delay(shootingSpeed),
+                this.resetKicker(),
+                new Delay(shootingSpeed)
         );
     }
 

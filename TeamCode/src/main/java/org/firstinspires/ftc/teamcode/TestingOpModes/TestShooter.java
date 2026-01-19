@@ -26,11 +26,13 @@ public class TestShooter extends RoyallyFuckedUpMode {
         P1.triangle().whenBecomesTrue(VPIDShooter.INSTANCE.spinUp());
         P1.square().whenBecomesTrue(VPIDShooter.INSTANCE.idle());
         P1.circle().whenBecomesTrue(VPIDShooter.INSTANCE.resetPID());
+        P1.cross().whenBecomesTrue(VPIDShooter.INSTANCE.spinDown());
     }
 
     @Override
     public void onUpdate() {
         super.onUpdate();
         addData("speed", VPIDShooter.INSTANCE.shooters.getState().getVelocity());
+        addData("power", VPIDShooter.INSTANCE.shooters.getPower());
     }
 }

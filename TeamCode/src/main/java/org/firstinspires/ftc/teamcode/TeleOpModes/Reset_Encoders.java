@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.TeleOpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
@@ -18,8 +19,9 @@ public class Reset_Encoders extends RoyallyFuckedUpMode {
     @Override
     public void onInit() {
         super.onInit();
-        rotationMotor = RobotConfig.TurretRotation.getMotor();
-        rotationMotor.zero();
+        for (DcMotor motor: hardwareMap.dcMotor){
+            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        }
         stop();
     }
 

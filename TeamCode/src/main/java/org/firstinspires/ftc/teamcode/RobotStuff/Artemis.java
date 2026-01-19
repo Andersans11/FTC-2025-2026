@@ -17,12 +17,14 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemGroup
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.PoseTrackingTurret;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.VPIDShooter;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.OldTurret;
 
 import dev.nextftc.control.KineticState;
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.delays.Delay;
+import dev.nextftc.core.commands.delays.WaitUntil;
 import dev.nextftc.core.commands.groups.SequentialGroup;
 import dev.nextftc.core.commands.utility.InstantCommand;
 import dev.nextftc.core.commands.utility.NullCommand;
@@ -122,7 +124,7 @@ public class Artemis extends BetterSubsystemGroup {
     }
 
     public static double motifShootingSpeed = 0.2;
-    public static double shootingSpeed = 0.15;
+    public static double shootingSpeed = 0.25;
     public static double shootingSpeed2 = 0.2;
 
     //  ------------------------- COMMANDS --------------------------- //
@@ -350,7 +352,6 @@ public class Artemis extends BetterSubsystemGroup {
                     Magazine.INSTANCE.setDesiredColor(i),
                     new Delay(shootingSpeed),
                     VPIDShooter.INSTANCE.shoot(),
-                    new Delay(shootingSpeed2),
                     Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.NONE),
                     Magazine.INSTANCE.setDesiredColor(i + 1)
             );
@@ -378,11 +379,11 @@ public class Artemis extends BetterSubsystemGroup {
             return new SequentialGroup(
                     new InstantCommand(() -> this.isMotifShooting = true),
                     VPIDShooter.INSTANCE.spinUp(),
-                    new Delay(1.25),
+                    new WaitUntil(() -> -VPIDShooter.INSTANCE.shooters.getVelocity() >= (PoseTrackingTurret.INSTANCE.isFar ? VPIDShooter.shootPower : VPIDShooter.shootPowerLess) - 50),
                     shootSingleMotif(0),
-                    new Delay(motifShootingSpeed),
+                    new WaitUntil(() -> -VPIDShooter.INSTANCE.shooters.getVelocity() >= (PoseTrackingTurret.INSTANCE.isFar ? VPIDShooter.shootPower : VPIDShooter.shootPowerLess) - 50),
                     shootSingleMotif(1),
-                    new Delay(motifShootingSpeed),
+                    new WaitUntil(() -> -VPIDShooter.INSTANCE.shooters.getVelocity() >= (PoseTrackingTurret.INSTANCE.isFar ? VPIDShooter.shootPower : VPIDShooter.shootPowerLess) - 50),
                     shootSingleMotif(2),
                     VPIDShooter.INSTANCE.idle(),
                     new InstantCommand(() -> this.isMotifShooting = false)
