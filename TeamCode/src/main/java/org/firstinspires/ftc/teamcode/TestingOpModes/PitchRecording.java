@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.RobotCentricDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.PoseTrackingTurret;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 
 @TeleOp(name = "Pitch Recording", group = Utils.PRIORITY_PRIORITY)
@@ -29,17 +29,17 @@ public class PitchRecording extends RoyallyFuckedUpMode {
 
         Artemis.INSTANCE.initFollower(hardwareMap);
 
-        PoseTrackingTurret.INSTANCE.mode = PoseTrackingTurret.TurretMode.POSE_TRACKING;
+        Turret.INSTANCE.mode = Turret.TurretMode.POSE_TRACKING;
 
         //P1.square().whenBecomesTrue(PoseTrackingTurret.INSTANCE.resetPose());
-        P1.circle().whenBecomesTrue(PoseTrackingTurret.INSTANCE.setIdle());
-        P1.cross().whenBecomesTrue(PoseTrackingTurret.INSTANCE.setTracking());
+        P1.circle().whenBecomesTrue(Turret.INSTANCE.setIdle());
+        P1.cross().whenBecomesTrue(Turret.INSTANCE.setTracking());
 
         P1.rightTrigger().atLeast(0.1).whenBecomesTrue(Artemis.INSTANCE.intake());
         P1.rightTrigger().atLeast(0.1).whenBecomesFalse(Artemis.INSTANCE.stopIntake());
 
-        P1.dpadUp().whenBecomesTrue(PoseTrackingTurret.INSTANCE.setBlueAlliance());
-        P1.dpadDown().whenBecomesTrue(PoseTrackingTurret.INSTANCE.setRedAlliance());
+        P1.dpadUp().whenBecomesTrue(Turret.INSTANCE.setBlueAlliance());
+        P1.dpadDown().whenBecomesTrue(Turret.INSTANCE.setRedAlliance());
 
         P1.rightBumper().whenBecomesTrue(Artemis.INSTANCE.outtake());
         P1.rightBumper().whenBecomesFalse(Artemis.INSTANCE.stopIntake());
@@ -58,7 +58,7 @@ public class PitchRecording extends RoyallyFuckedUpMode {
         P2.square().whenBecomesTrue(Magazine.INSTANCE.setMode(0));
         P2.triangle().whenBecomesTrue(Magazine.INSTANCE.setMode(1));
 
-        P2.dpadUp().whenBecomesTrue(() -> Shooter.INSTANCE.hood.setPosition(PoseTrackingTurret.hoodToPos));
+        P2.dpadUp().whenBecomesTrue(() -> Shooter.INSTANCE.hood.setPosition(Turret.hoodToPos));
 
         P2.leftTrigger().atLeast(0.1).whenBecomesTrue(Magazine.INSTANCE.incShotsFired());
 
@@ -77,9 +77,9 @@ public class PitchRecording extends RoyallyFuckedUpMode {
     public void onUpdate() {
         super.onUpdate();
 
-        addData("distance", Artemis.INSTANCE.currentPose.distanceFrom(PoseTrackingTurret.INSTANCE.targetPose));
+        addData("distance", Artemis.INSTANCE.currentPose.distanceFrom(Turret.INSTANCE.targetPose));
 
-        addData("tagY", PoseTrackingTurret.INSTANCE.waugh().component2());
+        addData("tagY", Turret.INSTANCE.waugh().component2());
 
         addData("target", RobotConfig.HoodServo.getServo().getPosition());
         addData("0", Magazine.INSTANCE.getSlotColor(0));
@@ -89,6 +89,6 @@ public class PitchRecording extends RoyallyFuckedUpMode {
         addData("Mode", Magazine.INSTANCE.mode);
         addData("desiredColor", Magazine.INSTANCE.desiredColor);
         addData("shotsFired", Magazine.INSTANCE.shotsFired);
-        addData("turret", PoseTrackingTurret.INSTANCE.rotationMotor.getPower());
+        addData("turret", Turret.INSTANCE.rotationMotor.getPower());
     }
 }

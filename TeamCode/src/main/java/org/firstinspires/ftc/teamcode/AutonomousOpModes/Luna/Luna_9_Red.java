@@ -15,9 +15,8 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Misc.Drawing;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.PoseTrackingTurret;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.VPIDShooter;
 
 import dev.nextftc.core.commands.delays.WaitUntil;
 import dev.nextftc.core.commands.groups.SequentialGroup;
@@ -103,7 +102,7 @@ public class Luna_9_Red extends RoyallyFuckedUpMode {
                     .build();
         }));
         P2.square().whenBecomesTrue(Magazine.INSTANCE.setMode(0));
-        P2.dpadUp().whenBecomesTrue(PoseTrackingTurret.INSTANCE.setRedAlliance());
+        P2.dpadUp().whenBecomesTrue(Turret.INSTANCE.setRedAlliance());
         Artemis.INSTANCE.stopIntake().schedule();
     }
 
@@ -130,19 +129,19 @@ public class Luna_9_Red extends RoyallyFuckedUpMode {
         super.onStartButtonPressed();
         new SequentialGroup(
                 Artemis.INSTANCE.stopIntake(),
-                VPIDShooter.INSTANCE.idle(),
+                Shooter.INSTANCE.idle(),
                 new InstantCommand(()-> follower.followPath(score1)),
                 new WaitUntil(() -> !follower.isBusy()),
-                PoseTrackingTurret.INSTANCE.setPosition(45),
-                new WaitUntil(() -> PoseTrackingTurret.INSTANCE.hasGotMotif),
-                PoseTrackingTurret.INSTANCE.setTracking(),
+                Turret.INSTANCE.setPosition(45),
+                new WaitUntil(() -> Turret.INSTANCE.hasGotMotif),
+                Turret.INSTANCE.setTracking(),
                 new InstantCommand(() -> pathTimer.resetTimer()),
                 Magazine.INSTANCE.setMode(0),
                 new WaitUntil(() -> pathTimer.getElapsedTimeSeconds() >= 0.5),
                 Magazine.INSTANCE.setMode(1),
                 Artemis.INSTANCE.shootMotif(),
                 new WaitUntil(() -> Magazine.INSTANCE.getSlotsFilled() == 0),
-                PoseTrackingTurret.INSTANCE.setPosition(0),
+                Turret.INSTANCE.setPosition(0),
                 Magazine.INSTANCE.setMode(0),
                 new InstantCommand(() -> follower.followPath(interrim1)),
                 new WaitUntil(() -> !follower.isBusy()),
@@ -158,7 +157,7 @@ public class Luna_9_Red extends RoyallyFuckedUpMode {
                 new WaitUntil(() -> pathTimer.getElapsedTimeSeconds() >= 2.5 || Magazine.INSTANCE.mode == 1),
                 Magazine.INSTANCE.fillSlots(),
                 Artemis.INSTANCE.stopIntake(),
-                PoseTrackingTurret.INSTANCE.setTracking(),
+                Turret.INSTANCE.setTracking(),
                 new InstantCommand(() -> {
                     follower.setMaxPower(pathPower);
                     follower.followPath(score2);
@@ -166,7 +165,7 @@ public class Luna_9_Red extends RoyallyFuckedUpMode {
                 new WaitUntil(() -> !follower.isBusy()),
                 Artemis.INSTANCE.shootMotif(),
                 new WaitUntil(() -> Magazine.INSTANCE.getSlotsFilled() == 0),
-                PoseTrackingTurret.INSTANCE.setPosition(0),
+                Turret.INSTANCE.setPosition(0),
                 Magazine.INSTANCE.setMode(0),
                 new InstantCommand(() -> follower.followPath(interrim2)),
                 new WaitUntil(() -> !follower.isBusy()),
@@ -181,7 +180,7 @@ public class Luna_9_Red extends RoyallyFuckedUpMode {
                 new InstantCommand(() -> pathTimer.resetTimer()),
                 new WaitUntil(() -> pathTimer.getElapsedTimeSeconds() >= 2.5 || Magazine.INSTANCE.mode == 1),
                 Artemis.INSTANCE.stopIntake(),
-                PoseTrackingTurret.INSTANCE.setTracking()
+                Turret.INSTANCE.setTracking()
         ).schedule();
     }
 

@@ -8,8 +8,8 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Artemis;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.RobotCentricDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.PoseTrackingTurret;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.VPIDShooter;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 
 import dev.nextftc.core.commands.groups.SequentialGroup;
 
@@ -32,22 +32,19 @@ public class Comp_OpMode extends RoyallyFuckedUpMode {
         P1.rightTrigger().atLeast(0.1).whenBecomesTrue(Artemis.INSTANCE.intake());
         P1.rightTrigger().atLeast(0.1).whenBecomesFalse(Artemis.INSTANCE.stopIntake());
 
-        P1.dpadUp().whenBecomesTrue(PoseTrackingTurret.INSTANCE.setBlueAlliance());
-        P1.dpadDown().whenBecomesTrue(PoseTrackingTurret.INSTANCE.setRedAlliance());
+        P1.dpadUp().whenBecomesTrue(Turret.INSTANCE.setBlueAlliance());
+        P1.dpadDown().whenBecomesTrue(Turret.INSTANCE.setRedAlliance());
 
         P1.rightBumper().whenBecomesTrue(Artemis.INSTANCE.outtake());
         P1.rightBumper().whenBecomesFalse(Artemis.INSTANCE.stopIntake());
 
-        P1.cross().whenBecomesTrue(PoseTrackingTurret.INSTANCE.setTracking());
+        P1.cross().whenBecomesTrue(Turret.INSTANCE.setTracking());
 
         P1.dpadLeft().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.GREEN));
         P1.dpadRight().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.PURPLE));
 
         P2.dpadLeft().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.GREEN));
         P2.dpadRight().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.PURPLE));
-
-        P2.cross().whenBecomesTrue(Artemis.INSTANCE.shootSingle(Utils.ArtifactTypes.GREEN));
-        P2.circle().whenBecomesTrue(Artemis.INSTANCE.shootSingle(Utils.ArtifactTypes.PURPLE));
 
         P2.rightTrigger().atLeast(0.1).whenBecomesTrue(
                 new SequentialGroup(
@@ -58,9 +55,13 @@ public class Comp_OpMode extends RoyallyFuckedUpMode {
         P2.square().whenBecomesTrue(Magazine.INSTANCE.setMode(0));
         P2.triangle().whenBecomesTrue(Magazine.INSTANCE.setMode(1));
 
-        P2.leftTrigger().atLeast(0.1).whenBecomesTrue(Magazine.INSTANCE.incShotsFired());
+        P2.leftTrigger().atLeast(0.1).whenBecomesTrue(Shooter.INSTANCE.spinUp());
 
-        P2.dpadUp().whenBecomesTrue(PoseTrackingTurret.INSTANCE.toggleTrackObelisk());
+        P2.cross().whenBecomesTrue(Shooter.INSTANCE.idle());
+
+        P2.circle().whenBecomesTrue(Magazine.INSTANCE.incShotsFired());
+
+        P2.dpadUp().whenBecomesTrue(Turret.INSTANCE.toggleTrackObelisk());
 
         P2.dpadDown().whenBecomesTrue(Artemis.INSTANCE.resetFollower());
 
@@ -93,8 +94,8 @@ public class Comp_OpMode extends RoyallyFuckedUpMode {
         addData("Mode", Magazine.INSTANCE.mode);
         addData("desiredColor", Magazine.INSTANCE.desiredColor);
         addData("shotsFired", Magazine.INSTANCE.shotsFired);
-        addData("turret", PoseTrackingTurret.INSTANCE.rotationMotor.getPower());
-        addData("speed", VPIDShooter.INSTANCE.shooters.getVelocity());
+        addData("turret", Turret.INSTANCE.rotationMotor.getPower());
+        addData("speed", Shooter.INSTANCE.shooters.getVelocity());
 
     }
 }

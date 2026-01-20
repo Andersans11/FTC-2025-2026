@@ -4,51 +4,47 @@ import com.bylazar.configurables.annotations.Configurable;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 
-import java.util.ArrayList;
-
-import dev.nextftc.bindings.Range;
 import dev.nextftc.control.ControlSystem;
+import dev.nextftc.control.KineticState;
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.delays.Delay;
 import dev.nextftc.core.commands.groups.SequentialGroup;
 import dev.nextftc.core.commands.utility.InstantCommand;
 import dev.nextftc.hardware.controllable.MotorGroup;
-import dev.nextftc.hardware.impl.MotorEx;
 import dev.nextftc.hardware.impl.ServoEx;
 import dev.nextftc.hardware.positionable.ServoGroup;
 import dev.nextftc.hardware.positionable.SetPosition;
-import dev.nextftc.hardware.powerable.SetPower;
 
 @Configurable
 public class Shooter implements IAmBetterSubsystem {
 
     public static final Shooter INSTANCE = new Shooter();
 
-    public MotorEx[] shooterMotors;
+    public ControlSystem controller;
     ServoGroup hoodServos;
     public ServoEx hood;
-    MotorGroup shooters;
+    public MotorGroup shooters;
     ServoEx kicker;
-    Range hoodSupp;
 
     // ------------------------ CONFIG ------------------------ //
-    public static double shootingSpeed = 0.1;
-    public static double kickerPos1 = 0.15;
-    public static double kickerPos0 = 0.825;
-    public static double shootPower = 0.8;
-
-    public double speeds = 0;
+    public static double shootingSpeed = 0.15;
+    public static double shootPower = 1950;
+    public static double shootPowerLess = 1750;
+    public static double kickerPos1 = 0.65;
+    public static double kickerPos0 = 1;
+    public static double kP = 0.01;
+    public static double kI = 0.0;
+    public static double kD = 0.0;
+    public static double kS = 0.0;
+    public static double kV = 0.00035;
+    public static double kA = 1;
 
     // --------------------- OPMODE -------------------------- //
     @Override
     public void initSystem() {
-        shooterMotors = new MotorEx[] {
+        shooters = new MotorGroup(
                 RobotConfig.ShootMotor1.getMotor(),
                 RobotConfig.ShootMotor2.getMotor()
-        };
-        shooters = new MotorGroup(
-                shooterMotors[0],
-                shooterMotors[1]
         );
         hoodServos = new ServoGroup(
                 RobotConfig.HoodServo.getServo(),
@@ -56,24 +52,46 @@ public class Shooter implements IAmBetterSubsystem {
         );
         hood = RobotConfig.HoodServo.getServo();
         kicker = RobotConfig.Kicker.getServo();
+
+        controller = ControlSystem.builder()
+                .velPid(kP, kI, kD)
+                .basicFF(kV, kA, kS)
+                .build();
     }
 
     @Override
     public void preStart() {}
 
     @Override
-    public void periodic() {}
+    public void periodic() {
+        shooters.setPower(controller.calculate(shooters.getState()));
+
+    }
 
 
     // ---------- COMMANDS ---------------------- //
     public Command spinUp() {
-        return new SetPower(shooters, -shootPower);
+        return new InstantCommand(() -> setGoal(-(Turret.INSTANCE.isFar ? Shooter.shootPower : Shooter.shootPowerLess)).schedule());
+    }
+    public Command spinUpLess() {
+        return new InstantCommand(() -> setGoal(-shootPowerLess).schedule());
     }
     public Command spinDown() {
-        return new SetPower(shooters, 0);
+        return setGoal(0);
     }
     public Command idle() {
-        return new SetPower(shooters, -0.5);
+        return setGoal(-750);
+    }
+
+    public Command setGoal(double vel) {
+        return new InstantCommand(() -> this.controller.setGoal(new KineticState(0.0, vel)));
+    }
+
+    public Command resetPID() {
+        return new InstantCommand(() -> this.controller = ControlSystem.builder()
+                .velPid(kP, kI, kD)
+                .basicFF(kV, kA, kS)
+                .build());
     }
     public Command kick() {
         return new SetPosition(kicker, kickerPos1);
@@ -85,11 +103,9 @@ public class Shooter implements IAmBetterSubsystem {
     public Command shoot() {
         return new SequentialGroup(
                 this.kick(),
-                new InstantCommand(() -> speeds = shooterMotors[0].getVelocity()),
-                new SequentialGroup(
-                        new Delay(shootingSpeed),
-                        this.resetKicker()
-                )
+                new Delay(shootingSpeed),
+                this.resetKicker(),
+                new Delay(shootingSpeed)
         );
     }
 

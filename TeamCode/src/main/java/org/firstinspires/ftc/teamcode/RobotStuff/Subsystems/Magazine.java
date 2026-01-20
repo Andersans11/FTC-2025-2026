@@ -224,7 +224,10 @@ public class Magazine implements IAmBetterSubsystem {
             new Delay(0.25),
             new InstantCommand(() -> {
                 if (mode == 0) desiredColor = Utils.ArtifactTypes.NONE;
-                else desiredColor = motif[shotsFired];
+                else {
+                    if (Artemis.INSTANCE.autoShooting) Shooter.INSTANCE.spinUp().schedule();
+                    desiredColor = motif[shotsFired];
+                }
                 this.mode = mode;
                 })
         );

@@ -9,8 +9,10 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Artemis;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.RobotCentricDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.PoseTrackingTurret;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.VPIDShooter;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
+
+import dev.nextftc.core.commands.groups.SequentialGroup;
 
 @TeleOp(name = "Test: Full", group = Utils.PRIORITY_PRIORITY)
 public class FullTest extends RoyallyFuckedUpMode {
@@ -28,19 +30,16 @@ public class FullTest extends RoyallyFuckedUpMode {
         super.onInit();
         Artemis.INSTANCE.initFollower(hardwareMap);
 
-        PoseTrackingTurret.INSTANCE.mode = PoseTrackingTurret.TurretMode.POSE_TRACKING;
-
-        P1.circle().whenBecomesTrue(PoseTrackingTurret.INSTANCE.setIdle());
-        P1.cross().whenBecomesTrue(PoseTrackingTurret.INSTANCE.setTracking());
-
         P1.rightTrigger().atLeast(0.1).whenBecomesTrue(Artemis.INSTANCE.intake());
         P1.rightTrigger().atLeast(0.1).whenBecomesFalse(Artemis.INSTANCE.stopIntake());
 
-        P1.dpadUp().whenBecomesTrue(PoseTrackingTurret.INSTANCE.setBlueAlliance());
-        P1.dpadDown().whenBecomesTrue(PoseTrackingTurret.INSTANCE.setRedAlliance());
+        P1.dpadUp().whenBecomesTrue(Turret.INSTANCE.setBlueAlliance());
+        P1.dpadDown().whenBecomesTrue(Turret.INSTANCE.setRedAlliance());
 
         P1.rightBumper().whenBecomesTrue(Artemis.INSTANCE.outtake());
         P1.rightBumper().whenBecomesFalse(Artemis.INSTANCE.stopIntake());
+
+        P1.cross().whenBecomesTrue(Turret.INSTANCE.setTracking());
 
         P1.dpadLeft().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.GREEN));
         P1.dpadRight().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.PURPLE));
@@ -48,23 +47,34 @@ public class FullTest extends RoyallyFuckedUpMode {
         P2.dpadLeft().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.GREEN));
         P2.dpadRight().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.PURPLE));
 
-        P2.cross().whenBecomesTrue(Artemis.INSTANCE.shootSingle(Utils.ArtifactTypes.GREEN));
-        P2.circle().whenBecomesTrue(Artemis.INSTANCE.shootSingle(Utils.ArtifactTypes.PURPLE));
-
-        P2.rightTrigger().atLeast(0.1).whenBecomesTrue(Artemis.INSTANCE.shootMotif());
+        P2.rightTrigger().atLeast(0.1).whenBecomesTrue(
+                new SequentialGroup(
+                        Magazine.INSTANCE.fillSlots(),
+                        Artemis.INSTANCE.shootMotif()
+                ));
 
         P2.square().whenBecomesTrue(Magazine.INSTANCE.setMode(0));
         P2.triangle().whenBecomesTrue(Magazine.INSTANCE.setMode(1));
 
-        P2.dpadUp().whenBecomesTrue(VPIDShooter.INSTANCE.resetKicker());
+        P2.leftTrigger().atLeast(0.1).whenBecomesTrue(Shooter.INSTANCE.spinUp());
 
-        P2.leftTrigger().atLeast(0.1).whenBecomesTrue(Magazine.INSTANCE.incShotsFired());
+        P2.cross().whenBecomesTrue(Shooter.INSTANCE.idle());
+
+        P2.circle().whenBecomesTrue(Magazine.INSTANCE.incShotsFired());
+
+        P2.dpadUp().whenBecomesTrue(Turret.INSTANCE.toggleTrackObelisk());
 
         P2.dpadDown().whenBecomesTrue(Artemis.INSTANCE.resetFollower());
 
-        P2.dpadUp().whenBecomesTrue(PoseTrackingTurret.INSTANCE.toggleTrackObelisk());
+        P2.leftBumper().whenBecomesTrue(Artemis.INSTANCE.setAutoShooting());
 
         Artemis.INSTANCE.indMode = Artemis.IndicatorMode.INIT_DONE;
+    }
+
+    @Override
+    public void onWaitForStart() {
+        super.onWaitForStart();
+        Artemis.INSTANCE.runIndicator();
     }
 
     @Override
@@ -82,18 +92,18 @@ public class FullTest extends RoyallyFuckedUpMode {
         addData("1", Magazine.INSTANCE.getSlotColor(1));
         addData("2", Magazine.INSTANCE.getSlotColor(2));
         addData("Active", Magazine.INSTANCE.activeSlot);
-        addData("red", PoseTrackingTurret.INSTANCE.isRed);
+        addData("red", Turret.INSTANCE.isRed);
         addData("desiredColor", Magazine.INSTANCE.desiredColor);
         addData("shotsFired", Magazine.INSTANCE.shotsFired);
-        addData("TurretMode", PoseTrackingTurret.INSTANCE.mode);
+        addData("TurretMode", Turret.INSTANCE.mode);
         addData("dist", Magazine.INSTANCE.color.getDistance(DistanceUnit.MM));
         addData("dist", Magazine.INSTANCE.range.getDistance(DistanceUnit.MM));
         addData("Pose", Math.toDegrees(Artemis.INSTANCE.currentPose.getHeading()));
 
-        addData("mode", PoseTrackingTurret.INSTANCE.mode);
-        addData("targetPose", PoseTrackingTurret.INSTANCE.targetPose);
-        addData("targetYaw", PoseTrackingTurret.INSTANCE.targetYaw);
-        addData("targetPitch", PoseTrackingTurret.INSTANCE.targetPitch);
-        addData("volt", PoseTrackingTurret.INSTANCE.voltageSensor.getVoltage());
+        addData("mode", Turret.INSTANCE.mode);
+        addData("targetPose", Turret.INSTANCE.targetPose);
+        addData("targetYaw", Turret.INSTANCE.targetYaw);
+        addData("targetPitch", Turret.INSTANCE.targetPitch);
+        addData("volt", Turret.INSTANCE.voltageSensor.getVoltage());
     }
 }

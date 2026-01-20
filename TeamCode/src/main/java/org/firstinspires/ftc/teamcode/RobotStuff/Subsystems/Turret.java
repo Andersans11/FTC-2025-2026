@@ -24,9 +24,9 @@ import dev.nextftc.hardware.impl.MotorEx;
 import kotlin.Pair;
 
 @Configurable
-public class PoseTrackingTurret implements IAmBetterSubsystem {
+public class Turret implements IAmBetterSubsystem {
 
-    public static final PoseTrackingTurret INSTANCE = new PoseTrackingTurret();
+    public static final Turret INSTANCE = new Turret();
 
     public MotorEx rotationMotor;
     public HuskyLens camera;
@@ -99,7 +99,7 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
         double x = currentPose.getX();
         double y = currentPose.getY();
         return (((y >= -x + 144) && (y >= x)) ||
-                ((y <= -x + 96) && (y <= x - 48))) &&
+                ((y <= -x + 102) && (y <= x - 42))) &&
                 !isAtLimit();
     }
 
@@ -137,7 +137,7 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
     }
 
     public Command resetHood() {
-        return VPIDShooter.INSTANCE.setHoodPos(hoodToPos);
+        return Shooter.INSTANCE.setHoodPos(hoodToPos);
     }
 
 
@@ -249,7 +249,7 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
 
                 controller.setGoal(new KineticState(degreesToTicks(Math.max(minLim, Math.min(maxLim, targetYaw)))));
                 rotationMotor.setPower(controller.calculate(rotationMotor.getState()));
-                VPIDShooter.INSTANCE.setHoodPos(calcHoodPower(currentPose.distanceFrom(targetPose))).schedule();
+                Shooter.INSTANCE.setHoodPos(calcHoodPower(currentPose.distanceFrom(targetPose))).schedule();
                 break;
             case IDLE:
                 rotationMotor.setPower(controller.calculate(rotationMotor.getState()));
