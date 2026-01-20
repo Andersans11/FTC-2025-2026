@@ -98,10 +98,13 @@ public class PoseTrackingTurret implements IAmBetterSubsystem {
     public boolean isInZone(Pose currentPose) {
         double x = currentPose.getX();
         double y = currentPose.getY();
-        if (
-                (((y >= -x + 144) && (y >= x)) ||
-                ((y <= -x + 96) && (y <= x - 48)))
-            )
+        return (((y >= -x + 144) && (y >= x)) ||
+                ((y <= -x + 96) && (y <= x - 48))) &&
+                !isAtLimit();
+    }
+
+    public boolean isAtLimit() {
+        return ticksToDegrees(controller.getGoal().getPosition()) == maxLim || ticksToDegrees(controller.getGoal().getPosition()) == minLim;
     }
 
     public Command toggleTrackObelisk() {

@@ -11,6 +11,8 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.PoseTrackingTurret;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.VPIDShooter;
 
+import dev.nextftc.core.commands.groups.SequentialGroup;
+
 @TeleOp(name = "TwoAndOnlyOpMode", group = Utils.PRIORITY_PRIORITY)
 public class Comp_OpMode extends RoyallyFuckedUpMode {
 
@@ -47,7 +49,11 @@ public class Comp_OpMode extends RoyallyFuckedUpMode {
         P2.cross().whenBecomesTrue(Artemis.INSTANCE.shootSingle(Utils.ArtifactTypes.GREEN));
         P2.circle().whenBecomesTrue(Artemis.INSTANCE.shootSingle(Utils.ArtifactTypes.PURPLE));
 
-        P2.rightTrigger().atLeast(0.1).whenBecomesTrue(Artemis.INSTANCE.shootMotif());
+        P2.rightTrigger().atLeast(0.1).whenBecomesTrue(
+                new SequentialGroup(
+                    Magazine.INSTANCE.fillSlots(),
+                    Artemis.INSTANCE.shootMotif()
+                ));
 
         P2.square().whenBecomesTrue(Magazine.INSTANCE.setMode(0));
         P2.triangle().whenBecomesTrue(Magazine.INSTANCE.setMode(1));
@@ -58,9 +64,15 @@ public class Comp_OpMode extends RoyallyFuckedUpMode {
 
         P2.dpadDown().whenBecomesTrue(Artemis.INSTANCE.resetFollower());
 
-        P2.leftBumper().whenBecomesTrue(Magazine.INSTANCE.fixModeOffset());
+        P2.leftBumper().whenBecomesTrue(Artemis.INSTANCE.setAutoShooting());
 
         Artemis.INSTANCE.indMode = Artemis.IndicatorMode.INIT_DONE;
+    }
+
+    @Override
+    public void onWaitForStart() {
+        super.onWaitForStart();
+        Artemis.INSTANCE.runIndicator();
     }
 
     @Override

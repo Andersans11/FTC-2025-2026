@@ -121,11 +121,11 @@ public class Artemis extends BetterSubsystemGroup {
         follower.updatePose();
         currentPose = follower.getPose();
         runIndicator();
+        if ((VPIDShooter.INSTANCE.controller.getGoal().getPosition() != VPIDShooter.shootPower && VPIDShooter.INSTANCE.controller.getGoal().getPosition() != VPIDShooter.shootPower) && PoseTrackingTurret.INSTANCE.isInZone(currentPose) && !PoseTrackingTurret.INSTANCE.isAtLimit() && Magazine.INSTANCE.mode == 1 && Magazine.INSTANCE.getSlotsFilled() == 3 && autoShooting) shootMotif();
     }
-
-    public static double motifShootingSpeed = 0.2;
     public static double shootingSpeed = 0.25;
-    public static double shootingSpeed2 = 0.2;
+
+    public boolean autoShooting = false;
 
     //  ------------------------- COMMANDS --------------------------- //
 
@@ -133,7 +133,7 @@ public class Artemis extends BetterSubsystemGroup {
 
         if (Magazine.INSTANCE.mode == 1) {
             if (isMotifShooting) indMode = IndicatorMode.SHOOTING_ACTIVE;
-            else if (PoseTrackingTurret.INSTANCE.controller.isWithinTolerance(new KineticState(OldTurret.INSTANCE.degreesToTicks(2)))) indMode = IndicatorMode.SHOOTING_TRACKED;
+            else if (PoseTrackingTurret.INSTANCE.controller.isWithinTolerance(new KineticState(OldTurret.INSTANCE.degreesToTicks(2))) && !PoseTrackingTurret.INSTANCE.isAtLimit()) indMode = IndicatorMode.SHOOTING_TRACKED;
             else indMode = IndicatorMode.SHOOTING_TRACKING;
         } else {
             if (Magazine.INSTANCE.hasBall) {
@@ -318,6 +318,10 @@ public class Artemis extends BetterSubsystemGroup {
             Pose newPose = PoseTrackingTurret.INSTANCE.isRed() ? new Pose(9, 9, Math.toRadians(90)) : new Pose(135, 9, Math.toRadians(90));
             follower.setPose(newPose);
         });
+    }
+
+    public Command setAutoShooting() {
+        return new InstantCommand(() -> autoShooting = !autoShooting);
     }
 
     /**
