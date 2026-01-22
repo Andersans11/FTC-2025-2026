@@ -96,6 +96,7 @@ public class Comp_OpMode extends RoyallyFuckedUpMode {
         addData("shotsFired", Magazine.INSTANCE.shotsFired);
         addData("turret", Turret.INSTANCE.rotationMotor.getPower());
         addData("speed", Shooter.INSTANCE.shooters.getVelocity());
+        addData("isShooting", Artemis.INSTANCE.isMotifShooting);
 
     }
 }

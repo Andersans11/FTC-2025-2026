@@ -106,7 +106,7 @@ public class Artemis extends BetterSubsystemGroup {
 
     public void initFollower(HardwareMap hardwareMap, Pose startingPose) {
         this.follower = Constants.createFollower(hardwareMap);
-        this.follower.setStartingPose(currentPose);
+        this.follower.setStartingPose(startingPose);
     }
 
     @Override
@@ -120,8 +120,11 @@ public class Artemis extends BetterSubsystemGroup {
         follower.updatePose();
         currentPose = follower.getPose();
         runIndicator();
-        if ((Shooter.INSTANCE.controller.getGoal().getPosition() != Shooter.shootPower && Shooter.INSTANCE.controller.getGoal().getPosition() != Shooter.shootPower) && Turret.INSTANCE.isInZone(currentPose) && !Turret.INSTANCE.isAtLimit() && Magazine.INSTANCE.mode == 1 && Magazine.INSTANCE.getSlotsFilled() == 3 && autoShooting) shootMotif();
+        if (!isMotifShooting && Turret.INSTANCE.controller.isWithinTolerance(new KineticState(OldTurret.INSTANCE.degreesToTicks(2))) && Turret.INSTANCE.isInZone(currentPose) && !Turret.INSTANCE.isAtLimit() && Magazine.INSTANCE.mode == 1 && Magazine.INSTANCE.getSlotsFilled() == 3 && autoShooting) {
+                shootMotif().schedule();
+        }
     }
+    
     public static double shootingSpeed = 0.25;
 
     public boolean autoShooting = false;

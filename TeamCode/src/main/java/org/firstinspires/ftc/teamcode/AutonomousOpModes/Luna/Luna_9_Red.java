@@ -172,15 +172,22 @@ public class Luna_9_Red extends RoyallyFuckedUpMode {
                 Artemis.INSTANCE.intake(),
                 Magazine.INSTANCE.setMode(0),
                 new InstantCommand(() -> {
-                    follower.setMaxPower(intakePower);
+                    follower.setMaxPower(intakePower + 0.05);
                     follower.followPath(intake2);
                     pathTimer.resetTimer();
                 }),
                 new WaitUntil(() -> !follower.isBusy() || pathTimer.getElapsedTimeSeconds() >= 10),
                 new InstantCommand(() -> pathTimer.resetTimer()),
                 new WaitUntil(() -> pathTimer.getElapsedTimeSeconds() >= 2.5 || Magazine.INSTANCE.mode == 1),
+                Magazine.INSTANCE.fillSlots(),
                 Artemis.INSTANCE.stopIntake(),
-                Turret.INSTANCE.setTracking()
+                Turret.INSTANCE.setTracking(),
+                new InstantCommand(() -> {
+                    follower.setMaxPower(pathPower);
+                    follower.followPath(score2);
+                }),
+                new WaitUntil(() -> !follower.isBusy()),
+                Artemis.INSTANCE.shootMotif()
         ).schedule();
     }
 

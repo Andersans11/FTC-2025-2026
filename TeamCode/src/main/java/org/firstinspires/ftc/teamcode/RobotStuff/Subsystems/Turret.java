@@ -59,8 +59,10 @@ public class Turret implements IAmBetterSubsystem {
     public static double kI = 0.0;
     public static double kD = 0.00002;
     public static double hoodToPos = 0.8;
-    public static double farHoodPos = 0.84;
-    public static double closeHoodPos = 0.9;
+    public static double farHoodPos = 0.83;
+    public static double pointX = 85;
+    public static double pointY = 0.82;
+    public static double slope = -0.00025;
     public boolean isFar;
 
     // --------------------- OPMODE --------------------------------- //
@@ -210,13 +212,15 @@ public class Turret implements IAmBetterSubsystem {
         if (dist >= 100) {
             isFar = true;
             return farHoodPos;
-        }
-        else if (dist <= 25) {
+        } else if (dist <= 25) {
             isFar = false;
             return 0.86;
+        }else if (dist >= 85) {
+            isFar = false;
+            return 0.82;
         }
         isFar = false;
-        return -(0.001 * dist) + closeHoodPos;
+        return slope * (dist - pointX) + pointY;
     }
 
     public Pair<Integer, Integer> waugh() { // yes, this is how we get the tag x and y position

@@ -29,9 +29,9 @@ public class Shooter implements IAmBetterSubsystem {
     // ------------------------ CONFIG ------------------------ //
     public static double shootingSpeed = 0.15;
     public static double shootPower = 1950;
-    public static double shootPowerLess = 1750;
+    public static double shootPowerLess = 1700;
     public static double kickerPos1 = 0.65;
-    public static double kickerPos0 = 1;
+    public static double kickerPos0 = 0.95;
     public static double kP = 0.01;
     public static double kI = 0.0;
     public static double kD = 0.0;
