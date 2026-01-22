@@ -41,6 +41,8 @@ public class Luna_9_Blue extends RoyallyFuckedUpMode {
     public static double intakeMidPos1 = 34;
     public static double intakeMidPos2 = 34;
 
+    public static double shootPower = 1650;
+
     Pose currentPose;
 
     public Luna_9_Blue() {
@@ -134,11 +136,11 @@ public class Luna_9_Blue extends RoyallyFuckedUpMode {
         addData("2", Magazine.INSTANCE.getSlotColor(2));
         addData("Active", Magazine.INSTANCE.activeSlot);
         addData("Mode", Magazine.INSTANCE.mode);
-        addData("desiredColor", Magazine.INSTANCE.desiredColor);
         addData("Is Follower Busy", follower.isBusy());
         addData("x", currentPose.getX());
         addData("y", currentPose.getY());
         addData("heading", Math.toDegrees(currentPose.getHeading()));
+        addData("speed", Shooter.INSTANCE.shooters.getVelocity());
         super.telemetryManager.update(telemetry);
         Magazine.INSTANCE.periodic();
         follower.updatePose();
@@ -147,10 +149,10 @@ public class Luna_9_Blue extends RoyallyFuckedUpMode {
     @Override
     public void onStartButtonPressed() {
         super.onStartButtonPressed();
+        Shooter.INSTANCE.isAuto = true;
         new SequentialGroup(
                 Turret.INSTANCE.setPosition(-45),
-                Artemis.INSTANCE.stopIntake(),
-                Shooter.INSTANCE.idle(),
+                Artemis.INSTANCE.start(),
                 new InstantCommand(()-> follower.followPath(score1)),
                 new WaitUntil(() -> !follower.isBusy()),
                 new WaitUntil(() -> Turret.INSTANCE.hasGotMotif),
@@ -160,7 +162,7 @@ public class Luna_9_Blue extends RoyallyFuckedUpMode {
                 new WaitUntil(() -> pathTimer.getElapsedTimeSeconds() >= 0.5),
                 Magazine.INSTANCE.setMode(1),
                 Magazine.INSTANCE.fillSlots(),
-                Artemis.INSTANCE.shootMotif(),
+                Artemis.INSTANCE.shootMotif(shootPower),
                 new WaitUntil(() -> Magazine.INSTANCE.getSlotsFilled() == 0),
                 Turret.INSTANCE.setPosition(0),
                 Magazine.INSTANCE.setMode(0),
@@ -188,7 +190,7 @@ public class Luna_9_Blue extends RoyallyFuckedUpMode {
                 new WaitUntil(() -> !follower.isBusy()),
                 Artemis.INSTANCE.stopIntake(),
                 Magazine.INSTANCE.fillSlots(),
-                Artemis.INSTANCE.shootMotif(),
+                Artemis.INSTANCE.shootMotif(shootPower),
                 new WaitUntil(() -> Magazine.INSTANCE.getSlotsFilled() == 0),
                 Turret.INSTANCE.setPosition(0),
                 Magazine.INSTANCE.setMode(0),
@@ -232,11 +234,14 @@ public class Luna_9_Blue extends RoyallyFuckedUpMode {
         addData("2", Magazine.INSTANCE.getSlotColor(2));
         addData("Active", Magazine.INSTANCE.activeSlot);
         addData("Mode", Magazine.INSTANCE.mode);
-        addData("desiredColor", Magazine.INSTANCE.desiredColor);
         addData("Is Follower Busy", follower.isBusy());
         addData("x", currentPose.getX());
         addData("y", currentPose.getY());
         addData("heading", Math.toDegrees(currentPose.getHeading()));
+        addData("speed", Shooter.INSTANCE.shooters.getVelocity());
+        addData("motif", Magazine.INSTANCE.motif[0]);
+        addData("motif", Magazine.INSTANCE.motif[1]);
+        addData("motif", Magazine.INSTANCE.motif[2]);
 
 
         Drawing.drawDebug(follower);

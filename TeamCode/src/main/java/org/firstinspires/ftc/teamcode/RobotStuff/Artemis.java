@@ -73,22 +73,6 @@ public class Artemis extends BetterSubsystemGroup {
 
     public IndicatorMode indMode = IndicatorMode.INIT;
 
-    public Utils.ArtifactTypes[] PPG = new Utils.ArtifactTypes[] {
-            Utils.ArtifactTypes.PURPLE,
-            Utils.ArtifactTypes.PURPLE,
-            Utils.ArtifactTypes.GREEN
-    };
-    public Utils.ArtifactTypes[] GPP = new Utils.ArtifactTypes[] {
-            Utils.ArtifactTypes.GREEN,
-            Utils.ArtifactTypes.PURPLE,
-            Utils.ArtifactTypes.PURPLE
-    };
-    public Utils.ArtifactTypes[] PGP = new Utils.ArtifactTypes[] {
-            Utils.ArtifactTypes.PURPLE,
-            Utils.ArtifactTypes.GREEN,
-            Utils.ArtifactTypes.PURPLE
-    };
-
     @Override
     public void initSystem() {
         super.initSystem();
@@ -394,6 +378,21 @@ public class Artemis extends BetterSubsystemGroup {
                     Shooter.INSTANCE.idle(),
                     new InstantCommand(() -> this.isMotifShooting = false)
             );
+    }
+
+    public Command shootMotif(double power) {
+        return new SequentialGroup(
+                new InstantCommand(() -> this.isMotifShooting = true),
+                Shooter.INSTANCE.spinUp(power),
+                new WaitUntil(() -> -Shooter.INSTANCE.shooters.getVelocity() >= (Turret.INSTANCE.isFar ? Shooter.shootPower : Shooter.shootPowerLess) - 50),
+                shootSingleMotif(0),
+                new WaitUntil(() -> -Shooter.INSTANCE.shooters.getVelocity() >= (Turret.INSTANCE.isFar ? Shooter.shootPower : Shooter.shootPowerLess) - 50),
+                shootSingleMotif(1),
+                new WaitUntil(() -> -Shooter.INSTANCE.shooters.getVelocity() >= (Turret.INSTANCE.isFar ? Shooter.shootPower : Shooter.shootPowerLess) - 50),
+                shootSingleMotif(2),
+                Shooter.INSTANCE.idle(),
+                new InstantCommand(() -> this.isMotifShooting = false)
+        );
     }
 
     public Command start() {

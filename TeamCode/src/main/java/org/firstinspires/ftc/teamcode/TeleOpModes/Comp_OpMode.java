@@ -79,6 +79,7 @@ public class Comp_OpMode extends RoyallyFuckedUpMode {
     @Override
     public void onStartButtonPressed() {
         super.onStartButtonPressed();
+        Shooter.INSTANCE.isAuto = false;
         Artemis.INSTANCE.start().schedule();
         Artemis.INSTANCE.indMode = Artemis.IndicatorMode.INTAKE_ACTIVE;
     }
@@ -92,11 +93,8 @@ public class Comp_OpMode extends RoyallyFuckedUpMode {
         addData("2", Magazine.INSTANCE.getSlotColor(2));
         addData("Active", Magazine.INSTANCE.activeSlot);
         addData("Mode", Magazine.INSTANCE.mode);
-        addData("desiredColor", Magazine.INSTANCE.desiredColor);
         addData("shotsFired", Magazine.INSTANCE.shotsFired);
-        addData("turret", Turret.INSTANCE.rotationMotor.getPower());
-        addData("speed", Shooter.INSTANCE.shooters.getVelocity());
-        addData("isShooting", Artemis.INSTANCE.isMotifShooting);
+        addData("motif", Magazine.INSTANCE.motif);
 
     }
 }

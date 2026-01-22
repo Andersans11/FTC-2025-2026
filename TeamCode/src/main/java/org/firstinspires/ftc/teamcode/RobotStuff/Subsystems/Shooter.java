@@ -25,6 +25,7 @@ public class Shooter implements IAmBetterSubsystem {
     public ServoEx hood;
     public MotorGroup shooters;
     ServoEx kicker;
+    public boolean isAuto = false;
 
     // ------------------------ CONFIG ------------------------ //
     public static double shootingSpeed = 0.15;
@@ -72,6 +73,9 @@ public class Shooter implements IAmBetterSubsystem {
     // ---------- COMMANDS ---------------------- //
     public Command spinUp() {
         return new InstantCommand(() -> setGoal(-(Turret.INSTANCE.isFar ? Shooter.shootPower : Shooter.shootPowerLess)).schedule());
+    }
+    public Command spinUp(double speed) {
+        return new InstantCommand(() -> setGoal(-speed).schedule());
     }
     public Command spinUpLess() {
         return new InstantCommand(() -> setGoal(-shootPowerLess).schedule());
