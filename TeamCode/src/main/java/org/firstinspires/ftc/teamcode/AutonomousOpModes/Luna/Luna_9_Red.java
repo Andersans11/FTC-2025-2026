@@ -18,6 +18,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 
+import dev.nextftc.core.commands.conditionals.IfElseCommand;
 import dev.nextftc.core.commands.delays.WaitUntil;
 import dev.nextftc.core.commands.groups.SequentialGroup;
 import dev.nextftc.core.commands.utility.InstantCommand;
@@ -26,15 +27,18 @@ import dev.nextftc.core.commands.utility.InstantCommand;
 @Autonomous(name = "Luna Red - Close")
 public class Luna_9_Red extends RoyallyFuckedUpMode {
     Follower follower;
-    PathChain score1, interrim1, intake1, score2, interrim2, intake2, score3;
+    PathChain score1, interrim1, intake1, score2, interrim2, intake2, score3, endIntake1, endIntake2;
     Timer pathTimer;
     public static double pathPower = 0.75;
     public static double intakePower = 0.2;
+    public static double moreIntakePower = 0.5;
 
     public static double intakeStartPos1 = 84;
     public static double intakeStartPos2 = 60;
     public static double intakeEndPos1 = 127;
     public static double intakeEndPos2 = 135;
+    public static double intakeMidPos1 = 108;
+    public static double intakeMidPos2 = 108;
 
     Pose currentPose;
 
@@ -57,8 +61,10 @@ public class Luna_9_Red extends RoyallyFuckedUpMode {
 
         Pose scoring = new Pose(84, 84, Math.toRadians(45));
         Pose intakeStart1 = new Pose(100, intakeStartPos1, Math.toRadians(0));
+        Pose intakeMid1 = new Pose(intakeMidPos1, intakeStartPos1, Math.toRadians(180));
         Pose intakeEnd1 = new Pose(intakeEndPos1, intakeStartPos1, Math.toRadians(0));
         Pose intakeStart2 = new Pose(100, intakeStartPos2, Math.toRadians(0));
+        Pose intakeMid2 = new Pose(intakeMidPos2, intakeStartPos2, Math.toRadians(180));
         Pose intakeEnd2 = new Pose(intakeEndPos2, intakeStartPos2, Math.toRadians(0));
         Pose gate = new Pose(108, 72, Math.toRadians(0));
 
@@ -87,6 +93,13 @@ public class Luna_9_Red extends RoyallyFuckedUpMode {
                 .build();
         intake2 = follower.pathBuilder()
                 .addPath(new BezierLine(intakeStart2, intakeEnd2))
+                .build();
+
+        endIntake1 = follower.pathBuilder()
+                .addPath(new BezierLine(intakeMid1, intakeEnd1))
+                .build();
+        endIntake2 = follower.pathBuilder()
+                .addPath(new BezierLine(intakeMid2, intakeEnd2))
                 .build();
 
         follower.setStartingPose(scoring);
@@ -128,65 +141,72 @@ public class Luna_9_Red extends RoyallyFuckedUpMode {
     public void onStartButtonPressed() {
         super.onStartButtonPressed();
         new SequentialGroup(
+                Turret.INSTANCE.setPosition(-45),
                 Artemis.INSTANCE.stopIntake(),
                 Shooter.INSTANCE.idle(),
                 new InstantCommand(()-> follower.followPath(score1)),
                 new WaitUntil(() -> !follower.isBusy()),
-                Turret.INSTANCE.setPosition(45),
                 new WaitUntil(() -> Turret.INSTANCE.hasGotMotif),
                 Turret.INSTANCE.setTracking(),
                 new InstantCommand(() -> pathTimer.resetTimer()),
                 Magazine.INSTANCE.setMode(0),
                 new WaitUntil(() -> pathTimer.getElapsedTimeSeconds() >= 0.5),
                 Magazine.INSTANCE.setMode(1),
+                Magazine.INSTANCE.fillSlots(),
                 Artemis.INSTANCE.shootMotif(),
                 new WaitUntil(() -> Magazine.INSTANCE.getSlotsFilled() == 0),
                 Turret.INSTANCE.setPosition(0),
                 Magazine.INSTANCE.setMode(0),
-                new InstantCommand(() -> follower.followPath(interrim1)),
+                new InstantCommand(() -> {
+                    follower.followPath(interrim1);
+                    follower.setMaxPower(moreIntakePower);
+                }),
                 new WaitUntil(() -> !follower.isBusy()),
                 Artemis.INSTANCE.intake(),
                 Magazine.INSTANCE.setMode(0),
                 new InstantCommand(() -> {
-                    follower.setMaxPower(intakePower);
                     follower.followPath(intake1);
                     pathTimer.resetTimer();
                 }),
-                new WaitUntil(() -> !follower.isBusy() || pathTimer.getElapsedTimeSeconds() >= 10),
-                new InstantCommand(() -> pathTimer.resetTimer()),
-                new WaitUntil(() -> pathTimer.getElapsedTimeSeconds() >= 2.5 || Magazine.INSTANCE.mode == 1),
-                Magazine.INSTANCE.fillSlots(),
-                Artemis.INSTANCE.stopIntake(),
+                new WaitUntil(() -> Magazine.INSTANCE.getSlotsFilled() >= 1),
+                new InstantCommand(() -> follower.followPath(endIntake1)),
+                new WaitUntil(() -> !follower.isBusy() || pathTimer.getElapsedTimeSeconds() >= 7.5 || Magazine.INSTANCE.getSlotsFilled() >= 2),
+                new IfElseCommand(() -> Magazine.INSTANCE.mode == 1, Artemis.INSTANCE.outtake()),
                 Turret.INSTANCE.setTracking(),
                 new InstantCommand(() -> {
                     follower.setMaxPower(pathPower);
                     follower.followPath(score2);
                 }),
                 new WaitUntil(() -> !follower.isBusy()),
+                Artemis.INSTANCE.stopIntake(),
+                Magazine.INSTANCE.fillSlots(),
                 Artemis.INSTANCE.shootMotif(),
                 new WaitUntil(() -> Magazine.INSTANCE.getSlotsFilled() == 0),
                 Turret.INSTANCE.setPosition(0),
                 Magazine.INSTANCE.setMode(0),
-                new InstantCommand(() -> follower.followPath(interrim2)),
+                new InstantCommand(() -> {
+                    follower.followPath(interrim2);
+                    follower.setMaxPower(moreIntakePower);
+                }),
                 new WaitUntil(() -> !follower.isBusy()),
                 Artemis.INSTANCE.intake(),
                 Magazine.INSTANCE.setMode(0),
                 new InstantCommand(() -> {
-                    follower.setMaxPower(intakePower + 0.05);
                     follower.followPath(intake2);
                     pathTimer.resetTimer();
                 }),
-                new WaitUntil(() -> !follower.isBusy() || pathTimer.getElapsedTimeSeconds() >= 10),
-                new InstantCommand(() -> pathTimer.resetTimer()),
-                new WaitUntil(() -> pathTimer.getElapsedTimeSeconds() >= 2.5 || Magazine.INSTANCE.mode == 1),
-                Magazine.INSTANCE.fillSlots(),
-                Artemis.INSTANCE.stopIntake(),
+                new WaitUntil(() -> Magazine.INSTANCE.getSlotsFilled() >= 1),
+                new InstantCommand(() -> follower.followPath(endIntake2)),
+                new WaitUntil(() -> !follower.isBusy() || pathTimer.getElapsedTimeSeconds() >= 7.5 || Magazine.INSTANCE.getSlotsFilled() >= 2),
+                new IfElseCommand(() -> Magazine.INSTANCE.mode == 1, Artemis.INSTANCE.outtake()),
                 Turret.INSTANCE.setTracking(),
                 new InstantCommand(() -> {
                     follower.setMaxPower(pathPower);
                     follower.followPath(score2);
                 }),
                 new WaitUntil(() -> !follower.isBusy()),
+                Artemis.INSTANCE.stopIntake(),
+                Magazine.INSTANCE.fillSlots(),
                 Artemis.INSTANCE.shootMotif()
         ).schedule();
     }
