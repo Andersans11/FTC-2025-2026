@@ -35,9 +35,9 @@ public class Turret implements IAmBetterSubsystem {
     public boolean hasSetAlliance = false;
     public boolean hasGotMotif = false;
     public boolean isLookingForMotif = false;
-    Pose redPose = new Pose(136, 136);
-    Pose bluePose = new Pose(8, 136);
-    public Pose targetPose = new Pose(136, 136);
+    Pose redPose = new Pose(134, 134);
+    Pose bluePose = new Pose(10, 134);
+    public Pose targetPose = new Pose(132, 132);
     Pose motifPose = new Pose(144, 72);
     public double targetYaw = 0;
     public double targetPitch = 0.0;
@@ -61,7 +61,7 @@ public class Turret implements IAmBetterSubsystem {
     public static double hoodToPos = 0.8;
     public static double farHoodPos = 0.83;
     public static double pointX = 85;
-    public static double pointY = 0.82;
+    public static double pointY = 0.84;
     public static double slope = -0.00025;
     public boolean isFar;
 

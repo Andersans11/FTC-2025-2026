@@ -94,7 +94,6 @@ public class Comp_OpMode extends RoyallyFuckedUpMode {
         addData("Active", Magazine.INSTANCE.activeSlot);
         addData("Mode", Magazine.INSTANCE.mode);
         addData("shotsFired", Magazine.INSTANCE.shotsFired);
-        addData("motif", Magazine.INSTANCE.motif);
-
+        addData("speed", Shooter.INSTANCE.shooters.getVelocity());
     }
 }

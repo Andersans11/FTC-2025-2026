@@ -40,7 +40,7 @@ public class Luna_9_Red extends RoyallyFuckedUpMode {
     public static double intakeMidPos1 = 108;
     public static double intakeMidPos2 = 108;
 
-    public static double shootPower = 1650;
+    public static double shootPower = 1500;
 
     Pose currentPose;
 
@@ -156,7 +156,7 @@ public class Luna_9_Red extends RoyallyFuckedUpMode {
                 Magazine.INSTANCE.setMode(1),
                 Magazine.INSTANCE.fillSlots(),
                 Artemis.INSTANCE.shootMotif(shootPower),
-                new WaitUntil(() -> Magazine.INSTANCE.getSlotsFilled() == 0),
+                new WaitUntil(() -> Magazine.INSTANCE.getSlotsFilled() == 0 || Magazine.INSTANCE.mode == 0),
                 Turret.INSTANCE.setPosition(0),
                 Magazine.INSTANCE.setMode(0),
                 new InstantCommand(() -> {
@@ -183,7 +183,7 @@ public class Luna_9_Red extends RoyallyFuckedUpMode {
                 Artemis.INSTANCE.stopIntake(),
                 Magazine.INSTANCE.fillSlots(),
                 Artemis.INSTANCE.shootMotif(shootPower),
-                new WaitUntil(() -> Magazine.INSTANCE.getSlotsFilled() == 0),
+                new WaitUntil(() -> Magazine.INSTANCE.getSlotsFilled() == 0 || Magazine.INSTANCE.mode == 0),
                 Turret.INSTANCE.setPosition(0),
                 Magazine.INSTANCE.setMode(0),
                 new InstantCommand(() -> {

@@ -30,14 +30,14 @@ public class Shooter implements IAmBetterSubsystem {
     // ------------------------ CONFIG ------------------------ //
     public static double shootingSpeed = 0.15;
     public static double shootPower = 1950;
-    public static double shootPowerLess = 1700;
+    public static double shootPowerLess = 1500;
     public static double kickerPos1 = 0.65;
     public static double kickerPos0 = 0.95;
-    public static double kP = 0.01;
+    public static double kP = 0.005;
     public static double kI = 0.0;
     public static double kD = 0.0;
     public static double kS = 0.0;
-    public static double kV = 0.00035;
+    public static double kV = 0.0004;
     public static double kA = 1;
 
     // --------------------- OPMODE -------------------------- //
@@ -65,7 +65,10 @@ public class Shooter implements IAmBetterSubsystem {
 
     @Override
     public void periodic() {
-        shooters.setPower(controller.calculate(shooters.getState()));
+        shooters.setPower(controller.calculate(new KineticState(
+                (shooters.getLeader().getCurrentPosition() + shooters.getFollowers()[0].getCurrentPosition()) / 2,
+                (shooters.getLeader().getVelocity() + shooters.getFollowers()[0].getVelocity()) / 2
+        )));
 
     }
 

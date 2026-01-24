@@ -2,8 +2,10 @@ package org.firstinspires.ftc.teamcode.RobotStuff;
 
 import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.follower.Follower;
+import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.localization.PoseTracker;
+import com.pedropathing.paths.Path;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PwmControl;
@@ -384,11 +386,11 @@ public class Artemis extends BetterSubsystemGroup {
         return new SequentialGroup(
                 new InstantCommand(() -> this.isMotifShooting = true),
                 Shooter.INSTANCE.spinUp(power),
-                new WaitUntil(() -> -Shooter.INSTANCE.shooters.getVelocity() >= (Turret.INSTANCE.isFar ? Shooter.shootPower : Shooter.shootPowerLess) - 50),
+                new WaitUntil(() -> -Shooter.INSTANCE.shooters.getVelocity() >= power - 20),
                 shootSingleMotif(0),
-                new WaitUntil(() -> -Shooter.INSTANCE.shooters.getVelocity() >= (Turret.INSTANCE.isFar ? Shooter.shootPower : Shooter.shootPowerLess) - 50),
+                new WaitUntil(() -> -Shooter.INSTANCE.shooters.getVelocity() >= power - 20),
                 shootSingleMotif(1),
-                new WaitUntil(() -> -Shooter.INSTANCE.shooters.getVelocity() >= (Turret.INSTANCE.isFar ? Shooter.shootPower : Shooter.shootPowerLess) - 50),
+                new WaitUntil(() -> -Shooter.INSTANCE.shooters.getVelocity() >= power - 20),
                 shootSingleMotif(2),
                 Shooter.INSTANCE.idle(),
                 new InstantCommand(() -> this.isMotifShooting = false)
