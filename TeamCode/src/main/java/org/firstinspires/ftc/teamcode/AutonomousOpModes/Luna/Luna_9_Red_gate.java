@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.AutonomousOpModes.Luna;
 
 import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.follower.Follower;
+import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
@@ -15,18 +16,17 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Misc.Drawing;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 
 import dev.nextftc.core.commands.Command;
-import dev.nextftc.core.commands.conditionals.IfElseCommand;
 import dev.nextftc.core.commands.delays.WaitUntil;
 import dev.nextftc.core.commands.groups.SequentialGroup;
 import dev.nextftc.core.commands.utility.InstantCommand;
 
 @Configurable
-@Autonomous(name = "Luna Red - Close")
-public class Luna_9_Red extends RoyallyFuckedUpMode {
+@Autonomous(name = "Luna Red - Close gate")
+public class Luna_9_Red_gate extends RoyallyFuckedUpMode {
     Follower follower;
     PathChain score1, interrim1, intake1, score2, interrim2, intake2, score3, endIntake1, endIntake2;
     Timer pathTimer;
@@ -45,7 +45,7 @@ public class Luna_9_Red extends RoyallyFuckedUpMode {
 
     Pose currentPose;
 
-    public Luna_9_Red() {
+    public Luna_9_Red_gate() {
         super();
         addSubsystemComponents(
                 new BetterSubsystemComponent(Artemis.INSTANCE)
@@ -69,16 +69,18 @@ public class Luna_9_Red extends RoyallyFuckedUpMode {
         Pose intakeStart2 = new Pose(100, intakeStartPos2, Math.toRadians(0));
         Pose intakeMid2 = new Pose(intakeMidPos2, intakeStartPos2, Math.toRadians(180));
         Pose intakeEnd2 = new Pose(intakeEndPos2, intakeStartPos2, Math.toRadians(0));
-        Pose gate = new Pose(108, 72, Math.toRadians(0));
+        Pose gate = new Pose(intakeEndPos1, 72, Math.toRadians(0));
 
         Artemis.INSTANCE.initFollower(hardwareMap, scoring);
 
         score2 = follower.pathBuilder()
-                .addPath(new BezierLine(intakeEnd1, scoring))
-                .setLinearHeadingInterpolation(intakeEnd1.getHeading(), scoring.getHeading())
+                .addPath(new BezierCurve(intakeEnd1, new Pose(108, 78), gate))
+                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .addPath(new BezierLine(gate, scoring))
+                .setLinearHeadingInterpolation(gate.getHeading(), scoring.getHeading())
                 .build();
         score3 = follower.pathBuilder()
-                .addPath(new BezierLine(intakeEnd2, intakeStart2))
+                .addPath(new BezierCurve(intakeEnd2, intakeStart2, scoring))
                 .setLinearHeadingInterpolation(intakeEnd2.getHeading(), intakeStart2.getHeading())
                 .build();
 
@@ -152,7 +154,7 @@ public class Luna_9_Red extends RoyallyFuckedUpMode {
         Shooter.INSTANCE.isAuto = true;
         new SequentialGroup(
                 Artemis.INSTANCE.start(),
-                Turret.INSTANCE.setPosition(-45),
+                Turret.INSTANCE.setPosition(45),
                 Artemis.INSTANCE.start(),
                 new InstantCommand(()-> follower.followPath(score1)),
                 new WaitUntil(() -> !follower.isBusy()),
