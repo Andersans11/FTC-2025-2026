@@ -6,14 +6,14 @@ import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.RobotStuff.Artemis;
+import org.firstinspires.ftc.teamcode.RobotStuff.Selene;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Hardware.ServoExFullRange;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.delays.Delay;
-import dev.nextftc.core.commands.groups.SequentialGroup;
+import org.firstinspires.ftc.teamcode.RobotStuff.Misc.SequentialGroupFixed;
 import dev.nextftc.core.commands.utility.InstantCommand;
 
 @Configurable
@@ -135,7 +135,7 @@ public class Magazine implements IAmBetterSubsystem {
             }
             if (!foundOne) {
                 if (mode == 0) setMode(1).schedule();
-                else if (!Artemis.INSTANCE.isMotifShooting) setMode(0).schedule();
+                else if (!Selene.INSTANCE.isMotifShooting) setMode(0).schedule();
             }
         });
     }
@@ -220,12 +220,12 @@ public class Magazine implements IAmBetterSubsystem {
     }
 
     public Command setMode(int mode) {
-        return new SequentialGroup(
+        return new SequentialGroupFixed(
             new Delay(0.25),
             new InstantCommand(() -> {
                 if (mode == 0) desiredColor = Utils.ArtifactTypes.NONE;
                 else {
-                    if (Artemis.INSTANCE.autoShooting) Shooter.INSTANCE.spinUp().schedule();
+                    if (Selene.INSTANCE.autoShooting) Shooter.INSTANCE.spinUp().schedule();
                     desiredColor = motif[shotsFired];
                 }
                 this.mode = mode;

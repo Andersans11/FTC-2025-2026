@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.TestingOpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.RobotStuff.Artemis;
+import org.firstinspires.ftc.teamcode.RobotStuff.Selene;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
@@ -19,7 +19,7 @@ public class PitchRecording extends RoyallyFuckedUpMode {
         super();
         addSubsystemComponents(
                 new BetterSubsystemComponent(RobotCentricDrive.INSTANCE),
-                new BetterSubsystemComponent(Artemis.INSTANCE)
+                new BetterSubsystemComponent(Selene.INSTANCE)
         );
     }
 
@@ -27,7 +27,7 @@ public class PitchRecording extends RoyallyFuckedUpMode {
     public void onInit() {
         super.onInit();
 
-        Artemis.INSTANCE.initFollower(hardwareMap);
+        Selene.INSTANCE.initFollower(hardwareMap);
 
         Turret.INSTANCE.mode = Turret.TurretMode.POSE_TRACKING;
 
@@ -35,14 +35,14 @@ public class PitchRecording extends RoyallyFuckedUpMode {
         P1.circle().whenBecomesTrue(Turret.INSTANCE.setIdle());
         P1.cross().whenBecomesTrue(Turret.INSTANCE.setTracking());
 
-        P1.rightTrigger().atLeast(0.1).whenBecomesTrue(Artemis.INSTANCE.intake());
-        P1.rightTrigger().atLeast(0.1).whenBecomesFalse(Artemis.INSTANCE.stopIntake());
+        P1.rightTrigger().atLeast(0.1).whenBecomesTrue(Selene.INSTANCE.intake());
+        P1.rightTrigger().atLeast(0.1).whenBecomesFalse(Selene.INSTANCE.stopIntake());
 
         P1.dpadUp().whenBecomesTrue(Turret.INSTANCE.setBlueAlliance());
         P1.dpadDown().whenBecomesTrue(Turret.INSTANCE.setRedAlliance());
 
-        P1.rightBumper().whenBecomesTrue(Artemis.INSTANCE.outtake());
-        P1.rightBumper().whenBecomesFalse(Artemis.INSTANCE.stopIntake());
+        P1.rightBumper().whenBecomesTrue(Selene.INSTANCE.outtake());
+        P1.rightBumper().whenBecomesFalse(Selene.INSTANCE.stopIntake());
 
         P1.dpadLeft().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.GREEN));
         P1.dpadRight().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.PURPLE));
@@ -50,10 +50,9 @@ public class PitchRecording extends RoyallyFuckedUpMode {
         P2.dpadLeft().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.GREEN));
         P2.dpadRight().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.PURPLE));
 
-        P2.cross().whenBecomesTrue(Artemis.INSTANCE.shootSingle(Utils.ArtifactTypes.GREEN));
-        P2.circle().whenBecomesTrue(Artemis.INSTANCE.shootSingle(Utils.ArtifactTypes.PURPLE));
+        P2.cross().whenBecomesTrue(Selene.INSTANCE.shootSingle());
 
-        P2.rightTrigger().atLeast(0.1).whenBecomesTrue(Artemis.INSTANCE.shootMotif());
+        P2.rightTrigger().atLeast(0.1).whenBecomesTrue(Selene.INSTANCE.shootMotif());
 
         P2.square().whenBecomesTrue(Magazine.INSTANCE.setMode(0));
         P2.triangle().whenBecomesTrue(Magazine.INSTANCE.setMode(1));
@@ -62,22 +61,22 @@ public class PitchRecording extends RoyallyFuckedUpMode {
 
         P2.leftTrigger().atLeast(0.1).whenBecomesTrue(Magazine.INSTANCE.incShotsFired());
 
-        P2.dpadDown().whenBecomesTrue(Artemis.INSTANCE.resetFollower());
+        P2.dpadDown().whenBecomesTrue(Selene.INSTANCE.resetFollower());
 
-        Artemis.INSTANCE.indMode = Artemis.IndicatorMode.INIT_DONE;
+        Selene.INSTANCE.indMode = Selene.IndicatorMode.INIT_DONE;
     }
 
     @Override
     public void onStartButtonPressed() {
         super.onStartButtonPressed();
-        Artemis.INSTANCE.start().schedule();
+        Selene.INSTANCE.start().schedule();
     }
 
     @Override
     public void onUpdate() {
         super.onUpdate();
 
-        addData("distance", Artemis.INSTANCE.currentPose.distanceFrom(Turret.INSTANCE.targetPose));
+        addData("distance", Selene.INSTANCE.currentPose.distanceFrom(Turret.INSTANCE.targetPose));
 
         addData("tagY", Turret.INSTANCE.waugh().component2());
 

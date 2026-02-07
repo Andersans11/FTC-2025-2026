@@ -5,14 +5,14 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
-import org.firstinspires.ftc.teamcode.RobotStuff.Artemis;
+import org.firstinspires.ftc.teamcode.RobotStuff.Selene;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.RobotCentricDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 
-import dev.nextftc.core.commands.groups.SequentialGroup;
+import org.firstinspires.ftc.teamcode.RobotStuff.Misc.SequentialGroupFixed;
 
 @TeleOp(name = "Test: Full", group = Utils.PRIORITY_PRIORITY)
 public class FullTest extends RoyallyFuckedUpMode {
@@ -21,23 +21,23 @@ public class FullTest extends RoyallyFuckedUpMode {
         super();
         addSubsystemComponents(
                 new BetterSubsystemComponent(RobotCentricDrive.INSTANCE),
-                new BetterSubsystemComponent(Artemis.INSTANCE)
+                new BetterSubsystemComponent(Selene.INSTANCE)
         );
     }
 
     @Override
     public void onInit() {
         super.onInit();
-        Artemis.INSTANCE.initFollower(hardwareMap);
+        Selene.INSTANCE.initFollower(hardwareMap);
 
-        P1.rightTrigger().atLeast(0.1).whenBecomesTrue(Artemis.INSTANCE.intake());
-        P1.rightTrigger().atLeast(0.1).whenBecomesFalse(Artemis.INSTANCE.stopIntake());
+        P1.rightTrigger().atLeast(0.1).whenBecomesTrue(Selene.INSTANCE.intake());
+        P1.rightTrigger().atLeast(0.1).whenBecomesFalse(Selene.INSTANCE.stopIntake());
 
         P1.dpadUp().whenBecomesTrue(Turret.INSTANCE.setBlueAlliance());
         P1.dpadDown().whenBecomesTrue(Turret.INSTANCE.setRedAlliance());
 
-        P1.rightBumper().whenBecomesTrue(Artemis.INSTANCE.outtake());
-        P1.rightBumper().whenBecomesFalse(Artemis.INSTANCE.stopIntake());
+        P1.rightBumper().whenBecomesTrue(Selene.INSTANCE.outtake());
+        P1.rightBumper().whenBecomesFalse(Selene.INSTANCE.stopIntake());
 
         P1.cross().whenBecomesTrue(Turret.INSTANCE.setTracking());
 
@@ -48,9 +48,9 @@ public class FullTest extends RoyallyFuckedUpMode {
         P2.dpadRight().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.PURPLE));
 
         P2.rightTrigger().atLeast(0.1).whenBecomesTrue(
-                new SequentialGroup(
+                new SequentialGroupFixed(
                         Magazine.INSTANCE.fillSlots(),
-                        Artemis.INSTANCE.shootMotif()
+                        Selene.INSTANCE.shootMotif()
                 ));
 
         P2.square().whenBecomesTrue(Magazine.INSTANCE.setMode(0));
@@ -64,24 +64,24 @@ public class FullTest extends RoyallyFuckedUpMode {
 
         P2.dpadUp().whenBecomesTrue(Turret.INSTANCE.toggleTrackObelisk());
 
-        P2.dpadDown().whenBecomesTrue(Artemis.INSTANCE.resetFollower());
+        P2.dpadDown().whenBecomesTrue(Selene.INSTANCE.resetFollower());
 
-        P2.leftBumper().whenBecomesTrue(Artemis.INSTANCE.setAutoShooting());
+        P2.leftBumper().whenBecomesTrue(Selene.INSTANCE.setAutoShooting());
 
-        Artemis.INSTANCE.indMode = Artemis.IndicatorMode.INIT_DONE;
+        Selene.INSTANCE.indMode = Selene.IndicatorMode.INIT_DONE;
     }
 
     @Override
     public void onWaitForStart() {
         super.onWaitForStart();
-        Artemis.INSTANCE.runIndicator();
+        Selene.INSTANCE.runIndicator();
     }
 
     @Override
     public void onStartButtonPressed() {
         super.onStartButtonPressed();
-        Artemis.INSTANCE.start().schedule();
-        Artemis.INSTANCE.indMode = Artemis.IndicatorMode.INTAKE_ACTIVE;
+        Selene.INSTANCE.start().schedule();
+        Selene.INSTANCE.indMode = Selene.IndicatorMode.INTAKE_ACTIVE;
     }
 
     @Override
@@ -98,7 +98,7 @@ public class FullTest extends RoyallyFuckedUpMode {
         addData("TurretMode", Turret.INSTANCE.mode);
         addData("dist", Magazine.INSTANCE.color.getDistance(DistanceUnit.MM));
         addData("dist", Magazine.INSTANCE.range.getDistance(DistanceUnit.MM));
-        addData("Pose", Math.toDegrees(Artemis.INSTANCE.currentPose.getHeading()));
+        addData("Pose", Math.toDegrees(Selene.INSTANCE.currentPose.getHeading()));
 
         addData("mode", Turret.INSTANCE.mode);
         addData("targetPose", Turret.INSTANCE.targetPose);

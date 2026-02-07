@@ -9,7 +9,7 @@ import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
-import org.firstinspires.ftc.teamcode.RobotStuff.Artemis;
+import org.firstinspires.ftc.teamcode.RobotStuff.Selene;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.Drawing;
@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemCompo
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.OldTurret;
 
-import dev.nextftc.core.commands.groups.SequentialGroup;
+import org.firstinspires.ftc.teamcode.RobotStuff.Misc.SequentialGroupFixed;
 import dev.nextftc.core.commands.utility.InstantCommand;
 
 @Disabled
@@ -36,7 +36,7 @@ public class Automous_Template extends RoyallyFuckedUpMode {
     public Automous_Template() {
         super();
         addSubsystemComponents(
-                new BetterSubsystemComponent(Artemis.INSTANCE)
+                new BetterSubsystemComponent(Selene.INSTANCE)
         );
     }
 
@@ -44,7 +44,7 @@ public class Automous_Template extends RoyallyFuckedUpMode {
     public void onInit() {
         super.onInit();
 
-        Artemis.INSTANCE.initFollower(hardwareMap);
+        Selene.INSTANCE.initFollower(hardwareMap);
 
         follower = Constants.createFollower(hardwareMap);
 
@@ -76,7 +76,7 @@ public class Automous_Template extends RoyallyFuckedUpMode {
     @Override
     public void onStartButtonPressed() {
         super.onStartButtonPressed();
-        new SequentialGroup(
+        new SequentialGroupFixed(
                 new InstantCommand(()-> {
                     follower.followPath(path1);
                 })

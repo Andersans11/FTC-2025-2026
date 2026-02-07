@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.TestingOpModes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
@@ -9,6 +10,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemCompo
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.HoldHeadingPID;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Intake;
 
+@Disabled
 @TeleOp(name = "Test Intake", group = Utils.TESTING)
 public class TestIntake extends RoyallyFuckedUpMode {
 
@@ -25,7 +27,6 @@ public class TestIntake extends RoyallyFuckedUpMode {
         super.onInit();
 
         P1.rightTrigger().atLeast(Sensitivities.p1RTThreshold).whenBecomesTrue(Intake.INSTANCE::start);
-        P1.rightTrigger().atLeast(Sensitivities.p1RTThreshold).whenBecomesFalse(Intake.INSTANCE::idle);
         P1.rightBumper().whenBecomesTrue(Intake.INSTANCE::stop);
     }
 

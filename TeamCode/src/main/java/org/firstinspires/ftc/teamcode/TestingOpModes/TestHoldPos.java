@@ -2,12 +2,14 @@ package org.firstinspires.ftc.teamcode.TestingOpModes;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 
+@Disabled
 @TeleOp(name = "Test: Hold Position", group = Utils.TESTING)
 public class TestHoldPos extends OpMode {
     Follower follower;

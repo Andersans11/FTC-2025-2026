@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.TestingOpModes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
@@ -8,6 +9,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemCompo
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.RobotCentricDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 
+@Disabled
 @TeleOp(name = "Pose Tracking", group = Utils.TESTING)
 public class PoseTrackingTestMode extends RoyallyFuckedUpMode {
 

@@ -13,7 +13,7 @@ import com.pedropathing.util.Timer;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
-import org.firstinspires.ftc.teamcode.RobotStuff.Artemis;
+import org.firstinspires.ftc.teamcode.RobotStuff.Selene;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 
 import dev.nextftc.control.ControlSystem;
@@ -238,7 +238,7 @@ public class Turret implements IAmBetterSubsystem {
     @Override
     public void periodic() {
 
-        Pose currentPose = Artemis.INSTANCE.currentPose;
+        Pose currentPose = Selene.INSTANCE.currentPose;
 
         switch (mode) {
             case POSE_TRACKING:

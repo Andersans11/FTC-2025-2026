@@ -8,13 +8,13 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
-import org.firstinspires.ftc.teamcode.RobotStuff.Artemis;
+import org.firstinspires.ftc.teamcode.RobotStuff.Selene;
 
 import dev.nextftc.control.ControlSystem;
 import dev.nextftc.control.KineticState;
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.delays.WaitUntil;
-import dev.nextftc.core.commands.groups.SequentialGroup;
+import org.firstinspires.ftc.teamcode.RobotStuff.Misc.SequentialGroupFixed;
 import dev.nextftc.core.commands.utility.InstantCommand;
 import dev.nextftc.core.commands.utility.NullCommand;
 import dev.nextftc.hardware.impl.MotorEx;
@@ -128,7 +128,7 @@ public class OldTurret implements IAmBetterSubsystem {
      * @return a sequential group that zeroes the turret
      */
     public Command zero() {
-        return new SequentialGroup(
+        return new SequentialGroupFixed(
                 new InstantCommand(() -> {
                     isZeroing = true;
                     mode = TurretMode.MANUAL_PID;
@@ -347,7 +347,7 @@ public class OldTurret implements IAmBetterSubsystem {
                 break;
         }
         oldPose = pose;
-        pose = Artemis.INSTANCE.currentPose;
+        pose = Selene.INSTANCE.currentPose;
 
         if (!hasGotMotif) {
             if (camera.blocks(3).length != 0) {

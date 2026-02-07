@@ -15,7 +15,7 @@ import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
-import org.firstinspires.ftc.teamcode.RobotStuff.Artemis;
+import org.firstinspires.ftc.teamcode.RobotStuff.Selene;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 
@@ -248,14 +248,14 @@ public class CameraTurret implements IAmBetterSubsystem {
                     double deltaHeading = (pose.getHeading()) - oldPose.getHeading();
                     targetYaw = targetYaw - Math.toDegrees(deltaHeading);
                 }
-                Shooter.INSTANCE.hood.setPosition(calcHoodPower(Artemis.INSTANCE.currentPose.distanceFrom(targetPose)));
+                Shooter.INSTANCE.hood.setPosition(calcHoodPower(Selene.INSTANCE.currentPose.distanceFrom(targetPose)));
                 controller.setGoal(new KineticState(degreesToTicks(Math.max(minLim, Math.min(maxLim, targetYaw)))));
                 rotationMotor.setPower(controller.calculate(rotationMotor.getState()));
                 break;
             case IDLE:
                 if (waluigi.component1() != 69420) {
                     targetYaw = ticksToDegrees(rotationMotor.getCurrentPosition()) - (a * (waluigi.component1() - 160));
-                    Shooter.INSTANCE.hood.setPosition(calcHoodPower(Artemis.INSTANCE.currentPose.distanceFrom(targetPose)));
+                    Shooter.INSTANCE.hood.setPosition(calcHoodPower(Selene.INSTANCE.currentPose.distanceFrom(targetPose)));
                     timer.resetTimer();
                     mode = TurretMode.POSE_TRACKING;
                     started = false;

@@ -8,7 +8,7 @@ import dev.nextftc.control.ControlSystem;
 import dev.nextftc.control.KineticState;
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.delays.Delay;
-import dev.nextftc.core.commands.groups.SequentialGroup;
+import org.firstinspires.ftc.teamcode.RobotStuff.Misc.SequentialGroupFixed;
 import dev.nextftc.core.commands.utility.InstantCommand;
 import dev.nextftc.hardware.controllable.MotorGroup;
 import dev.nextftc.hardware.impl.ServoEx;
@@ -24,20 +24,22 @@ public class Shooter implements IAmBetterSubsystem {
     ServoGroup hoodServos;
     public ServoEx hood;
     public MotorGroup shooters;
-    ServoEx kicker;
+    ServoEx stopper;
 
     // ------------------------ CONFIG ------------------------ //
     public static double shootingSpeed = 0.15;
     public static double shootPower = 1950;
     public static double shootPowerLess = 1750;
-    public static double kickerPos1 = 0.65;
-    public static double kickerPos0 = 1;
+    public static double stopperDownPos = 0.65;
+    public static double stopperUpPos = 1;
     public static double kP = 0.01;
     public static double kI = 0.0;
     public static double kD = 0.0;
     public static double kS = 0.0;
     public static double kV = 0.00035;
     public static double kA = 1;
+
+    public boolean isFar = false;
 
     // --------------------- OPMODE -------------------------- //
     @Override
@@ -51,7 +53,7 @@ public class Shooter implements IAmBetterSubsystem {
                 RobotConfig.HoodServo2.getServo()
         );
         hood = RobotConfig.HoodServo.getServo();
-        kicker = RobotConfig.Kicker.getServo();
+        stopper = RobotConfig.Kicker.getServo();
 
         controller = ControlSystem.builder()
                 .velPid(kP, kI, kD)
@@ -65,13 +67,21 @@ public class Shooter implements IAmBetterSubsystem {
     @Override
     public void periodic() {
         shooters.setPower(controller.calculate(shooters.getState()));
-
+        if (!isFar) { // No, you cannot make this smaller, Jack. The logic must behave this way or it breaks.
+            if (Turret.INSTANCE.isFar) {
+                isFar = true;
+                setGoal(Shooter.shootPower);
+            }
+        } else if (!Turret.INSTANCE.isFar) {
+            isFar = false;
+            setGoal(Shooter.shootPowerLess);
+        }
     }
 
 
     // ---------- COMMANDS ---------------------- //
     public Command spinUp() {
-        return new InstantCommand(() -> setGoal(-(Turret.INSTANCE.isFar ? Shooter.shootPower : Shooter.shootPowerLess)).schedule());
+        return new InstantCommand(() -> setGoal((Turret.INSTANCE.isFar ? Shooter.shootPower : Shooter.shootPowerLess)).schedule());
     }
     public Command spinUpLess() {
         return new InstantCommand(() -> setGoal(-shootPowerLess).schedule());
@@ -84,7 +94,7 @@ public class Shooter implements IAmBetterSubsystem {
     }
 
     public Command setGoal(double vel) {
-        return new InstantCommand(() -> this.controller.setGoal(new KineticState(0.0, vel)));
+        return new InstantCommand(() -> this.controller.setGoal(new KineticState(0.0, -vel)));
     }
 
     public Command resetPID() {
@@ -93,22 +103,12 @@ public class Shooter implements IAmBetterSubsystem {
                 .basicFF(kV, kA, kS)
                 .build());
     }
-    public Command kick() {
-        return new SetPosition(kicker, kickerPos1);
+    public Command StopperDown() {
+        return new SetPosition(stopper, stopperDownPos);
     }
-    public Command resetKicker() {
-        return new SetPosition(kicker, kickerPos0);
+    public Command StopperUp() {
+        return new SetPosition(stopper, stopperUpPos);
     }
-
-    public Command shoot() {
-        return new SequentialGroup(
-                this.kick(),
-                new Delay(shootingSpeed),
-                this.resetKicker(),
-                new Delay(shootingSpeed)
-        );
-    }
-
     public Command setHoodPos(double pos) {
         return new SetPosition(hood, pos);
     }

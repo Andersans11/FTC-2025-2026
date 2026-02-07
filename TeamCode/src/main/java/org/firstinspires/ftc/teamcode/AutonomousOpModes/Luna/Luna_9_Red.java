@@ -8,7 +8,7 @@ import com.pedropathing.paths.PathChain;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.RobotStuff.Artemis;
+import org.firstinspires.ftc.teamcode.RobotStuff.Selene;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.Drawing;
@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 
 import dev.nextftc.core.commands.delays.WaitUntil;
-import dev.nextftc.core.commands.groups.SequentialGroup;
+import org.firstinspires.ftc.teamcode.RobotStuff.Misc.SequentialGroupFixed;
 import dev.nextftc.core.commands.utility.InstantCommand;
 
 @Configurable
@@ -41,7 +41,7 @@ public class Luna_9_Red extends RoyallyFuckedUpMode {
     public Luna_9_Red() {
         super();
         addSubsystemComponents(
-                new BetterSubsystemComponent(Artemis.INSTANCE)
+                new BetterSubsystemComponent(Selene.INSTANCE)
         );
     }
 
@@ -62,7 +62,7 @@ public class Luna_9_Red extends RoyallyFuckedUpMode {
         Pose intakeEnd2 = new Pose(intakeEndPos2, intakeStartPos2, Math.toRadians(0));
         Pose gate = new Pose(108, 72, Math.toRadians(0));
 
-        Artemis.INSTANCE.initFollower(hardwareMap, scoring);
+        Selene.INSTANCE.initFollower(hardwareMap, scoring);
 
         score2 = follower.pathBuilder()
                 .addPath(new BezierLine(intakeEnd1, scoring))
@@ -103,7 +103,7 @@ public class Luna_9_Red extends RoyallyFuckedUpMode {
         }));
         P2.square().whenBecomesTrue(Magazine.INSTANCE.setMode(0));
         P2.dpadUp().whenBecomesTrue(Turret.INSTANCE.setRedAlliance());
-        Artemis.INSTANCE.stopIntake().schedule();
+        Selene.INSTANCE.stopIntake().schedule();
     }
 
     @Override
@@ -127,8 +127,8 @@ public class Luna_9_Red extends RoyallyFuckedUpMode {
     @Override
     public void onStartButtonPressed() {
         super.onStartButtonPressed();
-        new SequentialGroup(
-                Artemis.INSTANCE.stopIntake(),
+        new SequentialGroupFixed(
+                Selene.INSTANCE.stopIntake(),
                 Shooter.INSTANCE.idle(),
                 new InstantCommand(()-> follower.followPath(score1)),
                 new WaitUntil(() -> !follower.isBusy()),
@@ -139,13 +139,13 @@ public class Luna_9_Red extends RoyallyFuckedUpMode {
                 Magazine.INSTANCE.setMode(0),
                 new WaitUntil(() -> pathTimer.getElapsedTimeSeconds() >= 0.5),
                 Magazine.INSTANCE.setMode(1),
-                Artemis.INSTANCE.shootMotif(),
+                Selene.INSTANCE.shootMotif(),
                 new WaitUntil(() -> Magazine.INSTANCE.getSlotsFilled() == 0),
                 Turret.INSTANCE.setPosition(0),
                 Magazine.INSTANCE.setMode(0),
                 new InstantCommand(() -> follower.followPath(interrim1)),
                 new WaitUntil(() -> !follower.isBusy()),
-                Artemis.INSTANCE.intake(),
+                Selene.INSTANCE.intake(),
                 Magazine.INSTANCE.setMode(0),
                 new InstantCommand(() -> {
                     follower.setMaxPower(intakePower);
@@ -156,20 +156,20 @@ public class Luna_9_Red extends RoyallyFuckedUpMode {
                 new InstantCommand(() -> pathTimer.resetTimer()),
                 new WaitUntil(() -> pathTimer.getElapsedTimeSeconds() >= 2.5 || Magazine.INSTANCE.mode == 1),
                 Magazine.INSTANCE.fillSlots(),
-                Artemis.INSTANCE.stopIntake(),
+                Selene.INSTANCE.stopIntake(),
                 Turret.INSTANCE.setTracking(),
                 new InstantCommand(() -> {
                     follower.setMaxPower(pathPower);
                     follower.followPath(score2);
                 }),
                 new WaitUntil(() -> !follower.isBusy()),
-                Artemis.INSTANCE.shootMotif(),
+                Selene.INSTANCE.shootMotif(),
                 new WaitUntil(() -> Magazine.INSTANCE.getSlotsFilled() == 0),
                 Turret.INSTANCE.setPosition(0),
                 Magazine.INSTANCE.setMode(0),
                 new InstantCommand(() -> follower.followPath(interrim2)),
                 new WaitUntil(() -> !follower.isBusy()),
-                Artemis.INSTANCE.intake(),
+                Selene.INSTANCE.intake(),
                 Magazine.INSTANCE.setMode(0),
                 new InstantCommand(() -> {
                     follower.setMaxPower(intakePower);
@@ -179,7 +179,7 @@ public class Luna_9_Red extends RoyallyFuckedUpMode {
                 new WaitUntil(() -> !follower.isBusy() || pathTimer.getElapsedTimeSeconds() >= 10),
                 new InstantCommand(() -> pathTimer.resetTimer()),
                 new WaitUntil(() -> pathTimer.getElapsedTimeSeconds() >= 2.5 || Magazine.INSTANCE.mode == 1),
-                Artemis.INSTANCE.stopIntake(),
+                Selene.INSTANCE.stopIntake(),
                 Turret.INSTANCE.setTracking()
         ).schedule();
     }

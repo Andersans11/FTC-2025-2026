@@ -38,9 +38,6 @@ public class Intake implements IAmBetterSubsystem {
     public Command stop() {
         return new SetPower(intake, 0);
     }
-    public Command idle() {
-        return new SetPower(intake, idleSpeed);
-    }
     public Command reverse() {
         return new SetPower(intake, reverseSpeed);
     }
