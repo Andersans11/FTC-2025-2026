@@ -3,21 +3,21 @@ package org.firstinspires.ftc.teamcode.TestingOpModes;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RRoboticsOpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RRoboticsSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.RobotCentricDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.OldTurret;
 
 @Disabled
 @TeleOp(name = "Test: Turret", group = Utils.TESTING)
-public class TestTurret extends RoyallyFuckedUpMode {
+public class TestTurret extends RRoboticsOpMode {
 
     public TestTurret() {
         super();
         addSubsystemComponents(
-                new BetterSubsystemComponent(OldTurret.INSTANCE),
-                new BetterSubsystemComponent(RobotCentricDrive.INSTANCE)
+                new RRoboticsSubsystemComponent(OldTurret.INSTANCE),
+                new RRoboticsSubsystemComponent(RobotCentricDrive.INSTANCE)
         );
     }
 

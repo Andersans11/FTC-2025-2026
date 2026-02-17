@@ -3,19 +3,19 @@ package org.firstinspires.ftc.teamcode.TestingOpModes;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RRoboticsOpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RRoboticsSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 
 @Disabled
 @TeleOp(name = "Test Shooter", group = Utils.TESTING)
-public class TestShooter extends RoyallyFuckedUpMode {
+public class TestShooter extends RRoboticsOpMode {
 
     public TestShooter() {
         super();
         addSubsystemComponents(
-                new BetterSubsystemComponent(Shooter.INSTANCE)
+                new RRoboticsSubsystemComponent(Shooter.INSTANCE)
         );
     }
 

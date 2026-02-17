@@ -2,10 +2,10 @@ package org.firstinspires.ftc.teamcode.TeleOpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RRoboticsOpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Selene;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RRoboticsSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.RobotCentricDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
@@ -14,13 +14,13 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.SequentialGroupFixed;
 
 @TeleOp(name = "TwoAndOnlyOpMode", group = Utils.PRIORITY_PRIORITY)
-public class Comp_OpMode extends RoyallyFuckedUpMode {
+public class Comp_OpMode extends RRoboticsOpMode {
 
     public Comp_OpMode() {
         super();
         addSubsystemComponents(
-                new BetterSubsystemComponent(RobotCentricDrive.INSTANCE),
-                new BetterSubsystemComponent(Selene.INSTANCE)
+                new RRoboticsSubsystemComponent(RobotCentricDrive.INSTANCE),
+                new RRoboticsSubsystemComponent(Selene.INSTANCE)
         );
     }
 

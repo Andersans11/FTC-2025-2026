@@ -1,18 +1,11 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.Config;
 
-import androidx.annotation.StringDef;
-
-import com.bylazar.telemetry.PanelsTelemetry;
-import com.bylazar.telemetry.TelemetryManager;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
-import com.qualcomm.hardware.rev.RevTouchSensor;
-import com.qualcomm.robotcore.hardware.AnalogInput;
+import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -20,19 +13,12 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
-import dev.nextftc.bindings.Button;
-import dev.nextftc.bindings.Range;
 import dev.nextftc.ftc.GamepadEx;
-import dev.nextftc.ftc.NextFTCOpMode;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.HardwareConfigs.CRServoConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.HardwareConfigs.FullServoConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.HardwareConfigs.MotorConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.HardwareConfigs.ServoConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.DeltaTimer;
-
-import java.lang.reflect.Field;
 
 public class RobotConfig {
 
@@ -62,8 +48,10 @@ public class RobotConfig {
 
     public static GoBildaPinpointDriver Pinpoint;
 
+    public static Limelight3A Limelight;
+
     static HardwareMap hardwareMap;
-    static RoyallyFuckedUpMode opMode;
+    static RRoboticsOpMode opMode;
     static DeltaTimer deltaTimer;
     static GamepadEx p1;
     static GamepadEx p2;
@@ -76,7 +64,7 @@ public class RobotConfig {
      * @param opMode the opMode for the config to use
      * @param deltaTimer the DeltaTimer for the config to use, used in other subsystems
      */
-    public static void initConfig(RoyallyFuckedUpMode opMode, DeltaTimer deltaTimer) {
+    public static void initConfig(RRoboticsOpMode opMode, DeltaTimer deltaTimer) {
         RobotConfig.opMode = opMode;
         RobotConfig.hardwareMap = opMode.hardwareMap;
         RobotConfig.deltaTimer = deltaTimer;
@@ -86,7 +74,7 @@ public class RobotConfig {
         initHardware();
     }
 
-    public static RoyallyFuckedUpMode getOpMode() {
+    public static RRoboticsOpMode getOpMode() {
         return opMode;
     }
     public static long getDelta() {
@@ -108,7 +96,7 @@ public class RobotConfig {
      */
     private static void initHardware() {
 
-        VoltageSensor = hardwareMap.get(com.qualcomm.robotcore.hardware.VoltageSensor.class, "Control Hub");
+        VoltageSensor = hardwareMap.get(VoltageSensor.class, "Control Hub");
 
         Indicator = hardwareMap.get(ServoImplEx.class, "INDICATOR");
 
@@ -121,6 +109,8 @@ public class RobotConfig {
         camera = hardwareMap.get(HuskyLens.class, "HUSKYLENS");
 
         LimitSwitch = hardwareMap.get(TouchSensor.class, "LIMIT");
+
+        Limelight = hardwareMap.get(Limelight3A.class, "LIMELIGHT");
 
         FLDrive = new MotorConfig(
                 hardwareMap,

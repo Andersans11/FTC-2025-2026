@@ -13,6 +13,7 @@ import com.pedropathing.util.Timer;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.IRRoboticsSubsystem;
 import org.firstinspires.ftc.teamcode.RobotStuff.Selene;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 
@@ -24,7 +25,7 @@ import dev.nextftc.hardware.impl.MotorEx;
 import kotlin.Pair;
 
 @Configurable
-public class Turret implements IAmBetterSubsystem {
+public class Turret implements IRRoboticsSubsystem {
 
     public static final Turret INSTANCE = new Turret();
 

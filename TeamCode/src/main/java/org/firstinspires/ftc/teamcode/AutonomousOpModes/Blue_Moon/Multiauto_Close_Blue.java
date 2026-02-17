@@ -11,10 +11,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Selene;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RRoboticsOpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.Drawing;
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.SequentialGroupFixed;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RRoboticsSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Intake;
 
 import dev.nextftc.core.commands.delays.Delay;
@@ -23,7 +23,7 @@ import dev.nextftc.core.commands.utility.InstantCommand;
 
 @Configurable
 @Autonomous(name = "Multiauto Blue - Close")
-public class Multiauto_Close_Blue extends RoyallyFuckedUpMode {
+public class Multiauto_Close_Blue extends RRoboticsOpMode {
     Follower follower;
     PathChain scorePreloads, interrimClose, intakeClose, scoreClose, interrimMedium, intakeMedium, scoreMedium, intakeGate, scoreGate, interrimFar, intakeFar, scoreFar;
 
@@ -45,7 +45,7 @@ public class Multiauto_Close_Blue extends RoyallyFuckedUpMode {
     public Multiauto_Close_Blue() {
         super();
         addSubsystemComponents(
-                new BetterSubsystemComponent(Selene.INSTANCE)
+                new RRoboticsSubsystemComponent(Selene.INSTANCE)
         );
     }
 

@@ -1,23 +1,19 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes;
 
 
-import com.bylazar.telemetry.TelemetryManager;
-
 import dev.nextftc.bindings.Button;
 import dev.nextftc.bindings.Range;
-import dev.nextftc.ftc.NextFTCOpMode;
 import dev.nextftc.hardware.impl.MotorEx;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RRoboticsOpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Sensitivities;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.IAmBetterSubsystem;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.IRRoboticsSubsystem;
 
 
-public abstract class AbstractDriveMode implements IAmBetterSubsystem {
+public abstract class AbstractDriveMode implements IRRoboticsSubsystem {
 
-    RoyallyFuckedUpMode opMode;
+    RRoboticsOpMode opMode;
     Range forwardSupp;
     Range strafeSupp;
     Range turnSupp;

@@ -1,13 +1,13 @@
-package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems;
+package org.firstinspires.ftc.teamcode.RobotStuff.Config;
 
 import dev.nextftc.core.commands.CommandManager;
 import dev.nextftc.core.components.Component;
 
-public class BetterSubsystemComponent implements Component {
+public class RRoboticsSubsystemComponent implements Component {
 
-    private final IAmBetterSubsystem subsystem;
+    private final IRRoboticsSubsystem subsystem;
 
-    public BetterSubsystemComponent(IAmBetterSubsystem subsystem) {
+    public RRoboticsSubsystemComponent(IRRoboticsSubsystem subsystem) {
         this.subsystem = subsystem;
     }
 

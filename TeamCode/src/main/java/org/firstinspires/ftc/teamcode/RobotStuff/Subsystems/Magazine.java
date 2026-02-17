@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.IRRoboticsSubsystem;
 import org.firstinspires.ftc.teamcode.RobotStuff.Selene;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Hardware.ServoExFullRange;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
@@ -17,7 +18,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Misc.SequentialGroupFixed;
 import dev.nextftc.core.commands.utility.InstantCommand;
 
 @Configurable
-public class Magazine implements IAmBetterSubsystem {
+public class Magazine implements IRRoboticsSubsystem {
 
     public static final Magazine INSTANCE = new Magazine();
     MagSlot[] slots;

@@ -1,19 +1,16 @@
 package org.firstinspires.ftc.teamcode.TestingOpModes;
 
 import com.bylazar.configurables.annotations.Configurable;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.PwmControl;
-import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RRoboticsOpMode;
 
 import dev.nextftc.hardware.impl.ServoEx;
 
 @Configurable
 @TeleOp(name = "When I Need A Plumber")
-public class Locktite extends RoyallyFuckedUpMode {
+public class Locktite extends RRoboticsOpMode {
 
     public Locktite() {
         super();

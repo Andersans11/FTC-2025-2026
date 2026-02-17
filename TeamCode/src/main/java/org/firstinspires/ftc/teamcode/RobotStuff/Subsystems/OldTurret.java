@@ -6,6 +6,7 @@ import com.pedropathing.util.Timer;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.IRRoboticsSubsystem;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Selene;
@@ -22,7 +23,7 @@ import dev.nextftc.hardware.powerable.SetPower;
 import kotlin.Pair;
 
 @Configurable
-public class OldTurret implements IAmBetterSubsystem {
+public class OldTurret implements IRRoboticsSubsystem {
 
     public static final OldTurret INSTANCE = new OldTurret();
 

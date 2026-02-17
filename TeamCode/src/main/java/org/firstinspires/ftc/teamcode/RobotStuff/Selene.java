@@ -12,21 +12,19 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemGroup;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RRoboticsSubsystemGroup;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 
-import dev.nextftc.control.KineticState;
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.delays.Delay;
-import dev.nextftc.core.commands.delays.WaitUntil;
+
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.SequentialGroupFixed;
 import dev.nextftc.core.commands.utility.InstantCommand;
-import dev.nextftc.core.commands.utility.NullCommand;
 
 @Configurable
-public class Selene extends BetterSubsystemGroup {
+public class Selene extends RRoboticsSubsystemGroup {
 
     public static final Selene INSTANCE = new Selene();
 
@@ -65,22 +63,6 @@ public class Selene extends BetterSubsystemGroup {
 
     public IndicatorMode indMode = IndicatorMode.INIT;
 
-    public Utils.ArtifactTypes[] PPG = new Utils.ArtifactTypes[] {
-            Utils.ArtifactTypes.PURPLE,
-            Utils.ArtifactTypes.PURPLE,
-            Utils.ArtifactTypes.GREEN
-    };
-    public Utils.ArtifactTypes[] GPP = new Utils.ArtifactTypes[] {
-            Utils.ArtifactTypes.GREEN,
-            Utils.ArtifactTypes.PURPLE,
-            Utils.ArtifactTypes.PURPLE
-    };
-    public Utils.ArtifactTypes[] PGP = new Utils.ArtifactTypes[] {
-            Utils.ArtifactTypes.PURPLE,
-            Utils.ArtifactTypes.GREEN,
-            Utils.ArtifactTypes.PURPLE
-    };
-
     @Override
     public void initSystem() {
         super.initSystem();
@@ -99,6 +81,10 @@ public class Selene extends BetterSubsystemGroup {
     public void initFollower(HardwareMap hardwareMap, Pose startingPose) {
         this.follower = Constants.createFollower(hardwareMap);
         this.follower.setStartingPose(startingPose);
+    }
+
+    public Pose getCurrentPose() {
+        return this.follower.getPose();
     }
 
     @Override

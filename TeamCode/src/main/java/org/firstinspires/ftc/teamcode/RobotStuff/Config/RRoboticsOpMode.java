@@ -4,7 +4,6 @@ import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.DeltaTimer;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 
 import java.util.Arrays;
@@ -16,10 +15,10 @@ import dev.nextftc.core.components.BindingsComponent;
 import dev.nextftc.ftc.GamepadEx;
 import dev.nextftc.ftc.NextFTCOpMode;
 
-public class RoyallyFuckedUpMode extends NextFTCOpMode {
+public class RRoboticsOpMode extends NextFTCOpMode {
 
-    private final Set<BetterSubsystemComponent> subsystems = new HashSet<>();
-    public void addSubsystemComponents(BetterSubsystemComponent... subsystemComponents) {
+    private final Set<RRoboticsSubsystemComponent> subsystems = new HashSet<>();
+    public void addSubsystemComponents(RRoboticsSubsystemComponent... subsystemComponents) {
         subsystems.addAll(Arrays.asList(subsystemComponents));
         addComponents(subsystemComponents);
     }
@@ -35,7 +34,7 @@ public class RoyallyFuckedUpMode extends NextFTCOpMode {
     /**
      * just a class with basic stuff we use in every opmode
      */
-    protected RoyallyFuckedUpMode() {
+    protected RRoboticsOpMode() {
         addComponents(
                 BindingsComponent.INSTANCE
         );
@@ -48,7 +47,7 @@ public class RoyallyFuckedUpMode extends NextFTCOpMode {
         Turret.INSTANCE.hasGotMotif = false;
         Turret.INSTANCE.hasSetAlliance = false;
 
-        for (BetterSubsystemComponent sys : this.subsystems) {
+        for (RRoboticsSubsystemComponent sys : this.subsystems) {
             sys.initSubsystem();
         }
     }

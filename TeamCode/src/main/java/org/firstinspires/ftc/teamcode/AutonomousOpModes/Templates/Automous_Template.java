@@ -11,9 +11,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Selene;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RRoboticsOpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.Drawing;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RRoboticsSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.OldTurret;
 
@@ -23,7 +23,7 @@ import dev.nextftc.core.commands.utility.InstantCommand;
 @Disabled
 @Configurable
 @Autonomous(name = "Automous - Template")
-public class Automous_Template extends RoyallyFuckedUpMode {
+public class Automous_Template extends RRoboticsOpMode {
     Follower follower;
 
     PathChain path1;
@@ -36,7 +36,7 @@ public class Automous_Template extends RoyallyFuckedUpMode {
     public Automous_Template() {
         super();
         addSubsystemComponents(
-                new BetterSubsystemComponent(Selene.INSTANCE)
+                new RRoboticsSubsystemComponent(Selene.INSTANCE)
         );
     }
 

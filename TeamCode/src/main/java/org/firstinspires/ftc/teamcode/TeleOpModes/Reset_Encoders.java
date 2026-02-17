@@ -3,14 +3,13 @@ package org.firstinspires.ftc.teamcode.TeleOpModes;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RRoboticsOpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 
 import dev.nextftc.hardware.impl.MotorEx;
 
 @TeleOp(name = "Reset Encoders", group = Utils.UTILITY)
-public class Reset_Encoders extends RoyallyFuckedUpMode {
+public class Reset_Encoders extends RRoboticsOpMode {
 
     public Reset_Encoders() {}
 

@@ -3,19 +3,19 @@ package org.firstinspires.ftc.teamcode.TestingOpModes;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RRoboticsOpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.BetterSubsystemComponent;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RRoboticsSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.HoldHeadingPID;
 
 @Disabled
 @TeleOp(name = "Lock Yaw", group = Utils.TESTING)
-public class HoldHeadingTest extends RoyallyFuckedUpMode {
+public class HoldHeadingTest extends RRoboticsOpMode {
 
     public HoldHeadingTest() {
         super();
         addSubsystemComponents(
-                new BetterSubsystemComponent(HoldHeadingPID.INSTANCE)
+                new RRoboticsSubsystemComponent(HoldHeadingPID.INSTANCE)
         );
     }
 

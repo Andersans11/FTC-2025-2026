@@ -2,13 +2,12 @@ package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems;
 
 import com.bylazar.configurables.annotations.Configurable;
 
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.IRRoboticsSubsystem;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 
 import dev.nextftc.control.ControlSystem;
 import dev.nextftc.control.KineticState;
 import dev.nextftc.core.commands.Command;
-import dev.nextftc.core.commands.delays.Delay;
-import org.firstinspires.ftc.teamcode.RobotStuff.Misc.SequentialGroupFixed;
 import dev.nextftc.core.commands.utility.InstantCommand;
 import dev.nextftc.hardware.controllable.MotorGroup;
 import dev.nextftc.hardware.impl.ServoEx;
@@ -16,7 +15,7 @@ import dev.nextftc.hardware.positionable.ServoGroup;
 import dev.nextftc.hardware.positionable.SetPosition;
 
 @Configurable
-public class Shooter implements IAmBetterSubsystem {
+public class Shooter implements IRRoboticsSubsystem {
 
     public static final Shooter INSTANCE = new Shooter();
 

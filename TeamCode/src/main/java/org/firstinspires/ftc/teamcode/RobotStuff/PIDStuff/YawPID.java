@@ -1,10 +1,8 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.PIDStuff;
 
 import com.bylazar.configurables.annotations.Configurable;
-import com.bylazar.telemetry.TelemetryManager;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.RoyallyFuckedUpMode;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RRoboticsOpMode;
 
 @Configurable
 public class YawPID {
@@ -20,12 +18,12 @@ public class YawPID {
     double integral;
     double derivative;
 
-    RoyallyFuckedUpMode opMode;
+    RRoboticsOpMode opMode;
 
     public final String pidName;
     public static boolean DEBUG = false;
 
-    public YawPID(RoyallyFuckedUpMode opMode, String pidName) {
+    public YawPID(RRoboticsOpMode opMode, String pidName) {
         this.opMode = opMode;
         this.pidName = pidName;
     }

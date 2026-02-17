@@ -15,6 +15,7 @@ import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.IRRoboticsSubsystem;
 import org.firstinspires.ftc.teamcode.RobotStuff.Selene;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
@@ -27,7 +28,7 @@ import dev.nextftc.hardware.impl.MotorEx;
 import kotlin.Pair;
 
 @Configurable
-public class CameraTurret implements IAmBetterSubsystem {
+public class CameraTurret implements IRRoboticsSubsystem {
 
     public static final CameraTurret INSTANCE = new CameraTurret();
 
