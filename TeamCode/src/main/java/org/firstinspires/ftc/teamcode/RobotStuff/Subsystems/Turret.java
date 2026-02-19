@@ -30,7 +30,6 @@ public class Turret implements IRRoboticsSubsystem {
     public static final Turret INSTANCE = new Turret();
 
     public MotorEx rotationMotor;
-    public HuskyLens camera;
     public VoltageSensor voltageSensor;
     public boolean isRed = true;
     public boolean hasSetAlliance = false;
@@ -78,8 +77,6 @@ public class Turret implements IRRoboticsSubsystem {
     @Override
     public void initSystem() {
         this.rotationMotor = RobotConfig.TurretRotation.getMotor();
-        camera = new HuskyLens(RobotConfig.camera.getDeviceClient());
-        camera.selectAlgorithm(HuskyLens.Algorithm.TAG_RECOGNITION);
         voltageSensor = RobotConfig.VoltageSensor;
     }
 
@@ -221,17 +218,7 @@ public class Turret implements IRRoboticsSubsystem {
     }
 
     public Pair<Integer, Integer> waugh() { // yes, this is how we get the tag x and y position
-        try {
-            HuskyLens.Block tag;
-            if (isRed) {
-                tag = camera.blocks(1)[0];
-            } else {
-                tag = camera.blocks(2)[0];
-            }
-            return new Pair<>(tag.x, tag.y);
-        } catch (RuntimeException reeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee) {
-            return new Pair<>(69420, 42069);
-        }
+        return new Pair<>(69420, 42069);
     }
 
     public static double a = 0.04;
@@ -255,25 +242,6 @@ public class Turret implements IRRoboticsSubsystem {
             case IDLE:
                 rotationMotor.setPower(controller.calculate(rotationMotor.getState()));
                 break;
-        }
-
-        if (!hasGotMotif) {
-            if (camera.blocks(MOTIF_GPP).length != 0) {
-                Magazine.INSTANCE.motif = GPPGPP;
-                Magazine.INSTANCE.setMode(0);
-                trackGoal();
-                hasGotMotif = true;
-            } else if (camera.blocks(MOTIF_PGP).length != 0) {
-                Magazine.INSTANCE.motif = PGPPGP;
-                Magazine.INSTANCE.setMode(0);
-                trackGoal();
-                hasGotMotif = true;
-            } else if (camera.blocks(MOTIF_PPG).length != 0) {
-                Magazine.INSTANCE.motif = PPGPPG;
-                Magazine.INSTANCE.setMode(0);
-                trackGoal();
-                hasGotMotif = true;
-            }
         }
     }
 }
