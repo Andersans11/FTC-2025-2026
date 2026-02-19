@@ -88,16 +88,9 @@ public class FullTest extends RRoboticsOpMode {
     public void onUpdate() {
         super.onUpdate();
 
-        addData("0", Magazine.INSTANCE.getSlotColor(0));
-        addData("1", Magazine.INSTANCE.getSlotColor(1));
-        addData("2", Magazine.INSTANCE.getSlotColor(2));
-        addData("Active", Magazine.INSTANCE.activeSlot);
+
         addData("red", Turret.INSTANCE.isRed);
-        addData("desiredColor", Magazine.INSTANCE.desiredColor);
-        addData("shotsFired", Magazine.INSTANCE.shotsFired);
         addData("TurretMode", Turret.INSTANCE.mode);
-        addData("dist", Magazine.INSTANCE.color.getDistance(DistanceUnit.MM));
-        addData("dist", Magazine.INSTANCE.range.getDistance(DistanceUnit.MM));
         addData("Pose", Math.toDegrees(Selene.INSTANCE.currentPose.getHeading()));
 
         addData("mode", Turret.INSTANCE.mode);

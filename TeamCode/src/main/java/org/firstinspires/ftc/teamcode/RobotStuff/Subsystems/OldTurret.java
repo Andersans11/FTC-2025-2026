@@ -28,8 +28,6 @@ public class OldTurret implements IRRoboticsSubsystem {
     public static final OldTurret INSTANCE = new OldTurret();
 
     public MotorEx rotationMotor;
-    public HuskyLens camera;
-    public TouchSensor limitSwitch;
     public boolean isRedAlliance = true;
     public boolean hasSetAlliance = false;
     public boolean hasGotMotif = false;
@@ -114,9 +112,6 @@ public class OldTurret implements IRRoboticsSubsystem {
     @Override
     public void initSystem() {
         this.rotationMotor = RobotConfig.TurretRotation.getMotor();
-        camera = new HuskyLens(RobotConfig.camera.getDeviceClient());
-        camera.selectAlgorithm(HuskyLens.Algorithm.TAG_RECOGNITION);
-        limitSwitch = RobotConfig.LimitSwitch;
     }
 
     @Override
@@ -138,7 +133,6 @@ public class OldTurret implements IRRoboticsSubsystem {
                 new WaitUntil(() -> rotationMotor.getCurrentPosition() >= degreesToTicks(44)),
                 new InstantCommand(() -> mode = TurretMode.MANUAL_POWER),
                 new SetPower(rotationMotor, -0.5),
-                new WaitUntil(() -> limitSwitch.isPressed()),
                 new SetPower(rotationMotor, 0),
                 new InstantCommand(() -> {
                     off = rotationMotor.getCurrentPosition();
@@ -263,17 +257,7 @@ public class OldTurret implements IRRoboticsSubsystem {
      * @return a Pair containing the x and y positions, or dummy values
      */
     public Pair<Integer, Integer> waugh() { // yes, this is how we get the tag x and y position
-        try {
-            HuskyLens.Block tag;
-            if (isRedAlliance) {
-                tag = camera.blocks(1)[0];
-            } else {
-                tag = camera.blocks(2)[0];
-            }
-            return new Pair<>(tag.x, tag.y);
-        } catch (RuntimeException reeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee) {
-            return new Pair<>(69420, 42069);
-        }
+        return new Pair<>(69420, 42069);
     }
 
 
@@ -349,21 +333,5 @@ public class OldTurret implements IRRoboticsSubsystem {
         }
         oldPose = pose;
         pose = Selene.INSTANCE.currentPose;
-
-        if (!hasGotMotif) {
-            if (camera.blocks(3).length != 0) {
-                Magazine.INSTANCE.motif = GPPGPP;
-                Magazine.INSTANCE.setMode(0);
-                hasGotMotif = true;
-            } else if (camera.blocks(4).length != 0) {
-                Magazine.INSTANCE.motif = PGPPGP;
-                Magazine.INSTANCE.setMode(0);
-                hasGotMotif = true;
-            } else if (camera.blocks(5).length != 0) {
-                Magazine.INSTANCE.motif = PPGPPG;
-                Magazine.INSTANCE.setMode(0);
-                hasGotMotif = true;
-            }
-        }
     }
 }

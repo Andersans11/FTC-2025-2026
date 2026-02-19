@@ -38,7 +38,7 @@ public class Intake implements IRRoboticsSubsystem {
     public void initSystem() {
         intake = RobotConfig.IntakeMotor.getMotor();
         winch1 = RobotConfig.Intake1.getServo();
-        winch2 = RobotConfig.Intake1.getServo();
+        winch2 = RobotConfig.Intake2.getServo();
     }
 
     @Override

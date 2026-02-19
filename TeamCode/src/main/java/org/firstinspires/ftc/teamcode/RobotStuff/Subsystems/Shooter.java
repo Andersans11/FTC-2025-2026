@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems;
 
 import com.bylazar.configurables.annotations.Configurable;
 
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Hardware.ServoExFullRange;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.IRRoboticsSubsystem;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 
@@ -21,10 +22,9 @@ public class Shooter implements IRRoboticsSubsystem {
     public static final Shooter INSTANCE = new Shooter();
 
     public ControlSystem controller;
-    ServoGroup hoodServos;
-    public ServoEx hood;
+    public ServoExFullRange hood;
     public MotorGroup shooters;
-    ServoEx stopper;
+    public ServoExFullRange stopper;
 
     // ------------------------ CONFIG ------------------------ //
     public static double shootingSpeed = 0.15;
@@ -48,12 +48,8 @@ public class Shooter implements IRRoboticsSubsystem {
                 RobotConfig.ShootMotor1.getMotor(),
                 RobotConfig.ShootMotor2.getMotor()
         );
-        hoodServos = new ServoGroup(
-                RobotConfig.HoodServo.getServo(),
-                RobotConfig.HoodServo2.getServo()
-        );
         hood = RobotConfig.HoodServo.getServo();
-        stopper = RobotConfig.Kicker.getServo();
+        stopper = RobotConfig.StopperServo.getServo();
 
         controller = ControlSystem.builder()
                 .velPid(kP, kI, kD)

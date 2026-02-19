@@ -15,6 +15,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import dev.nextftc.ftc.GamepadEx;
 
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Hardware.ServoExFullRange;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.HardwareConfigs.FullServoConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.HardwareConfigs.MotorConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.HardwareConfigs.ServoConfig;
@@ -38,7 +39,7 @@ public class RobotConfig {
     public static FullServoConfig CarouselCR1;
     public static FullServoConfig CarouselCR2;
     public static FullServoConfig CarouselCR3;
-    public static ServoConfig HoodServo;
+    public static FullServoConfig HoodServo;
     public static ServoConfig HoodServo2;
     public static ServoImplEx Indicator;
     public static FullServoConfig StopperServo;
@@ -101,7 +102,7 @@ public class RobotConfig {
 
         VoltageSensor = hardwareMap.get(VoltageSensor.class, "Control Hub");
 
-        Indicator = hardwareMap.get(ServoImplEx.class, "INDICATOR");
+        Indicator = hardwareMap.get(ServoImplEx.class, "IND");
 
         Pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, "PINPOINT");
 
@@ -109,25 +110,25 @@ public class RobotConfig {
 
         FLDrive = new MotorConfig(
                 hardwareMap,
-                "FL DRIVE",
+                "FL",
                 DcMotorSimple.Direction.REVERSE,
                 DcMotor.ZeroPowerBehavior.BRAKE
         );
         BLDrive = new MotorConfig(
                 hardwareMap,
-                "BL DRIVE",
+                "BL",
                 DcMotorSimple.Direction.REVERSE,
                 DcMotor.ZeroPowerBehavior.BRAKE
         );
         FRDrive = new MotorConfig(
                 hardwareMap,
-                "FR DRIVE",
+                "FR",
                 DcMotorSimple.Direction.FORWARD,
                 DcMotor.ZeroPowerBehavior.BRAKE
         );
         BRDrive = new MotorConfig(
                 hardwareMap,
-                "BR DRIVE",
+                "BR",
                 DcMotorSimple.Direction.FORWARD,
                 DcMotor.ZeroPowerBehavior.BRAKE
         );
@@ -155,7 +156,7 @@ public class RobotConfig {
                 DcMotorSimple.Direction.FORWARD,
                 DcMotor.ZeroPowerBehavior.BRAKE
         );
-        HoodServo = new ServoConfig(
+        HoodServo = new FullServoConfig(
                 hardwareMap,
                 "HOOD",
                 Servo.Direction.FORWARD

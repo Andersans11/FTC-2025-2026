@@ -23,9 +23,6 @@ public class Magazine implements IRRoboticsSubsystem {
     public static final Magazine INSTANCE = new Magazine();
     MagSlot[] slots;
     public int activeSlot; // slot that receives the next ball
-    public ServoExFullRange[] servos;
-    public ColorRangeSensor color;
-    public DistanceSensor range;
     public double targetPos = 0;
     public double oldTargetPos = 180;
     public Utils.ArtifactTypes[] motif = new Utils.ArtifactTypes[] {
@@ -71,15 +68,6 @@ public class Magazine implements IRRoboticsSubsystem {
         };
         this.activeSlot = 0;
 
-        servos = new ServoExFullRange[]{
-                RobotConfig.CarouselCR1.getServo(),
-                RobotConfig.CarouselCR2.getServo(),
-                RobotConfig.CarouselCR3.getServo()
-        };
-
-        this.color = RobotConfig.IntakeCS;
-        this.range = RobotConfig.IntakeDS;
-
         timer = new Timer();
     }
 
@@ -88,7 +76,6 @@ public class Magazine implements IRRoboticsSubsystem {
 
     @Override
     public void periodic() {
-
         targetPos = (180 * mode) + slots[activeSlot].offset;
 
         double offestOffset = changedOffset ? 60 : 0;
@@ -98,9 +85,6 @@ public class Magazine implements IRRoboticsSubsystem {
             while (targetPos + offsetActual >= 355) {
                 targetPos = targetPos - 360;
             }
-            servos[0].setPosition((targetPos + offsetActual) / 355 * magToothCount / servoToothCount);
-            servos[1].setPosition((targetPos + offsetActual) / 355 * magToothCount / servoToothCount);
-            servos[2].setPosition((targetPos + offsetActual) / 355 * magToothCount / servoToothCount);
             oldTargetPos = targetPos;
         }
         if (slots[activeSlot].content != desiredColor) changeActiveSlot().schedule();
@@ -182,20 +166,7 @@ public class Magazine implements IRRoboticsSubsystem {
     }
 
     public void getColor() {
-        if (color.getDistance(DistanceUnit.MM) <= dist && timer.getElapsedTimeSeconds() >= 1) { // Range now
-            if (((color.red() + color.blue()) / 2) + 7 < color.green()) {
-                setActiveSlotContent(Utils.ArtifactTypes.GREEN).schedule();
-                colorQueue = Utils.ArtifactTypes.GREEN;
-            } else {
-                setActiveSlotContent(Utils.ArtifactTypes.PURPLE).schedule();
-                colorQueue = Utils.ArtifactTypes.PURPLE;
-            }
-            hasBall = true;
-            timer.resetTimer();
-            r = color.red();
-            g = color.green();
-            b = color.blue();
-        }
+
     }
 
     /**

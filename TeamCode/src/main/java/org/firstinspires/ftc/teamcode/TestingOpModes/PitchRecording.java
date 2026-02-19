@@ -50,7 +50,7 @@ public class PitchRecording extends RRoboticsOpMode {
         P2.dpadLeft().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.GREEN));
         P2.dpadRight().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.PURPLE));
 
-        P2.cross().whenBecomesTrue(Selene.INSTANCE.shootSingle());
+        //P2.cross().whenBecomesTrue(Selene.INSTANCE.shootSingle());
 
         P2.rightTrigger().atLeast(0.1).whenBecomesTrue(Selene.INSTANCE.shootMotif());
 
@@ -81,13 +81,6 @@ public class PitchRecording extends RRoboticsOpMode {
         addData("tagY", Turret.INSTANCE.waugh().component2());
 
         addData("target", RobotConfig.HoodServo.getServo().getPosition());
-        addData("0", Magazine.INSTANCE.getSlotColor(0));
-        addData("1", Magazine.INSTANCE.getSlotColor(1));
-        addData("2", Magazine.INSTANCE.getSlotColor(2));
-        addData("Active", Magazine.INSTANCE.activeSlot);
-        addData("Mode", Magazine.INSTANCE.mode);
-        addData("desiredColor", Magazine.INSTANCE.desiredColor);
-        addData("shotsFired", Magazine.INSTANCE.shotsFired);
         addData("turret", Turret.INSTANCE.rotationMotor.getPower());
     }
 }

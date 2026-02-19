@@ -34,7 +34,11 @@ public class ServoExFullRange implements Positionable {
 
     @Override
     public double getPosition() {
-        return cachedPosition;
+        try {
+            return cachedPosition;
+        } catch (RuntimeException reeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee) {
+            return -1;
+        }
     }
 
     @Override

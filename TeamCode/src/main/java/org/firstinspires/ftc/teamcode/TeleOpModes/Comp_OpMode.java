@@ -41,11 +41,6 @@ public class Comp_OpMode extends RRoboticsOpMode {
         P2.rightTrigger().atLeast(0.1).whenBecomesTrue(Shooter.INSTANCE.StopperUp());
         P2.rightTrigger().atLeast(0.1).whenBecomesFalse(Shooter.INSTANCE.StopperDown());
 
-        P2.square().whenBecomesTrue(Magazine.INSTANCE.setMode(0));
-        P2.triangle().whenBecomesTrue(Magazine.INSTANCE.setMode(1));
-
-        P2.cross().whenBecomesTrue(Shooter.INSTANCE.idle());
-
         P2.leftBumper().whenBecomesTrue(Selene.INSTANCE.setAutoShooting());
 
         Selene.INSTANCE.indMode = Selene.IndicatorMode.INIT_DONE;
@@ -68,15 +63,10 @@ public class Comp_OpMode extends RRoboticsOpMode {
     public void onUpdate() {
         super.onUpdate();
 
-        addData("0", Magazine.INSTANCE.getSlotColor(0));
-        addData("1", Magazine.INSTANCE.getSlotColor(1));
-        addData("2", Magazine.INSTANCE.getSlotColor(2));
-        addData("Active", Magazine.INSTANCE.activeSlot);
-        addData("Mode", Magazine.INSTANCE.mode);
-        addData("desiredColor", Magazine.INSTANCE.desiredColor);
-        addData("shotsFired", Magazine.INSTANCE.shotsFired);
         addData("turret", Turret.INSTANCE.rotationMotor.getPower());
         addData("speed", Shooter.INSTANCE.shooters.getVelocity());
-
+        addData("turret pos (ticks)", Turret.INSTANCE.rotationMotor.getCurrentPosition());
+        addData("turret pos (deg)", Turret.INSTANCE.ticksToDegrees(Turret.INSTANCE.rotationMotor.getCurrentPosition()));
+        addData("turret target yaw", Turret.INSTANCE.targetYaw);
     }
 }
