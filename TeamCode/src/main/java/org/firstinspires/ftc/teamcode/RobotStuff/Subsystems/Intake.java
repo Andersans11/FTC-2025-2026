@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems;
 
 import com.bylazar.configurables.annotations.Configurable;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.IRRoboticsSubsystem;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
@@ -14,11 +15,12 @@ public class Intake implements IRRoboticsSubsystem {
 
     public static final Intake INSTANCE = new Intake();
     public MotorEx intake;
+    public ServoImplEx winch1;
+    public ServoImplEx winch2;
 
     // ---------------------------- CONFIG -------------------------- //
     public static double intakeSpeed = 1;
     public static double reverseSpeed = -0.75;
-    public static double idleSpeed = 0.35;
 
 
     // ------------------------- OPMODE --------------------------- //
@@ -26,6 +28,7 @@ public class Intake implements IRRoboticsSubsystem {
     @Override
     public void initSystem() {
         intake = RobotConfig.IntakeMotor.getMotor();
+        winch1 = RobotConfig.
     }
 
     @Override

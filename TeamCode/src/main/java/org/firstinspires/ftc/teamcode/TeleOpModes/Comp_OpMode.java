@@ -38,32 +38,13 @@ public class Comp_OpMode extends RRoboticsOpMode {
         P1.rightBumper().whenBecomesTrue(Selene.INSTANCE.outtake());
         P1.rightBumper().whenBecomesFalse(Selene.INSTANCE.stopIntake());
 
-        P1.cross().whenBecomesTrue(Turret.INSTANCE.setTracking());
-
-        P1.dpadLeft().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.GREEN));
-        P1.dpadRight().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.PURPLE));
-
-        P2.dpadLeft().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.GREEN));
-        P2.dpadRight().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.PURPLE));
-
-        P2.rightTrigger().atLeast(0.1).whenBecomesTrue(
-                new SequentialGroupFixed(
-                    Magazine.INSTANCE.fillSlots(),
-                    Selene.INSTANCE.shootMotif()
-                ));
+        P2.rightTrigger().atLeast(0.1).whenBecomesTrue(Shooter.INSTANCE.StopperUp());
+        P2.rightTrigger().atLeast(0.1).whenBecomesFalse(Shooter.INSTANCE.StopperDown());
 
         P2.square().whenBecomesTrue(Magazine.INSTANCE.setMode(0));
         P2.triangle().whenBecomesTrue(Magazine.INSTANCE.setMode(1));
 
-        P2.leftTrigger().atLeast(0.1).whenBecomesTrue(Shooter.INSTANCE.spinUp());
-
         P2.cross().whenBecomesTrue(Shooter.INSTANCE.idle());
-
-        P2.circle().whenBecomesTrue(Magazine.INSTANCE.incShotsFired());
-
-        P2.dpadUp().whenBecomesTrue(Turret.INSTANCE.toggleTrackObelisk());
-
-        P2.dpadDown().whenBecomesTrue(Selene.INSTANCE.resetFollower());
 
         P2.leftBumper().whenBecomesTrue(Selene.INSTANCE.setAutoShooting());
 

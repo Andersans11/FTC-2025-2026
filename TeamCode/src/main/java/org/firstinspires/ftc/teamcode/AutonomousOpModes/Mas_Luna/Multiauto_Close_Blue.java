@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.AutonomousOpModes.Blue_Moon;
+package org.firstinspires.ftc.teamcode.AutonomousOpModes.Mas_Luna;
 
 import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.follower.Follower;

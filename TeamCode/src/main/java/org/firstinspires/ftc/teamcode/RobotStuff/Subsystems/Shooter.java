@@ -9,6 +9,7 @@ import dev.nextftc.control.ControlSystem;
 import dev.nextftc.control.KineticState;
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.utility.InstantCommand;
+import dev.nextftc.core.commands.utility.NullCommand;
 import dev.nextftc.hardware.controllable.MotorGroup;
 import dev.nextftc.hardware.impl.ServoEx;
 import dev.nextftc.hardware.positionable.ServoGroup;
@@ -103,9 +104,11 @@ public class Shooter implements IRRoboticsSubsystem {
                 .build());
     }
     public Command StopperDown() {
+        if (stopper.getPosition() == stopperDownPos) return new NullCommand();
         return new SetPosition(stopper, stopperDownPos);
     }
     public Command StopperUp() {
+        if (stopper.getPosition() == stopperUpPos) return new NullCommand();
         return new SetPosition(stopper, stopperUpPos);
     }
     public Command setHoodPos(double pos) {
