@@ -32,12 +32,12 @@ public class Shooter implements IRRoboticsSubsystem {
     public static double shootPowerLess = 1750;
     public static double stopperDownPos = 0.65;
     public static double stopperUpPos = 1;
-    public static double kP = 0.01;
+    public static double kP = 0.0;
     public static double kI = 0.0;
     public static double kD = 0.0;
     public static double kS = 0.0;
-    public static double kV = 0.00035;
-    public static double kA = 1;
+    public static double kV = 0.0;
+    public static double kA = 0.0;
 
     public boolean isFar = false;
 

@@ -132,16 +132,22 @@ public class Selene extends RRoboticsSubsystemGroup {
 
     public Command intake() {
         return new SequentialGroupFixed(
-                Intake.INSTANCE.start()
+                Intake.INSTANCE.active()
         );
     }
 
     public Command outtake() {
-        return Intake.INSTANCE.reverse();
+        return new SequentialGroupFixed(
+                Intake.INSTANCE.active(),
+                Intake.INSTANCE.reverse()
+        );
     }
 
     public Command stopIntake() {
-        return Intake.INSTANCE.stop();
+        return new SequentialGroupFixed(
+                Intake.INSTANCE.off(),
+                Intake.INSTANCE.start()
+        );
     }
 
     /**

@@ -41,9 +41,9 @@ public class RobotConfig {
     public static ServoConfig HoodServo;
     public static ServoConfig HoodServo2;
     public static ServoImplEx Indicator;
-    public static ServoConfig StopperServo;
-    public static ServoConfig Intake1;
-    public static ServoConfig Intake2;
+    public static FullServoConfig StopperServo;
+    public static FullServoConfig Intake1;
+    public static FullServoConfig Intake2;
 
     public static ServoConfig Kicker;
 
@@ -160,21 +160,20 @@ public class RobotConfig {
                 "HOOD",
                 Servo.Direction.FORWARD
         );
-        StopperServo = new ServoConfig(
+        StopperServo = new FullServoConfig(
                 hardwareMap,
                 "STOPPER",
                 Servo.Direction.REVERSE
         );
-        Intake1 = new ServoConfig(
+        Intake1 = new FullServoConfig(
                 hardwareMap,
                 "INTAKE 1",
                 Servo.Direction.FORWARD
         );
-        Intake2 = new ServoConfig(
+        Intake2 = new FullServoConfig(
                 hardwareMap,
                 "INTAKE 2",
                 Servo.Direction.REVERSE
         );
-
     }
 }
