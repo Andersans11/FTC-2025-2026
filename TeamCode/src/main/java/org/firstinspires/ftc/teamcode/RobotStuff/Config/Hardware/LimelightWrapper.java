@@ -22,10 +22,9 @@ public class LimelightWrapper {
 
 
     public void start() {
+        limelight.pipelineSwitch(0); // apriltag pipeline
         limelight.setPollRateHz(pollRate);
         limelight.start();
-
-        limelight.pipelineSwitch(0); // apriltag pipeline
     }
 
     public void stop() {

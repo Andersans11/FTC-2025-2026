@@ -41,6 +41,9 @@ public class RobotConfig {
     public static ServoConfig HoodServo;
     public static ServoConfig HoodServo2;
     public static ServoImplEx Indicator;
+    public static ServoConfig StopperServo;
+    public static ServoConfig Intake1;
+    public static ServoConfig Intake2;
 
     public static ServoConfig Kicker;
 
@@ -102,49 +105,41 @@ public class RobotConfig {
 
         Pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, "PINPOINT");
 
-        IntakeDS = hardwareMap.get(DistanceSensor.class, "DISTANCE");
-
-        IntakeCS = hardwareMap.get(ColorRangeSensor.class, "COLOR");
-
-        camera = hardwareMap.get(HuskyLens.class, "HUSKYLENS");
-
-        LimitSwitch = hardwareMap.get(TouchSensor.class, "LIMIT");
-
-        Limelight = hardwareMap.get(Limelight3A.class, "LIMELIGHT");
+        Limelight = hardwareMap.get(Limelight3A.class, "limelight");
 
         FLDrive = new MotorConfig(
                 hardwareMap,
-                "FLDRIVE",
+                "FL DRIVE",
                 DcMotorSimple.Direction.REVERSE,
                 DcMotor.ZeroPowerBehavior.BRAKE
         );
         BLDrive = new MotorConfig(
                 hardwareMap,
-                "BLDRIVE",
+                "BL DRIVE",
                 DcMotorSimple.Direction.REVERSE,
                 DcMotor.ZeroPowerBehavior.BRAKE
         );
         FRDrive = new MotorConfig(
                 hardwareMap,
-                "FRDRIVE",
+                "FR DRIVE",
                 DcMotorSimple.Direction.FORWARD,
                 DcMotor.ZeroPowerBehavior.BRAKE
         );
         BRDrive = new MotorConfig(
                 hardwareMap,
-                "BRDRIVE",
+                "BR DRIVE",
                 DcMotorSimple.Direction.FORWARD,
                 DcMotor.ZeroPowerBehavior.BRAKE
         );
         ShootMotor1 = new MotorConfig(
                 hardwareMap,
-                "SHOOTER1",
+                "SHOOTER 1",
                 DcMotorSimple.Direction.FORWARD,
                 DcMotor.ZeroPowerBehavior.FLOAT
         );
         ShootMotor2 = new MotorConfig(
                 hardwareMap,
-                "SHOOTER2",
+                "SHOOTER 2",
                 DcMotorSimple.Direction.REVERSE, // motors are facing opposite directions
                 DcMotor.ZeroPowerBehavior.FLOAT
         );
@@ -160,35 +155,26 @@ public class RobotConfig {
                 DcMotorSimple.Direction.FORWARD,
                 DcMotor.ZeroPowerBehavior.BRAKE
         );
-        Kicker = new ServoConfig(
-                hardwareMap,
-                "KICKER",
-                Servo.Direction.FORWARD
-        );
-        CarouselCR1 = new FullServoConfig(
-                hardwareMap,
-                "CAROUSEL1",
-                Servo.Direction.FORWARD
-        );
-        CarouselCR2 = new FullServoConfig(
-                hardwareMap,
-                "CAROUSEL2",
-                Servo.Direction.FORWARD
-        );
-        CarouselCR3 = new FullServoConfig(
-                hardwareMap,
-                "CAROUSEL3",
-                Servo.Direction.FORWARD
-        );
         HoodServo = new ServoConfig(
                 hardwareMap,
                 "HOOD",
                 Servo.Direction.FORWARD
         );
-        HoodServo2 = new ServoConfig(
+        StopperServo = new ServoConfig(
                 hardwareMap,
-                "HOOD2",
+                "STOPPER",
                 Servo.Direction.REVERSE
         );
+        Intake1 = new ServoConfig(
+                hardwareMap,
+                "INTAKE 1",
+                Servo.Direction.FORWARD
+        );
+        Intake2 = new ServoConfig(
+                hardwareMap,
+                "INTAKE 2",
+                Servo.Direction.REVERSE
+        );
+
     }
 }
