@@ -235,12 +235,12 @@ public class Turret implements IRRoboticsSubsystem {
                 if (isRed) targetYaw = Math.toDegrees(targetYaw - currentPose.getHeading());
                 else targetYaw = Math.toDegrees(Math.PI - targetYaw - currentPose.getHeading());
 
-                controller.setGoal(new KineticState(-degreesToTicks(Math.max(minLim, Math.min(maxLim, targetYaw)))));
-                rotationMotor.setPower(controller.calculate(rotationMotor.getState()));
+                controller.setGoal(new KineticState(degreesToTicks(Math.max(minLim, Math.min(maxLim, targetYaw)))));
+                rotationMotor.setPower(-controller.calculate(rotationMotor.getState()));
                 Shooter.INSTANCE.setHoodPos(calcHoodPower(currentPose.distanceFrom(targetPose))).schedule();
                 break;
             case IDLE:
-                rotationMotor.setPower(controller.calculate(rotationMotor.getState()));
+                rotationMotor.setPower(-controller.calculate(rotationMotor.getState()));
                 break;
         }
     }
