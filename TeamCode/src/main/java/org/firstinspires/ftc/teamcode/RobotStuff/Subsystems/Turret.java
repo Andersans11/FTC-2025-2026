@@ -41,8 +41,8 @@ public class Turret implements IRRoboticsSubsystem {
     Pose motifPose = new Pose(144, 72);
     public double targetYaw = 0;
     public double targetPitch = 0.0;
-    public static double minLim = -45;
-    public static double maxLim = 40;
+    public static double minLim = -90;
+    public static double maxLim = 90;
     public ControlSystem controller;
     public enum TurretMode {
         POSE_TRACKING,
@@ -235,7 +235,7 @@ public class Turret implements IRRoboticsSubsystem {
                 if (isRed) targetYaw = Math.toDegrees(targetYaw - currentPose.getHeading());
                 else targetYaw = Math.toDegrees(Math.PI - targetYaw - currentPose.getHeading());
 
-                controller.setGoal(new KineticState(degreesToTicks(Math.max(minLim, Math.min(maxLim, targetYaw)))));
+                controller.setGoal(new KineticState(-degreesToTicks(Math.max(minLim, Math.min(maxLim, targetYaw)))));
                 rotationMotor.setPower(controller.calculate(rotationMotor.getState()));
                 Shooter.INSTANCE.setHoodPos(calcHoodPower(currentPose.distanceFrom(targetPose))).schedule();
                 break;

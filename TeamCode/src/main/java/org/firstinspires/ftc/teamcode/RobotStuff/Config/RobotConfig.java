@@ -147,7 +147,7 @@ public class RobotConfig {
         TurretRotation = new MotorConfig(
                 hardwareMap,
                 "TURRET",
-                DcMotorSimple.Direction.FORWARD,
+                DcMotorSimple.Direction.REVERSE,
                 DcMotor.ZeroPowerBehavior.BRAKE
         );
         IntakeMotor = new MotorConfig(
