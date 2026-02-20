@@ -27,16 +27,15 @@ public class Shooter implements IRRoboticsSubsystem {
     public ServoExFullRange stopper;
 
     // ------------------------ CONFIG ------------------------ //
-    public static double shootingSpeed = 0.15;
     public static double shootPower = 1950;
     public static double shootPowerLess = 1750;
     public static double stopperDownPos = 0.65;
     public static double stopperUpPos = 1;
-    public static double kP = 0.0;
+    public static double kP = 0.001;
     public static double kI = 0.0;
     public static double kD = 0.0;
     public static double kS = 0.0;
-    public static double kV = 0.0;
+    public static double kV = 0.00042;
     public static double kA = 0.0;
 
     public boolean isFar = false;
@@ -77,7 +76,7 @@ public class Shooter implements IRRoboticsSubsystem {
 
     // ---------- COMMANDS ---------------------- //
     public Command spinUp() {
-        return new InstantCommand(() -> setGoal((Turret.INSTANCE.isFar ? Shooter.shootPower : Shooter.shootPowerLess)).schedule());
+        return new InstantCommand(() -> setGoal(-(Turret.INSTANCE.isFar ? Shooter.shootPower : Shooter.shootPowerLess)).schedule());
     }
     public Command spinUpLess() {
         return new InstantCommand(() -> setGoal(-shootPowerLess).schedule());
