@@ -46,6 +46,7 @@ public class Turret implements IRRoboticsSubsystem {
     public ControlSystem controller;
     public enum TurretMode {
         POSE_TRACKING,
+        TESTING,
         IDLE
     }
 
@@ -58,7 +59,7 @@ public class Turret implements IRRoboticsSubsystem {
     public static double kP = 0.0005;
     public static double kI = 0.0;
     public static double kD = 0.00002;
-    public static double hoodToPos = 0.8;
+    public static double hoodToPos = 0;
     public static double farHoodPos = 0.84;
     public static double closeHoodPos = 0.9;
     public boolean isFar;
@@ -204,17 +205,8 @@ public class Turret implements IRRoboticsSubsystem {
     }
 
     public double calcHoodPower(double dist) {
-
-        if (dist >= 100) {
-            isFar = true;
-            return farHoodPos;
-        }
-        else if (dist <= 25) {
-            isFar = false;
-            return 0.86;
-        }
-        isFar = false;
-        return -(0.001 * dist) + closeHoodPos;
+        if (dist >= 68) return 0.1;
+        return 0;
     }
 
     public Pair<Integer, Integer> waugh() { // yes, this is how we get the tag x and y position
@@ -238,6 +230,16 @@ public class Turret implements IRRoboticsSubsystem {
                 controller.setGoal(new KineticState(degreesToTicks(Math.max(minLim, Math.min(maxLim, targetYaw)))));
                 rotationMotor.setPower(-controller.calculate(rotationMotor.getState()));
                 Shooter.INSTANCE.setHoodPos(calcHoodPower(currentPose.distanceFrom(targetPose))).schedule();
+                Shooter.INSTANCE.setGoal(Shooter.INSTANCE.calcShooterPower(currentPose.distanceFrom(targetPose))).schedule();
+                break;
+            case TESTING:
+                targetYaw = // get yaw angle using trig, targetYaw = arctan(opposite/adjacent)
+                        Math.atan(Math.abs(targetPose.getY() - currentPose.getY()) / Math.abs(targetPose.getX() - currentPose.getX()));
+                if (isRed) targetYaw = Math.toDegrees(targetYaw - currentPose.getHeading());
+                else targetYaw = Math.toDegrees(Math.PI - targetYaw - currentPose.getHeading());
+
+                controller.setGoal(new KineticState(degreesToTicks(Math.max(minLim, Math.min(maxLim, targetYaw)))));
+                rotationMotor.setPower(-controller.calculate(rotationMotor.getState()));
                 break;
             case IDLE:
                 rotationMotor.setPower(-controller.calculate(rotationMotor.getState()));

@@ -5,6 +5,7 @@ import com.bylazar.configurables.annotations.Configurable;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Hardware.ServoExFullRange;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.IRRoboticsSubsystem;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.Selene;
 
 import dev.nextftc.control.ControlSystem;
 import dev.nextftc.control.KineticState;
@@ -30,7 +31,7 @@ public class Shooter implements IRRoboticsSubsystem {
     public static double shootPower = 1950;
     public static double shootPowerLess = 1750;
     public static double stopperDownPos = 0.65;
-    public static double stopperUpPos = 1;
+    public static double stopperUpPos = 0.8;
     public static double kP = 0.001;
     public static double kI = 0.0;
     public static double kD = 0.0;
@@ -62,15 +63,11 @@ public class Shooter implements IRRoboticsSubsystem {
     @Override
     public void periodic() {
         shooters.setPower(controller.calculate(shooters.getState()));
-        if (!isFar) { // No, you cannot make this smaller, Jack. The logic must behave this way or it breaks.
-            if (Turret.INSTANCE.isFar) {
-                isFar = true;
-                setGoal(Shooter.shootPower);
-            }
-        } else if (!Turret.INSTANCE.isFar) {
-            isFar = false;
-            setGoal(Shooter.shootPowerLess);
-        }
+    }
+
+    public double calcShooterPower(double dist) {
+        dist = (25.0/3.0) * dist + (2350.0/3.0);
+        return Math.max(1350, Math.min(2000, dist));
     }
 
 
@@ -85,11 +82,11 @@ public class Shooter implements IRRoboticsSubsystem {
         return setGoal(0);
     }
     public Command idle() {
-        return setGoal(-750);
+        return setGoal(750);
     }
 
     public Command setGoal(double vel) {
-        return new InstantCommand(() -> this.controller.setGoal(new KineticState(0.0, -vel)));
+        return new InstantCommand(() -> this.controller.setGoal(new KineticState(0.0, vel)));
     }
 
     public Command resetPID() {
@@ -107,6 +104,7 @@ public class Shooter implements IRRoboticsSubsystem {
         return new SetPosition(stopper, stopperUpPos);
     }
     public Command setHoodPos(double pos) {
-        return new SetPosition(hood, pos);
+        if (hood.getPosition() != pos) return new SetPosition(hood, pos);
+        return new NullCommand();
     }
 }

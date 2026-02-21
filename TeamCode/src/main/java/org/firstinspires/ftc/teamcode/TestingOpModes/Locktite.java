@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.TestingOpModes;
 import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Hardware.ServoExFullRange;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RRoboticsOpMode;
 
@@ -16,14 +17,14 @@ public class Locktite extends RRoboticsOpMode {
         super();
     }
 
-    ServoEx servo;
+    ServoExFullRange servo;
     public static double power = 0.0;
     double oldPower = 0.0;
 
     @Override
     public void onInit() {
         super.onInit();
-        servo = RobotConfig.Kicker.getServo();
+        servo = RobotConfig.StopperServo.getServo();
     }
 
     @Override

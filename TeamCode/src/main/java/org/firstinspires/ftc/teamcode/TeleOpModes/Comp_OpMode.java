@@ -41,6 +41,8 @@ public class Comp_OpMode extends RRoboticsOpMode {
         P2.rightTrigger().atLeast(0.1).whenBecomesTrue(Shooter.INSTANCE.StopperUp());
         P2.rightTrigger().atLeast(0.1).whenBecomesFalse(Shooter.INSTANCE.StopperDown());
 
+        P2.dpadDown().whenBecomesTrue(Selene.INSTANCE.resetFollower());
+
         P2.leftBumper().whenBecomesTrue(Selene.INSTANCE.setAutoShooting());
 
         Selene.INSTANCE.indMode = Selene.IndicatorMode.INIT_DONE;

@@ -183,8 +183,8 @@ public class Selene extends RRoboticsSubsystemGroup {
     public Command start() {
         return new SequentialGroupFixed(
                 Intake.INSTANCE.start(),
+                Intake.INSTANCE.off(),
                 Shooter.INSTANCE.StopperDown(),
-                Shooter.INSTANCE.spinUp(),
                 Turret.INSTANCE.resetHood()
         );
     }
