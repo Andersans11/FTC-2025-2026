@@ -22,7 +22,7 @@ public class RobotCentricDrive extends AbstractDriveMode {
                 FL, FR, BL, BR,
                 () -> (forwardSupp.get() * Sensitivities.forwardModifier.get()),
                 () -> (strafeSupp.get() * Sensitivities.strafeModifier.get()),
-                () -> ((turnSupp.get() * Sensitivities.turnModifier.get()) + (strafeSupp.get() * Sensitivities.strafeCompModifier.get()))
+                () -> ((turnSupp.get() * Sensitivities.turnModifier.get()))
         );
     }
 }

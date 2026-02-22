@@ -13,6 +13,8 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.SequentialGroupFixed;
 
+import dev.nextftc.core.commands.utility.InstantCommand;
+
 @TeleOp(name = "TwoAndOnlyOpMode", group = Utils.PRIORITY_PRIORITY)
 public class Comp_OpMode extends RRoboticsOpMode {
 
@@ -41,8 +43,12 @@ public class Comp_OpMode extends RRoboticsOpMode {
         P2.rightTrigger().atLeast(0.1).whenBecomesTrue(Shooter.INSTANCE.StopperUp());
         P2.rightTrigger().atLeast(0.1).whenBecomesFalse(Shooter.INSTANCE.StopperDown());
 
+        P1.leftBumper().whenBecomesTrue(Shooter.INSTANCE.StopperUp());
+        P1.leftBumper().whenBecomesFalse(Shooter.INSTANCE.StopperDown());
+
         P2.dpadDown().whenBecomesTrue(Selene.INSTANCE.resetFollower());
 
+        P2.leftBumper().whenBecomesTrue(Selene.INSTANCE.setAutoShooting());
         P2.leftBumper().whenBecomesTrue(Selene.INSTANCE.setAutoShooting());
 
         Selene.INSTANCE.indMode = Selene.IndicatorMode.INIT_DONE;
@@ -65,10 +71,22 @@ public class Comp_OpMode extends RRoboticsOpMode {
     public void onUpdate() {
         super.onUpdate();
 
-        addData("turret", Turret.INSTANCE.rotationMotor.getPower());
-        addData("speed", Shooter.INSTANCE.shooters.getVelocity());
+        addData("speed", Turret.INSTANCE.flywheelSpeed);
+        addData("hood", Turret.INSTANCE.hoodAngle);
+
+        addData("speed2", Turret.INSTANCE.newFlywheelSpeed);
+        addData("hood2", Turret.INSTANCE.newHoodAngle);
+
+        addData("ticks", Shooter.INSTANCE.controller.getGoal());
+
         addData("turret pos (ticks)", Turret.INSTANCE.rotationMotor.getCurrentPosition());
         addData("turret pos (deg)", Turret.INSTANCE.ticksToDegrees(Turret.INSTANCE.rotationMotor.getCurrentPosition()));
         addData("turret target yaw", Turret.INSTANCE.targetYaw);
+
+        addData("autoshooting", Selene.INSTANCE.autoShooting);
+        addData("is in zone", Turret.INSTANCE.isInZone(Selene.INSTANCE.currentPose));
+        addData("is at limit", Turret.INSTANCE.isAtLimit());
+
+        addData("i", Turret.INSTANCE.getrobotToGoalVector(Selene.INSTANCE.currentPose).getMagnitude());
     }
 }

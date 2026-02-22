@@ -96,8 +96,8 @@ public class Selene extends RRoboticsSubsystemGroup {
         follower.updatePose();
         currentPose = follower.getPose();
         runIndicator();
-        if (Turret.INSTANCE.isInZone(currentPose) && !Turret.INSTANCE.isAtLimit() && autoShooting) Shooter.INSTANCE.StopperUp();
-        else Shooter.INSTANCE.StopperDown();
+        if (Turret.INSTANCE.isInZone(currentPose) && !Turret.INSTANCE.isAtLimit() && autoShooting) Shooter.INSTANCE.StopperUp().schedule();
+        else if (autoShooting) Shooter.INSTANCE.StopperDown().schedule();
     }
 
     public boolean autoShooting = false;
