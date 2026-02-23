@@ -62,10 +62,15 @@ public class Turret implements IRRoboticsSubsystem {
 
     // ------------------------- CONFIG ------------------------------- //
 
-    public static double SCORE_HEIGHT = 36;
-    public static double SCORE_ANGLE_DEGREES = -20;
-    public double SCORE_ANGLE = Math.toRadians(SCORE_ANGLE_DEGREES);
-    public static double PASS_THROUGH_POINT_RADIUS = 5;
+    public static double closeScoreHeight = 36;
+    public static double closeScoreAngle = -30;
+    public double closeScoreAngleRad = Math.toRadians(closeScoreAngle);
+    public static double closeScoreRadius = 5;
+
+    public static double farScoreHeight = 36;
+    public static double farScoreAngle = -30;
+    public double farScoreAngleRad = Math.toRadians(farScoreAngle);
+    public static double farScoreRadius = 5;
     public static double kP = 0.0005;
     public static double kI = 0.0;
     public static double kD = 0.00002;
@@ -137,9 +142,20 @@ public class Turret implements IRRoboticsSubsystem {
         Vector robotToGoalVector = new Pose(targetPose.getX() - currentPose.getX(), targetPose.getY() - currentPose.getY()).getAsVector();
 
         double g = 32.174 * 12;
-        double x = robotToGoalVector.getMagnitude() - PASS_THROUGH_POINT_RADIUS;
-        double y = SCORE_HEIGHT;
-        double a = SCORE_ANGLE;
+
+        double x;
+        double y;
+        double a;
+
+        if (isFar) {
+            x = robotToGoalVector.getMagnitude() - farScoreRadius;
+            y = farScoreHeight;
+            a = farScoreAngleRad;
+        } else {
+            x = robotToGoalVector.getMagnitude() - closeScoreRadius;
+            y = closeScoreHeight;
+            a = closeScoreAngleRad;
+        }
 
         hoodAngle = MathFunctions.clamp(Math.atan(2 * y / x - Math.tan(a)), Math.toRadians(30), Math.toRadians(55));
 
@@ -173,8 +189,6 @@ public class Turret implements IRRoboticsSubsystem {
         targetYaw = targetYaw - Math.toDegrees(turretVelCompOff);
 
         controller.setGoal(new KineticState(degreesToTicks(Math.max(minLim, Math.min(maxLim, targetYaw)))));
-
-        hoodToPos++;
     }
 
     public Command toggleTrackObelisk() {
