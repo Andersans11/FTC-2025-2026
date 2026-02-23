@@ -24,7 +24,7 @@ public class Locktite extends RRoboticsOpMode {
     @Override
     public void onInit() {
         super.onInit();
-        servo = RobotConfig.StopperServo.getServo();
+        servo = RobotConfig.HoodServo.getServo();
     }
 
     @Override

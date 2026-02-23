@@ -159,7 +159,7 @@ public class RobotConfig {
         HoodServo = new FullServoConfig(
                 hardwareMap,
                 "HOOD",
-                Servo.Direction.FORWARD
+                Servo.Direction.REVERSE
         );
         StopperServo = new FullServoConfig(
                 hardwareMap,
