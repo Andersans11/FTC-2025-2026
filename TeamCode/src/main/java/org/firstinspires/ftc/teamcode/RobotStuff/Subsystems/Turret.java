@@ -83,6 +83,8 @@ public class Turret implements IRRoboticsSubsystem {
     public double newHoodAngle = 0;
     public double newFlywheelSpeed = 0;
 
+    public double turretDistFromCenter;
+
     // --------------------- OPMODE --------------------------------- //
 
 
@@ -135,11 +137,29 @@ public class Turret implements IRRoboticsSubsystem {
     }
 
     public Vector getrobotToGoalVector(Pose currentPose) {
-        return new Pose(targetPose.getX() - currentPose.getX(), targetPose.getY() - currentPose.getY()).getAsVector();
+        return targetPose.getAsVector().minus(currentPose.getAsVector());
+    }
+
+    public Pose getTurretPose(Pose currentPose) {
+        double turretDir = currentPose.getHeading() - Math.PI;
+        if (turretDir < 0) turretDir = turretDir + 2 * Math.PI;
+        Vector turretDiff = new Vector(turretDistFromCenter, turretDir);
+        Vector currentVector = currentPose.getAsVector();
+        Vector turretVector = currentVector.plus(turretDiff);
+        return new Pose(turretVector.getXComponent(), turretVector.getYComponent(), currentPose.getHeading());
+    }
+
+    public Pose getTurretPose(Pose currentPose, double turretPos) {
+        double turretDir = currentPose.getHeading() - Math.PI;
+        if (turretDir < 0) turretDir = turretDir + 2 * Math.PI;
+        Vector turretDiff = new Vector(turretDistFromCenter, turretDir);
+        Vector currentVector = currentPose.getAsVector();
+        Vector turretVector = currentVector.plus(turretDiff);
+        return new Pose(turretVector.getXComponent(), turretVector.getYComponent(), currentPose.getHeading() + Math.toRadians(turretPos));
     }
 
     public void calcTurretPositions(Pose currentPose, Vector robotVel) {
-        Vector robotToGoalVector = new Pose(targetPose.getX() - currentPose.getX(), targetPose.getY() - currentPose.getY()).getAsVector();
+        Vector robotToGoalVector = getrobotToGoalVector(getTurretPose(currentPose));
 
         double g = 32.174 * 12;
 
@@ -181,10 +201,12 @@ public class Turret implements IRRoboticsSubsystem {
 
         double turretVelCompOff = Math.atan(perpendicularComponent / ivr);
 
+        Pose turretPose = getTurretPose(currentPose);
+
         targetYaw = // get yaw angle using trig, targetYaw = arctan(opposite/adjacent)
-                Math.atan(Math.abs(targetPose.getY() - currentPose.getY()) / Math.abs(targetPose.getX() - currentPose.getX()));
-        if (isRed) targetYaw = Math.toDegrees(targetYaw - currentPose.getHeading());
-        else targetYaw = Math.toDegrees(Math.PI - targetYaw - currentPose.getHeading());
+                Math.atan(Math.abs(targetPose.getY() - turretPose.getY()) / Math.abs(targetPose.getX() - turretPose.getX()));
+        if (isRed) targetYaw = Math.toDegrees(targetYaw - turretPose.getHeading());
+        else targetYaw = Math.toDegrees(Math.PI - targetYaw - turretPose.getHeading());
 
         targetYaw = targetYaw - Math.toDegrees(turretVelCompOff);
 
