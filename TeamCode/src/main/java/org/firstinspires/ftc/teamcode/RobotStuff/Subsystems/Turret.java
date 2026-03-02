@@ -83,7 +83,7 @@ public class Turret implements IRRoboticsSubsystem {
     public double newHoodAngle = 0;
     public double newFlywheelSpeed = 0;
 
-    public double turretDistFromCenter;
+    public double turretDistFromCenter = 1.72149606;
 
     // --------------------- OPMODE --------------------------------- //
 
