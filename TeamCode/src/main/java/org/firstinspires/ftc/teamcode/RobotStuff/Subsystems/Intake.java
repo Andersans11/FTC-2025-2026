@@ -30,6 +30,8 @@ public class Intake implements IRRoboticsSubsystem {
     public static double active2 = 0.75;
     public static double off1 = 0.3;
     public static double off2 = 0.85;
+    public static double gate1 = 0.45;
+    public static double gate2 = 0.65;
 
 
     // ------------------------- OPMODE --------------------------- //
@@ -59,6 +61,13 @@ public class Intake implements IRRoboticsSubsystem {
         return new ParallelGroup(
                 new SetPosition(winch1, off1),
                 new SetPosition(winch2, off2)
+        );
+    }
+    public Command gate() {
+        return new ParallelGroup(
+                new SetPosition(winch1, gate1),
+                new SetPosition(winch2, gate2),
+                stop()
         );
     }
     public Command stop() {

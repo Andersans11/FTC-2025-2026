@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Selene;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RRoboticsSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.RobotCentricDrive;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
@@ -37,7 +38,7 @@ public class Comp_OpMode extends RRoboticsOpMode {
         P1.dpadUp().whenBecomesTrue(Turret.INSTANCE.setBlueAlliance());
         P1.dpadDown().whenBecomesTrue(Turret.INSTANCE.setRedAlliance());
 
-        P1.rightBumper().whenBecomesTrue(Selene.INSTANCE.outtake());
+        P1.rightBumper().whenBecomesTrue(Intake.INSTANCE.gate());
         P1.rightBumper().whenBecomesFalse(Selene.INSTANCE.stopIntake());
 
         P2.rightTrigger().atLeast(0.1).whenBecomesTrue(Shooter.INSTANCE.StopperUp());
