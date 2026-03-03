@@ -72,13 +72,13 @@ public class Comp_OpMode extends RRoboticsOpMode {
     public void onUpdate() {
         super.onUpdate();
 
-        addData("speed", Turret.INSTANCE.flywheelSpeed);
+        addData("speed", Shooter.INSTANCE.shooters.getLeader().getVelocity());
         addData("hood", Turret.INSTANCE.hoodAngle);
 
         addData("speed2", Turret.INSTANCE.newFlywheelSpeed);
         addData("hood2", Turret.INSTANCE.newHoodAngle);
 
-        addData("ticks", Shooter.INSTANCE.controller.getGoal());
+        addData("ticks", Shooter.INSTANCE.controller.getGoal().getVelocity());
 
         addData("turret pos (ticks)", Turret.INSTANCE.rotationMotor.getCurrentPosition());
         addData("turret pos (deg)", Turret.INSTANCE.ticksToDegrees(Turret.INSTANCE.rotationMotor.getCurrentPosition()));
