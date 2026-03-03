@@ -14,7 +14,6 @@ import com.pedropathing.geometry.Pose;
 import com.pedropathing.math.MathFunctions;
 import com.pedropathing.math.Vector;
 import com.pedropathing.util.Timer;
-import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.IRRoboticsSubsystem;
@@ -310,8 +309,6 @@ public class Turret implements IRRoboticsSubsystem {
     public double ticksToDegrees(double ticks) {
         return ticks / 8000 * 360 / 5;
     }
-
-    public static double a = 0.04;
 
     @Override
     public void periodic() {

@@ -62,7 +62,7 @@ public class Shooter implements IRRoboticsSubsystem {
 
     @Override
     public void periodic() {
-        shooters.setPower(controller.calculate(shooters.getState()));
+        shooters.setPower(controller.calculate(shooters.getLeader().getState()));
     }
 
     public double calcShooterPower(double dist) {

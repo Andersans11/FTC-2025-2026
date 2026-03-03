@@ -18,9 +18,9 @@ public class Constants {
 
 
     public static FollowerConstants followerConstants = new FollowerConstants()
-            .mass(11.79)
-            .forwardZeroPowerAcceleration(-65.5397)
-            .lateralZeroPowerAcceleration(-87.0747)
+            .mass(12.247)
+            .forwardZeroPowerAcceleration(-28.4571)
+            .lateralZeroPowerAcceleration(-70.8437)
             .useSecondaryTranslationalPIDF(true)
             .useSecondaryHeadingPIDF(true)
             .useSecondaryDrivePIDF(true)
@@ -37,13 +37,13 @@ public class Constants {
             .leftRearMotorName("BL")
             .rightFrontMotorName("FR")
             .rightRearMotorName("BR")
-            .leftFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
-            .leftRearMotorDirection(DcMotorSimple.Direction.FORWARD)
-            .rightFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
-            .rightRearMotorDirection(DcMotorSimple.Direction.REVERSE)
+            .leftFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
+            .leftRearMotorDirection(DcMotorSimple.Direction.REVERSE)
+            .rightFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
+            .rightRearMotorDirection(DcMotorSimple.Direction.FORWARD)
             .maxPower(1)
-            .xVelocity(69.4319)
-            .yVelocity(49.5211);
+            .xVelocity(80.2034)
+            .yVelocity(62.8311);
 
     public static PinpointConstants localizerConstants = new PinpointConstants()
             .hardwareMapName("PINPOINT")
