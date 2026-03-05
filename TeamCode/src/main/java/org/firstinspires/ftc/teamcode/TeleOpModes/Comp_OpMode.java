@@ -8,13 +8,8 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Selene;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RRoboticsSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.RobotCentricDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Intake;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
-
-import org.firstinspires.ftc.teamcode.RobotStuff.Misc.SequentialGroupFixed;
-
-import dev.nextftc.core.commands.utility.InstantCommand;
 
 @TeleOp(name = "TwoAndOnlyOpMode", group = Utils.PRIORITY_PRIORITY)
 public class Comp_OpMode extends RRoboticsOpMode {
@@ -41,11 +36,11 @@ public class Comp_OpMode extends RRoboticsOpMode {
         P1.rightBumper().whenBecomesTrue(Intake.INSTANCE.gate());
         P1.rightBumper().whenBecomesFalse(Selene.INSTANCE.stopIntake());
 
-        P2.rightTrigger().atLeast(0.1).whenBecomesTrue(Shooter.INSTANCE.StopperUp());
-        P2.rightTrigger().atLeast(0.1).whenBecomesFalse(Shooter.INSTANCE.StopperDown());
+        P2.rightTrigger().atLeast(0.1).whenBecomesTrue(Shooter.INSTANCE.StopperOpen());
+        P2.rightTrigger().atLeast(0.1).whenBecomesFalse(Shooter.INSTANCE.StopperClose());
 
-        P1.leftBumper().whenBecomesTrue(Shooter.INSTANCE.StopperUp());
-        P1.leftBumper().whenBecomesFalse(Shooter.INSTANCE.StopperDown());
+        P1.leftBumper().whenBecomesTrue(Shooter.INSTANCE.StopperOpen());
+        P1.leftBumper().whenBecomesFalse(Shooter.INSTANCE.StopperClose());
 
         P2.dpadDown().whenBecomesTrue(Selene.INSTANCE.resetFollower());
 

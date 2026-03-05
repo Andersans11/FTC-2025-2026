@@ -10,7 +10,6 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.RRoboticsOpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RRoboticsSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.RobotCentricDrive;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 
@@ -44,7 +43,7 @@ public class PitchRecording extends RRoboticsOpMode {
         P1.square().whenBecomesTrue(new SequentialGroupFixed(
                 Selene.INSTANCE.start(),
                 Selene.INSTANCE.intake(),
-                Shooter.INSTANCE.StopperUp(),
+                Shooter.INSTANCE.StopperOpen(),
                 new InstantCommand(() -> Turret.INSTANCE.mode = Turret.TurretMode.TESTING)
         ));
 

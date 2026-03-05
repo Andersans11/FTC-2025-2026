@@ -5,7 +5,6 @@ import com.bylazar.configurables.annotations.Configurable;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Hardware.ServoExFullRange;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.IRRoboticsSubsystem;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.Selene;
 
 import dev.nextftc.control.ControlSystem;
 import dev.nextftc.control.KineticState;
@@ -13,8 +12,6 @@ import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.utility.InstantCommand;
 import dev.nextftc.core.commands.utility.NullCommand;
 import dev.nextftc.hardware.controllable.MotorGroup;
-import dev.nextftc.hardware.impl.ServoEx;
-import dev.nextftc.hardware.positionable.ServoGroup;
 import dev.nextftc.hardware.positionable.SetPosition;
 
 @Configurable
@@ -95,11 +92,11 @@ public class Shooter implements IRRoboticsSubsystem {
                 .basicFF(kV, kA, kS)
                 .build());
     }
-    public Command StopperDown() {
+    public Command StopperClose() {
         if (stopper.getPosition() == stopperDownPos) return new NullCommand();
         return new SetPosition(stopper, stopperDownPos);
     }
-    public Command StopperUp() {
+    public Command StopperOpen() {
         if (stopper.getPosition() == stopperUpPos) return new NullCommand();
         return new SetPosition(stopper, stopperUpPos);
     }

@@ -16,9 +16,9 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Misc.Drawing;
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.SequentialGroupFixed;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RRoboticsSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Intake;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 
-import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.delays.Delay;
 import dev.nextftc.core.commands.delays.WaitUntil;
 import dev.nextftc.core.commands.utility.InstantCommand;
@@ -109,14 +109,17 @@ public class Multiauto_Close_Blue extends RRoboticsOpMode {
         intakeClose = follower.pathBuilder()
                 .addPath(new BezierLine(intakeStartClose, intakeEndClose))
                 .setGlobalDeceleration()
+                .setTimeoutConstraint(100)
                 .build();
         intakeMedium = follower.pathBuilder()
                 .addPath(new BezierLine(intakeStartMedium, intakeEndMedium))
                 .setGlobalDeceleration()
+                .setTimeoutConstraint(100)
                 .build();
         intakeFar = follower.pathBuilder()
                 .addPath(new BezierLine(intakeStartFar, intakeEndFar))
                 .setGlobalDeceleration()
+                .setTimeoutConstraint(100)
                 .build();
 
         intakeGate = follower.pathBuilder()
@@ -136,6 +139,9 @@ public class Multiauto_Close_Blue extends RRoboticsOpMode {
         follower.setMaxPower(pathPower);
 
         preloads = new SequentialGroupFixed(
+                Shooter.INSTANCE.setGoal(1400),
+                Shooter.INSTANCE.setHoodPos(0.0),
+                Selene.INSTANCE.stopIntake(),
                 Turret.INSTANCE.setPosition(0),
                 new InstantCommand(() -> follower.followPath(scorePreloads)),
                 new Delay(0.5),
@@ -145,7 +151,7 @@ public class Multiauto_Close_Blue extends RRoboticsOpMode {
                 new WaitUntil(() -> follower.isBusy()),
                 Selene.INSTANCE.intake(),
                 new InstantCommand(() -> follower.followPath(intakeMedium)),
-                new WaitUntil(() -> !follower.isBusy()),
+                new WaitUntil(() -> follower.atParametricEnd()),
                 Selene.INSTANCE.stopIntake(),
                 new InstantCommand(() -> follower.followPath(scoreMedium)),
                 new WaitUntil(() -> !follower.isBusy()),
@@ -158,6 +164,7 @@ public class Multiauto_Close_Blue extends RRoboticsOpMode {
                 new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.intake(),
                 new Delay(intakeTime),
+                Selene.INSTANCE.stopIntake(),
                 new InstantCommand(() -> follower.followPath(scoreGate)),
                 new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.shootMotif(),
@@ -169,6 +176,7 @@ public class Multiauto_Close_Blue extends RRoboticsOpMode {
                 new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.intake(),
                 new Delay(intakeTime),
+                Selene.INSTANCE.stopIntake(),
                 new InstantCommand(() -> follower.followPath(scoreGate)),
                 new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.shootMotif(),
@@ -180,6 +188,7 @@ public class Multiauto_Close_Blue extends RRoboticsOpMode {
                 new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.intake(),
                 new Delay(intakeTime),
+                Selene.INSTANCE.stopIntake(),
                 new InstantCommand(() -> follower.followPath(scoreGate)),
                 new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.shootMotif(),
@@ -191,7 +200,7 @@ public class Multiauto_Close_Blue extends RRoboticsOpMode {
                 new WaitUntil(() -> follower.isBusy()),
                 Selene.INSTANCE.intake(),
                 new InstantCommand(() -> follower.followPath(intakeClose)),
-                new WaitUntil(() -> !follower.isBusy()),
+                new WaitUntil(() -> follower.atParametricEnd()),
                 Selene.INSTANCE.stopIntake(),
                 new InstantCommand(() -> follower.followPath(scoreClose)),
                 new WaitUntil(() -> !follower.isBusy()),
@@ -200,7 +209,7 @@ public class Multiauto_Close_Blue extends RRoboticsOpMode {
                 new WaitUntil(() -> follower.isBusy()),
                 Selene.INSTANCE.intake(),
                 new InstantCommand(() -> follower.followPath(intakeFar)),
-                new WaitUntil(() -> !follower.isBusy()),
+                new WaitUntil(() -> follower.atParametricEnd()),
                 Selene.INSTANCE.stopIntake(),
                 new InstantCommand(() -> follower.followPath(scoreFar)),
                 new WaitUntil(() -> !follower.isBusy()),
@@ -216,7 +225,9 @@ public class Multiauto_Close_Blue extends RRoboticsOpMode {
                     .setGlobalDeceleration()
                     .build();
         }));
+        Shooter.INSTANCE.setHoodPos(0.0).schedule();
         Selene.INSTANCE.stopIntake().schedule();
+        Shooter.INSTANCE.StopperClose().schedule();
     }
 
     @Override

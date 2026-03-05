@@ -11,7 +11,6 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RRoboticsSubsystemGroup;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
@@ -36,7 +35,7 @@ public class Selene extends RRoboticsSubsystemGroup {
     public Timer ballTimer;
     public Pose currentPose = new Pose(9, 9, 0);
     public int indCycle = 0;
-    public double shootTime = 0.5; // TODO: This value is kinda inaccurate
+    public double shootTime = 0.6;
 
     public double currentPWM = 0;
     private Selene() {
@@ -96,8 +95,8 @@ public class Selene extends RRoboticsSubsystemGroup {
         follower.updatePose();
         currentPose = follower.getPose();
         runIndicator();
-        if (Turret.INSTANCE.isInZone(currentPose) && !Turret.INSTANCE.isAtLimit() && autoShooting) Shooter.INSTANCE.StopperUp().schedule();
-        else if (autoShooting) Shooter.INSTANCE.StopperDown().schedule();
+        if (Turret.INSTANCE.isInZone(currentPose) && !Turret.INSTANCE.isAtLimit() && autoShooting) Shooter.INSTANCE.StopperOpen().schedule();
+        else if (autoShooting) Shooter.INSTANCE.StopperClose().schedule();
     }
 
     public boolean autoShooting = false;
@@ -157,9 +156,9 @@ public class Selene extends RRoboticsSubsystemGroup {
     public Command shootMotif() { // TODO: Airsort
             return new SequentialGroupFixed(
                     new InstantCommand(() -> this.isMotifShooting = true),
-                    Shooter.INSTANCE.StopperUp(),
+                    Shooter.INSTANCE.StopperOpen(),
                     new Delay(shootTime),
-                    Shooter.INSTANCE.StopperDown(),
+                    Shooter.INSTANCE.StopperClose(),
                     new InstantCommand(() -> this.isMotifShooting = false)
             );
     }
@@ -171,10 +170,10 @@ public class Selene extends RRoboticsSubsystemGroup {
     public Command shootAll() {
         return new SequentialGroupFixed(
                 new InstantCommand(() -> this.isMotifShooting = true),
-                Shooter.INSTANCE.StopperUp(),
+                Shooter.INSTANCE.StopperOpen(),
                 intake(),
                 new Delay(shootTime),
-                Shooter.INSTANCE.StopperDown(),
+                Shooter.INSTANCE.StopperClose(),
                 stopIntake(),
                 new InstantCommand(() -> this.isMotifShooting = false)
         );
@@ -184,7 +183,7 @@ public class Selene extends RRoboticsSubsystemGroup {
         return new SequentialGroupFixed(
                 Intake.INSTANCE.start(),
                 Intake.INSTANCE.off(),
-                Shooter.INSTANCE.StopperDown(),
+                Shooter.INSTANCE.StopperClose(),
                 Turret.INSTANCE.resetHood()
         );
     }
