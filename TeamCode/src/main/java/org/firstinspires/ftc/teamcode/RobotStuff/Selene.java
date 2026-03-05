@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Hardware.LimelightWrapper;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
@@ -34,6 +35,7 @@ public class Selene extends RRoboticsSubsystemGroup {
     public Timer indTimer;
     public Timer ballTimer;
     public Pose currentPose = new Pose(9, 9, 0);
+    public LimelightWrapper limelight;
     public int indCycle = 0;
     public double shootTime = 0.75;
 
@@ -45,6 +47,8 @@ public class Selene extends RRoboticsSubsystemGroup {
                 Shooter.INSTANCE
         );
     }
+
+    public static double poseThreshold = 1; // in inches | todo tune?
 
     public enum IndicatorMode {
         INTAKE_IDLE,
@@ -64,6 +68,7 @@ public class Selene extends RRoboticsSubsystemGroup {
     public void initSystem() {
         super.initSystem();
         indicator = RobotConfig.Indicator;
+        limelight = LimelightWrapper.instance; limelight.init();
         indTimer = new Timer();
         ballTimer = new Timer();
         indicator.setPwmRange(new PwmControl.PwmRange(500, 2500));
@@ -87,6 +92,8 @@ public class Selene extends RRoboticsSubsystemGroup {
     @Override
     public void preStart() {
         super.preStart();
+
+        limelight.start();
     }
 
     @Override
@@ -94,6 +101,15 @@ public class Selene extends RRoboticsSubsystemGroup {
         super.periodic();
         follower.updatePose();
         currentPose = follower.getPose();
+
+        limelight.setYaw(currentPose.getHeading());
+        Pose llPose = limelight.getPose();
+
+        if (llPose != null && currentPose.distanceFrom(llPose) > poseThreshold) {
+            follower.setPose(llPose);
+            currentPose = llPose;
+        }
+
         runIndicator();
         if (Turret.INSTANCE.isInZone(currentPose) && !Turret.INSTANCE.isAtLimit() && autoShooting) Shooter.INSTANCE.StopperOpen().schedule();
         else if (autoShooting) Shooter.INSTANCE.StopperClose().schedule();
