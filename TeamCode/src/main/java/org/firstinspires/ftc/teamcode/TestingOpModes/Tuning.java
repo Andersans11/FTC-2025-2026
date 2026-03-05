@@ -8,7 +8,10 @@ import static org.firstinspires.ftc.teamcode.TestingOpModes.Tuning.stopRobot;
 import static org.firstinspires.ftc.teamcode.TestingOpModes.Tuning.telemetryM;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RRoboticsOpMode;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RRoboticsSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.Drawing;
+import org.firstinspires.ftc.teamcode.RobotStuff.Selene;
 
 import com.bylazar.configurables.PanelsConfigurables;
 import com.bylazar.configurables.annotations.Configurable;
@@ -70,6 +73,7 @@ public class Tuning extends SelectableOpMode {
                 p.add("Line", Line::new);
                 p.add("Triangle", Triangle::new);
                 p.add("Circle", Circle::new);
+                p.add("Heading", HoldHeading::new);
             });
         });
     }
@@ -112,6 +116,38 @@ public class Tuning extends SelectableOpMode {
     public static void stopRobot() {
         follower.startTeleopDrive(true);
         follower.setTeleOpDrive(0,0,0,true);
+    }
+}
+
+class HoldHeading extends RRoboticsOpMode {
+
+    public HoldHeading() {
+        super();
+        addSubsystemComponents(
+                new RRoboticsSubsystemComponent(Selene.INSTANCE)
+        );
+    }
+
+    Follower follower;
+
+    @Override
+    public void onInit() {
+        super.onInit();
+        follower = Constants.createFollower(hardwareMap);
+    }
+
+    @Override
+    public void onStartButtonPressed() {
+        super.onStartButtonPressed();
+        P1.leftBumper().whenBecomesTrue(() -> follower.holdPoint(new Pose(0, 0, Math.toRadians(0))));
+        P1.rightBumper().whenBecomesTrue(() -> follower.holdPoint(new Pose(0, 0, Math.toRadians(180))));
+    }
+
+
+    @Override
+    public void onUpdate() {
+        super.onUpdate();
+        follower.update();
     }
 }
 

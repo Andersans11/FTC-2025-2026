@@ -49,6 +49,7 @@ public class Turret implements IRRoboticsSubsystem {
     public ControlSystem controller;
     public enum TurretMode {
         POSE_TRACKING,
+        NO_SHOOTER,
         TESTING,
         IDLE
     }
@@ -118,7 +119,7 @@ public class Turret implements IRRoboticsSubsystem {
     public boolean isInZone(Pose currentPose) {
         double x = currentPose.getX();
         double y = currentPose.getY();
-        return (((y >= -x + 144) && (y >= x)) ||
+        return (((y >= -x + 128) && (y >= x - 9)) ||
                 ((y <= -x + 102) && (y <= x - 42))) &&
                 !isAtLimit();
     }
@@ -280,8 +281,8 @@ public class Turret implements IRRoboticsSubsystem {
         });
     }
 
-    public Command autoControl() {
-        return new InstantCommand(() -> mode = TurretMode.POSE_TRACKING);
+    public Command autoControl(boolean doShooter) {
+        return new InstantCommand(() -> mode = doShooter ? TurretMode.POSE_TRACKING : TurretMode.NO_SHOOTER);
     }
 
     public Command setRedAlliance() {
@@ -318,6 +319,17 @@ public class Turret implements IRRoboticsSubsystem {
         switch (mode) {
             case POSE_TRACKING:
                 calcTurretPositions(currentPose, Selene.INSTANCE.follower.getVelocity());
+                rotationMotor.setPower(-controller.calculate(rotationMotor.getState()));
+                break;
+            case NO_SHOOTER:
+                Pose turretPose = getTurretPose(currentPose);
+
+                targetYaw = // get yaw angle using trig, targetYaw = arctan(opposite/adjacent)
+                        Math.atan(Math.abs(targetPose.getY() - turretPose.getY()) / Math.abs(targetPose.getX() - turretPose.getX()));
+                if (isRed) targetYaw = Math.toDegrees(targetYaw - turretPose.getHeading());
+                else targetYaw = Math.toDegrees(Math.PI - targetYaw - turretPose.getHeading());
+
+                controller.setGoal(new KineticState(degreesToTicks(Math.max(minLim, Math.min(maxLim, targetYaw)))));
                 rotationMotor.setPower(-controller.calculate(rotationMotor.getState()));
                 break;
             case TESTING:

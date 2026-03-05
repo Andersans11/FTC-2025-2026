@@ -61,6 +61,7 @@ public class Comp_OpMode extends RRoboticsOpMode {
         super.onStartButtonPressed();
         Selene.INSTANCE.start().schedule();
         Selene.INSTANCE.indMode = Selene.IndicatorMode.INTAKE_ACTIVE;
+        Turret.INSTANCE.autoControl(true).schedule();
     }
 
     @Override
