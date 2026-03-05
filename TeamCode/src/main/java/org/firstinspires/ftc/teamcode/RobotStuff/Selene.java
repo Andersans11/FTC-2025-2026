@@ -36,7 +36,7 @@ public class Selene extends RRoboticsSubsystemGroup {
     public Timer ballTimer;
     public Pose currentPose = new Pose(9, 9, 0);
     public int indCycle = 0;
-    public double shootTime = 1; // TODO: This value is wildly inaccurate
+    public double shootTime = 0.5; // TODO: This value is kinda inaccurate
 
     public double currentPWM = 0;
     private Selene() {

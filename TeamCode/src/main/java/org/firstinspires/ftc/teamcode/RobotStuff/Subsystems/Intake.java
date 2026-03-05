@@ -26,12 +26,12 @@ public class Intake implements IRRoboticsSubsystem {
     public static double intakeSpeed = 1;
     public static double reverseSpeed = -0.75;
 
-    public static double active1 = 0.35;
-    public static double active2 = 0.75;
-    public static double off1 = 0.3;
-    public static double off2 = 0.85;
-    public static double gate1 = 0.45;
-    public static double gate2 = 0.65;
+    public static double active1 = 0.55;
+    public static double active2 = 0.45;
+    public static double off1 = 0.5;
+    public static double off2 = 0.5;
+    public static double gate1 = 0.55;
+    public static double gate2 = 0.45;
 
 
     // ------------------------- OPMODE --------------------------- //

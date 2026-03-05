@@ -25,22 +25,22 @@ public class Constants {
             .useSecondaryHeadingPIDF(true)
             .useSecondaryDrivePIDF(true)
             .centripetalScaling(0.0012)
-            .translationalPIDFCoefficients(new PIDFCoefficients(0.1,0,0.02,0))
+            .translationalPIDFCoefficients(new PIDFCoefficients(0.15,0,0.02,0))
             .headingPIDFCoefficients(new PIDFCoefficients(2.5,0,0.1,0))
-            .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.012,0,0.0006,0.6,0))
+            .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.008,0,0.0006,0.6,0))
             .secondaryTranslationalPIDFCoefficients(new PIDFCoefficients(0.2,0,0.01,0))
             .secondaryHeadingPIDFCoefficients(new PIDFCoefficients(2,0,0.1,0))
-            .secondaryDrivePIDFCoefficients(new FilteredPIDFCoefficients(0.01,0,0,0.6,0));
+            .secondaryDrivePIDFCoefficients(new FilteredPIDFCoefficients(0.01,0,0.001,0.6,0));
 
     public static MecanumConstants driveConstants = new MecanumConstants()
-            .leftFrontMotorName("FL")
-            .leftRearMotorName("BL")
-            .rightFrontMotorName("FR")
-            .rightRearMotorName("BR")
-            .leftFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
-            .leftRearMotorDirection(DcMotorSimple.Direction.REVERSE)
-            .rightFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
-            .rightRearMotorDirection(DcMotorSimple.Direction.FORWARD)
+            .leftFrontMotorName("BR")
+            .leftRearMotorName("FR")
+            .rightFrontMotorName("BL")
+            .rightRearMotorName("FL")
+            .leftFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
+            .leftRearMotorDirection(DcMotorSimple.Direction.FORWARD)
+            .rightFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
+            .rightRearMotorDirection(DcMotorSimple.Direction.REVERSE)
             .maxPower(1)
             .xVelocity(80.2034)
             .yVelocity(62.8311);
@@ -56,8 +56,8 @@ public class Constants {
 
     public static PathConstraints pathConstraints = new PathConstraints(
             0.995,
-            500,
-            1.25,
+            250,
+            0.5,
             1
     );
 
