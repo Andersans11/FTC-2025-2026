@@ -136,6 +136,13 @@ public class Turret implements IRRoboticsSubsystem {
         return 0.024 * angle - 0.84;
     }
 
+    public double calcHoodPosition(double dist) {
+        if (dist >= 68) {
+            return 0.1;
+        }
+        return 0.0;
+    }
+
     public Vector getrobotToGoalVector(Pose currentPose) {
         return targetPose.getAsVector().minus(currentPose.getAsVector());
     }
@@ -159,15 +166,16 @@ public class Turret implements IRRoboticsSubsystem {
     }
 
     public void calcTurretPositions(Pose currentPose, Vector robotVel) {
-        Vector robotToGoalVector = getrobotToGoalVector(getTurretPose(currentPose));
+        Pose turretPose = getTurretPose(currentPose);
+        Vector robotToGoalVector = getrobotToGoalVector(getTurretPose(turretPose));
 
-        double g = 32.174 * 12;
+        /*double g = 32.174 * 12;
 
         double x;
         double y;
         double a;
 
-        if (isFar) {
+        if (robotToGoalVector.getMagnitude() >= 100) {
             x = robotToGoalVector.getMagnitude() - farScoreRadius;
             y = farScoreHeight;
             a = farScoreAngleRad;
@@ -199,16 +207,17 @@ public class Turret implements IRRoboticsSubsystem {
         Shooter.INSTANCE.setHoodPos(angleToServoPower(90 - Math.toDegrees(newHoodAngle))).schedule();
         Shooter.INSTANCE.setGoal(calculateTicksPerSecond(newFlywheelSpeed, Math.toDegrees(newHoodAngle))).schedule();
 
-        double turretVelCompOff = Math.atan(perpendicularComponent / ivr);
+        double turretVelCompOff = Math.atan(perpendicularComponent / ivr);*/
 
-        Pose turretPose = getTurretPose(currentPose);
+        Shooter.INSTANCE.setHoodPos(calcHoodPosition(robotToGoalVector.getMagnitude()));
+        Shooter.INSTANCE.setGoal(Shooter.INSTANCE.calcShooterPower(robotToGoalVector.getMagnitude()));
 
         targetYaw = // get yaw angle using trig, targetYaw = arctan(opposite/adjacent)
                 Math.atan(Math.abs(targetPose.getY() - turretPose.getY()) / Math.abs(targetPose.getX() - turretPose.getX()));
         if (isRed) targetYaw = Math.toDegrees(targetYaw - turretPose.getHeading());
         else targetYaw = Math.toDegrees(Math.PI - targetYaw - turretPose.getHeading());
 
-        targetYaw = targetYaw - Math.toDegrees(turretVelCompOff);
+        //targetYaw = targetYaw - Math.toDegrees(turretVelCompOff);
 
         controller.setGoal(new KineticState(degreesToTicks(Math.max(minLim, Math.min(maxLim, targetYaw)))));
     }

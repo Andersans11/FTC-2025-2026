@@ -59,7 +59,7 @@ public class Teammate_Far_Red extends RRoboticsOpMode {
         Pose scoring = new Pose(64, 18, Math.toRadians(180));
         Pose intakeStartFar = new Pose(44, intakeYFar, Math.toRadians(180));
         Pose intakeEndFar = new Pose(intakeEndPos2, intakeYFar, Math.toRadians(180));
-        Pose gateIntake3 = new Pose(24, 12, Math.toRadians(270));
+        Pose gateIntake3 = new Pose(12, 12, Math.toRadians(270));
 
 
         Selene.INSTANCE.initFollower(hardwareMap, scoring);

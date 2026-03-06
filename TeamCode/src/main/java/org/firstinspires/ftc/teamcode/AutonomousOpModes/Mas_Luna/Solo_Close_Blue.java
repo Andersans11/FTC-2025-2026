@@ -5,6 +5,7 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
+import com.pedropathing.paths.Path;
 import com.pedropathing.paths.PathChain;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -27,22 +28,24 @@ import dev.nextftc.core.commands.utility.InstantCommand;
 @Autonomous(name = "Solo Blue - Close")
 public class Solo_Close_Blue extends RRoboticsOpMode {
     Follower follower;
-    PathChain scorePreloads, interrimClose, intakeClose, scoreClose, interrimMedium, intakeMedium, scoreMedium, hitGate, hitGate2, intakeGate1, intakeGate2, scoreGate1, scoreGate2, interrimFar, intakeFar, scoreFar;
+    PathChain scorePreloads, interrimClose, intakeClose, scoreClose, interrimMedium, intakeMedium, scoreMedium, intakeGate, scoreGate, hitGate, hitGate2, intakeGate1, intakeGate2, scoreGate1, scoreGate2, interrimFar, intakeFar, scoreFar;
 
     SequentialGroupFixed preloads, gates1, gates2, gates3, spikes;
     Timer pathTimer, opTimer;
 
     public int pathState = 0;
     public static double pathPower = 1;
-    public static double intakeTime = 1;
-    public static double gateEndTime = 20;
+    public static double intakeTime = 1.5;
+    public static double gateEndTime = 17.5;
     public static double intakeYClose = 84;
     public static double intakeYMedium = 60;
     public static double intakeYFar = 36;
-    public static double intakeEndPos1 = 8;
-    public static double intakeEndPos2 = 0;
+    public static double intakeEndPos1 = 28;
+    public static double intakeEndPos2 = 28;
 
-    public static double gateX = 16;
+    public static double gateX = 14.5;
+    public static double gateY = 58.75;
+    public static double gateHeading = 150;
 
     Pose currentPose;
 
@@ -68,15 +71,15 @@ public class Solo_Close_Blue extends RRoboticsOpMode {
         Pose scoring = new Pose(64, 88, Math.toRadians(180));
         Pose scoring2 = new Pose(64, 18, Math.toRadians(180));
         Pose intakeStartClose = new Pose(44, intakeYClose, Math.toRadians(180));
-        Pose intakeEndClose = new Pose(intakeEndPos1, intakeYClose, Math.toRadians(180));
+        Pose intakeEndClose = new Pose(8, intakeYClose, Math.toRadians(180));
         Pose intakeStartMedium = new Pose(44, intakeYMedium, Math.toRadians(180));
-        Pose intakeEndMedium = new Pose(intakeEndPos2, intakeYMedium, Math.toRadians(180));
+        Pose intakeEndMedium = new Pose(0, intakeYMedium, Math.toRadians(180));
         Pose intakeStartFar = new Pose(44, intakeYFar, Math.toRadians(180));
-        Pose intakeEndFar = new Pose(intakeEndPos2, intakeYFar, Math.toRadians(180));
-        Pose gate = new Pose(gateX, 72, Math.toRadians(180)); // TODO: tune this point
+        Pose intakeEndFar = new Pose(0, intakeYFar, Math.toRadians(180));
+        Pose gate = new Pose(gateX, gateY, Math.toRadians(gateHeading)); // TODO: tune this point
         Pose gateIntake1 = new Pose(12, 54, Math.toRadians(270));
-        Pose gateIntake2 = new Pose(12, 24, Math.toRadians(270));
-        Pose gateIntake3 = new Pose(24, 12, Math.toRadians(270));
+        Pose gateIntake2 = new Pose(12, 12, Math.toRadians(270));
+        Pose gateIntake3 = new Pose(12, 12, Math.toRadians(270));
         Pose gateInterrim = new Pose(28, 60);
 
         Selene.INSTANCE.initFollower(hardwareMap, scoring);
@@ -127,9 +130,7 @@ public class Solo_Close_Blue extends RRoboticsOpMode {
                 .build();
 
         hitGate = follower.pathBuilder()
-                .addPath(new BezierLine(scoring, new Pose(scoring.getX(), gate.getY())))
-                .setConstantHeadingInterpolation(scoring.getHeading())
-                .addPath(new BezierLine(new Pose(scoring.getX(), gate.getY()), gate))
+                .addPath(new BezierLine(scoring, new Pose(30, 72)))
                 .setConstantHeadingInterpolation(scoring.getHeading())
                 .build();
 
@@ -165,7 +166,19 @@ public class Solo_Close_Blue extends RRoboticsOpMode {
                 .setLinearHeadingInterpolation(gateIntake3.getHeading(), scoring2.getHeading())
                 .build();
 
-        follower.setStartingPose(new Pose(60, 84, Math.toRadians(180)));
+        intakeGate = follower.pathBuilder()
+                .addPath(new BezierCurve(scoring, intakeStartMedium, gate))
+                .setLinearHeadingInterpolation(scoring.getHeading(), gate.getHeading())
+                .setGlobalDeceleration()
+                .build();
+
+        scoreGate = follower.pathBuilder()
+                .addPath(new BezierCurve(gate, new Pose(scoring.getX(), gate.getY()), scoring))
+                .setLinearHeadingInterpolation(gate.getHeading(), scoring.getHeading())
+                .setGlobalDeceleration()
+                .build();
+
+        follower.setStartingPose(new Pose(65, 87, Math.toRadians(180)));
 
         follower.setMaxPower(pathPower);
 
@@ -178,16 +191,9 @@ public class Solo_Close_Blue extends RRoboticsOpMode {
                 Selene.INSTANCE.shootMotif(),
                 Selene.INSTANCE.intake(),
                 new InstantCommand(() -> follower.followPath(intakeMedium)),
-                new WaitUntil(() -> follower.getPose().getX() <= 12 && follower.getPose().getX() >= 1),
+                new WaitUntil(() -> follower.getPose().getX() <= intakeEndPos1 && follower.getPose().getX() >= 1),
                 Selene.INSTANCE.stopIntake(),
                 new InstantCommand(() -> follower.followPath(scoreMedium)),
-                new WaitUntil(() -> Turret.INSTANCE.isInZone(follower.getPose())),
-                Selene.INSTANCE.shootMotif(),
-                Selene.INSTANCE.intake(),
-                new InstantCommand(() -> follower.followPath(intakeFar)),
-                new WaitUntil(() -> follower.getPose().getX() <= 12 && follower.getPose().getX() >= 1),
-                Selene.INSTANCE.stopIntake(),
-                new InstantCommand(() -> follower.followPath(scoreFar)),
                 new WaitUntil(() -> Turret.INSTANCE.isInZone(follower.getPose())),
                 Selene.INSTANCE.shootMotif(),
                 new InstantCommand(() -> isDone = true)
@@ -195,50 +201,57 @@ public class Solo_Close_Blue extends RRoboticsOpMode {
 
         gates1 = new SequentialGroupFixed(
                 Selene.INSTANCE.intake(),
-                Turret.INSTANCE.setPosition(-64),
-                Shooter.INSTANCE.setGoal(2000),
-                new InstantCommand(() -> follower.followPath(hitGate)),
+                new InstantCommand(() -> follower.followPath(intakeGate)),
                 new WaitUntil(() -> !follower.isBusy()),
-                new Delay(0.5),
-                new InstantCommand(() -> follower.followPath(scoreGate1)),
-                new WaitUntil(() -> Turret.INSTANCE.isInZone(follower.getPose())),
+                new Delay(intakeTime),
                 Selene.INSTANCE.stopIntake(),
+                new InstantCommand(() -> follower.followPath(scoreGate)),
+                new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.shootMotif(),
                 new InstantCommand(() -> isDone = true)
         );
 
         gates2 = new SequentialGroupFixed(
                 Selene.INSTANCE.intake(),
-                new InstantCommand(() -> follower.followPath(intakeGate2)),
+                new InstantCommand(() -> follower.followPath(intakeGate)),
                 new WaitUntil(() -> !follower.isBusy()),
-                new InstantCommand(() -> follower.followPath(scoreGate2)),
-                new WaitUntil(() -> Turret.INSTANCE.isInZone(follower.getPose())),
+                new Delay(intakeTime),
                 Selene.INSTANCE.stopIntake(),
+                new InstantCommand(() -> follower.followPath(scoreGate)),
+                new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.shootMotif(),
                 new InstantCommand(() -> isDone = true)
         );
 
         gates3 = new SequentialGroupFixed(
                 Selene.INSTANCE.intake(),
-                new InstantCommand(() -> follower.followPath(intakeGate2)),
+                new InstantCommand(() -> follower.followPath(intakeGate)),
                 new WaitUntil(() -> !follower.isBusy()),
-                new InstantCommand(() -> follower.followPath(scoreGate2)),
-                new WaitUntil(() -> Turret.INSTANCE.isInZone(follower.getPose())),
+                new Delay(intakeTime),
                 Selene.INSTANCE.stopIntake(),
+                new InstantCommand(() -> follower.followPath(scoreGate)),
+                new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.shootMotif(),
                 new InstantCommand(() -> isDone = true)
         );
 
         spikes = new SequentialGroupFixed(
-                Turret.INSTANCE.setPosition(-45),
-                Shooter.INSTANCE.setGoal(1500),
                 Selene.INSTANCE.intake(),
                 new InstantCommand(() -> follower.followPath(intakeClose)),
-                new WaitUntil(() -> follower.getPose().getX() <= 20 && follower.getPose().getX() >= 1),
+                new WaitUntil(() -> follower.getPose().getX() <= intakeEndPos2 && follower.getPose().getX() >= 1),
                 Selene.INSTANCE.stopIntake(),
                 new InstantCommand(() -> follower.followPath(scoreClose)),
                 new WaitUntil(() -> Turret.INSTANCE.isInZone(follower.getPose())),
                 Selene.INSTANCE.shootMotif(),
+                Selene.INSTANCE.intake(),
+                new InstantCommand(() -> follower.followPath(intakeFar)),
+                new WaitUntil(() -> follower.getPose().getX() <= intakeEndPos1 && follower.getPose().getX() >= 1),
+                Selene.INSTANCE.stopIntake(),
+                new InstantCommand(() -> follower.followPath(scoreFar)),
+                new WaitUntil(() -> Turret.INSTANCE.isInZone(follower.getPose())),
+                Selene.INSTANCE.shootMotif(),
+                new InstantCommand(() -> follower.followPath(hitGate)),
+                new WaitUntil(() -> !follower.isBusy()),
                 new InstantCommand(() -> isDone = true)
         );
 
