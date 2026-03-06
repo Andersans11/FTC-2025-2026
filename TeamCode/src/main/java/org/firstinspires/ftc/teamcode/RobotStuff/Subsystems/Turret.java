@@ -62,13 +62,13 @@ public class Turret implements IRRoboticsSubsystem {
 
     // ------------------------- CONFIG ------------------------------- //
 
-    public static double closeScoreHeight = 36;
+    public static double closeScoreHeight = 40;
     public static double closeScoreAngle = -30;
     public double closeScoreAngleRad = Math.toRadians(closeScoreAngle);
     public static double closeScoreRadius = 5;
 
-    public static double farScoreHeight = 36;
-    public static double farScoreAngle = -30;
+    public static double farScoreHeight = 40;
+    public static double farScoreAngle = -20;
     public double farScoreAngleRad = Math.toRadians(farScoreAngle);
     public static double farScoreRadius = 5;
     public static double kP = 0.0005;
@@ -119,8 +119,8 @@ public class Turret implements IRRoboticsSubsystem {
     public boolean isInZone(Pose currentPose) {
         double x = currentPose.getX();
         double y = currentPose.getY();
-        return (((y >= -x + 128) && (y >= x - 9)) ||
-                ((y <= -x + 102) && (y <= x - 42))) &&
+        return (((y >= -x + 128) && (y >= x - 16)) ||
+                ((y <= -x + 112) && (y <= x - 32))) &&
                 !isAtLimit();
     }
 
