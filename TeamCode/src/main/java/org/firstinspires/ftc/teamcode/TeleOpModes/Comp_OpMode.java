@@ -67,23 +67,5 @@ public class Comp_OpMode extends RRoboticsOpMode {
     @Override
     public void onUpdate() {
         super.onUpdate();
-
-        addData("speed", Shooter.INSTANCE.shooters.getLeader().getVelocity());
-        addData("hood", Turret.INSTANCE.hoodAngle);
-
-        addData("speed2", Turret.INSTANCE.newFlywheelSpeed);
-        addData("hood2", Turret.INSTANCE.newHoodAngle);
-
-        addData("ticks", Shooter.INSTANCE.controller.getGoal().getVelocity());
-
-        addData("turret pos (ticks)", Turret.INSTANCE.rotationMotor.getCurrentPosition());
-        addData("turret pos (deg)", Turret.INSTANCE.ticksToDegrees(Turret.INSTANCE.rotationMotor.getCurrentPosition()));
-        addData("turret target yaw", Turret.INSTANCE.targetYaw);
-
-        addData("autoshooting", Selene.INSTANCE.autoShooting);
-        addData("is in zone", Turret.INSTANCE.isInZone(Selene.INSTANCE.currentPose));
-        addData("is at limit", Turret.INSTANCE.isAtLimit());
-
-        addData("i", Turret.INSTANCE.getrobotToGoalVector(Selene.INSTANCE.currentPose).getMagnitude());
     }
 }

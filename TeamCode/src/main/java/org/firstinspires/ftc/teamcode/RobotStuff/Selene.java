@@ -134,7 +134,7 @@ public class Selene extends RRoboticsSubsystemGroup {
 
     public Command resetFollower() {
         return new InstantCommand(() -> {
-            Pose newPose = Turret.INSTANCE.isRed() ? new Pose(9, 9, Math.toRadians(90)) : new Pose(135, 9, Math.toRadians(90));
+            Pose newPose = Turret.INSTANCE.isRed() ? new Pose(9, 7.5, Math.toRadians(90)) : new Pose(135, 7.5, Math.toRadians(90));
             follower.setPose(newPose);
         });
     }

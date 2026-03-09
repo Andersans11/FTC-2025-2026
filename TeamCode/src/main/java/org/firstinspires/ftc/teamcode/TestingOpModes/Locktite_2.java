@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.TestingOpModes;
 
 import com.bylazar.configurables.annotations.Configurable;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.robot.Robot;
 
@@ -10,6 +11,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 
 import dev.nextftc.hardware.impl.MotorEx;
 
+@Disabled
 @Configurable
 @TeleOp(name = "When I Need A Different Plumber")
 public class Locktite_2 extends RRoboticsOpMode {
