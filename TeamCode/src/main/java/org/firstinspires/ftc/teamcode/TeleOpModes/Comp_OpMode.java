@@ -67,5 +67,8 @@ public class Comp_OpMode extends RRoboticsOpMode {
     @Override
     public void onUpdate() {
         super.onUpdate();
+
+        addData("ll pose", Selene.INSTANCE.currentLLPose);
+        addData("pinpoint pose", Selene.INSTANCE.currentPose);
     }
 }

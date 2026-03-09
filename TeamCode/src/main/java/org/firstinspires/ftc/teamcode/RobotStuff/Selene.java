@@ -35,6 +35,7 @@ public class Selene extends RRoboticsSubsystemGroup {
     public Timer indTimer;
     public Timer ballTimer;
     public Pose currentPose = new Pose(9, 9, 0);
+    public Pose currentLLPose;
     public LimelightWrapper limelight;
     public int indCycle = 0;
     public double shootTime = 0.75;
@@ -48,7 +49,7 @@ public class Selene extends RRoboticsSubsystemGroup {
         );
     }
 
-    public static double poseThreshold = 1; // in inches | todo tune?
+    public static double poseThreshold = 2.5; // in inches | todo tune?
 
     public enum IndicatorMode {
         INTAKE_IDLE,
@@ -107,6 +108,7 @@ public class Selene extends RRoboticsSubsystemGroup {
 
         if (llPose != null && currentPose.distanceFrom(llPose) > poseThreshold) {
             follower.setPose(llPose);
+            currentLLPose = llPose;
             currentPose = llPose;
         }
 
