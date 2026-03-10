@@ -36,6 +36,8 @@ public class Shooter implements IRRoboticsSubsystem {
     public static double kV = 0.00042;
     public static double kA = 0.0;
 
+    public static double powerMod = 0;
+
     public boolean isFar = false;
 
     // --------------------- OPMODE -------------------------- //
@@ -63,11 +65,11 @@ public class Shooter implements IRRoboticsSubsystem {
     }
 
     double[][] table = {
-            {56.3, 1475},
-            {71.8, 1475},
-            {84.6, 1550},
-            {96.9, 1700},
-            {111.2, 1800},
+            {37.3, 1325, 0},
+            {49.0, 1350, 0},
+            {68.2, 1450, 0.1},
+            {87, 1625, 0.1},
+            {104.1, 1800, 0},
             {125.6, 2700}
     };
 
@@ -82,7 +84,7 @@ public class Shooter implements IRRoboticsSubsystem {
             double t2 = table[i+1][1];
 
             if (dist <= d2) {
-                return t1 + (dist - d1) * (t2 - t1) / (d2 - d1);
+                return t1 + (dist - d1) * (t2 - t1) / (d2 - d1) + powerMod;
             }
         }
 

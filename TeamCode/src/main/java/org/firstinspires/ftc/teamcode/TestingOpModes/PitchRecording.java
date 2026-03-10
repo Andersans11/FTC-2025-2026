@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 
 import dev.nextftc.core.commands.utility.InstantCommand;
 
-@Disabled
+//@Disabled
 @Configurable
 @TeleOp(name = "Pitch Recording", group = Utils.PRIORITY_PRIORITY)
 public class PitchRecording extends RRoboticsOpMode {
@@ -60,6 +60,8 @@ public class PitchRecording extends RRoboticsOpMode {
     @Override
     public void onUpdate() {
         super.onUpdate();
+
+        addData("speed", Shooter.INSTANCE.shooters.getVelocity());
 
         addData("distance", Selene.INSTANCE.currentPose.distanceFrom(Turret.INSTANCE.targetPose));
 

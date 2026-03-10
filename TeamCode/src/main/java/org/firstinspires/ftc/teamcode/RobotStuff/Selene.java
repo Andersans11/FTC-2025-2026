@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Hardware.LimelightWrapper;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Hardware.PoseResult;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
@@ -34,8 +35,8 @@ public class Selene extends RRoboticsSubsystemGroup {
     public ServoImplEx indicator;
     public Timer indTimer;
     public Timer ballTimer;
-    public Pose currentPose = new Pose(9, 9, 0);
-    public Pose currentLLPose;
+    public static Pose currentPose;
+    public Pose currentLLPose = new Pose(9, 9, 0);
     public LimelightWrapper limelight;
     public int indCycle = 0;
     public double shootTime = 0.75;
@@ -78,12 +79,14 @@ public class Selene extends RRoboticsSubsystemGroup {
 
     public void initFollower(HardwareMap hardwareMap) {
         this.follower = Constants.createFollower(hardwareMap);
+        if (currentPose == null) currentPose = new Pose(9, 9, 0);
         this.follower.setStartingPose(currentPose);
     }
 
     public void initFollower(HardwareMap hardwareMap, Pose startingPose) {
         this.follower = Constants.createFollower(hardwareMap);
         this.follower.setStartingPose(startingPose);
+        currentPose = startingPose;
     }
 
     public Pose getCurrentPose() {
@@ -103,14 +106,12 @@ public class Selene extends RRoboticsSubsystemGroup {
         follower.updatePose();
         currentPose = follower.getPose();
 
-        limelight.setYaw(currentPose.getHeading());
-        Pose llPose = limelight.getPose();
+        //limelight.setYaw(currentPose.getHeading());
 
-        if (llPose != null && currentPose.distanceFrom(llPose) > poseThreshold) {
-            follower.setPose(llPose);
-            currentLLPose = llPose;
-            currentPose = llPose;
-        }
+        //PoseResult poseResult = limelight.getPoseResult();
+        //currentPose = poseResult.assignIfThreshold(currentPose, poseThreshold, true);
+
+        //follower.setPose(currentPose);
 
         runIndicator();
         if (Turret.INSTANCE.isInZone(currentPose) && !Turret.INSTANCE.isAtLimit() && autoShooting) Shooter.INSTANCE.StopperOpen().schedule();

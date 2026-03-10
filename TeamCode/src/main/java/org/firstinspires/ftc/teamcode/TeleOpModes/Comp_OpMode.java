@@ -42,6 +42,9 @@ public class Comp_OpMode extends RRoboticsOpMode {
         P1.leftBumper().whenBecomesTrue(Shooter.INSTANCE.StopperOpen());
         P1.leftBumper().whenBecomesFalse(Shooter.INSTANCE.StopperClose());
 
+        P1.dpadUp().whenBecomesTrue(() -> Shooter.powerMod = Shooter.powerMod + 50);
+        P1.dpadDown().whenBecomesTrue(() -> Shooter.powerMod = Shooter.powerMod - 50);
+
         P2.dpadDown().whenBecomesTrue(Selene.INSTANCE.resetFollower());
 
         P2.leftBumper().whenBecomesTrue(Selene.INSTANCE.setAutoShooting());
@@ -69,6 +72,7 @@ public class Comp_OpMode extends RRoboticsOpMode {
         super.onUpdate();
 
         addData("ll pose", Selene.INSTANCE.currentLLPose);
-        addData("pinpoint pose", Selene.INSTANCE.currentPose);
+        addData("pinpoint pose", Selene.currentPose);
+        addData("Power Mod", Shooter.powerMod);
     }
 }

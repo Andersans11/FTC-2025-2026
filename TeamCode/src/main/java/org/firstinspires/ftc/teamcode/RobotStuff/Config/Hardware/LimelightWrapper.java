@@ -37,13 +37,15 @@ public class LimelightWrapper {
 
     public @Nullable Pose getPose() {
         LLResult result = limelight.getLatestResult();
-        if (result != null && result.isValid()) {
+        if (result.isValid()) {
             Pose3D mt2Pose = result.getBotpose_MT2();
-            if (mt2Pose != null) {
-                return new Pose(mt2Pose.getPosition().x, mt2Pose.getPosition().y, mt2Pose.getOrientation().getYaw());
-            }
+            return new Pose(mt2Pose.getPosition().x, mt2Pose.getPosition().y, mt2Pose.getOrientation().getYaw());
         }
         return null;
+    }
+
+    public PoseResult getPoseResult() {
+        return PoseResult.fromLL(limelight.getLatestResult());
     }
 
 }
