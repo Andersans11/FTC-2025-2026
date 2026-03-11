@@ -68,7 +68,14 @@ public class Comp_OpMode extends RRoboticsOpMode {
     public void onUpdate() {
         super.onUpdate();
 
+        addData("speed", Shooter.INSTANCE.shooters.getVelocity());
+
         addData("ll pose", Selene.INSTANCE.currentLLPose);
         addData("pinpoint pose", Selene.INSTANCE.currentPose);
+        addData("has ll pose", !Selene.INSTANCE.noLLPose);
+        if (!Selene.INSTANCE.noLLPose) {
+            addData("distance", Selene.INSTANCE.currentPose.distanceFrom(Selene.INSTANCE.currentLLPose));
+            addData("threshold", Selene.INSTANCE.threshold);
+        }
     }
 }

@@ -35,7 +35,9 @@ public class Selene extends RRoboticsSubsystemGroup {
     public Timer indTimer;
     public Timer ballTimer;
     public Pose currentPose = new Pose(9, 9, 0);
-    public Pose currentLLPose;
+    public Pose currentLLPose = new Pose(9, 9, 0);
+    public boolean noLLPose = true;
+    public boolean threshold = false;
     public LimelightWrapper limelight;
     public int indCycle = 0;
     public double shootTime = 0.75;
@@ -106,10 +108,13 @@ public class Selene extends RRoboticsSubsystemGroup {
         limelight.setYaw(currentPose.getHeading());
         Pose llPose = limelight.getPose();
 
+        noLLPose = llPose == null;
+        if (!noLLPose) threshold = currentPose.distanceFrom(llPose) > poseThreshold;
+
         if (llPose != null && currentPose.distanceFrom(llPose) > poseThreshold) {
-            follower.setPose(llPose);
-            currentLLPose = llPose;
-            currentPose = llPose;
+            //follower.setPose(llPose);
+            //currentLLPose = llPose;
+            //currentPose = llPose;
         }
 
         runIndicator();
