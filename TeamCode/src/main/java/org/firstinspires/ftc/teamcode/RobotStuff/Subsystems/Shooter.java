@@ -63,7 +63,7 @@ public class Shooter implements IRRoboticsSubsystem {
     }
 
     public double calcShooterPower(double dist) {
-        dist = (25.0/3.0) * dist + (2350.0/3.0);
+        dist = (25.0/3.0) * dist + (2350.0/3.0) + 100;
         return Math.max(1350, Math.min(2000, dist));
     }
 

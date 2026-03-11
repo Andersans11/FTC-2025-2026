@@ -209,8 +209,8 @@ public class Turret implements IRRoboticsSubsystem {
 
         double turretVelCompOff = Math.atan(perpendicularComponent / ivr);*/
 
-        Shooter.INSTANCE.setHoodPos(calcHoodPosition(robotToGoalVector.getMagnitude()));
-        Shooter.INSTANCE.setGoal(Shooter.INSTANCE.calcShooterPower(robotToGoalVector.getMagnitude()));
+        Shooter.INSTANCE.setHoodPos(calcHoodPosition(robotToGoalVector.getMagnitude())).schedule();
+        Shooter.INSTANCE.setGoal(Shooter.INSTANCE.calcShooterPower(robotToGoalVector.getMagnitude())).schedule();
 
         targetYaw = // get yaw angle using trig, targetYaw = arctan(opposite/adjacent)
                 Math.atan(Math.abs(targetPose.getY() - turretPose.getY()) / Math.abs(targetPose.getX() - turretPose.getX()));

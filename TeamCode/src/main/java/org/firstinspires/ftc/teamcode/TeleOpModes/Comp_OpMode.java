@@ -47,6 +47,8 @@ public class Comp_OpMode extends RRoboticsOpMode {
         P2.leftBumper().whenBecomesTrue(Selene.INSTANCE.setAutoShooting());
         P2.leftBumper().whenBecomesTrue(Selene.INSTANCE.setAutoShooting());
 
+        P1.square().whenBecomesTrue(Turret.INSTANCE.autoControl(true));
+
         Selene.INSTANCE.indMode = Selene.IndicatorMode.INIT_DONE;
     }
 
