@@ -36,7 +36,10 @@ public class Selene extends RRoboticsSubsystemGroup {
     public Timer indTimer;
     public Timer ballTimer;
     public static Pose currentPose;
+    public Pose currentPose = new Pose(9, 9, 0);
     public Pose currentLLPose = new Pose(9, 9, 0);
+    public boolean noLLPose = true;
+    public boolean threshold = false;
     public LimelightWrapper limelight;
     public int indCycle = 0;
     public double shootTime = 0.75;

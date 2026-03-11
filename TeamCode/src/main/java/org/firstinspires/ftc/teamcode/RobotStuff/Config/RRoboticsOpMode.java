@@ -54,7 +54,7 @@ public class RRoboticsOpMode extends NextFTCOpMode {
 
     public void addData(String key, Object value) {
         if (isUpdating) {
-            telemetryManager.addData(key, value);
+            telemetryManager.addData(key, value == null ? "NULLVALUE" : value);
         }
     }
 

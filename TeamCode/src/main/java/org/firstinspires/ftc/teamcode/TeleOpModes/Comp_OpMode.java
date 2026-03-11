@@ -50,6 +50,8 @@ public class Comp_OpMode extends RRoboticsOpMode {
         P2.leftBumper().whenBecomesTrue(Selene.INSTANCE.setAutoShooting());
         P2.leftBumper().whenBecomesTrue(Selene.INSTANCE.setAutoShooting());
 
+        P1.square().whenBecomesTrue(Turret.INSTANCE.autoControl(true));
+
         Selene.INSTANCE.indMode = Selene.IndicatorMode.INIT_DONE;
     }
 
@@ -71,7 +73,15 @@ public class Comp_OpMode extends RRoboticsOpMode {
     public void onUpdate() {
         super.onUpdate();
 
+        addData("speed", Shooter.INSTANCE.shooters.getVelocity());
+
         addData("ll pose", Selene.INSTANCE.currentLLPose);
+        addData("pinpoint pose", Selene.INSTANCE.currentPose);
+        addData("has ll pose", !Selene.INSTANCE.noLLPose);
+        if (!Selene.INSTANCE.noLLPose) {
+            addData("distance", Selene.INSTANCE.currentPose.distanceFrom(Selene.INSTANCE.currentLLPose));
+            addData("threshold", Selene.INSTANCE.threshold);
+        }
         addData("pinpoint pose", Selene.currentPose);
         addData("Power Mod", Shooter.powerMod);
     }

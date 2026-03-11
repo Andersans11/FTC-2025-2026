@@ -36,8 +36,6 @@ public class Shooter implements IRRoboticsSubsystem {
     public static double kV = 0.00042;
     public static double kA = 0.0;
 
-    public static double powerMod = 0;
-
     public boolean isFar = false;
 
     // --------------------- OPMODE -------------------------- //

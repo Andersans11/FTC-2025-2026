@@ -5,6 +5,7 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
+import com.pedropathing.paths.HeadingInterpolator;
 import com.pedropathing.paths.PathChain;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -27,22 +28,24 @@ import dev.nextftc.core.commands.utility.InstantCommand;
 @Autonomous(name = "Solo Red - Close")
 public class Solo_Close_Red extends RRoboticsOpMode {
     Follower follower;
-    PathChain scorePreloads, interrimClose, intakeClose, scoreClose, interrimMedium, intakeMedium, scoreMedium, hitGate, hitGate2, intakeGate1, intakeGate2, scoreGate1, scoreGate2, interrimFar, intakeFar, scoreFar;
+    PathChain scorePreloads, intakeClose, scoreClose, intakeMedium, scoreMedium, intakeGate, scoreGate, hitGate, intakeFar, scoreFar;
 
     SequentialGroupFixed preloads, gates1, gates2, gates3, spikes;
     Timer pathTimer, opTimer;
 
     public int pathState = 0;
     public static double pathPower = 1;
-    public static double intakeTime = 1;
-    public static double gateEndTime = 20;
+    public static double intakeTime = 1.5;
+    public static double gateEndTime = 17.5;
     public static double intakeYClose = 84;
     public static double intakeYMedium = 60;
     public static double intakeYFar = 36;
-    public static double intakeEndPos1 = 8;
-    public static double intakeEndPos2 = 0;
+    public static double intakeEndPos1 = 26;
+    public static double intakeEndPos2 = 26;
 
-    public static double gateX = 16;
+    public static double gateX = 14.5;
+    public static double gateY = 58.75;
+    public static double gateHeading = 30;
 
     Pose currentPose;
 
@@ -66,18 +69,13 @@ public class Solo_Close_Red extends RRoboticsOpMode {
         Drawing.init();
 
         Pose scoring = new Pose(64, 88, Math.toRadians(0)).mirror();
-        Pose scoring2 = new Pose(64, 18, Math.toRadians(0)).mirror();
         Pose intakeStartClose = new Pose(44, intakeYClose, Math.toRadians(0)).mirror();
-        Pose intakeEndClose = new Pose(intakeEndPos1, intakeYClose, Math.toRadians(0)).mirror();
+        Pose intakeEndClose = new Pose(8, intakeYClose, Math.toRadians(0)).mirror();
         Pose intakeStartMedium = new Pose(44, intakeYMedium, Math.toRadians(0)).mirror();
-        Pose intakeEndMedium = new Pose(intakeEndPos2, intakeYMedium, Math.toRadians(0)).mirror();
+        Pose intakeEndMedium = new Pose(20, 68, Math.toRadians(0)).mirror();
         Pose intakeStartFar = new Pose(44, intakeYFar, Math.toRadians(0)).mirror();
-        Pose intakeEndFar = new Pose(intakeEndPos2, intakeYFar, Math.toRadians(0)).mirror();
-        Pose gate = new Pose(gateX, 72, Math.toRadians(0)).mirror(); // TODO: tune this point
-        Pose gateIntake1 = new Pose(12, 54, Math.toRadians(270)).mirror();
-        Pose gateIntake2 = new Pose(12, 24, Math.toRadians(270)).mirror();
-        Pose gateIntake3 = new Pose(24, 12, Math.toRadians(270)).mirror();
-        Pose gateInterrim = new Pose(28, 60).mirror();
+        Pose intakeEndFar = new Pose(0, intakeYFar, Math.toRadians(0)).mirror();
+        Pose gate = new Pose(gateX, gateY, Math.toRadians(gateHeading)).mirror();
 
         Selene.INSTANCE.initFollower(hardwareMap, scoring);
 
@@ -97,28 +95,13 @@ public class Solo_Close_Red extends RRoboticsOpMode {
                 .setGlobalDeceleration()
                 .build();
 
-        interrimClose = follower.pathBuilder()
-                .addPath(new BezierLine(scoring, intakeStartClose))
-                .setConstantHeadingInterpolation(intakeStartClose.getHeading())
-                .setGlobalDeceleration()
-                .build();
-        interrimMedium = follower.pathBuilder()
-                .addPath(new BezierLine(scoring, intakeStartMedium))
-                .setLinearHeadingInterpolation(scoring.getHeading(), intakeStartMedium.getHeading())
-                .setGlobalDeceleration()
-                .build();
-        interrimFar = follower.pathBuilder()
-                .addPath(new BezierLine(scoring, intakeStartFar))
-                .setLinearHeadingInterpolation(scoring.getHeading(), intakeStartMedium.getHeading())
-                .setGlobalDeceleration()
-                .build();
-
         intakeClose = follower.pathBuilder()
                 .addPath(new BezierLine(intakeStartClose, intakeEndClose))
                 .setTimeoutConstraint(100)
                 .build();
         intakeMedium = follower.pathBuilder()
-                .addPath(new BezierLine(intakeStartMedium, intakeEndMedium))
+                .addPath(new BezierCurve(intakeStartMedium, new Pose(24, 60).mirror(), intakeEndMedium))
+                .setConstantHeadingInterpolation(intakeStartMedium.getHeading())
                 .setTimeoutConstraint(100)
                 .build();
         intakeFar = follower.pathBuilder()
@@ -127,67 +110,52 @@ public class Solo_Close_Red extends RRoboticsOpMode {
                 .build();
 
         hitGate = follower.pathBuilder()
-                .addPath(new BezierLine(scoring, new Pose(scoring.getX(), gate.getY())))
-                .setConstantHeadingInterpolation(scoring.getHeading())
-                .addPath(new BezierLine(new Pose(scoring.getX(), gate.getY()), gate))
+                .addPath(new BezierLine(scoring, new Pose(30, 72).mirror()))
                 .setConstantHeadingInterpolation(scoring.getHeading())
                 .build();
 
-        hitGate2 = follower.pathBuilder()
-                .addPath(new BezierLine(scoring2, gate))
-                .setConstantHeadingInterpolation(scoring2.getHeading())
-                .addPath(new BezierLine(gate, new Pose(scoring.getX(), gate.getY())))
-                .setConstantHeadingInterpolation(scoring2.getHeading())
+        intakeGate = follower.pathBuilder()
+                .addPath(new BezierCurve(scoring, intakeStartMedium, gate))
+                .setLinearHeadingInterpolation(scoring.getHeading(), gate.getHeading())
                 .setGlobalDeceleration()
                 .build();
 
-        intakeGate1 = follower.pathBuilder()
-                .addPath(new BezierCurve(gate, gateInterrim, gateIntake1))
-                .setLinearHeadingInterpolation(gate.getHeading(), gateIntake1.getHeading())
-                .addPath(new BezierLine(gateIntake1, gateIntake2))
-                .setConstantHeadingInterpolation(gateIntake1.getHeading())
-                .addParametricCallback(0.5, () -> follower.setMaxPower(0.75))
-                .addParametricCallback(1, () -> follower.setMaxPower(1))
-                .build();
-        intakeGate2 = follower.pathBuilder()
-                .addPath(new BezierLine(scoring2, gateIntake3))
-                .setConstantHeadingInterpolation(scoring2.getHeading())
-                .addParametricCallback(0.5, () -> follower.setMaxPower(0.75))
-                .addParametricCallback(1, () -> follower.setMaxPower(1))
-                .build();
-
-        scoreGate1 = follower.pathBuilder()
-                .addPath(new BezierLine(gateIntake2, scoring2))
-                .setLinearHeadingInterpolation(gateIntake2.getHeading(), scoring2.getHeading())
-                .build();
-        scoreGate2 = follower.pathBuilder()
-                .addPath(new BezierLine(gateIntake3, scoring2))
-                .setLinearHeadingInterpolation(gateIntake3.getHeading(), scoring2.getHeading())
+        scoreGate = follower.pathBuilder()
+                .addPath(new BezierCurve(gate, new Pose(scoring.getX(), gate.getY()), scoring))
+                .setHeadingInterpolation(
+                    HeadingInterpolator.piecewise(
+                        new HeadingInterpolator.PiecewiseNode(
+                            0,
+                            .5,
+                            HeadingInterpolator.linear(gate.getHeading(), scoring.getHeading())
+                        ),
+                        new HeadingInterpolator.PiecewiseNode(
+                            .5,
+                            1,
+                            HeadingInterpolator.constant(scoring.getHeading())
+                        )
+                    )
+                )
+                .setGlobalDeceleration()
                 .build();
 
-        follower.setStartingPose(new Pose(60, 84, Math.toRadians(0)).mirror());
+        follower.setStartingPose(new Pose(65, 87, Math.toRadians(0)).mirror());
 
         follower.setMaxPower(pathPower);
 
         preloads = new SequentialGroupFixed(
                 Shooter.INSTANCE.setGoal(1500),
                 Selene.INSTANCE.stopIntake(),
-                Turret.INSTANCE.setPosition(45),
+                Turret.INSTANCE.setPosition(42.5),
                 new InstantCommand(() -> follower.followPath(scorePreloads)),
                 new Delay(0.5),
                 Selene.INSTANCE.shootMotif(),
                 Selene.INSTANCE.intake(),
+                Shooter.INSTANCE.setHoodPos(0.1),
                 new InstantCommand(() -> follower.followPath(intakeMedium)),
-                new WaitUntil(() -> follower.getPose().getX() <= 12 && follower.getPose().getX() >= 1),
+                new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.stopIntake(),
                 new InstantCommand(() -> follower.followPath(scoreMedium)),
-                new WaitUntil(() -> Turret.INSTANCE.isInZone(follower.getPose())),
-                Selene.INSTANCE.shootMotif(),
-                Selene.INSTANCE.intake(),
-                new InstantCommand(() -> follower.followPath(intakeFar)),
-                new WaitUntil(() -> follower.getPose().getX() <= 12 && follower.getPose().getX() >= 1),
-                Selene.INSTANCE.stopIntake(),
-                new InstantCommand(() -> follower.followPath(scoreFar)),
                 new WaitUntil(() -> Turret.INSTANCE.isInZone(follower.getPose())),
                 Selene.INSTANCE.shootMotif(),
                 new InstantCommand(() -> isDone = true)
@@ -195,50 +163,54 @@ public class Solo_Close_Red extends RRoboticsOpMode {
 
         gates1 = new SequentialGroupFixed(
                 Selene.INSTANCE.intake(),
-                Turret.INSTANCE.setPosition(-64),
-                Shooter.INSTANCE.setGoal(2000),
-                new InstantCommand(() -> follower.followPath(hitGate)),
+                new InstantCommand(() -> follower.followPath(intakeGate)),
                 new WaitUntil(() -> !follower.isBusy()),
-                new Delay(0.5),
-                new InstantCommand(() -> follower.followPath(scoreGate1)),
+                new Delay(intakeTime),
+                new InstantCommand(() -> follower.followPath(scoreGate)),
                 new WaitUntil(() -> Turret.INSTANCE.isInZone(follower.getPose())),
-                Selene.INSTANCE.stopIntake(),
                 Selene.INSTANCE.shootMotif(),
                 new InstantCommand(() -> isDone = true)
         );
 
         gates2 = new SequentialGroupFixed(
                 Selene.INSTANCE.intake(),
-                new InstantCommand(() -> follower.followPath(intakeGate2)),
+                new InstantCommand(() -> follower.followPath(intakeGate)),
                 new WaitUntil(() -> !follower.isBusy()),
-                new InstantCommand(() -> follower.followPath(scoreGate2)),
+                new Delay(intakeTime),
+                new InstantCommand(() -> follower.followPath(scoreGate)),
                 new WaitUntil(() -> Turret.INSTANCE.isInZone(follower.getPose())),
-                Selene.INSTANCE.stopIntake(),
                 Selene.INSTANCE.shootMotif(),
                 new InstantCommand(() -> isDone = true)
         );
 
         gates3 = new SequentialGroupFixed(
                 Selene.INSTANCE.intake(),
-                new InstantCommand(() -> follower.followPath(intakeGate2)),
+                new InstantCommand(() -> follower.followPath(intakeGate)),
                 new WaitUntil(() -> !follower.isBusy()),
-                new InstantCommand(() -> follower.followPath(scoreGate2)),
+                new Delay(intakeTime),
+                new InstantCommand(() -> follower.followPath(scoreGate)),
                 new WaitUntil(() -> Turret.INSTANCE.isInZone(follower.getPose())),
-                Selene.INSTANCE.stopIntake(),
                 Selene.INSTANCE.shootMotif(),
                 new InstantCommand(() -> isDone = true)
         );
 
         spikes = new SequentialGroupFixed(
-                Turret.INSTANCE.setPosition(-45),
-                Shooter.INSTANCE.setGoal(1500),
                 Selene.INSTANCE.intake(),
                 new InstantCommand(() -> follower.followPath(intakeClose)),
-                new WaitUntil(() -> follower.getPose().getX() <= 20 && follower.getPose().getX() >= 1),
+                new WaitUntil(() -> follower.getPose().getX() <= intakeEndPos2 && follower.getPose().getX() >= 1),
                 Selene.INSTANCE.stopIntake(),
                 new InstantCommand(() -> follower.followPath(scoreClose)),
                 new WaitUntil(() -> Turret.INSTANCE.isInZone(follower.getPose())),
                 Selene.INSTANCE.shootMotif(),
+                Selene.INSTANCE.intake(),
+                new InstantCommand(() -> follower.followPath(intakeFar)),
+                new WaitUntil(() -> follower.getPose().getX() <= intakeEndPos1 && follower.getPose().getX() >= 1),
+                Selene.INSTANCE.stopIntake(),
+                new InstantCommand(() -> follower.followPath(scoreFar)),
+                new WaitUntil(() -> Turret.INSTANCE.isInZone(follower.getPose())),
+                Selene.INSTANCE.shootMotif(),
+                new InstantCommand(() -> follower.followPath(hitGate)),
+                new WaitUntil(() -> !follower.isBusy()),
                 new InstantCommand(() -> isDone = true)
         );
 
@@ -251,7 +223,7 @@ public class Solo_Close_Red extends RRoboticsOpMode {
                     .setGlobalDeceleration()
                     .build();
         }));
-        Shooter.INSTANCE.setHoodPos(0.1).schedule();
+        Shooter.INSTANCE.setHoodPos(0.0).schedule();
         Selene.INSTANCE.stopIntake().schedule();
         Shooter.INSTANCE.StopperClose().schedule();
         Turret.INSTANCE.setPosition(0).schedule();
