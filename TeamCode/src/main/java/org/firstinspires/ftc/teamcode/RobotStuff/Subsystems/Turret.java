@@ -38,13 +38,13 @@ public class Turret implements IRRoboticsSubsystem {
     public boolean hasSetAlliance = false;
     public boolean hasGotMotif = false;
     public boolean isLookingForMotif = false;
-    Pose redPose = new Pose(136, 136);
-    Pose bluePose = new Pose(8, 136);
-    public Pose targetPose = new Pose(136, 136);
+    Pose redPose = new Pose(136, 130);
+    Pose bluePose = new Pose(8, 130);
+    public Pose targetPose = new Pose(130, 130);
     Pose motifPose = new Pose(144, 72);
     public double targetYaw = 0;
     public double targetPitch = 0.0;
-    public static double minLim = -90;
+    public static double minLim = -70;
     public static double maxLim = 90;
     public ControlSystem controller;
     public enum TurretMode {
@@ -136,13 +136,6 @@ public class Turret implements IRRoboticsSubsystem {
         return 0.024 * angle - 0.84;
     }
 
-    public double calcHoodPosition(double dist) {
-        if (dist >= 68) {
-            return 0.1;
-        }
-        return 0.0;
-    }
-
     public Vector getrobotToGoalVector(Pose currentPose) {
         return targetPose.getAsVector().minus(currentPose.getAsVector());
     }
@@ -209,7 +202,7 @@ public class Turret implements IRRoboticsSubsystem {
 
         double turretVelCompOff = Math.atan(perpendicularComponent / ivr);*/
 
-        Shooter.INSTANCE.setHoodPos(calcHoodPosition(robotToGoalVector.getMagnitude())).schedule();
+        Shooter.INSTANCE.setHoodPos(Shooter.INSTANCE.calcHoodPower(robotToGoalVector.getMagnitude())).schedule();
         Shooter.INSTANCE.setGoal(Shooter.INSTANCE.calcShooterPower(robotToGoalVector.getMagnitude())).schedule();
 
         targetYaw = // get yaw angle using trig, targetYaw = arctan(opposite/adjacent)

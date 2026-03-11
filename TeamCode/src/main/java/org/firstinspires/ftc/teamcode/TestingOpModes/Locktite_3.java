@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.TestingOpModes;
 
 import com.bylazar.configurables.annotations.Configurable;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -10,6 +11,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 
 import dev.nextftc.hardware.impl.MotorEx;
 
+@Disabled
 @Configurable
 @TeleOp(name = "Motor Directions")
 public class Locktite_3 extends RRoboticsOpMode {

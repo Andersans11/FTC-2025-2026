@@ -14,10 +14,10 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RRoboticsOpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.Drawing;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RRoboticsSubsystemComponent;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.OldTurret;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.SequentialGroupFixed;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
+
 import dev.nextftc.core.commands.utility.InstantCommand;
 
 @Disabled
@@ -69,8 +69,7 @@ public class Automous_Template extends RRoboticsOpMode {
     @Override
     public void onWaitForStart() {
         telemetry.update();
-        OldTurret.INSTANCE.periodic();
-        Magazine.INSTANCE.periodic();
+        Turret.INSTANCE.periodic();
     }
 
     @Override
@@ -87,14 +86,6 @@ public class Automous_Template extends RRoboticsOpMode {
     public void onUpdate() {
         super.onUpdate();
         follower.update();
-
-        addData("0", Magazine.INSTANCE.getSlotColor(0));
-        addData("1", Magazine.INSTANCE.getSlotColor(1));
-        addData("2", Magazine.INSTANCE.getSlotColor(2));
-        addData("Active", Magazine.INSTANCE.activeSlot);
-        addData("Mode", Magazine.INSTANCE.mode);
-        addData("desiredColor", Magazine.INSTANCE.desiredColor);
-        addData("Is Follower Busy", follower.isBusy());
 
 
         Drawing.drawDebug(follower);

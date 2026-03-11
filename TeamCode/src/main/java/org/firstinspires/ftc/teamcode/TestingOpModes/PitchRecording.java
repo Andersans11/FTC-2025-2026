@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.TestingOpModes;
 
 import com.bylazar.configurables.annotations.Configurable;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.SequentialGroupFixed;
@@ -58,6 +59,8 @@ public class PitchRecording extends RRoboticsOpMode {
     @Override
     public void onUpdate() {
         super.onUpdate();
+
+        addData("speed", Shooter.INSTANCE.shooters.getVelocity());
 
         addData("distance", Selene.INSTANCE.currentPose.distanceFrom(Turret.INSTANCE.targetPose));
 

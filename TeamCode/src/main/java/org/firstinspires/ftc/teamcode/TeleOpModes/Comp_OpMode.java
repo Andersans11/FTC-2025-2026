@@ -70,22 +70,14 @@ public class Comp_OpMode extends RRoboticsOpMode {
     public void onUpdate() {
         super.onUpdate();
 
-        addData("speed", Shooter.INSTANCE.shooters.getLeader().getVelocity());
-        addData("hood", Turret.INSTANCE.hoodAngle);
+        addData("speed", Shooter.INSTANCE.shooters.getVelocity());
 
-        addData("speed2", Turret.INSTANCE.newFlywheelSpeed);
-        addData("hood2", Turret.INSTANCE.newHoodAngle);
-
-        addData("ticks", Shooter.INSTANCE.controller.getGoal().getVelocity());
-
-        addData("turret pos (ticks)", Turret.INSTANCE.rotationMotor.getCurrentPosition());
-        addData("turret pos (deg)", Turret.INSTANCE.ticksToDegrees(Turret.INSTANCE.rotationMotor.getCurrentPosition()));
-        addData("turret target yaw", Turret.INSTANCE.targetYaw);
-
-        addData("autoshooting", Selene.INSTANCE.autoShooting);
-        addData("is in zone", Turret.INSTANCE.isInZone(Selene.INSTANCE.currentPose));
-        addData("is at limit", Turret.INSTANCE.isAtLimit());
-
-        addData("i", Turret.INSTANCE.getrobotToGoalVector(Selene.INSTANCE.currentPose).getMagnitude());
+        addData("ll pose", Selene.INSTANCE.currentLLPose);
+        addData("pinpoint pose", Selene.INSTANCE.currentPose);
+        addData("has ll pose", !Selene.INSTANCE.noLLPose);
+        if (!Selene.INSTANCE.noLLPose) {
+            addData("distance", Selene.INSTANCE.currentPose.distanceFrom(Selene.INSTANCE.currentLLPose));
+            addData("threshold", Selene.INSTANCE.threshold);
+        }
     }
 }

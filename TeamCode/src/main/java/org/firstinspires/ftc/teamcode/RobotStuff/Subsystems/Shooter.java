@@ -62,9 +62,49 @@ public class Shooter implements IRRoboticsSubsystem {
         shooters.setPower(controller.calculate(shooters.getLeader().getState()));
     }
 
+    double[][] table = {
+            {56.3, 1475, 0.0},
+            {61.0, 1550, 0.1}, //0.1
+            {77.5, 1625, 0.1},
+            {99.0, 1750, 0.1},
+            {115.2, 1950, 0.2}, //0.2
+            {133.5, 2000, 0.2}
+    };
+
     public double calcShooterPower(double dist) {
-        dist = (25.0/3.0) * dist + (2350.0/3.0) + 100;
-        return Math.max(1350, Math.min(2000, dist));
+        if (dist <= table[0][0]) return table[0][1];
+
+        for (int i = 0; i < table.length - 1; i++) {
+
+            double d1 = table[i][0];
+            double t1 = table[i][1];
+            double d2 = table[i+1][0];
+            double t2 = table[i+1][1];
+
+            if (dist <= d2) {
+                return t1 + (dist - d1) * (t2 - t1) / (d2 - d1);
+            }
+        }
+
+        return table[table.length - 1][1];
+    }
+
+    public double calcHoodPower(double dist) {
+        if (dist <= table[0][0]) return table[0][2];
+
+        for (int i = 0; i < table.length - 1; i++) {
+
+            double d1 = table[i][0];
+            double t1 = table[i][2];
+            double d2 = table[i+1][0];
+            double t2 = table[i+1][2];
+
+            if (dist <= d2) {
+                return t1 + (dist - d1) * (t2 - t1) / (d2 - d1);
+            }
+        }
+
+        return table[table.length - 1][2];
     }
 
 

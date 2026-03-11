@@ -4,6 +4,7 @@ import com.pedropathing.geometry.Pose;
 import com.qualcomm.hardware.limelightvision.LLFieldMap;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Hardware.LimelightWrapper;
@@ -14,6 +15,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Selene;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.RobotCentricDrive;
 
+@Disabled
 @TeleOp(name = "Test Limelight", group = Utils.TESTING)
 public class LimelightTestMode extends RRoboticsOpMode {
 

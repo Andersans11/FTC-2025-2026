@@ -35,6 +35,9 @@ public class Selene extends RRoboticsSubsystemGroup {
     public Timer indTimer;
     public Timer ballTimer;
     public Pose currentPose = new Pose(9, 9, 0);
+    public Pose currentLLPose = new Pose(9, 9, 0);
+    public boolean noLLPose = true;
+    public boolean threshold = false;
     public LimelightWrapper limelight;
     public int indCycle = 0;
     public double shootTime = 0.75;
@@ -48,7 +51,7 @@ public class Selene extends RRoboticsSubsystemGroup {
         );
     }
 
-    public static double poseThreshold = 1; // in inches | todo tune?
+    public static double poseThreshold = 2.5; // in inches | todo tune?
 
     public enum IndicatorMode {
         INTAKE_IDLE,
@@ -105,9 +108,13 @@ public class Selene extends RRoboticsSubsystemGroup {
         limelight.setYaw(currentPose.getHeading());
         Pose llPose = limelight.getPose();
 
+        noLLPose = llPose == null;
+        if (!noLLPose) threshold = currentPose.distanceFrom(llPose) > poseThreshold;
+
         if (llPose != null && currentPose.distanceFrom(llPose) > poseThreshold) {
-            follower.setPose(llPose);
-            currentPose = llPose;
+            //follower.setPose(llPose);
+            //currentLLPose = llPose;
+            //currentPose = llPose;
         }
 
         runIndicator();
@@ -134,7 +141,7 @@ public class Selene extends RRoboticsSubsystemGroup {
 
     public Command resetFollower() {
         return new InstantCommand(() -> {
-            Pose newPose = Turret.INSTANCE.isRed() ? new Pose(9, 9, Math.toRadians(90)) : new Pose(135, 9, Math.toRadians(90));
+            Pose newPose = Turret.INSTANCE.isRed() ? new Pose(9, 7.5, Math.toRadians(90)) : new Pose(135, 7.5, Math.toRadians(90));
             follower.setPose(newPose);
         });
     }

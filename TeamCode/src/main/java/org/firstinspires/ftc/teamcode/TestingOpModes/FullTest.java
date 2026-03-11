@@ -2,13 +2,12 @@ package org.firstinspires.ftc.teamcode.TestingOpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RRoboticsOpMode;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Selene;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RRoboticsSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.RobotCentricDrive;
-import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Magazine;
+import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 
@@ -36,36 +35,18 @@ public class FullTest extends RRoboticsOpMode {
         P1.dpadUp().whenBecomesTrue(Turret.INSTANCE.setBlueAlliance());
         P1.dpadDown().whenBecomesTrue(Turret.INSTANCE.setRedAlliance());
 
-        P1.rightBumper().whenBecomesTrue(Selene.INSTANCE.outtake());
+        P1.rightBumper().whenBecomesTrue(Intake.INSTANCE.gate());
         P1.rightBumper().whenBecomesFalse(Selene.INSTANCE.stopIntake());
 
-        P1.cross().whenBecomesTrue(Turret.INSTANCE.setTracking());
+        P2.rightTrigger().atLeast(0.1).whenBecomesTrue(Shooter.INSTANCE.StopperOpen());
+        P2.rightTrigger().atLeast(0.1).whenBecomesFalse(Shooter.INSTANCE.StopperClose());
 
-        P1.dpadLeft().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.GREEN));
-        P1.dpadRight().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.PURPLE));
-
-        P2.dpadLeft().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.GREEN));
-        P2.dpadRight().whenBecomesTrue(Magazine.INSTANCE.setActiveSlotContent(Utils.ArtifactTypes.PURPLE));
-
-        P2.rightTrigger().atLeast(0.1).whenBecomesTrue(
-                new SequentialGroupFixed(
-                        Magazine.INSTANCE.fillSlots(),
-                        Selene.INSTANCE.shootMotif()
-                ));
-
-        P2.square().whenBecomesTrue(Magazine.INSTANCE.setMode(0));
-        P2.triangle().whenBecomesTrue(Magazine.INSTANCE.setMode(1));
-
-        P2.leftTrigger().atLeast(0.1).whenBecomesTrue(Shooter.INSTANCE.spinUp());
-
-        P2.cross().whenBecomesTrue(Shooter.INSTANCE.idle());
-
-        P2.circle().whenBecomesTrue(Magazine.INSTANCE.incShotsFired());
-
-        P2.dpadUp().whenBecomesTrue(Turret.INSTANCE.toggleTrackObelisk());
+        P1.leftBumper().whenBecomesTrue(Shooter.INSTANCE.StopperOpen());
+        P1.leftBumper().whenBecomesFalse(Shooter.INSTANCE.StopperClose());
 
         P2.dpadDown().whenBecomesTrue(Selene.INSTANCE.resetFollower());
 
+        P2.leftBumper().whenBecomesTrue(Selene.INSTANCE.setAutoShooting());
         P2.leftBumper().whenBecomesTrue(Selene.INSTANCE.setAutoShooting());
 
         Selene.INSTANCE.indMode = Selene.IndicatorMode.INIT_DONE;
@@ -82,21 +63,29 @@ public class FullTest extends RRoboticsOpMode {
         super.onStartButtonPressed();
         Selene.INSTANCE.start().schedule();
         Selene.INSTANCE.indMode = Selene.IndicatorMode.INTAKE_ACTIVE;
+        Turret.INSTANCE.autoControl(true).schedule();
     }
 
     @Override
     public void onUpdate() {
         super.onUpdate();
 
+        addData("speed", Shooter.INSTANCE.shooters.getLeader().getVelocity());
+        addData("hood", Turret.INSTANCE.hoodAngle);
 
-        addData("red", Turret.INSTANCE.isRed);
-        addData("TurretMode", Turret.INSTANCE.mode);
-        addData("Pose", Math.toDegrees(Selene.INSTANCE.currentPose.getHeading()));
+        addData("speed2", Turret.INSTANCE.newFlywheelSpeed);
+        addData("hood2", Turret.INSTANCE.newHoodAngle);
 
-        addData("mode", Turret.INSTANCE.mode);
-        addData("targetPose", Turret.INSTANCE.targetPose);
-        addData("targetYaw", Turret.INSTANCE.targetYaw);
-        addData("targetPitch", Turret.INSTANCE.targetPitch);
-        addData("volt", Turret.INSTANCE.voltageSensor.getVoltage());
+        addData("ticks", Shooter.INSTANCE.controller.getGoal().getVelocity());
+
+        addData("turret pos (ticks)", Turret.INSTANCE.rotationMotor.getCurrentPosition());
+        addData("turret pos (deg)", Turret.INSTANCE.ticksToDegrees(Turret.INSTANCE.rotationMotor.getCurrentPosition()));
+        addData("turret target yaw", Turret.INSTANCE.targetYaw);
+
+        addData("autoshooting", Selene.INSTANCE.autoShooting);
+        addData("is in zone", Turret.INSTANCE.isInZone(Selene.INSTANCE.currentPose));
+        addData("is at limit", Turret.INSTANCE.isAtLimit());
+
+        addData("i", Turret.INSTANCE.getrobotToGoalVector(Selene.INSTANCE.currentPose).getMagnitude());
     }
 }
