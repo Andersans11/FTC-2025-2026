@@ -35,13 +35,13 @@ public class Solo_Close_Blue extends RRoboticsOpMode {
 
     public int pathState = 0;
     public static double pathPower = 1;
-    public static double intakeTime = 1.5;
+    public static double intakeTime = 1.75;
     public static double gateEndTime = 17.5;
     public static double intakeYClose = 84;
     public static double intakeYMedium = 60;
     public static double intakeYFar = 36;
-    public static double intakeEndPos1 = 28;
-    public static double intakeEndPos2 = 28;
+    public static double intakeEndPos1 = 24;
+    public static double intakeEndPos2 = 26;
 
     public static double gateX = 14.5;
     public static double gateY = 58.75;
@@ -73,7 +73,7 @@ public class Solo_Close_Blue extends RRoboticsOpMode {
         Pose intakeStartClose = new Pose(44, intakeYClose, Math.toRadians(180));
         Pose intakeEndClose = new Pose(8, intakeYClose, Math.toRadians(180));
         Pose intakeStartMedium = new Pose(44, intakeYMedium, Math.toRadians(180));
-        Pose intakeEndMedium = new Pose(0, intakeYMedium, Math.toRadians(180));
+        Pose intakeEndMedium = new Pose(20, 68, Math.toRadians(180));
         Pose intakeStartFar = new Pose(44, intakeYFar, Math.toRadians(180));
         Pose intakeEndFar = new Pose(0, intakeYFar, Math.toRadians(180));
         Pose gate = new Pose(gateX, gateY, Math.toRadians(gateHeading)); // TODO: tune this point
@@ -121,7 +121,8 @@ public class Solo_Close_Blue extends RRoboticsOpMode {
                 .setTimeoutConstraint(100)
                 .build();
         intakeMedium = follower.pathBuilder()
-                .addPath(new BezierLine(intakeStartMedium, intakeEndMedium))
+                .addPath(new BezierCurve(intakeStartMedium, new Pose(26, 60), intakeEndMedium))
+                .setConstantHeadingInterpolation(intakeStartMedium.getHeading())
                 .setTimeoutConstraint(100)
                 .build();
         intakeFar = follower.pathBuilder()
@@ -183,15 +184,16 @@ public class Solo_Close_Blue extends RRoboticsOpMode {
         follower.setMaxPower(pathPower);
 
         preloads = new SequentialGroupFixed(
-                Shooter.INSTANCE.setGoal(1500),
+                Shooter.INSTANCE.setGoal(1350),
                 Selene.INSTANCE.stopIntake(),
-                Turret.INSTANCE.setPosition(-45),
+                Turret.INSTANCE.setPosition(-42.5),
                 new InstantCommand(() -> follower.followPath(scorePreloads)),
                 new Delay(0.5),
                 Selene.INSTANCE.shootMotif(),
                 Selene.INSTANCE.intake(),
                 new InstantCommand(() -> follower.followPath(intakeMedium)),
-                new WaitUntil(() -> follower.getPose().getX() <= intakeEndPos1 && follower.getPose().getX() >= 1),
+                new WaitUntil(() -> !follower.isBusy()),
+                Shooter.INSTANCE.setGoal(1400),
                 Selene.INSTANCE.stopIntake(),
                 new InstantCommand(() -> follower.followPath(scoreMedium)),
                 new WaitUntil(() -> Turret.INSTANCE.isInZone(follower.getPose())),
@@ -204,9 +206,9 @@ public class Solo_Close_Blue extends RRoboticsOpMode {
                 new InstantCommand(() -> follower.followPath(intakeGate)),
                 new WaitUntil(() -> !follower.isBusy()),
                 new Delay(intakeTime),
-                Selene.INSTANCE.stopIntake(),
                 new InstantCommand(() -> follower.followPath(scoreGate)),
-                new WaitUntil(() -> !follower.isBusy()),
+                new WaitUntil(() -> Turret.INSTANCE.isInZone(currentPose)),
+                Selene.INSTANCE.stopIntake(),
                 Selene.INSTANCE.shootMotif(),
                 new InstantCommand(() -> isDone = true)
         );
@@ -216,9 +218,9 @@ public class Solo_Close_Blue extends RRoboticsOpMode {
                 new InstantCommand(() -> follower.followPath(intakeGate)),
                 new WaitUntil(() -> !follower.isBusy()),
                 new Delay(intakeTime),
-                Selene.INSTANCE.stopIntake(),
                 new InstantCommand(() -> follower.followPath(scoreGate)),
-                new WaitUntil(() -> !follower.isBusy()),
+                new WaitUntil(() -> Turret.INSTANCE.isInZone(currentPose)),
+                Selene.INSTANCE.stopIntake(),
                 Selene.INSTANCE.shootMotif(),
                 new InstantCommand(() -> isDone = true)
         );
@@ -228,9 +230,9 @@ public class Solo_Close_Blue extends RRoboticsOpMode {
                 new InstantCommand(() -> follower.followPath(intakeGate)),
                 new WaitUntil(() -> !follower.isBusy()),
                 new Delay(intakeTime),
-                Selene.INSTANCE.stopIntake(),
                 new InstantCommand(() -> follower.followPath(scoreGate)),
-                new WaitUntil(() -> !follower.isBusy()),
+                new WaitUntil(() -> Turret.INSTANCE.isInZone(currentPose)),
+                Selene.INSTANCE.stopIntake(),
                 Selene.INSTANCE.shootMotif(),
                 new InstantCommand(() -> isDone = true)
         );

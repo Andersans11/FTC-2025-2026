@@ -65,12 +65,14 @@ public class Shooter implements IRRoboticsSubsystem {
     }
 
     double[][] table = {
-            {37.3, 1325, 0},
-            {49.0, 1350, 0},
-            {68.2, 1450, 0.1},
-            {87, 1625, 0.1},
-            {104.1, 1800, 0},
-            {125.6, 2700}
+            {36.4, 1275, 0.0},
+            {53.9, 1300, 0.0},
+            {64.9, 1325, 0.1},
+            {85.6, 1425, 0.1},
+            {100.4, 1550, 0.1},
+            {115.0, 1700, 0.2},
+            {123.5, 1775, 0.25},
+            {140.2, 1850, 0.3},
     };
 
     public double calcShooterPower(double dist) {
@@ -89,6 +91,24 @@ public class Shooter implements IRRoboticsSubsystem {
         }
 
         return table[table.length - 1][1];
+    }
+
+    public double calcHoodPower(double dist) {
+        if (dist <= table[0][0]) return table[0][2];
+
+        for (int i = 0; i < table.length - 1; i++) {
+
+            double d1 = table[i][0];
+            double t1 = table[i][2];
+            double d2 = table[i+1][0];
+            double t2 = table[i+1][2];
+
+            if (dist <= d2) {
+                return t1 + (dist - d1) * (t2 - t1) / (d2 - d1);
+            }
+        }
+
+        return table[table.length - 1][2];
     }
 
 
