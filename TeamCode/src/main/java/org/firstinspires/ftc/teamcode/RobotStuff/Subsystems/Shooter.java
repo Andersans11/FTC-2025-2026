@@ -24,6 +24,8 @@ public class Shooter implements IRRoboticsSubsystem {
     public MotorGroup shooters;
     public ServoExFullRange stopper;
 
+    public static double powerMod;
+
     // ------------------------ CONFIG ------------------------ //
     public static double shootPower = 1950;
     public static double shootPowerLess = 1750;

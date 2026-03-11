@@ -34,6 +34,7 @@ public class Turret implements IRRoboticsSubsystem {
 
     public MotorEx rotationMotor;
     public VoltageSensor voltageSensor;
+    public Vector robotToGoalVector = new Vector(0, 0);
     public boolean isRed = true;
     public boolean hasSetAlliance = false;
     public boolean hasGotMotif = false;
@@ -59,6 +60,7 @@ public class Turret implements IRRoboticsSubsystem {
     Timer timer;
 
     public Vector robotVel;
+    public double robotHeading = 0;
 
     // ------------------------- CONFIG ------------------------------- //
 
@@ -84,6 +86,9 @@ public class Turret implements IRRoboticsSubsystem {
     public double newFlywheelSpeed = 0;
 
     public double turretDistFromCenter = 1.72149606;
+
+    public static boolean runVComp = false;
+    public static double vP = 0.25;
 
     // --------------------- OPMODE --------------------------------- //
 
@@ -120,7 +125,7 @@ public class Turret implements IRRoboticsSubsystem {
         double x = currentPose.getX();
         double y = currentPose.getY();
         return (((y >= -x + 128) && (y >= x - 16)) ||
-                ((y <= -x + 112) && (y <= x - 32))) &&
+                ((y <= -x + 102) && (y <= x - 42))) &&
                 !isAtLimit();
     }
 
@@ -160,7 +165,7 @@ public class Turret implements IRRoboticsSubsystem {
 
     public void calcTurretPositions(Pose currentPose, Vector robotVel) {
         Pose turretPose = getTurretPose(currentPose);
-        Vector robotToGoalVector = getrobotToGoalVector(getTurretPose(turretPose));
+        robotToGoalVector = getrobotToGoalVector(getTurretPose(turretPose));
 
         /*double g = 32.174 * 12;
 
@@ -201,16 +206,19 @@ public class Turret implements IRRoboticsSubsystem {
         Shooter.INSTANCE.setGoal(calculateTicksPerSecond(newFlywheelSpeed, Math.toDegrees(newHoodAngle))).schedule();
 
         double turretVelCompOff = Math.atan(perpendicularComponent / ivr);*/
+        double coordinateTheta = robotVel.getTheta() - robotToGoalVector.getTheta();
+        double perpendicularComponent = Math.sin(coordinateTheta) * robotVel.getMagnitude();
 
         Shooter.INSTANCE.setHoodPos(Shooter.INSTANCE.calcHoodPower(robotToGoalVector.getMagnitude())).schedule();
         Shooter.INSTANCE.setGoal(Shooter.INSTANCE.calcShooterPower(robotToGoalVector.getMagnitude())).schedule();
 
-        targetYaw = // get yaw angle using trig, targetYaw = arctan(opposite/adjacent)
-                Math.atan(Math.abs(targetPose.getY() - turretPose.getY()) / Math.abs(targetPose.getX() - turretPose.getX()));
-        if (isRed) targetYaw = Math.toDegrees(targetYaw - turretPose.getHeading());
-        else targetYaw = Math.toDegrees(Math.PI - targetYaw - turretPose.getHeading());
+        robotHeading = Math.toDegrees(turretPose.getHeading());
+        if (robotHeading < 0) robotHeading = robotHeading + 360;
 
-        //targetYaw = targetYaw - Math.toDegrees(turretVelCompOff);
+        if (isRed) targetYaw = Math.toDegrees(robotToGoalVector.getTheta() - Math.toRadians(robotHeading));
+        else targetYaw = Math.toDegrees(robotToGoalVector.getTheta() - Math.toRadians(robotHeading));
+
+        if (runVComp) targetYaw = targetYaw - perpendicularComponent * vP;
 
         controller.setGoal(new KineticState(degreesToTicks(Math.max(minLim, Math.min(maxLim, targetYaw)))));
     }
@@ -316,7 +324,7 @@ public class Turret implements IRRoboticsSubsystem {
     @Override
     public void periodic() {
 
-        Pose currentPose = Selene.INSTANCE.currentPose;
+        Pose currentPose = Selene.currentPose;
 
         switch (mode) {
             case POSE_TRACKING:
@@ -326,13 +334,18 @@ public class Turret implements IRRoboticsSubsystem {
             case NO_SHOOTER:
                 Pose turretPose = getTurretPose(currentPose);
 
-                targetYaw = // get yaw angle using trig, targetYaw = arctan(opposite/adjacent)
-                        Math.atan(Math.abs(targetPose.getY() - turretPose.getY()) / Math.abs(targetPose.getX() - turretPose.getX()));
-                if (isRed) targetYaw = Math.toDegrees(targetYaw - turretPose.getHeading());
-                else targetYaw = Math.toDegrees(Math.PI - targetYaw - turretPose.getHeading());
+                double coordinateTheta = Selene.INSTANCE.follower.getVelocity().getTheta() - robotToGoalVector.getTheta();
+                double perpendicularComponent = Math.sin(coordinateTheta) * robotVel.getMagnitude();
+
+                robotHeading = Math.toDegrees(turretPose.getHeading());
+                if (robotHeading < 0) robotHeading = robotHeading + 360;
+
+                if (isRed) targetYaw = Math.toDegrees(robotToGoalVector.getTheta() - Math.toRadians(robotHeading));
+                else targetYaw = Math.toDegrees(robotToGoalVector.getTheta() - Math.toRadians(robotHeading));
+
+                if (runVComp) targetYaw = targetYaw - perpendicularComponent * vP;
 
                 controller.setGoal(new KineticState(degreesToTicks(Math.max(minLim, Math.min(maxLim, targetYaw)))));
-                rotationMotor.setPower(-controller.calculate(rotationMotor.getState()));
                 break;
             case TESTING:
                 targetYaw = // get yaw angle using trig, targetYaw = arctan(opposite/adjacent)

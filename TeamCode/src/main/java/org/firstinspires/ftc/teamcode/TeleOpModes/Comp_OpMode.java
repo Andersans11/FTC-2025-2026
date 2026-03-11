@@ -42,8 +42,8 @@ public class Comp_OpMode extends RRoboticsOpMode {
         P1.leftBumper().whenBecomesTrue(Shooter.INSTANCE.StopperOpen());
         P1.leftBumper().whenBecomesFalse(Shooter.INSTANCE.StopperClose());
 
-        P1.dpadUp().whenBecomesTrue(() -> Shooter.powerMod = Shooter.powerMod + 50);
-        P1.dpadDown().whenBecomesTrue(() -> Shooter.powerMod = Shooter.powerMod - 50);
+        P1.triangle().whenBecomesTrue(() -> Shooter.powerMod = Shooter.powerMod + 50);
+        P1.cross().whenBecomesTrue(() -> Shooter.powerMod = Shooter.powerMod - 50);
 
         P2.dpadDown().whenBecomesTrue(Selene.INSTANCE.resetFollower());
 
@@ -73,15 +73,9 @@ public class Comp_OpMode extends RRoboticsOpMode {
     public void onUpdate() {
         super.onUpdate();
 
-        addData("speed", Shooter.INSTANCE.shooters.getVelocity());
+        addData("pinpoint pose", Turret.INSTANCE.robotHeading);
 
-        addData("ll pose", Selene.INSTANCE.currentLLPose);
-        addData("pinpoint pose", Selene.INSTANCE.currentPose);
-        addData("has ll pose", !Selene.INSTANCE.noLLPose);
-        if (!Selene.INSTANCE.noLLPose) {
-            addData("distance", Selene.INSTANCE.currentPose.distanceFrom(Selene.INSTANCE.currentLLPose));
-            addData("threshold", Selene.INSTANCE.threshold);
-        }
+        addData("robottogoalvector", Math.toDegrees(Turret.INSTANCE.robotToGoalVector.getTheta()));
         addData("pinpoint pose", Selene.currentPose);
         addData("Power Mod", Shooter.powerMod);
     }

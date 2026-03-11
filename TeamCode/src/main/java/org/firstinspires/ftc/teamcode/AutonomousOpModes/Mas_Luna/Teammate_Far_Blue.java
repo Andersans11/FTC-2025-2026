@@ -18,6 +18,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 
+import dev.nextftc.core.commands.delays.Delay;
 import dev.nextftc.core.commands.delays.WaitUntil;
 import dev.nextftc.core.commands.utility.InstantCommand;
 
@@ -34,6 +35,8 @@ public class Teammate_Far_Blue extends RRoboticsOpMode {
     public static double pathPower = 1;
     public static double intakeYFar = 36;
     public static double intakeEndPos2 = 0;
+
+    public static double startDelay = 1;
 
     Pose currentPose;
 
@@ -87,20 +90,23 @@ public class Teammate_Far_Blue extends RRoboticsOpMode {
                 .setLinearHeadingInterpolation(gateIntake3.getHeading(), scoring.getHeading())
                 .build();
 
-        follower.setStartingPose(new Pose(60, 84, Math.toRadians(180)));
+        follower.setStartingPose(new Pose(65, 15, Math.toRadians(180)));
 
         follower.setMaxPower(pathPower);
 
         preloads = new SequentialGroupFixed(
-                Shooter.INSTANCE.setGoal(2000),
+                Turret.INSTANCE.autoControl(true),
                 Selene.INSTANCE.stopIntake(),
-                Turret.INSTANCE.setPosition(-64),
+                new Delay(startDelay),
                 Selene.INSTANCE.shootMotif(),
                 Selene.INSTANCE.intake(),
+                Turret.INSTANCE.setPosition(-64),
                 new InstantCommand(() -> follower.followPath(intakeSpike)),
-                new WaitUntil(() -> follower.getPose().getX() <= 12 && follower.getPose().getX() >= 1),
+                new WaitUntil(() -> follower.getPose().getX() <= 24 && follower.getPose().getX() >= 1),
                 Selene.INSTANCE.stopIntake(),
                 new InstantCommand(() -> follower.followPath(scoreSpike)),
+                new Delay(1),
+                Turret.INSTANCE.autoControl(true),
                 new WaitUntil(() -> Turret.INSTANCE.isInZone(follower.getPose())),
                 Selene.INSTANCE.shootMotif(),
                 new InstantCommand(() -> isDone = true)
@@ -108,9 +114,12 @@ public class Teammate_Far_Blue extends RRoboticsOpMode {
 
         gates1 = new SequentialGroupFixed(
                 Selene.INSTANCE.intake(),
+                Turret.INSTANCE.setPosition(-64),
                 new InstantCommand(() -> follower.followPath(intakeGate)),
                 new WaitUntil(() -> !follower.isBusy()),
                 new InstantCommand(() -> follower.followPath(scoreGate)),
+                new Delay(1),
+                Turret.INSTANCE.autoControl(true),
                 new WaitUntil(() -> Turret.INSTANCE.isInZone(follower.getPose())),
                 Selene.INSTANCE.stopIntake(),
                 Selene.INSTANCE.shootMotif(),
@@ -119,9 +128,12 @@ public class Teammate_Far_Blue extends RRoboticsOpMode {
 
         gates2 = new SequentialGroupFixed(
                 Selene.INSTANCE.intake(),
+                Turret.INSTANCE.setPosition(-64),
                 new InstantCommand(() -> follower.followPath(intakeGate)),
                 new WaitUntil(() -> !follower.isBusy()),
                 new InstantCommand(() -> follower.followPath(scoreGate)),
+                new Delay(1),
+                Turret.INSTANCE.autoControl(true),
                 new WaitUntil(() -> Turret.INSTANCE.isInZone(follower.getPose())),
                 Selene.INSTANCE.stopIntake(),
                 Selene.INSTANCE.shootMotif(),
@@ -130,9 +142,12 @@ public class Teammate_Far_Blue extends RRoboticsOpMode {
 
         gates3 = new SequentialGroupFixed(
                 Selene.INSTANCE.intake(),
+                Turret.INSTANCE.setPosition(-64),
                 new InstantCommand(() -> follower.followPath(intakeGate)),
                 new WaitUntil(() -> !follower.isBusy()),
                 new InstantCommand(() -> follower.followPath(scoreGate)),
+                new Delay(1),
+                Turret.INSTANCE.autoControl(true),
                 new WaitUntil(() -> Turret.INSTANCE.isInZone(follower.getPose())),
                 Selene.INSTANCE.stopIntake(),
                 Selene.INSTANCE.shootMotif(),
@@ -141,9 +156,12 @@ public class Teammate_Far_Blue extends RRoboticsOpMode {
 
         gates4 = new SequentialGroupFixed(
                 Selene.INSTANCE.intake(),
+                Turret.INSTANCE.setPosition(-64),
                 new InstantCommand(() -> follower.followPath(intakeGate)),
                 new WaitUntil(() -> !follower.isBusy()),
                 new InstantCommand(() -> follower.followPath(scoreGate)),
+                new Delay(1),
+                Turret.INSTANCE.autoControl(true),
                 new WaitUntil(() -> Turret.INSTANCE.isInZone(follower.getPose())),
                 Selene.INSTANCE.stopIntake(),
                 Selene.INSTANCE.shootMotif(),
@@ -152,9 +170,12 @@ public class Teammate_Far_Blue extends RRoboticsOpMode {
 
         gates5 = new SequentialGroupFixed(
                 Selene.INSTANCE.intake(),
+                Turret.INSTANCE.setPosition(-64),
                 new InstantCommand(() -> follower.followPath(intakeGate)),
                 new WaitUntil(() -> !follower.isBusy()),
                 new InstantCommand(() -> follower.followPath(scoreGate)),
+                new Delay(1),
+                Turret.INSTANCE.autoControl(true),
                 new WaitUntil(() -> Turret.INSTANCE.isInZone(follower.getPose())),
                 Selene.INSTANCE.stopIntake(),
                 Selene.INSTANCE.shootMotif(),
@@ -163,9 +184,12 @@ public class Teammate_Far_Blue extends RRoboticsOpMode {
 
         gates6 = new SequentialGroupFixed(
                 Selene.INSTANCE.intake(),
+                Turret.INSTANCE.setPosition(-64),
                 new InstantCommand(() -> follower.followPath(intakeGate)),
                 new WaitUntil(() -> !follower.isBusy()),
                 new InstantCommand(() -> follower.followPath(scoreGate)),
+                new Delay(1),
+                Turret.INSTANCE.autoControl(true),
                 new WaitUntil(() -> Turret.INSTANCE.isInZone(follower.getPose())),
                 Selene.INSTANCE.stopIntake(),
                 Selene.INSTANCE.shootMotif(),
@@ -181,10 +205,9 @@ public class Teammate_Far_Blue extends RRoboticsOpMode {
                     .setGlobalDeceleration()
                     .build();
         }));
-        Shooter.INSTANCE.setHoodPos(0.1).schedule();
+        Turret.INSTANCE.setPosition(-64).schedule();
         Selene.INSTANCE.stopIntake().schedule();
         Shooter.INSTANCE.StopperClose().schedule();
-        Turret.INSTANCE.setPosition(0).schedule();
     }
 
     @Override
