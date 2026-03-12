@@ -80,15 +80,12 @@ public class Turret implements IRRoboticsSubsystem {
     public boolean isFar;
 
     public double hoodAngle = 0;
-    public double flywheelSpeed = 0;
-
-    public double newHoodAngle = 0;
-    public double newFlywheelSpeed = 0;
 
     public double turretDistFromCenter = 1.72149606;
 
     public static boolean runVComp = false;
     public static double vP = 0.25;
+    public static double hP = 0.0004;
 
     // --------------------- OPMODE --------------------------------- //
 
@@ -209,8 +206,12 @@ public class Turret implements IRRoboticsSubsystem {
         double coordinateTheta = robotVel.getTheta() - robotToGoalVector.getTheta();
         double perpendicularComponent = Math.sin(coordinateTheta) * robotVel.getMagnitude();
 
-        Shooter.INSTANCE.setHoodPos(Shooter.INSTANCE.calcHoodPower(robotToGoalVector.getMagnitude())).schedule();
-        Shooter.INSTANCE.setGoal(Shooter.INSTANCE.calcShooterPower(robotToGoalVector.getMagnitude())).schedule();
+        double shooterPower = Shooter.INSTANCE.calcShooterPower(robotToGoalVector.getMagnitude());
+        double hoodPower = Shooter.INSTANCE.calcHoodPower(robotToGoalVector.getMagnitude());
+        hoodPower = hoodPower - (Shooter.INSTANCE.controller.getGoal().getVelocity() - Shooter.INSTANCE.shooters.getVelocity()) * hP;
+
+        Shooter.INSTANCE.setHoodPos(hoodPower).schedule();
+        Shooter.INSTANCE.setGoal(shooterPower).schedule();
 
         robotHeading = Math.toDegrees(turretPose.getHeading());
         if (robotHeading < 0) robotHeading = robotHeading + 360;
@@ -275,6 +276,13 @@ public class Turret implements IRRoboticsSubsystem {
             mode = TurretMode.IDLE;
             targetYaw = Math.max(minLim, Math.min(maxLim, pos));
             controller.setGoal(new KineticState(degreesToTicks(targetYaw)));
+        });
+    }
+
+    public Command setHoodPosition(double hoodPos) {
+        return new InstantCommand(() -> {
+            mode = TurretMode.IDLE;
+            hoodAngle = hoodPos;
         });
     }
 
@@ -360,6 +368,8 @@ public class Turret implements IRRoboticsSubsystem {
                 rotationMotor.setPower(-controller.calculate(rotationMotor.getState()));
                 break;
             case IDLE:
+                double hoodPower = hoodAngle - (Shooter.INSTANCE.controller.getGoal().getVelocity() - Shooter.INSTANCE.shooters.getVelocity()) * hP;
+                Shooter.INSTANCE.setHoodPos(hoodPower).schedule();
                 rotationMotor.setPower(-controller.calculate(rotationMotor.getState()));
                 break;
         }

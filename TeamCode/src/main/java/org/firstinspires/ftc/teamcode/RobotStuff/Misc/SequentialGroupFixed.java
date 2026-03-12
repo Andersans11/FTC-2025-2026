@@ -16,6 +16,10 @@ public class SequentialGroupFixed extends CommandGroup {
         return getChildren().isEmpty();
     }
 
+    public void add(Command command) {
+        getChildren().add(command);
+    }
+
     @Override
     public void start() {
         getChildren().first().start();

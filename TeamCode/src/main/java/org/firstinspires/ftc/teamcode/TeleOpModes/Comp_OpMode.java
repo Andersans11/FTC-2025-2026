@@ -72,11 +72,7 @@ public class Comp_OpMode extends RRoboticsOpMode {
     @Override
     public void onUpdate() {
         super.onUpdate();
-
-        addData("pinpoint pose", Turret.INSTANCE.robotHeading);
-
-        addData("robottogoalvector", Math.toDegrees(Turret.INSTANCE.robotToGoalVector.getTheta()));
-        addData("pinpoint pose", Selene.currentPose);
+        addData("speed", Shooter.INSTANCE.shooters.getVelocity());
         addData("Power Mod", Shooter.powerMod);
     }
 }

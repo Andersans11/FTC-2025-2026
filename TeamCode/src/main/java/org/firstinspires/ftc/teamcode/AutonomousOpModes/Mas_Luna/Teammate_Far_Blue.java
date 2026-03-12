@@ -23,7 +23,7 @@ import dev.nextftc.core.commands.delays.WaitUntil;
 import dev.nextftc.core.commands.utility.InstantCommand;
 
 @Configurable
-@Autonomous(name = "Blue - Far")
+@Autonomous(name = "Teammate Blue - Far")
 public class Teammate_Far_Blue extends RRoboticsOpMode {
     Follower follower;
     PathChain scorePreloads, intakeGate, scoreGate, intakeSpike, scoreSpike;

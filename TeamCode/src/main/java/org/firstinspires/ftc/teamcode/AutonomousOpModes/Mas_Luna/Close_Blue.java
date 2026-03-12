@@ -22,6 +22,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 
 import java.util.ArrayList;
 
+import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.delays.Delay;
 import dev.nextftc.core.commands.delays.WaitUntil;
 import dev.nextftc.core.commands.utility.InstantCommand;
@@ -34,21 +35,31 @@ public class Close_Blue extends RRoboticsOpMode {
 
     SequentialGroupFixed preloads, closes, middles, fars, gates, hitGates;
     ArrayList<SequentialGroupFixed> commands;
+    SequentialGroupFixed routines;
     Timer pathTimer, opTimer;
 
     public int pathState = 0;
     public static double pathPower = 1;
-    public static double intakeTime = 1.5;
+    public static double intakeTime = 1.0;
     public static double gateEndTime = 17.5;
     public static double intakeYClose = 84;
     public static double intakeYMedium = 60;
     public static double intakeYFar = 36;
-    public static double intakeEndPos1 = 26;
+    public static double intakeEndPos1 = 24.0;
     public static double intakeEndPos2 = 26;
 
     public static double gateX = 14.5;
     public static double gateY = 58.75;
     public static double gateHeading = 150;
+
+    public static double shootPower = 1500;
+    public static double preloadDiff = 25;
+    public static double gateDiff = 0;
+    public static double closeDiff = 0;
+    public static double middleDiff = -50;
+    public static double farDiff = -25;
+    public static double turretPos = -42.5;
+    public static double middleTurretPos = -40;
 
     boolean doingMiddles = false;
 
@@ -109,7 +120,7 @@ public class Close_Blue extends RRoboticsOpMode {
                 .setTimeoutConstraint(100)
                 .build();
         intakeMedium = follower.pathBuilder()
-                .addPath(new BezierCurve(intakeStartMedium, new Pose(24, 60), intakeEndMedium))
+                .addPath(new BezierCurve(intakeStartMedium, new Pose(22, 60), intakeEndMedium))
                 .setConstantHeadingInterpolation(intakeStartMedium.getHeading())
                 .setTimeoutConstraint(100)
                 .build();
@@ -119,7 +130,7 @@ public class Close_Blue extends RRoboticsOpMode {
                 .build();
 
         hitGate = follower.pathBuilder()
-                .addPath(new BezierLine(scoring, new Pose(30, 72)))
+                .addPath(new BezierLine(scoring, new Pose(36, 72)))
                 .setConstantHeadingInterpolation(scoring.getHeading())
                 .build();
 
@@ -153,31 +164,35 @@ public class Close_Blue extends RRoboticsOpMode {
         follower.setMaxPower(pathPower);
 
         preloads = new SequentialGroupFixed(
-                Shooter.INSTANCE.setGoal(1350),
+                Shooter.INSTANCE.setGoal(shootPower + preloadDiff),
                 Selene.INSTANCE.stopIntake(),
-                Turret.INSTANCE.setPosition(-42.5),
+                Turret.INSTANCE.setPosition(turretPos),
                 new Delay(startDelay),
                 new InstantCommand(() -> follower.followPath(scorePreloads)),
                 new Delay(0.5),
                 Selene.INSTANCE.shootMotif(),
-                Shooter.INSTANCE.setHoodPos(0.1)
+                Turret.INSTANCE.setHoodPosition(0.1)
         );
 
         preloads.setName("preloads");
 
         middles = new SequentialGroupFixed(
+                Shooter.INSTANCE.setGoal(shootPower + middleDiff),
                 Selene.INSTANCE.intake(),
+                Turret.INSTANCE.setPosition(middleTurretPos),
                 new InstantCommand(() -> follower.followPath(intakeMedium)),
                 new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.stopIntake(),
                 new InstantCommand(() -> follower.followPath(scoreMedium)),
                 new WaitUntil(() -> Turret.INSTANCE.isInZone(follower.getPose())),
-                Selene.INSTANCE.shootMotif()
+                Selene.INSTANCE.shootMotif(),
+                Turret.INSTANCE.setPosition(turretPos)
         );
 
         middles.setName("middles");
 
         gates = new SequentialGroupFixed(
+                Shooter.INSTANCE.setGoal(shootPower + gateDiff),
                 Selene.INSTANCE.intake(),
                 new InstantCommand(() -> follower.followPath(intakeGate)),
                 new WaitUntil(() -> !follower.isBusy()),
@@ -190,6 +205,7 @@ public class Close_Blue extends RRoboticsOpMode {
         gates.setName("gates");
 
         closes = new SequentialGroupFixed(
+                Shooter.INSTANCE.setGoal(shootPower + closeDiff),
                 Selene.INSTANCE.intake(),
                 new InstantCommand(() -> follower.followPath(intakeClose)),
                 new WaitUntil(() -> follower.getPose().getX() <= intakeEndPos2 && follower.getPose().getX() >= 1),
@@ -202,6 +218,7 @@ public class Close_Blue extends RRoboticsOpMode {
         closes.setName("closes");
 
         fars = new SequentialGroupFixed(
+                Shooter.INSTANCE.setGoal(shootPower + farDiff),
                 Selene.INSTANCE.intake(),
                 new InstantCommand(() -> follower.followPath(intakeFar)),
                 new WaitUntil(() -> follower.getPose().getX() <= intakeEndPos1 && follower.getPose().getX() >= 1),
@@ -220,7 +237,7 @@ public class Close_Blue extends RRoboticsOpMode {
 
         hitGates.setName("end");
 
-        commands.add(preloads);
+        routines = new SequentialGroupFixed(preloads);
 
         P1.triangle().whenBecomesTrue(() -> commands.add(closes));
         P1.square().whenBecomesTrue(() -> {
@@ -246,7 +263,7 @@ public class Close_Blue extends RRoboticsOpMode {
                     .setGlobalDeceleration()
                     .build();
         }));
-        Shooter.INSTANCE.setHoodPos(0.0).schedule();
+        Turret.INSTANCE.setHoodPosition(0.0).schedule();
         Selene.INSTANCE.stopIntake().schedule();
         Shooter.INSTANCE.StopperClose().schedule();
         Turret.INSTANCE.setPosition(0).schedule();
@@ -271,16 +288,10 @@ public class Close_Blue extends RRoboticsOpMode {
         super.onStartButtonPressed();
         opTimer.resetTimer();
         commands.add(hitGates);
-        for (int i = 0; i < commands.size();) {
-            if (!isRunning) {
-                commands.get(i).schedule();
-                isRunning = true;
-            }
-            if (commands.get(i).isDone()) {
-                i++;
-                isRunning = false;
-            }
+        for (int i = 0; i < commands.size(); i++) {
+            routines.add(commands.get(i));
         }
+        routines.schedule();
     }
 
     @Override

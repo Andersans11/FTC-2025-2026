@@ -71,10 +71,6 @@ public class FullTest extends RRoboticsOpMode {
         super.onUpdate();
 
         addData("speed", Shooter.INSTANCE.shooters.getLeader().getVelocity());
-        addData("hood", Turret.INSTANCE.hoodAngle);
-
-        addData("speed2", Turret.INSTANCE.newFlywheelSpeed);
-        addData("hood2", Turret.INSTANCE.newHoodAngle);
 
         addData("ticks", Shooter.INSTANCE.controller.getGoal().getVelocity());
 

@@ -20,6 +20,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 
+import java.net.BindException;
 import java.util.ArrayList;
 
 import dev.nextftc.core.commands.delays.Delay;
@@ -27,12 +28,11 @@ import dev.nextftc.core.commands.delays.WaitUntil;
 import dev.nextftc.core.commands.utility.InstantCommand;
 
 @Configurable
-@Autonomous(name = "Blue - Close")
+@Autonomous(name = "Blue - Far")
 public class Far_Blue extends RRoboticsOpMode {
     Follower follower;
-    PathChain scorePreloads, intakeClose, scoreClose, intakeMedium, scoreMedium, intakeGate, scoreGate, hitGate, intakeFar, scoreFar, intakeGate1, scoreGate1;
-
-    SequentialGroupFixed preloads, closes, middles, fars, gates, hpZone;
+    PathChain scorePreloads, intakeClose, scoreClose, intakeMedium, scoreMedium, intakeGate, scoreGate, hitGate, intakeFar, scoreFar, intakeGate1, intakeGate2, scoreGate1;
+    SequentialGroupFixed preloads, closes, middles, fars, gates, hpZone, hpZone2;
     ArrayList<SequentialGroupFixed> commands;
     Timer pathTimer, opTimer;
 
@@ -44,7 +44,8 @@ public class Far_Blue extends RRoboticsOpMode {
     public static double intakeYFar = 36;
     public static double intakeEndPos1 = 24;
     public static double intakeEndPos2 = 26;
-    public static double intakeEndPos3 = 10;
+    public static double intakeEndPos3 = 10.5;
+    public static double shootTime = 0.925;
 
     public static double gateX = 14.5;
     public static double gateY = 58.75;
@@ -53,8 +54,9 @@ public class Far_Blue extends RRoboticsOpMode {
     boolean doingMiddles = false;
 
     public static double startDelay = 1;
-    public static double shootPower = 1775;
-    public static double turretAngle = -64;
+    public static double shootPower = 1800;
+    public static double turretAngle = -70;
+    SequentialGroupFixed routines;
 
     Pose currentPose;
 
@@ -87,7 +89,7 @@ public class Far_Blue extends RRoboticsOpMode {
         Pose intakeStartFar = new Pose(44, intakeYFar, Math.toRadians(180));
         Pose intakeEndFar = new Pose(0, intakeYFar, Math.toRadians(180));
         Pose gate = new Pose(gateX, gateY, Math.toRadians(gateHeading));
-        Pose gateIntake3 = new Pose(0, 12, Math.toRadians(180));
+        Pose gateIntake3 = new Pose(11, 9, Math.toRadians(180));
 
         Selene.INSTANCE.initFollower(hardwareMap, scoring);
 
@@ -152,7 +154,17 @@ public class Far_Blue extends RRoboticsOpMode {
                 .build();
 
         intakeGate1 = follower.pathBuilder()
-                .addPath(new BezierLine(scoring, gateIntake3))
+                .addPath(new BezierLine(scoring, new Pose(36, 9)))
+                .setConstantHeadingInterpolation(scoring.getHeading())
+                .addPath(new BezierLine(new Pose(36, 9), gateIntake3))
+                .setConstantHeadingInterpolation(scoring.getHeading())
+                .addParametricCallback(0.5, () -> follower.setMaxPower(0.75))
+                .build();
+
+        intakeGate2 = follower.pathBuilder()
+                .addPath(new BezierLine(scoring, new Pose(36, 27)))
+                .setConstantHeadingInterpolation(scoring.getHeading())
+                .addPath(new BezierLine(new Pose(36, 27), gateIntake3))
                 .setConstantHeadingInterpolation(scoring.getHeading())
                 .addParametricCallback(0.5, () -> follower.setMaxPower(0.75))
                 .build();
@@ -167,10 +179,12 @@ public class Far_Blue extends RRoboticsOpMode {
         follower.setMaxPower(pathPower);
 
         preloads = new SequentialGroupFixed(
-                new Delay(startDelay),
+                new InstantCommand(() -> follower.followPath(scorePreloads)),
+                Turret.INSTANCE.setHoodPosition(0.25),
                 Shooter.INSTANCE.setGoal(shootPower),
                 Selene.INSTANCE.stopIntake(),
                 Turret.INSTANCE.setPosition(turretAngle),
+                new Delay(startDelay),
                 Selene.INSTANCE.shootMotif()
         );
 
@@ -182,23 +196,36 @@ public class Far_Blue extends RRoboticsOpMode {
                 new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.stopIntake(),
                 new InstantCommand(() -> follower.followPath(scoreMedium)),
-                new WaitUntil(() -> !follower.isBusy()),
+                new WaitUntil(() -> follower.getCurrentTValue() >= shootTime),
                 Selene.INSTANCE.shootMotif()
         );
 
         hpZone = new SequentialGroupFixed(
                 Selene.INSTANCE.intake(),
-                new InstantCommand(() -> follower.followPath(intakeGate)),
-                new WaitUntil(() -> follower.getPose().getX() <= intakeEndPos3 && follower.getPose().getX() >= 1),
+                new InstantCommand(() -> follower.followPath(intakeGate1)),
+                new Delay(1.75),
                 new InstantCommand(() -> follower.setMaxPower(1)),
-                new InstantCommand(() -> follower.followPath(scoreGate)),
+                new InstantCommand(() -> follower.followPath(scoreGate1)),
                 new Delay(1),
-                new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.stopIntake(),
+                new WaitUntil(() -> follower.getCurrentTValue() >= shootTime),
+                Selene.INSTANCE.shootMotif()
+        );
+
+        hpZone2 = new SequentialGroupFixed(
+                Selene.INSTANCE.intake(),
+                new InstantCommand(() -> follower.followPath(intakeGate2)),
+                new Delay(2.25),
+                new InstantCommand(() -> follower.setMaxPower(1)),
+                new InstantCommand(() -> follower.followPath(scoreGate1)),
+                new Delay(1),
+                Selene.INSTANCE.stopIntake(),
+                new WaitUntil(() -> follower.getCurrentTValue() >= shootTime),
                 Selene.INSTANCE.shootMotif()
         );
 
         hpZone.setName("hpZone");
+        hpZone2.setName("hpZone 2");
 
         middles.setName("middle");
 
@@ -208,7 +235,7 @@ public class Far_Blue extends RRoboticsOpMode {
                 new WaitUntil(() -> !follower.isBusy()),
                 new Delay(intakeTime),
                 new InstantCommand(() -> follower.followPath(scoreGate)),
-                new WaitUntil(() -> !follower.isBusy()),
+                new WaitUntil(() -> follower.getCurrentTValue() >= shootTime),
                 Selene.INSTANCE.shootMotif()
         );
 
@@ -220,7 +247,7 @@ public class Far_Blue extends RRoboticsOpMode {
                 new WaitUntil(() -> follower.getPose().getX() <= intakeEndPos2 && follower.getPose().getX() >= 1),
                 Selene.INSTANCE.stopIntake(),
                 new InstantCommand(() -> follower.followPath(scoreClose)),
-                new WaitUntil(() -> !follower.isBusy()),
+                new WaitUntil(() -> follower.getCurrentTValue() >= shootTime),
                 Selene.INSTANCE.shootMotif()
         );
 
@@ -232,13 +259,11 @@ public class Far_Blue extends RRoboticsOpMode {
                 new WaitUntil(() -> follower.getPose().getX() <= intakeEndPos1 && follower.getPose().getX() >= 1),
                 Selene.INSTANCE.stopIntake(),
                 new InstantCommand(() -> follower.followPath(scoreFar)),
-                new WaitUntil(() -> !follower.isBusy()),
+                new WaitUntil(() -> follower.getCurrentTValue() >= shootTime),
                 Selene.INSTANCE.shootMotif()
         );
 
         fars.setName("far");
-
-        commands.add(preloads);
 
         P1.triangle().whenBecomesTrue(() -> commands.add(closes));
         P1.square().whenBecomesTrue(() -> {
@@ -255,6 +280,7 @@ public class Far_Blue extends RRoboticsOpMode {
         });
         P1.cross().whenBecomesTrue(() -> commands.add(fars));
         P1.dpadUp().whenBecomesTrue(() -> commands.add(hpZone));
+        P1.dpadDown().whenBecomesTrue(() -> commands.add(hpZone2));
 
         P1.rightBumper().whenBecomesTrue(Intake.INSTANCE.stop());
         P1.leftBumper().whenBecomesTrue(new InstantCommand(() -> {
@@ -265,10 +291,12 @@ public class Far_Blue extends RRoboticsOpMode {
                     .setGlobalDeceleration()
                     .build();
         }));
-        Shooter.INSTANCE.setHoodPos(0.25).schedule();
+        Turret.INSTANCE.setHoodPosition(0.25).schedule();
         Selene.INSTANCE.stopIntake().schedule();
         Shooter.INSTANCE.StopperClose().schedule();
-        Turret.INSTANCE.setPosition(-64).schedule();
+        Turret.INSTANCE.setPosition(turretAngle).schedule();
+
+        routines = new SequentialGroupFixed(preloads);
     }
 
     @Override
@@ -289,16 +317,10 @@ public class Far_Blue extends RRoboticsOpMode {
     public void onStartButtonPressed() {
         super.onStartButtonPressed();
         opTimer.resetTimer();
-        for (int i = 0; i < commands.size();) {
-            if (!isRunning) {
-                commands.get(i).schedule();
-                isRunning = true;
-            }
-            if (commands.get(i).isDone()) {
-                i++;
-                isRunning = false;
-            }
+        for (int i = 0; i < commands.size(); i++) {
+            routines.add(commands.get(i));
         }
+        routines.schedule();
     }
 
     @Override

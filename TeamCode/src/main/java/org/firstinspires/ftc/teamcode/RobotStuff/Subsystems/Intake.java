@@ -28,8 +28,8 @@ public class Intake implements IRRoboticsSubsystem {
 
     public static double active1 = 0.525;
     public static double active2 = 0.475;
-    public static double off1 = 0.5;
-    public static double off2 = 0.5;
+    public static double off1 = 0.475;
+    public static double off2 = 0.525;
     public static double gate1 = 0.55;
     public static double gate2 = 0.45;
 
