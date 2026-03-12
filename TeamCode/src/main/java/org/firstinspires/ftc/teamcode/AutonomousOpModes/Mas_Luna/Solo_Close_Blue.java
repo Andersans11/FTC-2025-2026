@@ -6,6 +6,7 @@ import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.HeadingInterpolator;
+import com.pedropathing.paths.Path;
 import com.pedropathing.paths.PathChain;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -20,8 +21,6 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 
-import java.util.ArrayList;
-
 import dev.nextftc.core.commands.delays.Delay;
 import dev.nextftc.core.commands.delays.WaitUntil;
 import dev.nextftc.core.commands.utility.InstantCommand;
@@ -32,8 +31,7 @@ public class Solo_Close_Blue extends RRoboticsOpMode {
     Follower follower;
     PathChain scorePreloads, intakeClose, scoreClose, intakeMedium, scoreMedium, intakeGate, scoreGate, hitGate, intakeFar, scoreFar;
 
-    SequentialGroupFixed preloads, closes, middles, fars, gates, hitGates;
-    ArrayList<SequentialGroupFixed> commands;
+    SequentialGroupFixed preloads, gates1, gates2, gates3, spikes;
     Timer pathTimer, opTimer;
 
     public int pathState = 0;
@@ -50,11 +48,9 @@ public class Solo_Close_Blue extends RRoboticsOpMode {
     public static double gateY = 58.75;
     public static double gateHeading = 150;
 
-    boolean doingMiddles = false;
-
     Pose currentPose;
 
-    boolean isRunning = false;
+    boolean isDone = false;
 
     public Solo_Close_Blue() {
         super();
@@ -66,8 +62,6 @@ public class Solo_Close_Blue extends RRoboticsOpMode {
     @Override
     public void onInit() {
         super.onInit();
-
-        commands = new ArrayList<>();
 
         follower = Constants.createFollower(hardwareMap);
 
@@ -157,80 +151,69 @@ public class Solo_Close_Blue extends RRoboticsOpMode {
                 new InstantCommand(() -> follower.followPath(scorePreloads)),
                 new Delay(0.5),
                 Selene.INSTANCE.shootMotif(),
-                Shooter.INSTANCE.setHoodPos(0.1)
-        );
-
-        preloads.setName("preloads");
-
-        middles = new SequentialGroupFixed(
                 Selene.INSTANCE.intake(),
+                Shooter.INSTANCE.setHoodPos(0.1),
                 new InstantCommand(() -> follower.followPath(intakeMedium)),
                 new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.stopIntake(),
                 new InstantCommand(() -> follower.followPath(scoreMedium)),
                 new WaitUntil(() -> Turret.INSTANCE.isInZone(follower.getPose())),
-                Selene.INSTANCE.shootMotif()
+                Selene.INSTANCE.shootMotif(),
+                new InstantCommand(() -> isDone = true)
         );
 
-        middles.setName("middles");
-
-        gates = new SequentialGroupFixed(
+        gates1 = new SequentialGroupFixed(
                 Selene.INSTANCE.intake(),
                 new InstantCommand(() -> follower.followPath(intakeGate)),
                 new WaitUntil(() -> !follower.isBusy()),
                 new Delay(intakeTime),
                 new InstantCommand(() -> follower.followPath(scoreGate)),
                 new WaitUntil(() -> Turret.INSTANCE.isInZone(follower.getPose())),
-                Selene.INSTANCE.shootMotif()
+                Selene.INSTANCE.shootMotif(),
+                new InstantCommand(() -> isDone = true)
         );
 
-        gates.setName("gates");
+        gates2 = new SequentialGroupFixed(
+                Selene.INSTANCE.intake(),
+                new InstantCommand(() -> follower.followPath(intakeGate)),
+                new WaitUntil(() -> !follower.isBusy()),
+                new Delay(intakeTime),
+                new InstantCommand(() -> follower.followPath(scoreGate)),
+                new WaitUntil(() -> Turret.INSTANCE.isInZone(follower.getPose())),
+                Selene.INSTANCE.shootMotif(),
+                new InstantCommand(() -> isDone = true)
+        );
 
-        closes = new SequentialGroupFixed(
+        gates3 = new SequentialGroupFixed(
+                Selene.INSTANCE.intake(),
+                new InstantCommand(() -> follower.followPath(intakeGate)),
+                new WaitUntil(() -> !follower.isBusy()),
+                new Delay(intakeTime),
+                new InstantCommand(() -> follower.followPath(scoreGate)),
+                new WaitUntil(() -> Turret.INSTANCE.isInZone(follower.getPose())),
+                Selene.INSTANCE.shootMotif(),
+                new InstantCommand(() -> isDone = true)
+        );
+
+        spikes = new SequentialGroupFixed(
                 Selene.INSTANCE.intake(),
                 new InstantCommand(() -> follower.followPath(intakeClose)),
                 new WaitUntil(() -> follower.getPose().getX() <= intakeEndPos2 && follower.getPose().getX() >= 1),
                 Selene.INSTANCE.stopIntake(),
                 new InstantCommand(() -> follower.followPath(scoreClose)),
                 new WaitUntil(() -> Turret.INSTANCE.isInZone(follower.getPose())),
-                Selene.INSTANCE.shootMotif()
-        );
-
-        closes.setName("closes");
-
-        fars = new SequentialGroupFixed(
+                Selene.INSTANCE.shootMotif(),
                 Selene.INSTANCE.intake(),
                 new InstantCommand(() -> follower.followPath(intakeFar)),
                 new WaitUntil(() -> follower.getPose().getX() <= intakeEndPos1 && follower.getPose().getX() >= 1),
                 Selene.INSTANCE.stopIntake(),
                 new InstantCommand(() -> follower.followPath(scoreFar)),
                 new WaitUntil(() -> Turret.INSTANCE.isInZone(follower.getPose())),
-                Selene.INSTANCE.shootMotif()
-        );
-
-        fars.setName("fars");
-
-        hitGates = new SequentialGroupFixed(
+                Selene.INSTANCE.shootMotif(),
                 new InstantCommand(() -> follower.followPath(hitGate)),
-                new WaitUntil(() -> !follower.isBusy())
+                new WaitUntil(() -> !follower.isBusy()),
+                new InstantCommand(() -> isDone = true)
         );
-
-        commands.add(preloads);
-
-        P1.triangle().whenBecomesTrue(() -> commands.add(closes));
-        P1.square().whenBecomesTrue(() -> {
-            if (!doingMiddles) {
-                commands.add(middles);
-                doingMiddles = true;
-            }
-
-            commands.add(gates);
-        });
-        P1.circle().whenBecomesTrue(() -> {
-            commands.add(middles);
-            doingMiddles = true;
-        });
-        P1.cross().whenBecomesTrue(() -> commands.add(fars));
 
         P1.rightBumper().whenBecomesTrue(Intake.INSTANCE.stop());
         P1.leftBumper().whenBecomesTrue(new InstantCommand(() -> {
@@ -253,9 +236,6 @@ public class Solo_Close_Blue extends RRoboticsOpMode {
         addData("x", currentPose.getX());
         addData("y", currentPose.getY());
         addData("heading", Math.toDegrees(currentPose.getHeading()));
-        for (int i = 0; i < commands.size(); i++) {
-            addData("path " + (i + 1), commands.get(i).name());
-        }
         super.telemetryManager.update(telemetry);
         follower.updatePose();
         Turret.INSTANCE.periodic();
@@ -265,17 +245,6 @@ public class Solo_Close_Blue extends RRoboticsOpMode {
     public void onStartButtonPressed() {
         super.onStartButtonPressed();
         opTimer.resetTimer();
-        commands.add(hitGates);
-        for (int i = 0; i < commands.size();) {
-            if (!isRunning) {
-                commands.get(i).schedule();
-                isRunning = true;
-            }
-            if (commands.get(i).isDone()) {
-                i++;
-                isRunning = false;
-            }
-        }
     }
 
     @Override
@@ -291,6 +260,54 @@ public class Solo_Close_Blue extends RRoboticsOpMode {
 
 
         Drawing.drawDebug(follower);
+
+        switch (pathState) {
+            case 0:
+                preloads.schedule();
+                pathState = 1;
+                break;
+            case 1:
+                if (isDone) {
+                    isDone = false;
+                    gates1.schedule();
+                    pathState = 2;
+                }
+                break;
+            case 2:
+                if (isDone) {
+                    isDone = false;
+                    if (opTimer.getElapsedTimeSeconds() >= gateEndTime) {
+                        spikes.schedule();
+                        pathState = 6;
+                    } else {
+                        gates2.schedule();
+                        pathState = 3;
+                    }
+                }
+                break;
+            case 3:
+                if (isDone) {
+                    isDone = false;
+                    if (opTimer.getElapsedTimeSeconds() >= gateEndTime) {
+                        spikes.schedule();
+                        pathState = 6;
+                    } else {
+                        gates3.schedule();
+                        pathState = 4;
+                    }
+                }
+                break;
+            case 4:
+                if (isDone) {
+                    isDone = false;
+                    spikes.schedule();
+                    pathState = 5;
+                }
+                break;
+            case 5:
+                // Idle
+                break;
+        }
     }
 
     @Override
