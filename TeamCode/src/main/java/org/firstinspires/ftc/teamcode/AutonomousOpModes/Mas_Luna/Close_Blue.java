@@ -10,12 +10,12 @@ import com.pedropathing.paths.PathChain;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.RobotStuff.Selene;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RRoboticsOpMode;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RRoboticsSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.Drawing;
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.SequentialGroupFixed;
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.RRoboticsSubsystemComponent;
+import org.firstinspires.ftc.teamcode.RobotStuff.Selene;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
@@ -27,8 +27,8 @@ import dev.nextftc.core.commands.delays.WaitUntil;
 import dev.nextftc.core.commands.utility.InstantCommand;
 
 @Configurable
-@Autonomous(name = "Solo Blue - Close")
-public class Solo_Close_Blue extends RRoboticsOpMode {
+@Autonomous(name = "Blue - Close")
+public class Close_Blue extends RRoboticsOpMode {
     Follower follower;
     PathChain scorePreloads, intakeClose, scoreClose, intakeMedium, scoreMedium, intakeGate, scoreGate, hitGate, intakeFar, scoreFar;
 
@@ -56,7 +56,9 @@ public class Solo_Close_Blue extends RRoboticsOpMode {
 
     boolean isRunning = false;
 
-    public Solo_Close_Blue() {
+    public static double startDelay = 0.5;
+
+    public Close_Blue() {
         super();
         addSubsystemComponents(
                 new RRoboticsSubsystemComponent(Selene.INSTANCE)
@@ -154,6 +156,7 @@ public class Solo_Close_Blue extends RRoboticsOpMode {
                 Shooter.INSTANCE.setGoal(1350),
                 Selene.INSTANCE.stopIntake(),
                 Turret.INSTANCE.setPosition(-42.5),
+                new Delay(startDelay),
                 new InstantCommand(() -> follower.followPath(scorePreloads)),
                 new Delay(0.5),
                 Selene.INSTANCE.shootMotif(),
@@ -214,6 +217,8 @@ public class Solo_Close_Blue extends RRoboticsOpMode {
                 new InstantCommand(() -> follower.followPath(hitGate)),
                 new WaitUntil(() -> !follower.isBusy())
         );
+
+        hitGates.setName("end");
 
         commands.add(preloads);
 

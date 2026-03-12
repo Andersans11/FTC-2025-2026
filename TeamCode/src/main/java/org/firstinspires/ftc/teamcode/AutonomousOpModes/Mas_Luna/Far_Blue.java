@@ -10,12 +10,12 @@ import com.pedropathing.paths.PathChain;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.RobotStuff.Selene;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RRoboticsOpMode;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RRoboticsSubsystemComponent;
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.Drawing;
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.SequentialGroupFixed;
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.RRoboticsSubsystemComponent;
+import org.firstinspires.ftc.teamcode.RobotStuff.Selene;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
@@ -27,24 +27,24 @@ import dev.nextftc.core.commands.delays.WaitUntil;
 import dev.nextftc.core.commands.utility.InstantCommand;
 
 @Configurable
-@Autonomous(name = "Solo Blue - Close")
-public class Solo_Close_Blue extends RRoboticsOpMode {
+@Autonomous(name = "Blue - Close")
+public class Far_Blue extends RRoboticsOpMode {
     Follower follower;
-    PathChain scorePreloads, intakeClose, scoreClose, intakeMedium, scoreMedium, intakeGate, scoreGate, hitGate, intakeFar, scoreFar;
+    PathChain scorePreloads, intakeClose, scoreClose, intakeMedium, scoreMedium, intakeGate, scoreGate, hitGate, intakeFar, scoreFar, intakeGate1, scoreGate1;
 
-    SequentialGroupFixed preloads, closes, middles, fars, gates, hitGates;
+    SequentialGroupFixed preloads, closes, middles, fars, gates, hpZone;
     ArrayList<SequentialGroupFixed> commands;
     Timer pathTimer, opTimer;
 
     public int pathState = 0;
     public static double pathPower = 1;
     public static double intakeTime = 1.5;
-    public static double gateEndTime = 17.5;
     public static double intakeYClose = 84;
     public static double intakeYMedium = 60;
     public static double intakeYFar = 36;
-    public static double intakeEndPos1 = 26;
+    public static double intakeEndPos1 = 24;
     public static double intakeEndPos2 = 26;
+    public static double intakeEndPos3 = 10;
 
     public static double gateX = 14.5;
     public static double gateY = 58.75;
@@ -52,11 +52,15 @@ public class Solo_Close_Blue extends RRoboticsOpMode {
 
     boolean doingMiddles = false;
 
+    public static double startDelay = 1;
+    public static double shootPower = 1775;
+    public static double turretAngle = -64;
+
     Pose currentPose;
 
     boolean isRunning = false;
 
-    public Solo_Close_Blue() {
+    public Far_Blue() {
         super();
         addSubsystemComponents(
                 new RRoboticsSubsystemComponent(Selene.INSTANCE)
@@ -75,7 +79,7 @@ public class Solo_Close_Blue extends RRoboticsOpMode {
 
         Drawing.init();
 
-        Pose scoring = new Pose(64, 88, Math.toRadians(180));
+        Pose scoring = new Pose(64, 18, Math.toRadians(180));
         Pose intakeStartClose = new Pose(44, intakeYClose, Math.toRadians(180));
         Pose intakeEndClose = new Pose(8, intakeYClose, Math.toRadians(180));
         Pose intakeStartMedium = new Pose(44, intakeYMedium, Math.toRadians(180));
@@ -83,6 +87,7 @@ public class Solo_Close_Blue extends RRoboticsOpMode {
         Pose intakeStartFar = new Pose(44, intakeYFar, Math.toRadians(180));
         Pose intakeEndFar = new Pose(0, intakeYFar, Math.toRadians(180));
         Pose gate = new Pose(gateX, gateY, Math.toRadians(gateHeading));
+        Pose gateIntake3 = new Pose(0, 12, Math.toRadians(180));
 
         Selene.INSTANCE.initFollower(hardwareMap, scoring);
 
@@ -146,18 +151,27 @@ public class Solo_Close_Blue extends RRoboticsOpMode {
                 .setGlobalDeceleration()
                 .build();
 
-        follower.setStartingPose(new Pose(65, 87, Math.toRadians(180)));
+        intakeGate1 = follower.pathBuilder()
+                .addPath(new BezierLine(scoring, gateIntake3))
+                .setConstantHeadingInterpolation(scoring.getHeading())
+                .addParametricCallback(0.5, () -> follower.setMaxPower(0.75))
+                .build();
+
+        scoreGate1 = follower.pathBuilder()
+                .addPath(new BezierLine(gateIntake3, scoring))
+                .setLinearHeadingInterpolation(gateIntake3.getHeading(), scoring.getHeading())
+                .build();
+
+        follower.setStartingPose(new Pose(65, 15, Math.toRadians(180)));
 
         follower.setMaxPower(pathPower);
 
         preloads = new SequentialGroupFixed(
-                Shooter.INSTANCE.setGoal(1350),
+                new Delay(startDelay),
+                Shooter.INSTANCE.setGoal(shootPower),
                 Selene.INSTANCE.stopIntake(),
-                Turret.INSTANCE.setPosition(-42.5),
-                new InstantCommand(() -> follower.followPath(scorePreloads)),
-                new Delay(0.5),
-                Selene.INSTANCE.shootMotif(),
-                Shooter.INSTANCE.setHoodPos(0.1)
+                Turret.INSTANCE.setPosition(turretAngle),
+                Selene.INSTANCE.shootMotif()
         );
 
         preloads.setName("preloads");
@@ -168,11 +182,25 @@ public class Solo_Close_Blue extends RRoboticsOpMode {
                 new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.stopIntake(),
                 new InstantCommand(() -> follower.followPath(scoreMedium)),
-                new WaitUntil(() -> Turret.INSTANCE.isInZone(follower.getPose())),
+                new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.shootMotif()
         );
 
-        middles.setName("middles");
+        hpZone = new SequentialGroupFixed(
+                Selene.INSTANCE.intake(),
+                new InstantCommand(() -> follower.followPath(intakeGate)),
+                new WaitUntil(() -> follower.getPose().getX() <= intakeEndPos3 && follower.getPose().getX() >= 1),
+                new InstantCommand(() -> follower.setMaxPower(1)),
+                new InstantCommand(() -> follower.followPath(scoreGate)),
+                new Delay(1),
+                new WaitUntil(() -> !follower.isBusy()),
+                Selene.INSTANCE.stopIntake(),
+                Selene.INSTANCE.shootMotif()
+        );
+
+        hpZone.setName("hpZone");
+
+        middles.setName("middle");
 
         gates = new SequentialGroupFixed(
                 Selene.INSTANCE.intake(),
@@ -180,11 +208,11 @@ public class Solo_Close_Blue extends RRoboticsOpMode {
                 new WaitUntil(() -> !follower.isBusy()),
                 new Delay(intakeTime),
                 new InstantCommand(() -> follower.followPath(scoreGate)),
-                new WaitUntil(() -> Turret.INSTANCE.isInZone(follower.getPose())),
+                new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.shootMotif()
         );
 
-        gates.setName("gates");
+        gates.setName("gate");
 
         closes = new SequentialGroupFixed(
                 Selene.INSTANCE.intake(),
@@ -192,11 +220,11 @@ public class Solo_Close_Blue extends RRoboticsOpMode {
                 new WaitUntil(() -> follower.getPose().getX() <= intakeEndPos2 && follower.getPose().getX() >= 1),
                 Selene.INSTANCE.stopIntake(),
                 new InstantCommand(() -> follower.followPath(scoreClose)),
-                new WaitUntil(() -> Turret.INSTANCE.isInZone(follower.getPose())),
+                new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.shootMotif()
         );
 
-        closes.setName("closes");
+        closes.setName("close");
 
         fars = new SequentialGroupFixed(
                 Selene.INSTANCE.intake(),
@@ -204,16 +232,11 @@ public class Solo_Close_Blue extends RRoboticsOpMode {
                 new WaitUntil(() -> follower.getPose().getX() <= intakeEndPos1 && follower.getPose().getX() >= 1),
                 Selene.INSTANCE.stopIntake(),
                 new InstantCommand(() -> follower.followPath(scoreFar)),
-                new WaitUntil(() -> Turret.INSTANCE.isInZone(follower.getPose())),
+                new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.shootMotif()
         );
 
-        fars.setName("fars");
-
-        hitGates = new SequentialGroupFixed(
-                new InstantCommand(() -> follower.followPath(hitGate)),
-                new WaitUntil(() -> !follower.isBusy())
-        );
+        fars.setName("far");
 
         commands.add(preloads);
 
@@ -231,6 +254,7 @@ public class Solo_Close_Blue extends RRoboticsOpMode {
             doingMiddles = true;
         });
         P1.cross().whenBecomesTrue(() -> commands.add(fars));
+        P1.dpadUp().whenBecomesTrue(() -> commands.add(hpZone));
 
         P1.rightBumper().whenBecomesTrue(Intake.INSTANCE.stop());
         P1.leftBumper().whenBecomesTrue(new InstantCommand(() -> {
@@ -241,10 +265,10 @@ public class Solo_Close_Blue extends RRoboticsOpMode {
                     .setGlobalDeceleration()
                     .build();
         }));
-        Shooter.INSTANCE.setHoodPos(0.0).schedule();
+        Shooter.INSTANCE.setHoodPos(0.25).schedule();
         Selene.INSTANCE.stopIntake().schedule();
         Shooter.INSTANCE.StopperClose().schedule();
-        Turret.INSTANCE.setPosition(0).schedule();
+        Turret.INSTANCE.setPosition(-64).schedule();
     }
 
     @Override
@@ -265,7 +289,6 @@ public class Solo_Close_Blue extends RRoboticsOpMode {
     public void onStartButtonPressed() {
         super.onStartButtonPressed();
         opTimer.resetTimer();
-        commands.add(hitGates);
         for (int i = 0; i < commands.size();) {
             if (!isRunning) {
                 commands.get(i).schedule();
