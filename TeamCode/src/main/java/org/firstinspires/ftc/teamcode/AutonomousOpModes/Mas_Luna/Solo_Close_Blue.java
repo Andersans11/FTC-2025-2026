@@ -41,14 +41,12 @@ public class Solo_Close_Blue extends RRoboticsOpMode {
     public static double intakeYClose = 84;
     public static double intakeYMedium = 60;
     public static double intakeYFar = 36;
-    public static double intakeEndPos1 = 24;
+    public static double intakeEndPos1 = 26;
     public static double intakeEndPos2 = 26;
 
     public static double gateX = 14.5;
     public static double gateY = 58.75;
     public static double gateHeading = 150;
-    public static double shooterPower = 1500;
-    public static double hoodPos = 0.1;
 
     Pose currentPose;
 
@@ -79,6 +77,8 @@ public class Solo_Close_Blue extends RRoboticsOpMode {
         Pose intakeStartFar = new Pose(44, intakeYFar, Math.toRadians(180));
         Pose intakeEndFar = new Pose(0, intakeYFar, Math.toRadians(180));
         Pose gate = new Pose(gateX, gateY, Math.toRadians(gateHeading));
+
+        Selene.INSTANCE.initFollower(hardwareMap, scoring);
 
         scoreClose = follower.pathBuilder()
                 .addPath(new BezierLine(intakeEndClose, scoring))
@@ -145,18 +145,14 @@ public class Solo_Close_Blue extends RRoboticsOpMode {
         follower.setMaxPower(pathPower);
 
         preloads = new SequentialGroupFixed(
-                Turret.INSTANCE.setBlueAlliance(),
-                Turret.INSTANCE.autoControl(false),
-                Shooter.INSTANCE.setGoal(shooterPower),
-                Shooter.INSTANCE.setHoodPos(hoodPos),
+                Shooter.INSTANCE.setGoal(1350),
                 Selene.INSTANCE.stopIntake(),
+                Turret.INSTANCE.setPosition(-42.5),
                 new InstantCommand(() -> follower.followPath(scorePreloads)),
                 new Delay(0.5),
                 Selene.INSTANCE.shootMotif(),
                 Selene.INSTANCE.intake(),
-                Turret.INSTANCE.autoControl(true),
-                new InstantCommand(() -> Turret.runVComp = true),
-                new InstantCommand(() -> Shooter.powerMod = 100),
+                Shooter.INSTANCE.setHoodPos(0.1),
                 new InstantCommand(() -> follower.followPath(intakeMedium)),
                 new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.stopIntake(),
@@ -228,11 +224,10 @@ public class Solo_Close_Blue extends RRoboticsOpMode {
                     .setGlobalDeceleration()
                     .build();
         }));
-        Selene.INSTANCE.initFollower(hardwareMap, new Pose(65, 87, Math.toRadians(180)));
         Shooter.INSTANCE.setHoodPos(0.0).schedule();
         Selene.INSTANCE.stopIntake().schedule();
         Shooter.INSTANCE.StopperClose().schedule();
-        Turret.INSTANCE.setPosition(-45).schedule();
+        Turret.INSTANCE.setPosition(0).schedule();
     }
 
     @Override
