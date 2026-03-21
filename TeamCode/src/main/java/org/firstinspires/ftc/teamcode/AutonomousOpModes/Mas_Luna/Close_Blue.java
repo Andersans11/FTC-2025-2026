@@ -88,13 +88,13 @@ public class Close_Blue extends RRoboticsOpMode {
 
         Drawing.init();
 
-        Pose scoring = new Pose(64, 88, Math.toRadians(180));
+        Pose scoring = new Pose(54, 78, Math.toRadians(180));
         Pose intakeStartClose = new Pose(44, intakeYClose, Math.toRadians(180));
-        Pose intakeEndClose = new Pose(8, intakeYClose, Math.toRadians(180));
+        Pose intakeEndClose = new Pose(intakeEndPos2, intakeYClose, Math.toRadians(180));
         Pose intakeStartMedium = new Pose(44, intakeYMedium, Math.toRadians(180));
         Pose intakeEndMedium = new Pose(20, 68, Math.toRadians(180));
         Pose intakeStartFar = new Pose(44, intakeYFar, Math.toRadians(180));
-        Pose intakeEndFar = new Pose(0, intakeYFar, Math.toRadians(180));
+        Pose intakeEndFar = new Pose(intakeEndPos1, intakeYFar, Math.toRadians(180));
         Pose gate = new Pose(gateX, gateY, Math.toRadians(gateHeading));
 
         Selene.INSTANCE.initFollower(hardwareMap, scoring);
@@ -184,7 +184,7 @@ public class Close_Blue extends RRoboticsOpMode {
                 new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.stopIntake(),
                 new InstantCommand(() -> follower.followPath(scoreMedium)),
-                new WaitUntil(() -> Turret.INSTANCE.isInZone(follower.getPose())),
+                new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.shootMotif(),
                 Turret.INSTANCE.setPosition(turretPos)
         );
@@ -198,7 +198,7 @@ public class Close_Blue extends RRoboticsOpMode {
                 new WaitUntil(() -> !follower.isBusy()),
                 new Delay(intakeTime),
                 new InstantCommand(() -> follower.followPath(scoreGate)),
-                new WaitUntil(() -> Turret.INSTANCE.isInZone(follower.getPose())),
+                new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.shootMotif()
         );
 
@@ -208,10 +208,10 @@ public class Close_Blue extends RRoboticsOpMode {
                 Shooter.INSTANCE.setGoal(shootPower + closeDiff),
                 Selene.INSTANCE.intake(),
                 new InstantCommand(() -> follower.followPath(intakeClose)),
-                new WaitUntil(() -> follower.getPose().getX() <= intakeEndPos2 && follower.getPose().getX() >= 1),
+                new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.stopIntake(),
                 new InstantCommand(() -> follower.followPath(scoreClose)),
-                new WaitUntil(() -> Turret.INSTANCE.isInZone(follower.getPose())),
+                new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.shootMotif()
         );
 
@@ -221,10 +221,10 @@ public class Close_Blue extends RRoboticsOpMode {
                 Shooter.INSTANCE.setGoal(shootPower + farDiff),
                 Selene.INSTANCE.intake(),
                 new InstantCommand(() -> follower.followPath(intakeFar)),
-                new WaitUntil(() -> follower.getPose().getX() <= intakeEndPos1 && follower.getPose().getX() >= 1),
+                new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.stopIntake(),
                 new InstantCommand(() -> follower.followPath(scoreFar)),
-                new WaitUntil(() -> Turret.INSTANCE.isInZone(follower.getPose())),
+                new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.shootMotif()
         );
 

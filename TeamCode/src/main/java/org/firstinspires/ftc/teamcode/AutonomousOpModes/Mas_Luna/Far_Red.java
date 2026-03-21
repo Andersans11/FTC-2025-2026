@@ -41,8 +41,8 @@ public class Far_Red extends RRoboticsOpMode {
     public static double intakeYClose = 84;
     public static double intakeYMedium = 60;
     public static double intakeYFar = 36;
-    public static double intakeEndPos1 = 144 - 24;
-    public static double intakeEndPos2 = 144 - 26;
+    public static double intakeEndPos1 = 24;
+    public static double intakeEndPos2 = 26;
     public static double intakeEndPos3 = 10.5;
     public static double shootTime = 0.925;
 
@@ -53,8 +53,8 @@ public class Far_Red extends RRoboticsOpMode {
     boolean doingMiddles = false;
 
     public static double startDelay = 1;
-    public static double shootPower = 1800;
-    public static double turretAngle = -70;
+    public static double shootPower = 1825;
+    public static double turretAngle = 68;
     SequentialGroupFixed routines;
 
     Pose currentPose;
@@ -80,17 +80,17 @@ public class Far_Red extends RRoboticsOpMode {
 
         Drawing.init();
 
-        Pose scoring = new Pose(64, 18, Math.toRadians(0)).mirror();
-        Pose intakeStartClose = new Pose(44, intakeYClose, Math.toRadians(0)).mirror();
-        Pose intakeEndClose = new Pose(8, intakeYClose, Math.toRadians(0)).mirror();
-        Pose intakeStartMedium = new Pose(44, intakeYMedium, Math.toRadians(0)).mirror();
-        Pose intakeEndMedium = new Pose(20, 68, Math.toRadians(0)).mirror();
-        Pose intakeStartFar = new Pose(44, intakeYFar, Math.toRadians(0)).mirror();
-        Pose intakeEndFar = new Pose(0, intakeYFar, Math.toRadians(0)).mirror();
-        Pose gate = new Pose(gateX, gateY, Math.toRadians(gateHeading)).mirror();
-        Pose gateIntake3 = new Pose(11, 9, Math.toRadians(0)).mirror();
+        Pose scoring = new Pose(144 - 54, 18, Math.toRadians(0));
+        Pose intakeStartClose = new Pose(144 - 44, intakeYClose, Math.toRadians(0));
+        Pose intakeEndClose = new Pose(144 - intakeEndPos2, intakeYClose, Math.toRadians(0));
+        Pose intakeStartMedium = new Pose(144 - 44, intakeYMedium, Math.toRadians(0));
+        Pose intakeEndMedium = new Pose(144 - 20, 68, Math.toRadians(0));
+        Pose intakeStartFar = new Pose(144 - 44, intakeYFar, Math.toRadians(0));
+        Pose intakeEndFar = new Pose(144 - intakeEndPos1, intakeYFar, Math.toRadians(0));
+        Pose gate = new Pose(144 - gateX, gateY, Math.toRadians(gateHeading));
+        Pose gateIntake3 = new Pose(144 - 11, 7, Math.toRadians(0));
 
-        Selene.INSTANCE.initFollower(hardwareMap, new Pose(65, 15, Math.toRadians(0)).mirror());
+        Selene.INSTANCE.initFollower(hardwareMap, new Pose(144 - 65, 15, Math.toRadians(0)));
 
         scoreClose = follower.pathBuilder()
                 .addPath(new BezierLine(intakeEndClose, scoring))
@@ -113,7 +113,7 @@ public class Far_Red extends RRoboticsOpMode {
                 .setTimeoutConstraint(100)
                 .build();
         intakeMedium = follower.pathBuilder()
-                .addPath(new BezierCurve(intakeStartMedium, new Pose(24, 60).mirror(), intakeEndMedium))
+                .addPath(new BezierCurve(intakeStartMedium, new Pose(144 - 24, 60), intakeEndMedium))
                 .setConstantHeadingInterpolation(intakeStartMedium.getHeading())
                 .setTimeoutConstraint(100)
                 .build();
@@ -123,7 +123,7 @@ public class Far_Red extends RRoboticsOpMode {
                 .build();
 
         hitGate = follower.pathBuilder()
-                .addPath(new BezierLine(scoring, new Pose(30, 72).mirror()))
+                .addPath(new BezierLine(scoring, new Pose(144 - 30, 72)))
                 .setConstantHeadingInterpolation(scoring.getHeading())
                 .build();
 
@@ -153,17 +153,17 @@ public class Far_Red extends RRoboticsOpMode {
                 .build();
 
         intakeGate1 = follower.pathBuilder()
-                .addPath(new BezierLine(scoring, new Pose(36, 9).mirror()))
+                .addPath(new BezierLine(scoring, new Pose(144 - 36, 9)))
                 .setConstantHeadingInterpolation(scoring.getHeading())
-                .addPath(new BezierLine(new Pose(36, 9).mirror(), gateIntake3))
+                .addPath(new BezierLine(new Pose(144 - 36, 9), gateIntake3))
                 .setConstantHeadingInterpolation(scoring.getHeading())
                 .addParametricCallback(0.5, () -> follower.setMaxPower(0.75))
                 .build();
 
         intakeGate2 = follower.pathBuilder()
-                .addPath(new BezierLine(scoring, new Pose(36, 27).mirror()))
+                .addPath(new BezierLine(scoring, new Pose(144 - 36, 27)))
                 .setConstantHeadingInterpolation(scoring.getHeading())
-                .addPath(new BezierLine(new Pose(36, 27).mirror(), gateIntake3))
+                .addPath(new BezierLine(new Pose(144 - 36, 27), gateIntake3))
                 .setConstantHeadingInterpolation(scoring.getHeading())
                 .addParametricCallback(0.5, () -> follower.setMaxPower(0.75))
                 .build();
@@ -173,7 +173,7 @@ public class Far_Red extends RRoboticsOpMode {
                 .setLinearHeadingInterpolation(gateIntake3.getHeading(), scoring.getHeading())
                 .build();
 
-        follower.setStartingPose(new Pose(65, 15, Math.toRadians(0)).mirror());
+        follower.setStartingPose(new Pose(144 - 65, 15, Math.toRadians(0)));
 
         follower.setMaxPower(pathPower);
 
@@ -195,19 +195,19 @@ public class Far_Red extends RRoboticsOpMode {
                 new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.stopIntake(),
                 new InstantCommand(() -> follower.followPath(scoreMedium)),
-                new WaitUntil(() -> follower.getCurrentTValue() >= shootTime),
+                new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.shootMotif()
         );
 
         hpZone = new SequentialGroupFixed(
                 Selene.INSTANCE.intake(),
                 new InstantCommand(() -> follower.followPath(intakeGate1)),
-                new Delay(1.75),
+                new Delay(2.25),
                 new InstantCommand(() -> follower.setMaxPower(1)),
                 new InstantCommand(() -> follower.followPath(scoreGate1)),
                 new Delay(1),
                 Selene.INSTANCE.stopIntake(),
-                new WaitUntil(() -> follower.getCurrentTValue() >= shootTime),
+                new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.shootMotif()
         );
 
@@ -219,7 +219,7 @@ public class Far_Red extends RRoboticsOpMode {
                 new InstantCommand(() -> follower.followPath(scoreGate1)),
                 new Delay(1),
                 Selene.INSTANCE.stopIntake(),
-                new WaitUntil(() -> follower.getCurrentTValue() >= shootTime),
+                new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.shootMotif()
         );
 
@@ -234,7 +234,7 @@ public class Far_Red extends RRoboticsOpMode {
                 new WaitUntil(() -> !follower.isBusy()),
                 new Delay(intakeTime),
                 new InstantCommand(() -> follower.followPath(scoreGate)),
-                new WaitUntil(() -> follower.getCurrentTValue() >= shootTime),
+                new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.shootMotif()
         );
 
@@ -243,10 +243,10 @@ public class Far_Red extends RRoboticsOpMode {
         closes = new SequentialGroupFixed(
                 Selene.INSTANCE.intake(),
                 new InstantCommand(() -> follower.followPath(intakeClose)),
-                new WaitUntil(() -> follower.getPose().getX() <= intakeEndPos2 && follower.getPose().getX() >= 1),
+                new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.stopIntake(),
                 new InstantCommand(() -> follower.followPath(scoreClose)),
-                new WaitUntil(() -> follower.getCurrentTValue() >= shootTime),
+                new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.shootMotif()
         );
 
@@ -255,10 +255,10 @@ public class Far_Red extends RRoboticsOpMode {
         fars = new SequentialGroupFixed(
                 Selene.INSTANCE.intake(),
                 new InstantCommand(() -> follower.followPath(intakeFar)),
-                new WaitUntil(() -> follower.getPose().getX() <= intakeEndPos1 && follower.getPose().getX() >= 1),
+                new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.stopIntake(),
                 new InstantCommand(() -> follower.followPath(scoreFar)),
-                new WaitUntil(() -> follower.getCurrentTValue() >= shootTime),
+                new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.shootMotif()
         );
 

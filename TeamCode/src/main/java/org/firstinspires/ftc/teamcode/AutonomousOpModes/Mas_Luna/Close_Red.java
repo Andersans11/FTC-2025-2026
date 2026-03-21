@@ -47,7 +47,7 @@ public class Close_Red extends RRoboticsOpMode {
     public static double intakeEndPos1 = 144 - 24.0;
     public static double intakeEndPos2 = 144 - 26;
 
-    public static double gateX = 14.5;
+    public static double gateX = 129.5;
     public static double gateY = 58.75;
     public static double gateHeading = 30;
 
@@ -57,7 +57,7 @@ public class Close_Red extends RRoboticsOpMode {
     public static double closeDiff = 0;
     public static double middleDiff = -50;
     public static double farDiff = -25;
-    public static double turretPos = 42.5;
+    public static double turretPos = 40;
     public static double middleTurretPos = 40;
 
     boolean doingMiddles = false;
@@ -87,16 +87,16 @@ public class Close_Red extends RRoboticsOpMode {
 
         Drawing.init();
 
-        Pose scoring = new Pose(64, 88, Math.toRadians(0)).mirror();
-        Pose intakeStartClose = new Pose(44, intakeYClose, Math.toRadians(0)).mirror();
-        Pose intakeEndClose = new Pose(8, intakeYClose, Math.toRadians(0)).mirror();
-        Pose intakeStartMedium = new Pose(44, intakeYMedium, Math.toRadians(0)).mirror();
-        Pose intakeEndMedium = new Pose(20, 68, Math.toRadians(0)).mirror();
-        Pose intakeStartFar = new Pose(44, intakeYFar, Math.toRadians(0)).mirror();
-        Pose intakeEndFar = new Pose(0, intakeYFar, Math.toRadians(0)).mirror();
-        Pose gate = new Pose(gateX, gateY, Math.toRadians(gateHeading)).mirror();
+        Pose scoring = new Pose(144 - 54, 78, Math.toRadians(0));
+        Pose intakeStartClose = new Pose(144 - 44, intakeYClose, Math.toRadians(0));
+        Pose intakeEndClose = new Pose(144 - 8, intakeYClose, Math.toRadians(0));
+        Pose intakeStartMedium = new Pose(144 - 44, intakeYMedium, Math.toRadians(0));
+        Pose intakeEndMedium = new Pose(144 - 20, 68, Math.toRadians(0));
+        Pose intakeStartFar = new Pose(144 - 44, intakeYFar, Math.toRadians(0));
+        Pose intakeEndFar = new Pose(144 - 0, intakeYFar, Math.toRadians(0));
+        Pose gate = new Pose(gateX, gateY, Math.toRadians(gateHeading));
 
-        Selene.INSTANCE.initFollower(hardwareMap, new Pose(65, 87, Math.toRadians(0)).mirror());
+        Selene.INSTANCE.initFollower(hardwareMap, new Pose(144 - 65, 87, Math.toRadians(0)));
 
         scoreClose = follower.pathBuilder()
                 .addPath(new BezierLine(intakeEndClose, scoring))
@@ -119,7 +119,7 @@ public class Close_Red extends RRoboticsOpMode {
                 .setTimeoutConstraint(100)
                 .build();
         intakeMedium = follower.pathBuilder()
-                .addPath(new BezierCurve(intakeStartMedium, new Pose(22, 60).mirror(), intakeEndMedium))
+                .addPath(new BezierCurve(intakeStartMedium, new Pose(144 - 22, 60), intakeEndMedium))
                 .setConstantHeadingInterpolation(intakeStartMedium.getHeading())
                 .setTimeoutConstraint(100)
                 .build();
@@ -129,7 +129,7 @@ public class Close_Red extends RRoboticsOpMode {
                 .build();
 
         hitGate = follower.pathBuilder()
-                .addPath(new BezierLine(scoring, new Pose(36, 72).mirror()))
+                .addPath(new BezierLine(scoring, new Pose(144 - 36, 72)))
                 .setConstantHeadingInterpolation(scoring.getHeading())
                 .build();
 
@@ -158,7 +158,7 @@ public class Close_Red extends RRoboticsOpMode {
                 .setGlobalDeceleration()
                 .build();
 
-        follower.setStartingPose(new Pose(65, 87, Math.toRadians(0)).mirror());
+        follower.setStartingPose(new Pose(144 - 65, 87, Math.toRadians(0)));
 
         follower.setMaxPower(pathPower);
 
@@ -183,7 +183,7 @@ public class Close_Red extends RRoboticsOpMode {
                 new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.stopIntake(),
                 new InstantCommand(() -> follower.followPath(scoreMedium)),
-                new WaitUntil(() -> Turret.INSTANCE.isInZone(follower.getPose())),
+                new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.shootMotif(),
                 Turret.INSTANCE.setPosition(turretPos)
         );
@@ -197,7 +197,7 @@ public class Close_Red extends RRoboticsOpMode {
                 new WaitUntil(() -> !follower.isBusy()),
                 new Delay(intakeTime),
                 new InstantCommand(() -> follower.followPath(scoreGate)),
-                new WaitUntil(() -> Turret.INSTANCE.isInZone(follower.getPose())),
+                new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.shootMotif()
         );
 
@@ -207,10 +207,10 @@ public class Close_Red extends RRoboticsOpMode {
                 Shooter.INSTANCE.setGoal(shootPower + closeDiff),
                 Selene.INSTANCE.intake(),
                 new InstantCommand(() -> follower.followPath(intakeClose)),
-                new WaitUntil(() -> follower.getPose().getX() <= intakeEndPos2 && follower.getPose().getX() >= 1),
+                new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.stopIntake(),
                 new InstantCommand(() -> follower.followPath(scoreClose)),
-                new WaitUntil(() -> Turret.INSTANCE.isInZone(follower.getPose())),
+                new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.shootMotif()
         );
 
@@ -220,10 +220,10 @@ public class Close_Red extends RRoboticsOpMode {
                 Shooter.INSTANCE.setGoal(shootPower + farDiff),
                 Selene.INSTANCE.intake(),
                 new InstantCommand(() -> follower.followPath(intakeFar)),
-                new WaitUntil(() -> follower.getPose().getX() <= intakeEndPos1 && follower.getPose().getX() >= 1),
+                new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.stopIntake(),
                 new InstantCommand(() -> follower.followPath(scoreFar)),
-                new WaitUntil(() -> Turret.INSTANCE.isInZone(follower.getPose())),
+                new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.shootMotif()
         );
 
