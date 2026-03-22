@@ -89,7 +89,7 @@ public class Far_Blue extends RRoboticsOpMode {
         Pose intakeStartFar = new Pose(44, intakeYFar, Math.toRadians(180));
         Pose intakeEndFar = new Pose(intakeEndPos1, intakeYFar, Math.toRadians(180));
         Pose gate = new Pose(gateX, gateY, Math.toRadians(gateHeading));
-        Pose gateIntake3 = new Pose(11, 9, Math.toRadians(180));
+        Pose gateIntake3 = new Pose(15, 9.5, Math.toRadians(180));
 
         Selene.INSTANCE.initFollower(hardwareMap, scoring);
 
@@ -162,9 +162,9 @@ public class Far_Blue extends RRoboticsOpMode {
                 .build();
 
         intakeGate2 = follower.pathBuilder()
-                .addPath(new BezierLine(scoring, new Pose(36, 27)))
+                .addPath(new BezierLine(scoring, new Pose(20, 27)))
                 .setConstantHeadingInterpolation(scoring.getHeading())
-                .addPath(new BezierLine(new Pose(36, 27), gateIntake3))
+                .addPath(new BezierCurve(new Pose(20, 27), new Pose(35, 20), gateIntake3))
                 .setConstantHeadingInterpolation(scoring.getHeading())
                 .addParametricCallback(0.5, () -> follower.setMaxPower(0.75))
                 .build();
@@ -203,7 +203,7 @@ public class Far_Blue extends RRoboticsOpMode {
         hpZone = new SequentialGroupFixed(
                 Selene.INSTANCE.intake(),
                 new InstantCommand(() -> follower.followPath(intakeGate1)),
-                new Delay(2.25),
+                new WaitUntil(() -> !follower.isBusy()),
                 new InstantCommand(() -> follower.setMaxPower(1)),
                 new InstantCommand(() -> follower.followPath(scoreGate1)),
                 new Delay(1),
@@ -215,7 +215,7 @@ public class Far_Blue extends RRoboticsOpMode {
         hpZone2 = new SequentialGroupFixed(
                 Selene.INSTANCE.intake(),
                 new InstantCommand(() -> follower.followPath(intakeGate2)),
-                new Delay(2.25),
+                new WaitUntil(() -> !follower.isBusy()),
                 new InstantCommand(() -> follower.setMaxPower(1)),
                 new InstantCommand(() -> follower.followPath(scoreGate1)),
                 new Delay(1),
