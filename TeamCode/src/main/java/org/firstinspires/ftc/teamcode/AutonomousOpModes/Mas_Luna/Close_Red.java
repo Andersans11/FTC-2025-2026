@@ -44,7 +44,7 @@ public class Close_Red extends RRoboticsOpMode {
     public static double intakeYClose = 84;
     public static double intakeYMedium = 60;
     public static double intakeYFar = 36;
-    public static double intakeEndPos1 = 144 - 24.0;
+    public static double intakeEndPos1 = 144 - 20;
     public static double intakeEndPos2 = 144 - 26;
 
     public static double gateX = 129.5;

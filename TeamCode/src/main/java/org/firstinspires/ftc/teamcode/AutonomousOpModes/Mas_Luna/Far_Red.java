@@ -88,7 +88,7 @@ public class Far_Red extends RRoboticsOpMode {
         Pose intakeStartFar = new Pose(144 - 44, intakeYFar, Math.toRadians(0));
         Pose intakeEndFar = new Pose(144 - intakeEndPos1, intakeYFar, Math.toRadians(0));
         Pose gate = new Pose(144 - gateX, gateY, Math.toRadians(gateHeading));
-        Pose gateIntake3 = new Pose(144 - 11, 7, Math.toRadians(0));
+        Pose gateIntake3 = new Pose(144 - 15, 9.5, Math.toRadians(0));
 
         Selene.INSTANCE.initFollower(hardwareMap, new Pose(144 - 65, 15, Math.toRadians(0)));
 
@@ -153,17 +153,17 @@ public class Far_Red extends RRoboticsOpMode {
                 .build();
 
         intakeGate1 = follower.pathBuilder()
-                .addPath(new BezierLine(scoring, new Pose(144 - 36, 9)))
+                .addPath(new BezierLine(scoring, new Pose(144 - 36, 9.5)))
                 .setConstantHeadingInterpolation(scoring.getHeading())
-                .addPath(new BezierLine(new Pose(144 - 36, 9), gateIntake3))
+                .addPath(new BezierLine(new Pose(144 - 36, 9.5), gateIntake3))
                 .setConstantHeadingInterpolation(scoring.getHeading())
                 .addParametricCallback(0.5, () -> follower.setMaxPower(0.75))
                 .build();
 
         intakeGate2 = follower.pathBuilder()
-                .addPath(new BezierLine(scoring, new Pose(144 - 36, 27)))
+                .addPath(new BezierLine(scoring, new Pose(144 - 20, 27)))
                 .setConstantHeadingInterpolation(scoring.getHeading())
-                .addPath(new BezierLine(new Pose(144 - 36, 27), gateIntake3))
+                .addPath(new BezierCurve(new Pose(144 - 20, 27), new Pose(144 - 35, 20), gateIntake3))
                 .setConstantHeadingInterpolation(scoring.getHeading())
                 .addParametricCallback(0.5, () -> follower.setMaxPower(0.75))
                 .build();
@@ -202,7 +202,7 @@ public class Far_Red extends RRoboticsOpMode {
         hpZone = new SequentialGroupFixed(
                 Selene.INSTANCE.intake(),
                 new InstantCommand(() -> follower.followPath(intakeGate1)),
-                new Delay(2.25),
+                new WaitUntil(() -> !follower.isBusy()),
                 new InstantCommand(() -> follower.setMaxPower(1)),
                 new InstantCommand(() -> follower.followPath(scoreGate1)),
                 new Delay(1),
@@ -214,7 +214,7 @@ public class Far_Red extends RRoboticsOpMode {
         hpZone2 = new SequentialGroupFixed(
                 Selene.INSTANCE.intake(),
                 new InstantCommand(() -> follower.followPath(intakeGate2)),
-                new Delay(2.25),
+                new WaitUntil(() -> !follower.isBusy()),
                 new InstantCommand(() -> follower.setMaxPower(1)),
                 new InstantCommand(() -> follower.followPath(scoreGate1)),
                 new Delay(1),
