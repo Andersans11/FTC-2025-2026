@@ -108,6 +108,8 @@ public class RobotConfig {
 
         Limelight = hardwareMap.get(Limelight3A.class, "limelight");
 
+        IntakeCS = hardwareMap.get(ColorRangeSensor.class, "DIST");
+
         FLDrive = new MotorConfig(
                 hardwareMap,
                 "FL",

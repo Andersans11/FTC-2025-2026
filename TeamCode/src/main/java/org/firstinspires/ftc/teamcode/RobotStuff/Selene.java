@@ -4,12 +4,14 @@ import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.util.Timer;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Hardware.LimelightWrapper;
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.Hardware.PoseResult;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
@@ -33,7 +35,7 @@ public class Selene extends RRoboticsSubsystemGroup {
     boolean isShooting = false;
     public boolean isMotifShooting = false;
     public ServoImplEx indicator;
-    public Timer indTimer;
+    public Timer distTimer;
     public Timer ballTimer;
     public static Pose currentPose;
     public Pose currentLLPose = new Pose(9, 9, 0);
@@ -42,6 +44,11 @@ public class Selene extends RRoboticsSubsystemGroup {
     public LimelightWrapper limelight;
     public int indCycle = 0;
     public double shootTime = 0.75;
+    public ColorRangeSensor dist;
+    OpMode opmode;
+    public boolean runDistance = false;
+    public double distThreshold = 100;
+    int hasSomething = 0;
 
     public double currentPWM = 0;
     private Selene() {
@@ -73,7 +80,7 @@ public class Selene extends RRoboticsSubsystemGroup {
         super.initSystem();
         indicator = RobotConfig.Indicator;
         limelight = LimelightWrapper.instance; limelight.init();
-        indTimer = new Timer();
+        distTimer = new Timer();
         ballTimer = new Timer();
         indicator.setPwmRange(new PwmControl.PwmRange(500, 2500));
         indicator.setPwmEnable();
@@ -90,9 +97,25 @@ public class Selene extends RRoboticsSubsystemGroup {
         this.follower.setStartingPose(startingPose);
         currentPose = startingPose;
     }
+    public void getOpMode(OpMode opmode) {
+        this.opmode = opmode;
+        runDistance = true;
+    }
 
     public Pose getCurrentPose() {
         return this.follower.getPose();
+    }
+    
+    void runDist() {
+        if (dist.getDistance(DistanceUnit.MM) <= distThreshold && hasSomething == 0) {
+            hasSomething = 1;
+            distTimer.resetTimer();
+        } else if (dist.getDistance(DistanceUnit.MM) >= distThreshold && hasSomething != 0) {
+            hasSomething = 0;
+        } else if (dist.getDistance(DistanceUnit.MM) <= distThreshold && distTimer.getElapsedTimeSeconds() >= 0.5 && hasSomething == 1) {
+            opmode.gamepad1.rumble(250);
+            hasSomething = 2;
+        }
     }
 
     @Override
@@ -107,6 +130,7 @@ public class Selene extends RRoboticsSubsystemGroup {
         super.periodic();
         follower.updatePose();
         currentPose = follower.getPose();
+        runDist();
 
         //limelight.setYaw(currentPose.getHeading());
 

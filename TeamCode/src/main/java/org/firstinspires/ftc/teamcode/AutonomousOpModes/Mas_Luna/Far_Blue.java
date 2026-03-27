@@ -94,7 +94,7 @@ public class Far_Blue extends RRoboticsOpMode {
         Selene.INSTANCE.initFollower(hardwareMap, scoring);
 
         scoreClose = follower.pathBuilder()
-                .addPath(new BezierLine(intakeEndClose, scoring))
+                .addPath(new BezierCurve(intakeEndClose, intakeStartClose, scoring))
                 .setLinearHeadingInterpolation(intakeEndClose.getHeading(), scoring.getHeading())
                 .setGlobalDeceleration()
                 .build();
