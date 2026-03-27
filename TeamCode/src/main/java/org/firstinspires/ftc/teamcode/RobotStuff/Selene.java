@@ -31,7 +31,7 @@ public class Selene extends RRoboticsSubsystemGroup {
 
     public static final Selene INSTANCE = new Selene();
 
-    public Follower follower;
+    public static Follower follower;
     boolean isShooting = false;
     public boolean isMotifShooting = false;
     public ServoImplEx indicator;
@@ -59,8 +59,6 @@ public class Selene extends RRoboticsSubsystemGroup {
         );
     }
 
-    public static double poseThreshold = 2.5; // in inches | todo tune?
-
     public enum IndicatorMode {
         INTAKE_IDLE,
         INTAKE_ACTIVE,
@@ -87,14 +85,18 @@ public class Selene extends RRoboticsSubsystemGroup {
     }
 
     public void initFollower(HardwareMap hardwareMap) {
-        this.follower = Constants.createFollower(hardwareMap);
-        if (currentPose == null) currentPose = new Pose(9, 9, 0);
-        this.follower.setStartingPose(currentPose);
+        if (follower == null) {
+            follower = Constants.createFollower(hardwareMap);
+            currentPose = new Pose(9, 9, 0);
+            follower.setStartingPose(currentPose);
+        }
     }
 
     public void initFollower(HardwareMap hardwareMap, Pose startingPose) {
-        this.follower = Constants.createFollower(hardwareMap);
-        this.follower.setStartingPose(startingPose);
+        if (follower == null) {
+            follower = Constants.createFollower(hardwareMap);
+            follower.setStartingPose(startingPose);
+        } else follower.setPose(startingPose);
         currentPose = startingPose;
     }
     public void getOpMode(OpMode opmode) {
@@ -103,7 +105,7 @@ public class Selene extends RRoboticsSubsystemGroup {
     }
 
     public Pose getCurrentPose() {
-        return this.follower.getPose();
+        return follower.getPose();
     }
     
     void runDist() {

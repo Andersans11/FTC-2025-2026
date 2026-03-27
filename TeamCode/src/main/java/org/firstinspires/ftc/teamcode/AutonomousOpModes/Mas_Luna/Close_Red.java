@@ -5,10 +5,10 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
+import com.pedropathing.paths.HeadingInterpolator;
 import com.pedropathing.paths.PathChain;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Pedro.Constants;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RRoboticsOpMode;
@@ -20,35 +20,55 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 
+import java.util.ArrayList;
+
 import dev.nextftc.core.commands.delays.Delay;
 import dev.nextftc.core.commands.delays.WaitUntil;
 import dev.nextftc.core.commands.utility.InstantCommand;
 
-@Disabled
 @Configurable
-@Autonomous(name = "Gate Red - Close")
-public class Multiauto_Close_Red extends RRoboticsOpMode {
+@Autonomous(name = "Red - Close")
+public class Close_Red extends RRoboticsOpMode {
     Follower follower;
-    PathChain scorePreloads, interrimClose, intakeClose, scoreClose, interrimMedium, intakeMedium, scoreMedium, intakeGate, scoreGate, interrimFar, intakeFar, scoreFar;
+    PathChain scorePreloads, intakeClose, scoreClose, intakeMedium, scoreMedium, intakeGate, scoreGate, hitGate, intakeFar, scoreFar;
 
-    SequentialGroupFixed preloads, gates1, gates2, gates3, spikes;
+    SequentialGroupFixed preloads, closes, middles, fars, gates, hitGates;
+    ArrayList<SequentialGroupFixed> commands;
+    SequentialGroupFixed routines;
     Timer pathTimer, opTimer;
 
     public int pathState = 0;
     public static double pathPower = 1;
-    public static double intakeTime = 1;
+    public static double intakeTime = 1.0;
     public static double gateEndTime = 17.5;
     public static double intakeYClose = 84;
     public static double intakeYMedium = 60;
-    public static double intakeYFar = 48;
-    public static double intakeEndPos1 = 20;
-    public static double intakeEndPos2 = 12;
+    public static double intakeYFar = 36;
+    public static double intakeEndPos1 = 144 - 20;
+    public static double intakeEndPos2 = 144 - 26;
+
+    public static double gateX = 129.5;
+    public static double gateY = 58.75;
+    public static double gateHeading = 30;
+
+    public static double shootPower = 1500;
+    public static double preloadDiff = 25;
+    public static double gateDiff = 0;
+    public static double closeDiff = 0;
+    public static double middleDiff = -50;
+    public static double farDiff = -25;
+    public static double turretPos = 40;
+    public static double middleTurretPos = 40;
+
+    boolean doingMiddles = false;
 
     Pose currentPose;
 
-    boolean isDone = false;
+    boolean isRunning = false;
 
-    public Multiauto_Close_Red() {
+    public static double startDelay = 0.5;
+
+    public Close_Red() {
         super();
         addSubsystemComponents(
                 new RRoboticsSubsystemComponent(Selene.INSTANCE)
@@ -59,22 +79,24 @@ public class Multiauto_Close_Red extends RRoboticsOpMode {
     public void onInit() {
         super.onInit();
 
+        commands = new ArrayList<>();
+
         follower = Constants.createFollower(hardwareMap);
 
         opTimer = new Timer();
 
         Drawing.init();
 
-        Pose scoring = new Pose(60, 84, Math.toRadians(45)).mirror();
-        Pose intakeStartClose = new Pose(44, intakeYClose, Math.toRadians(0)).mirror();
-        Pose intakeEndClose = new Pose(intakeEndPos1, intakeYClose, Math.toRadians(0)).mirror();
-        Pose intakeStartMedium = new Pose(44, intakeYMedium, Math.toRadians(0)).mirror();
-        Pose intakeEndMedium = new Pose(intakeEndPos2, intakeYMedium, Math.toRadians(0)).mirror();
-        Pose intakeStartFar = new Pose(44, intakeYFar, Math.toRadians(0)).mirror();
-        Pose intakeEndFar = new Pose(intakeEndPos2, intakeYFar, Math.toRadians(0)).mirror();
-        Pose gate = new Pose(36, 72, Math.toRadians(0)).mirror(); // TODO: tune this point
+        Pose scoring = new Pose(144 - 54, 78, Math.toRadians(0));
+        Pose intakeStartClose = new Pose(144 - 44, intakeYClose, Math.toRadians(0));
+        Pose intakeEndClose = new Pose(144 - 8, intakeYClose, Math.toRadians(0));
+        Pose intakeStartMedium = new Pose(144 - 44, intakeYMedium, Math.toRadians(0));
+        Pose intakeEndMedium = new Pose(144 - 20, 68, Math.toRadians(0));
+        Pose intakeStartFar = new Pose(144 - 44, intakeYFar, Math.toRadians(0));
+        Pose intakeEndFar = new Pose(144 - 0, intakeYFar, Math.toRadians(0));
+        Pose gate = new Pose(gateX, gateY, Math.toRadians(gateHeading));
 
-        Selene.INSTANCE.initFollower(hardwareMap, scoring);
+        Selene.INSTANCE.initFollower(hardwareMap, new Pose(144 - 65, 87, Math.toRadians(0)));
 
         scoreClose = follower.pathBuilder()
                 .addPath(new BezierLine(intakeEndClose, scoring))
@@ -92,144 +114,158 @@ public class Multiauto_Close_Red extends RRoboticsOpMode {
                 .setGlobalDeceleration()
                 .build();
 
-        interrimClose = follower.pathBuilder()
-                .addPath(new BezierLine(scoring, intakeStartClose))
-                .setLinearHeadingInterpolation(scoring.getHeading(), intakeStartClose.getHeading())
-                .setGlobalDeceleration()
-                .build();
-        interrimMedium = follower.pathBuilder()
-                .addPath(new BezierLine(scoring, intakeStartMedium))
-                .setLinearHeadingInterpolation(scoring.getHeading(), intakeStartMedium.getHeading())
-                .setGlobalDeceleration()
-                .build();
-        interrimFar = follower.pathBuilder()
-                .addPath(new BezierLine(scoring, intakeStartFar))
-                .setLinearHeadingInterpolation(scoring.getHeading(), intakeStartMedium.getHeading())
-                .setGlobalDeceleration()
-                .build();
-
         intakeClose = follower.pathBuilder()
                 .addPath(new BezierLine(intakeStartClose, intakeEndClose))
-                .setGlobalDeceleration()
                 .setTimeoutConstraint(100)
                 .build();
         intakeMedium = follower.pathBuilder()
-                .addPath(new BezierLine(intakeStartMedium, intakeEndMedium))
-                .setGlobalDeceleration()
+                .addPath(new BezierCurve(intakeStartMedium, new Pose(144 - 22, 60), intakeEndMedium))
+                .setConstantHeadingInterpolation(intakeStartMedium.getHeading())
                 .setTimeoutConstraint(100)
                 .build();
         intakeFar = follower.pathBuilder()
                 .addPath(new BezierLine(intakeStartFar, intakeEndFar))
-                .setGlobalDeceleration()
                 .setTimeoutConstraint(100)
                 .build();
 
+        hitGate = follower.pathBuilder()
+                .addPath(new BezierLine(scoring, new Pose(144 - 36, 72)))
+                .setConstantHeadingInterpolation(scoring.getHeading())
+                .build();
+
         intakeGate = follower.pathBuilder()
-                .addPath(new BezierCurve(scoring, new Pose(scoring.getX(), gate.getY()), gate))
+                .addPath(new BezierCurve(scoring, intakeStartMedium, gate))
                 .setLinearHeadingInterpolation(scoring.getHeading(), gate.getHeading())
                 .setGlobalDeceleration()
                 .build();
 
         scoreGate = follower.pathBuilder()
                 .addPath(new BezierCurve(gate, new Pose(scoring.getX(), gate.getY()), scoring))
-                .setLinearHeadingInterpolation(gate.getHeading(), scoring.getHeading())
+                .setHeadingInterpolation(
+                    HeadingInterpolator.piecewise(
+                        new HeadingInterpolator.PiecewiseNode(
+                            0,
+                            .5,
+                            HeadingInterpolator.linear(gate.getHeading(), scoring.getHeading())
+                        ),
+                        new HeadingInterpolator.PiecewiseNode(
+                            .5,
+                            1,
+                            HeadingInterpolator.constant(scoring.getHeading())
+                        )
+                    )
+                )
                 .setGlobalDeceleration()
                 .build();
 
-        follower.setStartingPose(scoring);
+        follower.setStartingPose(new Pose(144 - 65, 87, Math.toRadians(0)));
 
         follower.setMaxPower(pathPower);
 
         preloads = new SequentialGroupFixed(
-                Shooter.INSTANCE.setGoal(1400),
-                Shooter.INSTANCE.setHoodPos(0.0),
+                Shooter.INSTANCE.setGoal(shootPower + preloadDiff),
                 Selene.INSTANCE.stopIntake(),
-                Turret.INSTANCE.setPosition(0),
+                Turret.INSTANCE.setPosition(turretPos),
+                new Delay(startDelay),
                 new InstantCommand(() -> follower.followPath(scorePreloads)),
                 new Delay(0.5),
                 Selene.INSTANCE.shootMotif(),
-                new WaitUntil(() -> !follower.isBusy()),
-                new InstantCommand(() -> follower.followPath(interrimMedium)),
-                new WaitUntil(() -> follower.isBusy()),
+                Turret.INSTANCE.setHoodPosition(0.1)
+        );
+
+        preloads.setName("preloads");
+
+        middles = new SequentialGroupFixed(
+                Shooter.INSTANCE.setGoal(shootPower + middleDiff),
                 Selene.INSTANCE.intake(),
+                Turret.INSTANCE.setPosition(middleTurretPos),
                 new InstantCommand(() -> follower.followPath(intakeMedium)),
-                new WaitUntil(() -> follower.atParametricEnd()),
+                new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.stopIntake(),
                 new InstantCommand(() -> follower.followPath(scoreMedium)),
                 new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.shootMotif(),
-                new InstantCommand(() -> isDone = true)
+                Turret.INSTANCE.setPosition(turretPos)
         );
 
-        gates1 = new SequentialGroupFixed(
+        middles.setName("middles");
+
+        gates = new SequentialGroupFixed(
+                Shooter.INSTANCE.setGoal(shootPower + gateDiff),
+                Selene.INSTANCE.intake(),
                 new InstantCommand(() -> follower.followPath(intakeGate)),
                 new WaitUntil(() -> !follower.isBusy()),
-                Selene.INSTANCE.intake(),
                 new Delay(intakeTime),
-                Selene.INSTANCE.stopIntake(),
                 new InstantCommand(() -> follower.followPath(scoreGate)),
                 new WaitUntil(() -> !follower.isBusy()),
-                Selene.INSTANCE.shootMotif(),
-                new InstantCommand(() -> isDone = true)
+                Selene.INSTANCE.shootMotif()
         );
 
-        gates2 = new SequentialGroupFixed(
-                new InstantCommand(() -> follower.followPath(intakeGate)),
-                new WaitUntil(() -> !follower.isBusy()),
-                Selene.INSTANCE.intake(),
-                new Delay(intakeTime),
-                Selene.INSTANCE.stopIntake(),
-                new InstantCommand(() -> follower.followPath(scoreGate)),
-                new WaitUntil(() -> !follower.isBusy()),
-                Selene.INSTANCE.shootMotif(),
-                new InstantCommand(() -> isDone = true)
-        );
+        gates.setName("gates");
 
-        gates3 = new SequentialGroupFixed(
-                new InstantCommand(() -> follower.followPath(intakeGate)),
-                new WaitUntil(() -> !follower.isBusy()),
-                Selene.INSTANCE.intake(),
-                new Delay(intakeTime),
-                Selene.INSTANCE.stopIntake(),
-                new InstantCommand(() -> follower.followPath(scoreGate)),
-                new WaitUntil(() -> !follower.isBusy()),
-                Selene.INSTANCE.shootMotif(),
-                new InstantCommand(() -> isDone = true)
-        );
-
-        spikes = new SequentialGroupFixed(
-                new InstantCommand(() -> follower.followPath(interrimClose)),
-                new WaitUntil(() -> follower.isBusy()),
+        closes = new SequentialGroupFixed(
+                Shooter.INSTANCE.setGoal(shootPower + closeDiff),
                 Selene.INSTANCE.intake(),
                 new InstantCommand(() -> follower.followPath(intakeClose)),
-                new WaitUntil(() -> follower.atParametricEnd()),
+                new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.stopIntake(),
                 new InstantCommand(() -> follower.followPath(scoreClose)),
                 new WaitUntil(() -> !follower.isBusy()),
-                Selene.INSTANCE.shootMotif(),
-                new InstantCommand(() -> follower.followPath(interrimFar)),
-                new WaitUntil(() -> follower.isBusy()),
+                Selene.INSTANCE.shootMotif()
+        );
+
+        closes.setName("closes");
+
+        fars = new SequentialGroupFixed(
+                Shooter.INSTANCE.setGoal(shootPower + farDiff),
                 Selene.INSTANCE.intake(),
                 new InstantCommand(() -> follower.followPath(intakeFar)),
-                new WaitUntil(() -> follower.atParametricEnd()),
+                new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.stopIntake(),
                 new InstantCommand(() -> follower.followPath(scoreFar)),
                 new WaitUntil(() -> !follower.isBusy()),
-                Selene.INSTANCE.shootMotif(),
-                new InstantCommand(() -> isDone = true)
+                Selene.INSTANCE.shootMotif()
         );
+
+        fars.setName("fars");
+
+        hitGates = new SequentialGroupFixed(
+                new InstantCommand(() -> follower.followPath(hitGate)),
+                new WaitUntil(() -> !follower.isBusy())
+        );
+
+        hitGates.setName("end");
+
+        routines = new SequentialGroupFixed(preloads);
+
+        P1.triangle().whenBecomesTrue(() -> commands.add(closes));
+        P1.square().whenBecomesTrue(() -> {
+            if (!doingMiddles) {
+                commands.add(middles);
+                doingMiddles = true;
+            }
+
+            commands.add(gates);
+        });
+        P1.circle().whenBecomesTrue(() -> {
+            commands.add(middles);
+            doingMiddles = true;
+        });
+        P1.cross().whenBecomesTrue(() -> commands.add(fars));
 
         P1.rightBumper().whenBecomesTrue(Intake.INSTANCE.stop());
         P1.leftBumper().whenBecomesTrue(new InstantCommand(() -> {
+            Turret.INSTANCE.setBlueAlliance().schedule();
             scorePreloads = follower.pathBuilder()
                     .addPath(new BezierLine(follower.getPose(), scoring))
                     .setLinearHeadingInterpolation(follower.getPose().getHeading(), scoring.getHeading())
                     .setGlobalDeceleration()
                     .build();
         }));
-        Shooter.INSTANCE.setHoodPos(0.0).schedule();
+        Turret.INSTANCE.setHoodPosition(0.0).schedule();
         Selene.INSTANCE.stopIntake().schedule();
         Shooter.INSTANCE.StopperClose().schedule();
+        Turret.INSTANCE.setPosition(0).schedule();
     }
 
     @Override
@@ -238,14 +274,23 @@ public class Multiauto_Close_Red extends RRoboticsOpMode {
         addData("x", currentPose.getX());
         addData("y", currentPose.getY());
         addData("heading", Math.toDegrees(currentPose.getHeading()));
+        for (int i = 0; i < commands.size(); i++) {
+            addData("path " + (i + 1), commands.get(i).name());
+        }
         super.telemetryManager.update(telemetry);
         follower.updatePose();
+        Turret.INSTANCE.periodic();
     }
 
     @Override
     public void onStartButtonPressed() {
         super.onStartButtonPressed();
         opTimer.resetTimer();
+        commands.add(hitGates);
+        for (int i = 0; i < commands.size(); i++) {
+            routines.add(commands.get(i));
+        }
+        routines.schedule();
     }
 
     @Override
@@ -261,54 +306,6 @@ public class Multiauto_Close_Red extends RRoboticsOpMode {
 
 
         Drawing.drawDebug(follower);
-
-        switch (pathState) {
-            case 0:
-                preloads.schedule();
-                pathState = 1;
-                break;
-            case 1:
-                if (isDone) {
-                    isDone = false;
-                    gates1.schedule();
-                    pathState = 2;
-                }
-                break;
-            case 2:
-                if (isDone) {
-                    isDone = false;
-                    if (opTimer.getElapsedTimeSeconds() >= gateEndTime) {
-                        spikes.schedule();
-                        pathState = 5;
-                    } else {
-                        gates2.schedule();
-                        pathState = 3;
-                    }
-                }
-                break;
-            case 3:
-                if (isDone) {
-                    isDone = false;
-                    if (opTimer.getElapsedTimeSeconds() >= gateEndTime) {
-                        spikes.schedule();
-                        pathState = 5;
-                    } else {
-                        gates3.schedule();
-                        pathState = 4;
-                    }
-                }
-                break;
-            case 4:
-                if (isDone) {
-                    isDone = false;
-                    spikes.schedule();
-                    pathState = 5;
-                }
-                break;
-            case 5:
-                // Idle
-                break;
-        }
     }
 
     @Override
