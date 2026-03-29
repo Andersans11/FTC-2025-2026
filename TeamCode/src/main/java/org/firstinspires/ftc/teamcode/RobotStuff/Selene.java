@@ -82,6 +82,7 @@ public class Selene extends RRoboticsSubsystemGroup {
         ballTimer = new Timer();
         indicator.setPwmRange(new PwmControl.PwmRange(500, 2500));
         indicator.setPwmEnable();
+        dist = RobotConfig.IntakeCS;
     }
 
     public void initFollower(HardwareMap hardwareMap) {
@@ -114,7 +115,7 @@ public class Selene extends RRoboticsSubsystemGroup {
             distTimer.resetTimer();
         } else if (dist.getDistance(DistanceUnit.MM) >= distThreshold && hasSomething != 0) {
             hasSomething = 0;
-        } else if (dist.getDistance(DistanceUnit.MM) <= distThreshold && distTimer.getElapsedTimeSeconds() >= 0.5 && hasSomething == 1) {
+        } else if (dist.getDistance(DistanceUnit.MM) <= distThreshold && distTimer.getElapsedTimeSeconds() >= 0.25 && hasSomething == 1) {
             opmode.gamepad1.rumble(250);
             hasSomething = 2;
         }
@@ -132,7 +133,7 @@ public class Selene extends RRoboticsSubsystemGroup {
         super.periodic();
         follower.updatePose();
         currentPose = follower.getPose();
-        runDist();
+        // if (runDistance) runDist();
 
         //limelight.setYaw(currentPose.getHeading());
 
