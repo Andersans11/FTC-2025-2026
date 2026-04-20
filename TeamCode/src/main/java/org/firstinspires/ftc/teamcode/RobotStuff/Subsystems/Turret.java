@@ -39,9 +39,9 @@ public class Turret implements IRRoboticsSubsystem {
     public boolean hasSetAlliance = false;
     public boolean hasGotMotif = false;
     public boolean isLookingForMotif = false;
-    Pose redPose = new Pose(136, 130);
-    Pose bluePose = new Pose(8, 130);
-    public Pose targetPose = new Pose(130, 130);
+    Pose redPose = new Pose(130, 127);
+    Pose bluePose = new Pose(14, 127);
+    public Pose targetPose = new Pose(130, 127);
     Pose motifPose = new Pose(144, 72);
     public double targetYaw = 0;
     public double targetPitch = 0.0;

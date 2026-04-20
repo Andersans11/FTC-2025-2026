@@ -53,6 +53,7 @@ public class Comp_OpMode extends RRoboticsOpMode {
         P1.square().whenBecomesTrue(Turret.INSTANCE.autoControl(true));
 
         Selene.INSTANCE.indMode = Selene.IndicatorMode.INIT_DONE;
+        Selene.INSTANCE.getOpMode(this);
     }
 
     @Override

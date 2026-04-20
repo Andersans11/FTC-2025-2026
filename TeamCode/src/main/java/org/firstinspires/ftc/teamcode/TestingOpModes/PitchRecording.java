@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 
 import dev.nextftc.core.commands.utility.InstantCommand;
 
-@Disabled
+
 @Configurable
 @TeleOp(name = "Pitch Recording", group = Utils.PRIORITY_PRIORITY)
 public class PitchRecording extends RRoboticsOpMode {
@@ -68,7 +68,7 @@ public class PitchRecording extends RRoboticsOpMode {
         addData("shootPower", Shooter.INSTANCE.controller.getGoal());
 
         addData("target", RobotConfig.HoodServo.getServo().getPosition());
-        addData("turret", Turret.INSTANCE.rotationMotor.getPower());
+        addData("turret", Turret.INSTANCE.ticksToDegrees(Turret.INSTANCE.rotationMotor.getCurrentPosition()));
 
         addData("mode", Turret.INSTANCE.mode);
 

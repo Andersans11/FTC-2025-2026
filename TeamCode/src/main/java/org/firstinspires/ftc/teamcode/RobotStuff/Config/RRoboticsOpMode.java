@@ -59,9 +59,7 @@ public class RRoboticsOpMode extends NextFTCOpMode {
     }
 
     public void addLine(String line) {
-        if (isUpdating) {
-            telemetryManager.addLine(line);
-        }
+        telemetryManager.addLine(line);
     }
 
     @Override
