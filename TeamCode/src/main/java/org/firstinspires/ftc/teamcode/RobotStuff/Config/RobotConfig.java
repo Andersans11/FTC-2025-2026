@@ -45,6 +45,8 @@ public class RobotConfig {
     public static FullServoConfig StopperServo;
     public static FullServoConfig Intake1;
     public static FullServoConfig Intake2;
+    public static FullServoConfig TurretServo1;
+    public static FullServoConfig TurretServo2;
 
     public static ServoConfig Kicker;
 
@@ -176,6 +178,16 @@ public class RobotConfig {
         Intake2 = new FullServoConfig(
                 hardwareMap,
                 "INTAKE 2",
+                Servo.Direction.REVERSE
+        );
+        TurretServo1 = new FullServoConfig(
+                hardwareMap,
+                "TURRET1",
+                Servo.Direction.FORWARD
+        );
+        TurretServo1 = new FullServoConfig(
+                hardwareMap,
+                "TURRET2",
                 Servo.Direction.REVERSE
         );
     }

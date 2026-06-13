@@ -44,7 +44,7 @@ public class PitchRecording extends RRoboticsOpMode {
 
         P1.square().whenBecomesTrue(new SequentialGroupFixed(
                 Selene.INSTANCE.start(),
-                Selene.INSTANCE.intake(),
+                Selene.INSTANCE.intakeOn(),
                 Shooter.INSTANCE.StopperOpen(),
                 new InstantCommand(() -> Turret.INSTANCE.mode = Turret.TurretMode.TESTING)
         ));
@@ -68,7 +68,6 @@ public class PitchRecording extends RRoboticsOpMode {
         addData("shootPower", Shooter.INSTANCE.controller.getGoal());
 
         addData("target", RobotConfig.HoodServo.getServo().getPosition());
-        addData("turret", Turret.INSTANCE.rotationMotor.getPower());
 
         addData("mode", Turret.INSTANCE.mode);
 

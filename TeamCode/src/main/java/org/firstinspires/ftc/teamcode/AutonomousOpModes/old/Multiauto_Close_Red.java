@@ -143,7 +143,7 @@ public class Multiauto_Close_Red extends RRoboticsOpMode {
         preloads = new SequentialGroupFixed(
                 Shooter.INSTANCE.setGoal(1400),
                 Shooter.INSTANCE.setHoodPos(0.0),
-                Selene.INSTANCE.stopIntake(),
+                Selene.INSTANCE.intakeOff(),
                 Turret.INSTANCE.setPosition(0),
                 new InstantCommand(() -> follower.followPath(scorePreloads)),
                 new Delay(0.5),
@@ -151,10 +151,10 @@ public class Multiauto_Close_Red extends RRoboticsOpMode {
                 new WaitUntil(() -> !follower.isBusy()),
                 new InstantCommand(() -> follower.followPath(interrimMedium)),
                 new WaitUntil(() -> follower.isBusy()),
-                Selene.INSTANCE.intake(),
+                Selene.INSTANCE.intakeOn(),
                 new InstantCommand(() -> follower.followPath(intakeMedium)),
                 new WaitUntil(() -> follower.atParametricEnd()),
-                Selene.INSTANCE.stopIntake(),
+                Selene.INSTANCE.intakeOff(),
                 new InstantCommand(() -> follower.followPath(scoreMedium)),
                 new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.shootMotif(),
@@ -164,9 +164,9 @@ public class Multiauto_Close_Red extends RRoboticsOpMode {
         gates1 = new SequentialGroupFixed(
                 new InstantCommand(() -> follower.followPath(intakeGate)),
                 new WaitUntil(() -> !follower.isBusy()),
-                Selene.INSTANCE.intake(),
+                Selene.INSTANCE.intakeOn(),
                 new Delay(intakeTime),
-                Selene.INSTANCE.stopIntake(),
+                Selene.INSTANCE.intakeOff(),
                 new InstantCommand(() -> follower.followPath(scoreGate)),
                 new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.shootMotif(),
@@ -176,9 +176,9 @@ public class Multiauto_Close_Red extends RRoboticsOpMode {
         gates2 = new SequentialGroupFixed(
                 new InstantCommand(() -> follower.followPath(intakeGate)),
                 new WaitUntil(() -> !follower.isBusy()),
-                Selene.INSTANCE.intake(),
+                Selene.INSTANCE.intakeOn(),
                 new Delay(intakeTime),
-                Selene.INSTANCE.stopIntake(),
+                Selene.INSTANCE.intakeOff(),
                 new InstantCommand(() -> follower.followPath(scoreGate)),
                 new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.shootMotif(),
@@ -188,9 +188,9 @@ public class Multiauto_Close_Red extends RRoboticsOpMode {
         gates3 = new SequentialGroupFixed(
                 new InstantCommand(() -> follower.followPath(intakeGate)),
                 new WaitUntil(() -> !follower.isBusy()),
-                Selene.INSTANCE.intake(),
+                Selene.INSTANCE.intakeOn(),
                 new Delay(intakeTime),
-                Selene.INSTANCE.stopIntake(),
+                Selene.INSTANCE.intakeOff(),
                 new InstantCommand(() -> follower.followPath(scoreGate)),
                 new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.shootMotif(),
@@ -200,19 +200,19 @@ public class Multiauto_Close_Red extends RRoboticsOpMode {
         spikes = new SequentialGroupFixed(
                 new InstantCommand(() -> follower.followPath(interrimClose)),
                 new WaitUntil(() -> follower.isBusy()),
-                Selene.INSTANCE.intake(),
+                Selene.INSTANCE.intakeOn(),
                 new InstantCommand(() -> follower.followPath(intakeClose)),
                 new WaitUntil(() -> follower.atParametricEnd()),
-                Selene.INSTANCE.stopIntake(),
+                Selene.INSTANCE.intakeOff(),
                 new InstantCommand(() -> follower.followPath(scoreClose)),
                 new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.shootMotif(),
                 new InstantCommand(() -> follower.followPath(interrimFar)),
                 new WaitUntil(() -> follower.isBusy()),
-                Selene.INSTANCE.intake(),
+                Selene.INSTANCE.intakeOn(),
                 new InstantCommand(() -> follower.followPath(intakeFar)),
                 new WaitUntil(() -> follower.atParametricEnd()),
-                Selene.INSTANCE.stopIntake(),
+                Selene.INSTANCE.intakeOff(),
                 new InstantCommand(() -> follower.followPath(scoreFar)),
                 new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.shootMotif(),
@@ -228,7 +228,7 @@ public class Multiauto_Close_Red extends RRoboticsOpMode {
                     .build();
         }));
         Shooter.INSTANCE.setHoodPos(0.0).schedule();
-        Selene.INSTANCE.stopIntake().schedule();
+        Selene.INSTANCE.intakeOff().schedule();
         Shooter.INSTANCE.StopperClose().schedule();
     }
 

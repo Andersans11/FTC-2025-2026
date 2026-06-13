@@ -19,11 +19,11 @@ public class Callbacks extends PedroJSON.main.Callback {
             case "shootMotif":
                 codeToRun = () -> Selene.INSTANCE.shootMotif().schedule();
                 break;
-            case "intake":
-                codeToRun = () -> Selene.INSTANCE.intake().schedule();
+            case "intake1":
+                codeToRun = () -> Selene.INSTANCE.intakeOn().schedule();
                 break;
             case "idle":
-                codeToRun = () -> Selene.INSTANCE.stopIntake().schedule();
+                codeToRun = () -> Selene.INSTANCE.intakeOff().schedule();
                 break;
         }
 

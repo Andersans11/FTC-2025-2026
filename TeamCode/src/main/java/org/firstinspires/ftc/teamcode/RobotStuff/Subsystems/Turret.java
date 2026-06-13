@@ -16,6 +16,7 @@ import com.pedropathing.math.Vector;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.Hardware.ServoExFullRange;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.IRRoboticsSubsystem;
 import org.firstinspires.ftc.teamcode.RobotStuff.Selene;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
@@ -32,15 +33,17 @@ public class Turret implements IRRoboticsSubsystem {
 
     public static final Turret INSTANCE = new Turret();
 
-    public MotorEx rotationMotor;
+    public ServoExFullRange[] servos;
     public VoltageSensor voltageSensor;
     public Vector robotToGoalVector = new Vector(0, 0);
     public boolean isRed = true;
     public boolean hasSetAlliance = false;
     public boolean hasGotMotif = false;
     public boolean isLookingForMotif = false;
-    Pose redPose = new Pose(136, 130);
-    Pose bluePose = new Pose(8, 130);
+    Pose redPose = new Pose(188, 188);
+    Pose bluePose = new Pose(8, 188);
+    Pose redPrism = new Pose(106, 188);
+    Pose bluePrism = new Pose(90, 188);
     public Pose targetPose = new Pose(130, 130);
     Pose motifPose = new Pose(144, 72);
     public double targetYaw = 0;
@@ -100,7 +103,10 @@ public class Turret implements IRRoboticsSubsystem {
 
     @Override
     public void initSystem() {
-        this.rotationMotor = RobotConfig.TurretRotation.getMotor();
+        this.servos = new ServoExFullRange[] {
+                RobotConfig.TurretServo1.getServo(),
+                RobotConfig.TurretServo2.getServo()
+        };
         voltageSensor = RobotConfig.VoltageSensor;
         robotVel = new Vector();
     }
@@ -158,6 +164,23 @@ public class Turret implements IRRoboticsSubsystem {
         Vector currentVector = currentPose.getAsVector();
         Vector turretVector = currentVector.plus(turretDiff);
         return new Pose(turretVector.getXComponent(), turretVector.getYComponent(), currentPose.getHeading() + Math.toRadians(turretPos));
+    }
+
+    public void switchTargets() {
+        switch ((int) targetPose.getX()) {
+            case 8:
+                targetPose = bluePrism;
+                break;
+            case 90:
+                targetPose = bluePose;
+                break;
+            case 188:
+                targetPose = redPrism;
+                break;
+            case 106:
+                targetPose = redPose;
+                break;
+        }
     }
 
     public void calcTurretPositions(Pose currentPose, Vector robotVel) {
@@ -221,7 +244,8 @@ public class Turret implements IRRoboticsSubsystem {
 
         if (runVComp) targetYaw = targetYaw - perpendicularComponent * vP;
 
-        controller.setGoal(new KineticState(degreesToTicks(Math.max(minLim, Math.min(maxLim, targetYaw)))));
+        servos[0].setPosition(degreesToTicks(Math.max(minLim, Math.min(maxLim, targetYaw))));
+        servos[1].setPosition(degreesToTicks(Math.max(minLim, Math.min(maxLim, targetYaw))));
     }
 
     public Command toggleTrackObelisk() {
@@ -322,11 +346,11 @@ public class Turret implements IRRoboticsSubsystem {
     }
 
     public double degreesToTicks(double degrees) {
-        return degrees * 8000 / 360 * 5;
+        return degrees / 355;
     }
 
     public double ticksToDegrees(double ticks) {
-        return ticks / 8000 * 360 / 5;
+        return ticks * 355;
     }
 
     @Override
@@ -337,7 +361,6 @@ public class Turret implements IRRoboticsSubsystem {
         switch (mode) {
             case POSE_TRACKING:
                 calcTurretPositions(currentPose, Selene.INSTANCE.follower.getVelocity());
-                rotationMotor.setPower(-controller.calculate(rotationMotor.getState()));
                 break;
             case NO_SHOOTER:
                 Pose turretPose = getTurretPose(currentPose);
@@ -365,12 +388,10 @@ public class Turret implements IRRoboticsSubsystem {
                 robotVel.setComponents(robotVel.getMagnitude(), robotVel.getTheta() - currentPose.getHeading() + Math.toRadians(targetYaw));
 
                 controller.setGoal(new KineticState(degreesToTicks(Math.max(minLim, Math.min(maxLim, targetYaw)))));
-                rotationMotor.setPower(-controller.calculate(rotationMotor.getState()));
                 break;
             case IDLE:
                 double hoodPower = hoodAngle - (Shooter.INSTANCE.controller.getGoal().getVelocity() - Shooter.INSTANCE.shooters.getVelocity()) * hP;
                 Shooter.INSTANCE.setHoodPos(hoodPower).schedule();
-                rotationMotor.setPower(-controller.calculate(rotationMotor.getState()));
                 break;
         }
 

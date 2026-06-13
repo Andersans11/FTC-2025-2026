@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems;
 
 import com.bylazar.configurables.annotations.Configurable;
-import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Hardware.ServoExFullRange;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.IRRoboticsSubsystem;
@@ -9,7 +8,6 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.groups.ParallelGroup;
-import dev.nextftc.hardware.controllable.RunToPosition;
 import dev.nextftc.hardware.impl.MotorEx;
 import dev.nextftc.hardware.positionable.SetPosition;
 import dev.nextftc.hardware.powerable.SetPower;
@@ -18,7 +16,8 @@ import dev.nextftc.hardware.powerable.SetPower;
 public class Intake implements IRRoboticsSubsystem {
 
     public static final Intake INSTANCE = new Intake();
-    public MotorEx intake;
+    public MotorEx intake1;
+    public MotorEx intake2;
     public ServoExFullRange winch1;
     public ServoExFullRange winch2;
 
@@ -38,7 +37,8 @@ public class Intake implements IRRoboticsSubsystem {
 
     @Override
     public void initSystem() {
-        intake = RobotConfig.IntakeMotor.getMotor();
+        intake1 = RobotConfig.IntakeMotor.getMotor();
+        intake2 = RobotConfig.IntakeMotor.getMotor();
         winch1 = RobotConfig.Intake1.getServo();
         winch2 = RobotConfig.Intake2.getServo();
     }
@@ -49,7 +49,10 @@ public class Intake implements IRRoboticsSubsystem {
     // ------------------------------ COMMANDS ------------------------- //
 
     public Command start() {
-        return new SetPower(intake, intakeSpeed);
+        return new ParallelGroup(
+                new SetPower(intake1, intakeSpeed),
+                new SetPower(intake2, intakeSpeed)
+        );
     }
     public Command active() {
         return new ParallelGroup(
@@ -71,9 +74,15 @@ public class Intake implements IRRoboticsSubsystem {
         );
     }
     public Command stop() {
-        return new SetPower(intake, 0);
+        return new ParallelGroup(
+                new SetPower(intake1, 0),
+                new SetPower(intake2, 0)
+        );
     }
     public Command reverse() {
-        return new SetPower(intake, reverseSpeed);
+        return new ParallelGroup(
+                new SetPower(intake1, reverseSpeed),
+                new SetPower(intake2, reverseSpeed)
+        );
     }
 }

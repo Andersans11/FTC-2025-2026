@@ -22,7 +22,6 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Turret;
 
 import java.util.ArrayList;
 
-import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.delays.Delay;
 import dev.nextftc.core.commands.delays.WaitUntil;
 import dev.nextftc.core.commands.utility.InstantCommand;
@@ -167,7 +166,7 @@ public class Close_Blue extends RRoboticsOpMode {
 
         preloads = new SequentialGroupFixed(
                 Shooter.INSTANCE.setGoal(shootPower + preloadDiff),
-                Selene.INSTANCE.stopIntake(),
+                Selene.INSTANCE.intakeOff(),
                 Turret.INSTANCE.setPosition(turretPos),
                 new Delay(startDelay),
                 new InstantCommand(() -> follower.followPath(scorePreloads)),
@@ -180,11 +179,11 @@ public class Close_Blue extends RRoboticsOpMode {
 
         middles = new SequentialGroupFixed(
                 Shooter.INSTANCE.setGoal(shootPower + middleDiff),
-                Selene.INSTANCE.intake(),
+                Selene.INSTANCE.intakeOn(),
                 Turret.INSTANCE.setPosition(middleTurretPos),
                 new InstantCommand(() -> follower.followPath(intakeMedium)),
                 new WaitUntil(() -> follower.atParametricEnd()),
-                Selene.INSTANCE.stopIntake(),
+                Selene.INSTANCE.intakeOff(),
                 new InstantCommand(() -> follower.followPath(scoreMedium)),
                 new WaitUntil(() -> isDonePathing()),
                 Selene.INSTANCE.shootMotif(),
@@ -195,13 +194,13 @@ public class Close_Blue extends RRoboticsOpMode {
 
         gates = new SequentialGroupFixed(
                 Shooter.INSTANCE.setGoal(shootPower + gateDiff),
-                Selene.INSTANCE.intake(),
+                Selene.INSTANCE.intakeOn(),
                 new InstantCommand(() -> follower.followPath(intakeGate)),
                 new WaitUntil(() -> isDonePathing()),
                 new Delay(intakeTime),
                 new InstantCommand(() -> follower.followPath(scoreGate)),
                 new WaitUntil(() -> follower.getCurrentTValue() >= 0.75),
-                Selene.INSTANCE.stopIntake(),
+                Selene.INSTANCE.intakeOff(),
                 new WaitUntil(() -> isDonePathing()),
                 Selene.INSTANCE.shootMotif()
         );
@@ -210,10 +209,10 @@ public class Close_Blue extends RRoboticsOpMode {
 
         closes = new SequentialGroupFixed(
                 Shooter.INSTANCE.setGoal(shootPower + closeDiff),
-                Selene.INSTANCE.intake(),
+                Selene.INSTANCE.intakeOn(),
                 new InstantCommand(() -> follower.followPath(intakeClose)),
                 new WaitUntil(() -> isDonePathing()),
-                Selene.INSTANCE.stopIntake(),
+                Selene.INSTANCE.intakeOff(),
                 new InstantCommand(() -> follower.followPath(scoreClose)),
                 new WaitUntil(() -> isDonePathing()),
                 Selene.INSTANCE.shootMotif()
@@ -223,10 +222,10 @@ public class Close_Blue extends RRoboticsOpMode {
 
         fars = new SequentialGroupFixed(
                 Shooter.INSTANCE.setGoal(shootPower + farDiff),
-                Selene.INSTANCE.intake(),
+                Selene.INSTANCE.intakeOn(),
                 new InstantCommand(() -> follower.followPath(intakeFar)),
                 new WaitUntil(() -> isDonePathing()),
-                Selene.INSTANCE.stopIntake(),
+                Selene.INSTANCE.intakeOff(),
                 new InstantCommand(() -> follower.followPath(scoreFar)),
                 new WaitUntil(() -> isDonePathing()),
                 Selene.INSTANCE.shootMotif()
@@ -270,7 +269,7 @@ public class Close_Blue extends RRoboticsOpMode {
                     .build();
         }));
         Turret.INSTANCE.setHoodPosition(hoodPosPreloads).schedule();
-        Selene.INSTANCE.stopIntake().schedule();
+        Selene.INSTANCE.intakeOff().schedule();
         Shooter.INSTANCE.StopperClose().schedule();
         Turret.INSTANCE.setPosition(0).schedule();
     }

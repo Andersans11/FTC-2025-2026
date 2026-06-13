@@ -95,13 +95,13 @@ public class Teammate_Far_Red extends RRoboticsOpMode {
 
         preloads = new SequentialGroupFixed(
                 Shooter.INSTANCE.setGoal(2000),
-                Selene.INSTANCE.stopIntake(),
+                Selene.INSTANCE.intakeOff(),
                 Turret.INSTANCE.setPosition(-64),
                 Selene.INSTANCE.shootMotif(),
-                Selene.INSTANCE.intake(),
+                Selene.INSTANCE.intakeOn(),
                 new InstantCommand(() -> follower.followPath(intakeSpike)),
                 new WaitUntil(() -> follower.getPose().getX() <= 12 && follower.getPose().getX() >= 1),
-                Selene.INSTANCE.stopIntake(),
+                Selene.INSTANCE.intakeOff(),
                 new InstantCommand(() -> follower.followPath(scoreSpike)),
                 new WaitUntil(() -> Turret.INSTANCE.isInZone(follower.getPose())),
                 Selene.INSTANCE.shootMotif(),
@@ -109,67 +109,67 @@ public class Teammate_Far_Red extends RRoboticsOpMode {
         );
 
         gates1 = new SequentialGroupFixed(
-                Selene.INSTANCE.intake(),
+                Selene.INSTANCE.intakeOn(),
                 new InstantCommand(() -> follower.followPath(intakeGate)),
                 new WaitUntil(() -> !follower.isBusy()),
                 new InstantCommand(() -> follower.followPath(scoreGate)),
                 new WaitUntil(() -> Turret.INSTANCE.isInZone(follower.getPose())),
-                Selene.INSTANCE.stopIntake(),
+                Selene.INSTANCE.intakeOff(),
                 Selene.INSTANCE.shootMotif(),
                 new InstantCommand(() -> isDone = true)
         );
 
         gates2 = new SequentialGroupFixed(
-                Selene.INSTANCE.intake(),
+                Selene.INSTANCE.intakeOn(),
                 new InstantCommand(() -> follower.followPath(intakeGate)),
                 new WaitUntil(() -> !follower.isBusy()),
                 new InstantCommand(() -> follower.followPath(scoreGate)),
                 new WaitUntil(() -> Turret.INSTANCE.isInZone(follower.getPose())),
-                Selene.INSTANCE.stopIntake(),
+                Selene.INSTANCE.intakeOff(),
                 Selene.INSTANCE.shootMotif(),
                 new InstantCommand(() -> isDone = true)
         );
 
         gates3 = new SequentialGroupFixed(
-                Selene.INSTANCE.intake(),
+                Selene.INSTANCE.intakeOn(),
                 new InstantCommand(() -> follower.followPath(intakeGate)),
                 new WaitUntil(() -> !follower.isBusy()),
                 new InstantCommand(() -> follower.followPath(scoreGate)),
                 new WaitUntil(() -> Turret.INSTANCE.isInZone(follower.getPose())),
-                Selene.INSTANCE.stopIntake(),
+                Selene.INSTANCE.intakeOff(),
                 Selene.INSTANCE.shootMotif(),
                 new InstantCommand(() -> isDone = true)
         );
 
         gates4 = new SequentialGroupFixed(
-                Selene.INSTANCE.intake(),
+                Selene.INSTANCE.intakeOn(),
                 new InstantCommand(() -> follower.followPath(intakeGate)),
                 new WaitUntil(() -> !follower.isBusy()),
                 new InstantCommand(() -> follower.followPath(scoreGate)),
                 new WaitUntil(() -> Turret.INSTANCE.isInZone(follower.getPose())),
-                Selene.INSTANCE.stopIntake(),
+                Selene.INSTANCE.intakeOff(),
                 Selene.INSTANCE.shootMotif(),
                 new InstantCommand(() -> isDone = true)
         );
 
         gates5 = new SequentialGroupFixed(
-                Selene.INSTANCE.intake(),
+                Selene.INSTANCE.intakeOn(),
                 new InstantCommand(() -> follower.followPath(intakeGate)),
                 new WaitUntil(() -> !follower.isBusy()),
                 new InstantCommand(() -> follower.followPath(scoreGate)),
                 new WaitUntil(() -> Turret.INSTANCE.isInZone(follower.getPose())),
-                Selene.INSTANCE.stopIntake(),
+                Selene.INSTANCE.intakeOff(),
                 Selene.INSTANCE.shootMotif(),
                 new InstantCommand(() -> isDone = true)
         );
 
         gates6 = new SequentialGroupFixed(
-                Selene.INSTANCE.intake(),
+                Selene.INSTANCE.intakeOn(),
                 new InstantCommand(() -> follower.followPath(intakeGate)),
                 new WaitUntil(() -> !follower.isBusy()),
                 new InstantCommand(() -> follower.followPath(scoreGate)),
                 new WaitUntil(() -> Turret.INSTANCE.isInZone(follower.getPose())),
-                Selene.INSTANCE.stopIntake(),
+                Selene.INSTANCE.intakeOff(),
                 Selene.INSTANCE.shootMotif(),
                 new InstantCommand(() -> isDone = true)
         );
@@ -184,7 +184,7 @@ public class Teammate_Far_Red extends RRoboticsOpMode {
                     .build();
         }));
         Shooter.INSTANCE.setHoodPos(0.1).schedule();
-        Selene.INSTANCE.stopIntake().schedule();
+        Selene.INSTANCE.intakeOff().schedule();
         Shooter.INSTANCE.StopperClose().schedule();
         Turret.INSTANCE.setPosition(0).schedule();
     }

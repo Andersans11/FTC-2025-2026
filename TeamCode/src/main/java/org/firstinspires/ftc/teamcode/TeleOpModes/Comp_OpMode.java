@@ -36,18 +36,14 @@ public class Comp_OpMode extends RRoboticsOpMode {
         P1.rightBumper().whenBecomesTrue(Intake.INSTANCE.gate());
         P1.rightBumper().whenBecomesFalse(Selene.INSTANCE.stopIntake());
 
-        P2.rightTrigger().atLeast(0.1).whenBecomesTrue(Shooter.INSTANCE.StopperOpen());
-        P2.rightTrigger().atLeast(0.1).whenBecomesFalse(Shooter.INSTANCE.StopperClose());
-
-        P1.leftBumper().whenBecomesTrue(Shooter.INSTANCE.StopperOpen());
-        P1.leftBumper().whenBecomesFalse(Shooter.INSTANCE.StopperClose());
+        P1.leftBumper().whenBecomesTrue(Selene.INSTANCE.shoot());
+        P1.leftBumper().whenBecomesFalse(Selene.INSTANCE.stopShoot());
 
         P1.triangle().whenBecomesTrue(() -> Shooter.powerMod = Shooter.powerMod + 50);
         P1.cross().whenBecomesTrue(() -> Shooter.powerMod = Shooter.powerMod - 50);
 
         P2.dpadDown().whenBecomesTrue(Selene.INSTANCE.resetFollower());
 
-        P2.leftBumper().whenBecomesTrue(Selene.INSTANCE.setAutoShooting());
         P2.leftBumper().whenBecomesTrue(Selene.INSTANCE.setAutoShooting());
 
         P1.square().whenBecomesTrue(Turret.INSTANCE.autoControl(true));

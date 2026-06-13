@@ -24,6 +24,8 @@ import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.delays.Delay;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.SequentialGroupFixed;
+
+import dev.nextftc.core.commands.groups.SequentialGroup;
 import dev.nextftc.core.commands.utility.InstantCommand;
 
 @Configurable
@@ -43,7 +45,7 @@ public class Selene extends RRoboticsSubsystemGroup {
     public boolean threshold = false;
     public LimelightWrapper limelight;
     public int indCycle = 0;
-    public double shootTime = 0.75;
+    public double shootTime = 0.5;
     public ColorRangeSensor dist;
     OpMode opmode;
     public boolean runDistance = false;
@@ -174,12 +176,21 @@ public class Selene extends RRoboticsSubsystemGroup {
         return new InstantCommand(() -> autoShooting = !autoShooting);
     }
 
-
-
     public Command intake() {
         return new SequentialGroupFixed(
-                Intake.INSTANCE.active()
+                Intake.INSTANCE.active(),
+                Intake.INSTANCE.start()
         );
+    }
+    public Command stopIntake() {
+        return new SequentialGroupFixed(
+                Intake.INSTANCE.off(),
+                Intake.INSTANCE.stop()
+        );
+    }
+
+    public Command intakeOn() {
+        return Intake.INSTANCE.active();
     }
 
     public Command outtake() {
@@ -189,10 +200,21 @@ public class Selene extends RRoboticsSubsystemGroup {
         );
     }
 
-    public Command stopIntake() {
-        return new SequentialGroupFixed(
-                Intake.INSTANCE.off(),
-                Intake.INSTANCE.start()
+    public Command intakeOff() {
+        return Intake.INSTANCE.off();
+    }
+
+    public Command shoot() {
+        return new SequentialGroup(
+                Shooter.INSTANCE.StopperOpen(),
+                intakeOn()
+        );
+    }
+
+    public Command stopShoot() {
+        return new SequentialGroup(
+                Shooter.INSTANCE.StopperClose(),
+                intakeOff()
         );
     }
 
@@ -218,10 +240,10 @@ public class Selene extends RRoboticsSubsystemGroup {
         return new SequentialGroupFixed(
                 new InstantCommand(() -> this.isMotifShooting = true),
                 Shooter.INSTANCE.StopperOpen(),
-                intake(),
+                intakeOn(),
                 new Delay(shootTime),
                 Shooter.INSTANCE.StopperClose(),
-                stopIntake(),
+                intakeOff(),
                 new InstantCommand(() -> this.isMotifShooting = false)
         );
     }

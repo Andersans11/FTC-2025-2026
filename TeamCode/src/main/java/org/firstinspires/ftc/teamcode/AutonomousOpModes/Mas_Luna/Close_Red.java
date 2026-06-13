@@ -164,7 +164,7 @@ public class Close_Red extends RRoboticsOpMode {
 
         preloads = new SequentialGroupFixed(
                 Shooter.INSTANCE.setGoal(shootPower + preloadDiff),
-                Selene.INSTANCE.stopIntake(),
+                Selene.INSTANCE.intakeOff(),
                 Turret.INSTANCE.setPosition(turretPos),
                 new Delay(startDelay),
                 new InstantCommand(() -> follower.followPath(scorePreloads)),
@@ -177,11 +177,11 @@ public class Close_Red extends RRoboticsOpMode {
 
         middles = new SequentialGroupFixed(
                 Shooter.INSTANCE.setGoal(shootPower + middleDiff),
-                Selene.INSTANCE.intake(),
+                Selene.INSTANCE.intakeOn(),
                 Turret.INSTANCE.setPosition(middleTurretPos),
                 new InstantCommand(() -> follower.followPath(intakeMedium)),
                 new WaitUntil(() -> !follower.isBusy()),
-                Selene.INSTANCE.stopIntake(),
+                Selene.INSTANCE.intakeOff(),
                 new InstantCommand(() -> follower.followPath(scoreMedium)),
                 new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.shootMotif(),
@@ -192,7 +192,7 @@ public class Close_Red extends RRoboticsOpMode {
 
         gates = new SequentialGroupFixed(
                 Shooter.INSTANCE.setGoal(shootPower + gateDiff),
-                Selene.INSTANCE.intake(),
+                Selene.INSTANCE.intakeOn(),
                 new InstantCommand(() -> follower.followPath(intakeGate)),
                 new WaitUntil(() -> !follower.isBusy()),
                 new Delay(intakeTime),
@@ -205,10 +205,10 @@ public class Close_Red extends RRoboticsOpMode {
 
         closes = new SequentialGroupFixed(
                 Shooter.INSTANCE.setGoal(shootPower + closeDiff),
-                Selene.INSTANCE.intake(),
+                Selene.INSTANCE.intakeOn(),
                 new InstantCommand(() -> follower.followPath(intakeClose)),
                 new WaitUntil(() -> !follower.isBusy()),
-                Selene.INSTANCE.stopIntake(),
+                Selene.INSTANCE.intakeOff(),
                 new InstantCommand(() -> follower.followPath(scoreClose)),
                 new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.shootMotif()
@@ -218,10 +218,10 @@ public class Close_Red extends RRoboticsOpMode {
 
         fars = new SequentialGroupFixed(
                 Shooter.INSTANCE.setGoal(shootPower + farDiff),
-                Selene.INSTANCE.intake(),
+                Selene.INSTANCE.intakeOn(),
                 new InstantCommand(() -> follower.followPath(intakeFar)),
                 new WaitUntil(() -> !follower.isBusy()),
-                Selene.INSTANCE.stopIntake(),
+                Selene.INSTANCE.intakeOff(),
                 new InstantCommand(() -> follower.followPath(scoreFar)),
                 new WaitUntil(() -> !follower.isBusy()),
                 Selene.INSTANCE.shootMotif()
@@ -263,7 +263,7 @@ public class Close_Red extends RRoboticsOpMode {
                     .build();
         }));
         Turret.INSTANCE.setHoodPosition(0.0).schedule();
-        Selene.INSTANCE.stopIntake().schedule();
+        Selene.INSTANCE.intakeOff().schedule();
         Shooter.INSTANCE.StopperClose().schedule();
         Turret.INSTANCE.setPosition(0).schedule();
     }
