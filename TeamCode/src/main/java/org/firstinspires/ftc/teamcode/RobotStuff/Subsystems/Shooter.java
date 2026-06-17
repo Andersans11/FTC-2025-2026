@@ -29,8 +29,8 @@ public class Shooter implements IRRoboticsSubsystem {
     // ------------------------ CONFIG ------------------------ //
     public static double shootPower = 1950;
     public static double shootPowerLess = 1750;
-    public static double stopperDownPos = 0.65;
-    public static double stopperUpPos = 0.8;
+    public static double stopperDownPos = 0.4;
+    public static double stopperUpPos = 0.25;
     public static double kP = 0.001;
     public static double kI = 0.0;
     public static double kD = 0.0;

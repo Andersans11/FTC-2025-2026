@@ -22,9 +22,6 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.HardwareConfigs.ServoCon
 import org.firstinspires.ftc.teamcode.RobotStuff.Misc.DeltaTimer;
 
 public class RobotConfig {
-
-    public static ColorRangeSensor IntakeCS;
-    public static DistanceSensor IntakeDS;
     public static VoltageSensor VoltageSensor;
     public static MotorConfig FLDrive;
     public static MotorConfig BLDrive;
@@ -32,29 +29,16 @@ public class RobotConfig {
     public static MotorConfig BRDrive;
     public static MotorConfig ShootMotor1;
     public static MotorConfig ShootMotor2;
-    public static MotorConfig TurretRotation;
-    public static MotorConfig IntakeMotor;
-    public static TouchSensor LimitSwitch;
-
-    public static FullServoConfig CarouselCR1;
-    public static FullServoConfig CarouselCR2;
-    public static FullServoConfig CarouselCR3;
+    public static MotorConfig IntakeMotor1;
+    public static MotorConfig IntakeMotor2;
     public static FullServoConfig HoodServo;
-    public static ServoConfig HoodServo2;
-    public static ServoImplEx Indicator;
     public static FullServoConfig StopperServo;
     public static FullServoConfig Intake1;
     public static FullServoConfig Intake2;
     public static FullServoConfig TurretServo1;
     public static FullServoConfig TurretServo2;
 
-    public static ServoConfig Kicker;
-
-    public static HuskyLens camera;
-
     public static GoBildaPinpointDriver Pinpoint;
-
-    public static Limelight3A Limelight;
 
     static HardwareMap hardwareMap;
     static RRoboticsOpMode opMode;
@@ -104,13 +88,7 @@ public class RobotConfig {
 
         VoltageSensor = hardwareMap.get(VoltageSensor.class, "Control Hub");
 
-        Indicator = hardwareMap.get(ServoImplEx.class, "IND");
-
         Pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, "PINPOINT");
-
-        Limelight = hardwareMap.get(Limelight3A.class, "limelight");
-
-        IntakeCS = hardwareMap.get(ColorRangeSensor.class, "DIST");
 
         FLDrive = new MotorConfig(
                 hardwareMap,
@@ -148,16 +126,16 @@ public class RobotConfig {
                 DcMotorSimple.Direction.REVERSE, // motors are facing opposite directions
                 DcMotor.ZeroPowerBehavior.FLOAT
         );
-        TurretRotation = new MotorConfig(
+        IntakeMotor1 = new MotorConfig(
                 hardwareMap,
-                "TURRET",
-                DcMotorSimple.Direction.REVERSE,
+                "INTAKE 1",
+                DcMotorSimple.Direction.FORWARD,
                 DcMotor.ZeroPowerBehavior.BRAKE
         );
-        IntakeMotor = new MotorConfig(
+        IntakeMotor2 = new MotorConfig(
                 hardwareMap,
-                "INTAKE",
-                DcMotorSimple.Direction.FORWARD,
+                "INTAKE 2",
+                DcMotorSimple.Direction.REVERSE,
                 DcMotor.ZeroPowerBehavior.BRAKE
         );
         HoodServo = new FullServoConfig(
@@ -172,23 +150,23 @@ public class RobotConfig {
         );
         Intake1 = new FullServoConfig(
                 hardwareMap,
-                "INTAKE 1",
+                "WINCH 1",
                 Servo.Direction.FORWARD
         );
         Intake2 = new FullServoConfig(
                 hardwareMap,
-                "INTAKE 2",
+                "WINCH 2",
                 Servo.Direction.REVERSE
         );
         TurretServo1 = new FullServoConfig(
                 hardwareMap,
-                "TURRET1",
+                "TURRET 1",
                 Servo.Direction.FORWARD
         );
-        TurretServo1 = new FullServoConfig(
+        TurretServo2 = new FullServoConfig(
                 hardwareMap,
-                "TURRET2",
-                Servo.Direction.REVERSE
+                "TURRET 2",
+                Servo.Direction.FORWARD
         );
     }
 }

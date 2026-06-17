@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.TestingOpModes;
 
+import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -10,14 +11,16 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.RRoboticsSubsystemCompon
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.HoldHeadingPID;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Intake;
 
-@Disabled
+@Configurable
 @TeleOp(name = "Test Intake", group = Utils.TESTING)
 public class TestIntake extends RRoboticsOpMode {
+
+    public static boolean doIntake = false;
+    boolean isIntaking = false;
 
     public TestIntake() {
         super();
         addSubsystemComponents(
-                new RRoboticsSubsystemComponent(HoldHeadingPID.INSTANCE),
                 new RRoboticsSubsystemComponent(Intake.INSTANCE)
         );
     }
@@ -25,13 +28,21 @@ public class TestIntake extends RRoboticsOpMode {
     @Override
     public void onInit() {
         super.onInit();
-
-        P1.rightTrigger().atLeast(Sensitivities.p1RTThreshold).whenBecomesTrue(Intake.INSTANCE::start);
-        P1.rightBumper().whenBecomesTrue(Intake.INSTANCE::stop);
     }
 
     @Override
     public void onUpdate() {
         super.onUpdate();
+        if (doIntake != isIntaking) {
+            if (doIntake) {
+                Intake.INSTANCE.start().schedule();
+                Intake.INSTANCE.active().schedule();
+            } else {
+                Intake.INSTANCE.stop().schedule();
+                Intake.INSTANCE.off().schedule();
+            }
+            isIntaking = doIntake;
+        }
+
     }
 }

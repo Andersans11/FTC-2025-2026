@@ -17,7 +17,7 @@ public class LimelightWrapper {
     public static final LimelightWrapper instance = new LimelightWrapper();
 
     public void init() {
-        limelight = RobotConfig.Limelight;
+        //limelight = RobotConfig.Limelight;
     }
 
 

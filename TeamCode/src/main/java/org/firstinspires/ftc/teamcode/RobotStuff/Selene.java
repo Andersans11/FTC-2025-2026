@@ -78,13 +78,11 @@ public class Selene extends RRoboticsSubsystemGroup {
     @Override
     public void initSystem() {
         super.initSystem();
-        indicator = RobotConfig.Indicator;
         limelight = LimelightWrapper.instance; limelight.init();
         distTimer = new Timer();
         ballTimer = new Timer();
         indicator.setPwmRange(new PwmControl.PwmRange(500, 2500));
         indicator.setPwmEnable();
-        dist = RobotConfig.IntakeCS;
     }
 
     public void initFollower(HardwareMap hardwareMap) {

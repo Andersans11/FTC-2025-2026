@@ -40,15 +40,15 @@ public class Turret implements IRRoboticsSubsystem {
     public boolean hasSetAlliance = false;
     public boolean hasGotMotif = false;
     public boolean isLookingForMotif = false;
-    Pose redPose = new Pose(188, 188);
-    Pose bluePose = new Pose(8, 188);
-    Pose redPrism = new Pose(106, 188);
-    Pose bluePrism = new Pose(90, 188);
+    Pose redPose = new Pose(184, 184);
+    Pose bluePose = new Pose(8, 184);
+    Pose redPrism = new Pose(104, 184);
+    Pose bluePrism = new Pose(88, 184);
     public Pose targetPose = new Pose(130, 130);
     Pose motifPose = new Pose(144, 72);
     public double targetYaw = 0;
     public double targetPitch = 0.0;
-    public static double minLim = -70;
+    public static double minLim = -135;
     public static double maxLim = 90;
     public ControlSystem controller;
     public enum TurretMode {
@@ -81,6 +81,8 @@ public class Turret implements IRRoboticsSubsystem {
     public static double kD = 0.00002;
     public int hoodToPos = 0;
     public boolean isFar;
+
+    public double oldTurretPos = 361;
 
     public double hoodAngle = 0;
 
@@ -187,7 +189,7 @@ public class Turret implements IRRoboticsSubsystem {
         Pose turretPose = getTurretPose(currentPose);
         robotToGoalVector = getrobotToGoalVector(getTurretPose(turretPose));
 
-        /*double g = 32.174 * 12;
+        double g = 32.174 * 12;
 
         double x;
         double y;
@@ -244,8 +246,7 @@ public class Turret implements IRRoboticsSubsystem {
 
         if (runVComp) targetYaw = targetYaw - perpendicularComponent * vP;
 
-        servos[0].setPosition(degreesToTicks(Math.max(minLim, Math.min(maxLim, targetYaw))));
-        servos[1].setPosition(degreesToTicks(Math.max(minLim, Math.min(maxLim, targetYaw))));
+        setTurretPos(targetYaw);
     }
 
     public Command toggleTrackObelisk() {
@@ -345,12 +346,20 @@ public class Turret implements IRRoboticsSubsystem {
         });
     }
 
+    public void setTurretPos(double pos) {
+        if (pos != oldTurretPos) {
+            servos[0].setPosition(degreesToTicks(Math.max(minLim, Math.min(maxLim, pos))));
+            servos[1].setPosition(degreesToTicks(Math.max(minLim, Math.min(maxLim, pos))) + 0.01);
+            oldTurretPos = pos;
+        }
+    }
+
     public double degreesToTicks(double degrees) {
-        return degrees / 355;
+        return (degrees / 19 * 7 / 15 * 50 / 355) + 0.5;
     }
 
     public double ticksToDegrees(double ticks) {
-        return ticks * 355;
+        return (ticks - 0.5) * 19 / 7 * 15 / 50 * 355;
     }
 
     @Override
@@ -376,18 +385,10 @@ public class Turret implements IRRoboticsSubsystem {
 
                 if (runVComp) targetYaw = targetYaw - perpendicularComponent * vP;
 
-                controller.setGoal(new KineticState(degreesToTicks(Math.max(minLim, Math.min(maxLim, targetYaw)))));
+                setTurretPos(targetYaw);
                 break;
             case TESTING:
-                targetYaw = // get yaw angle using trig, targetYaw = arctan(opposite/adjacent)
-                        Math.atan(Math.abs(targetPose.getY() - currentPose.getY()) / Math.abs(targetPose.getX() - currentPose.getX()));
-                if (isRed) targetYaw = Math.toDegrees(targetYaw - currentPose.getHeading());
-                else targetYaw = Math.toDegrees(Math.PI - targetYaw - currentPose.getHeading());
-
-                robotVel = Selene.INSTANCE.follower.getVelocity();
-                robotVel.setComponents(robotVel.getMagnitude(), robotVel.getTheta() - currentPose.getHeading() + Math.toRadians(targetYaw));
-
-                controller.setGoal(new KineticState(degreesToTicks(Math.max(minLim, Math.min(maxLim, targetYaw)))));
+                setTurretPos(targetYaw);
                 break;
             case IDLE:
                 double hoodPower = hoodAngle - (Shooter.INSTANCE.controller.getGoal().getVelocity() - Shooter.INSTANCE.shooters.getVelocity()) * hP;
