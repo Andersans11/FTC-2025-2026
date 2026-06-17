@@ -189,7 +189,7 @@ public class Turret implements IRRoboticsSubsystem {
         Pose turretPose = getTurretPose(currentPose);
         robotToGoalVector = getrobotToGoalVector(getTurretPose(turretPose));
 
-        double g = 32.174 * 12;
+        /*double g = 32.174 * 12;
 
         double x;
         double y;
