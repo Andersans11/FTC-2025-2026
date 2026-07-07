@@ -16,7 +16,6 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 
 import dev.nextftc.core.commands.utility.InstantCommand;
 
-@Disabled
 @Configurable
 @TeleOp(name = "Pitch Recording", group = Utils.PRIORITY_PRIORITY)
 public class PitchRecording extends RRoboticsOpMode {
@@ -29,8 +28,10 @@ public class PitchRecording extends RRoboticsOpMode {
         );
     }
 
-    public static double shootPower = 1500;
-    public static double hoodPos = 0;
+    public static double shootPower = 700;
+    public static double hoodPos = 62.5;
+    public static double turretPos = 0;
+    double oldHoodPos = 1;
 
     @Override
     public void onInit() {
@@ -44,7 +45,7 @@ public class PitchRecording extends RRoboticsOpMode {
 
         P1.square().whenBecomesTrue(new SequentialGroupFixed(
                 Selene.INSTANCE.start(),
-                Selene.INSTANCE.intakeOn(),
+                Selene.INSTANCE.intake(),
                 Shooter.INSTANCE.StopperOpen(),
                 new InstantCommand(() -> Turret.INSTANCE.mode = Turret.TurretMode.TESTING)
         ));
@@ -67,11 +68,15 @@ public class PitchRecording extends RRoboticsOpMode {
 
         addData("shootPower", Shooter.INSTANCE.controller.getGoal());
 
-        addData("target", RobotConfig.HoodServo.getServo().getPosition());
+        addData("Hood", RobotConfig.HoodServo.getServo().getPosition());
 
         addData("mode", Turret.INSTANCE.mode);
 
-        if (-Shooter.INSTANCE.controller.getGoal().getVelocity() != shootPower) Shooter.INSTANCE.setGoal(shootPower).schedule();
-        if (RobotConfig.HoodServo.getServo().getPosition() != hoodPos) Shooter.INSTANCE.setHoodPos(hoodPos).schedule();
+        if (Shooter.INSTANCE.controller.getGoal().getVelocity() != shootPower) Shooter.INSTANCE.setGoal(shootPower).schedule();
+        if (oldHoodPos != hoodPos) {
+            Shooter.INSTANCE.setHoodPos(Turret.INSTANCE.angleToServoPower(hoodPos)).schedule();
+            oldHoodPos = hoodPos;
+        }
+        if (Turret.INSTANCE.targetYaw != turretPos) Turret.INSTANCE.targetYaw = turretPos;
     }
 }

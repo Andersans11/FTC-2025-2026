@@ -9,7 +9,6 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.RRoboticsSubsystemCompon
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.Shooter;
 
 
-@Disabled
 @TeleOp(name = "Test Shooter", group = Utils.TESTING)
 public class TestShooter extends RRoboticsOpMode {
 

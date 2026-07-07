@@ -39,12 +39,15 @@ public class Comp_OpMode extends RRoboticsOpMode {
         P1.leftBumper().whenBecomesTrue(Selene.INSTANCE.shoot());
         P1.leftBumper().whenBecomesFalse(Selene.INSTANCE.stopShoot());
 
-        P1.triangle().whenBecomesTrue(() -> Shooter.powerMod = Shooter.powerMod + 50);
-        P1.cross().whenBecomesTrue(() -> Shooter.powerMod = Shooter.powerMod - 50);
+        P2.triangle().whenBecomesTrue(() -> Shooter.powerMod = Shooter.powerMod + 50);
+        P2.cross().whenBecomesTrue(() -> Shooter.powerMod = Shooter.powerMod - 50);
+
+        P2.square().whenBecomesTrue(() -> Turret.turretOff = Turret.turretOff + 5);
+        P2.circle().whenBecomesTrue(() -> Turret.turretOff = Turret.turretOff - 5);
 
         P2.dpadDown().whenBecomesTrue(Selene.INSTANCE.resetFollower());
 
-        P2.leftBumper().whenBecomesTrue(Selene.INSTANCE.setAutoShooting());
+        P2.leftBumper().whenBecomesTrue(Turret.INSTANCE::switchTargets);
 
         P1.square().whenBecomesTrue(Turret.INSTANCE.autoControl(true));
 
@@ -71,5 +74,11 @@ public class Comp_OpMode extends RRoboticsOpMode {
         super.onUpdate();
         addData("speed", Shooter.INSTANCE.shooters.getVelocity());
         addData("Power Mod", Shooter.powerMod);
+        addData("stopperPos", Shooter.INSTANCE.stopper.getPosition());
+        addData("turretPos", Turret.INSTANCE.targetYaw);
+        addData("posex", Selene.INSTANCE.getCurrentPose().getX());
+        addData("posex", Selene.INSTANCE.getCurrentPose().getY());
+        addData("posex", Math.toDegrees(Selene.INSTANCE.getCurrentPose().getHeading()));
+        addData("target", Turret.INSTANCE.targetPose.getX());
     }
 }

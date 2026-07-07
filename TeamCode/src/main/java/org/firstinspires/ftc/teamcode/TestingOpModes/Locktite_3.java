@@ -47,8 +47,8 @@ public class Locktite_3 extends RRoboticsOpMode {
         super.onUpdate();
         if (doIntake != isIntaking) {
             if (doIntake) {
-                servo.setPower(1);
-                servo2.setPower(1);
+                servo.setPower(-1);
+                servo2.setPower(-1);
             } else {
                 servo.setPower(0);
                 servo2.setPower(0);

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.Subsystems;
 
 import com.bylazar.configurables.annotations.Configurable;
+import com.pedropathing.math.MathFunctions;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.Hardware.ServoExFullRange;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.IRRoboticsSubsystem;
@@ -31,11 +32,11 @@ public class Shooter implements IRRoboticsSubsystem {
     public static double shootPowerLess = 1750;
     public static double stopperDownPos = 0.4;
     public static double stopperUpPos = 0.25;
-    public static double kP = 0.001;
+    public static double kP = 0.05;
     public static double kI = 0.0;
     public static double kD = 0.0;
     public static double kS = 0.0;
-    public static double kV = 0.00042;
+    public static double kV = 0.001;
     public static double kA = 0.0;
 
     public boolean isFar = false;
@@ -44,8 +45,8 @@ public class Shooter implements IRRoboticsSubsystem {
     @Override
     public void initSystem() {
         shooters = new MotorGroup(
-                RobotConfig.ShootMotor1.getMotor(),
-                RobotConfig.ShootMotor2.getMotor()
+                RobotConfig.ShootMotor2.getMotor(),
+                RobotConfig.ShootMotor1.getMotor()
         );
         hood = RobotConfig.HoodServo.getServo();
         stopper = RobotConfig.StopperServo.getServo();
@@ -61,18 +62,15 @@ public class Shooter implements IRRoboticsSubsystem {
 
     @Override
     public void periodic() {
-        shooters.setPower(controller.calculate(shooters.getLeader().getState()));
+        shooters.setPower(-Math.max(controller.calculate(shooters.getLeader().getState()), 0));
     }
 
     double[][] table = {
-            {36.4, 1275, 0.0},
-            {53.9, 1300, 0.0},
-            {64.9, 1325, 0.1},
-            {85.6, 1425, 0.1},
-            {100.4, 1550, 0.1},
-            {115.0, 1700, 0.2},
-            {123.5, 1775, 0.25},
-            {140.2, 1850, 0.3},
+            {30.6, 600, 62.5},
+            {47.5, 650, 57.5},
+            {65.2, 750, 57.5},
+            {83.2, 800, 50},
+            {101.5, 925, 55},
     };
 
     public double calcShooterPower(double dist) {
@@ -138,14 +136,14 @@ public class Shooter implements IRRoboticsSubsystem {
     }
     public Command StopperClose() {
         if (stopper.getPosition() == stopperDownPos) return new NullCommand();
-        return new SetPosition(stopper, stopperDownPos);
+        return new InstantCommand(() -> stopper.setPosition(stopperDownPos));
     }
     public Command StopperOpen() {
         if (stopper.getPosition() == stopperUpPos) return new NullCommand();
-        return new SetPosition(stopper, stopperUpPos);
+        return new InstantCommand(() -> stopper.setPosition(stopperUpPos));
     }
     public Command setHoodPos(double pos) {
-        if (hood.getPosition() != pos) return new SetPosition(hood, pos);
+        if (hood.getPosition() != pos) return new SetPosition(hood, MathFunctions.clamp(pos, Turret.INSTANCE.angleToServoPower(40), 1));
         return new NullCommand();
     }
 }

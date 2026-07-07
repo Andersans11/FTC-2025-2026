@@ -117,13 +117,13 @@ public class RobotConfig {
         ShootMotor1 = new MotorConfig(
                 hardwareMap,
                 "SHOOTER 1",
-                DcMotorSimple.Direction.FORWARD,
+                DcMotorSimple.Direction.REVERSE,
                 DcMotor.ZeroPowerBehavior.FLOAT
         );
         ShootMotor2 = new MotorConfig(
                 hardwareMap,
                 "SHOOTER 2",
-                DcMotorSimple.Direction.REVERSE, // motors are facing opposite directions
+                DcMotorSimple.Direction.FORWARD, // motors are facing opposite directions
                 DcMotor.ZeroPowerBehavior.FLOAT
         );
         IntakeMotor1 = new MotorConfig(
@@ -141,12 +141,12 @@ public class RobotConfig {
         HoodServo = new FullServoConfig(
                 hardwareMap,
                 "HOOD",
-                Servo.Direction.REVERSE
+                Servo.Direction.FORWARD
         );
         StopperServo = new FullServoConfig(
                 hardwareMap,
                 "STOPPER",
-                Servo.Direction.REVERSE
+                Servo.Direction.FORWARD
         );
         Intake1 = new FullServoConfig(
                 hardwareMap,

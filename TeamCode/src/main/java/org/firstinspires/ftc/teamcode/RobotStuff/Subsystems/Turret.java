@@ -44,12 +44,12 @@ public class Turret implements IRRoboticsSubsystem {
     Pose bluePose = new Pose(8, 184);
     Pose redPrism = new Pose(104, 184);
     Pose bluePrism = new Pose(88, 184);
-    public Pose targetPose = new Pose(130, 130);
+    public Pose targetPose = new Pose(184, 184);
     Pose motifPose = new Pose(144, 72);
     public double targetYaw = 0;
     public double targetPitch = 0.0;
     public static double minLim = -135;
-    public static double maxLim = 90;
+    public static double maxLim = 125;
     public ControlSystem controller;
     public enum TurretMode {
         POSE_TRACKING,
@@ -67,15 +67,10 @@ public class Turret implements IRRoboticsSubsystem {
 
     // ------------------------- CONFIG ------------------------------- //
 
-    public static double closeScoreHeight = 40;
-    public static double closeScoreAngle = -30;
-    public double closeScoreAngleRad = Math.toRadians(closeScoreAngle);
-    public static double closeScoreRadius = 5;
-
-    public static double farScoreHeight = 40;
-    public static double farScoreAngle = -20;
-    public double farScoreAngleRad = Math.toRadians(farScoreAngle);
-    public static double farScoreRadius = 5;
+    public static double scoreHeight = 40;
+    public static double scoreAngle = -30;
+    public double scoreAngleRad = Math.toRadians(scoreAngle);
+    public static double scoreRadius = 5;
     public static double kP = 0.0005;
     public static double kI = 0.0;
     public static double kD = 0.00002;
@@ -85,12 +80,17 @@ public class Turret implements IRRoboticsSubsystem {
     public double oldTurretPos = 361;
 
     public double hoodAngle = 0;
+    public double flywheelSpeed = 0;
+    public double newHoodAngle = 0;
+    public double newFlywheelSpeed = 0;
 
     public double turretDistFromCenter = 1.72149606;
 
     public static boolean runVComp = false;
     public static double vP = 0.25;
     public static double hP = 0.0004;
+
+    public static double turretOff = 10;
 
     // --------------------- OPMODE --------------------------------- //
 
@@ -138,12 +138,13 @@ public class Turret implements IRRoboticsSubsystem {
         return ticksToDegrees(controller.getGoal().getPosition()) == maxLim || ticksToDegrees(controller.getGoal().getPosition()) == minLim;
     }
 
-    public double calculateTicksPerSecond(double velocity, double launchAngle) {
-        return (1100.0 * velocity) / (198.07 - 0.63 * launchAngle);
+    public double calculateTicksPerSecond(double velocity) {
+        return (velocity - 40.63507) / 0.210041;
     }
 
     public double angleToServoPower(double angle) {
-        return 0.024 * angle - 0.84;
+        angle = 9.25 * (62.5 - angle);
+        return 1 - (angle / 355);
     }
 
     public Vector getrobotToGoalVector(Pose currentPose) {
@@ -173,13 +174,13 @@ public class Turret implements IRRoboticsSubsystem {
             case 8:
                 targetPose = bluePrism;
                 break;
-            case 90:
+            case 88:
                 targetPose = bluePose;
                 break;
-            case 188:
+            case 184:
                 targetPose = redPrism;
                 break;
-            case 106:
+            case 104:
                 targetPose = redPose;
                 break;
         }
@@ -189,23 +190,27 @@ public class Turret implements IRRoboticsSubsystem {
         Pose turretPose = getTurretPose(currentPose);
         robotToGoalVector = getrobotToGoalVector(getTurretPose(turretPose));
 
-        /*double g = 32.174 * 12;
+        Shooter.INSTANCE.setHoodPos(angleToServoPower(Shooter.INSTANCE.calcHoodPower(robotToGoalVector.getMagnitude()))).schedule();
+        Shooter.INSTANCE.setGoal(Shooter.INSTANCE.calcShooterPower(robotToGoalVector.getMagnitude())).schedule();
 
-        double x;
-        double y;
-        double a;
+        targetYaw = // get yaw angle using trig, targetYaw = arctan(opposite/adjacent)
+                Math.atan(Math.abs(targetPose.getY() - currentPose.getY()) / Math.abs(targetPose.getX() - currentPose.getX()));
+        if (isRed) targetYaw = Math.toDegrees(targetYaw - currentPose.getHeading());
+        else targetYaw = Math.toDegrees(Math.PI - targetYaw - currentPose.getHeading());
 
-        if (robotToGoalVector.getMagnitude() >= 100) {
-            x = robotToGoalVector.getMagnitude() - farScoreRadius;
-            y = farScoreHeight;
-            a = farScoreAngleRad;
-        } else {
-            x = robotToGoalVector.getMagnitude() - closeScoreRadius;
-            y = closeScoreHeight;
-            a = closeScoreAngleRad;
-        }
+        setTurretPos(targetYaw + turretOff);
+    }
 
-        hoodAngle = MathFunctions.clamp(Math.atan(2 * y / x - Math.tan(a)), Math.toRadians(30), Math.toRadians(55));
+    public void calcTurretPositionsEq(Pose currentPose, Vector robotVel) {
+        Pose turretPose = getTurretPose(currentPose);
+        robotToGoalVector = getrobotToGoalVector(getTurretPose(turretPose));
+
+        double g = 32.174 * 12;
+        double x = robotToGoalVector.getMagnitude() - scoreRadius;
+        double y = scoreHeight;
+        double a = scoreAngleRad;
+
+        hoodAngle = MathFunctions.clamp(Math.atan(2 * y / x - Math.tan(a)), Math.toRadians(40), Math.toRadians(62.5));
 
         flywheelSpeed = Math.sqrt(g * x * x / (2 * Math.pow(Math.cos(hoodAngle), 2) * (x * Math.tan(hoodAngle) - y)));
 
@@ -220,31 +225,21 @@ public class Turret implements IRRoboticsSubsystem {
         double nvr = Math.sqrt(ivr * ivr + perpendicularComponent * perpendicularComponent);
         double ndr = nvr * time;
 
-        newHoodAngle = MathFunctions.clamp(Math.atan(vz / nvr), Math.toRadians(30), Math.toRadians(55));
+        newHoodAngle = MathFunctions.clamp(Math.atan(vz / nvr), Math.toRadians(40), Math.toRadians(62.5));
 
         newFlywheelSpeed = Math.sqrt(g * ndr * ndr / (2 * Math.pow(Math.cos(hoodAngle), 2) * (ndr * Math.tan(hoodAngle) - y)));
 
-        Shooter.INSTANCE.setHoodPos(angleToServoPower(90 - Math.toDegrees(newHoodAngle))).schedule();
-        Shooter.INSTANCE.setGoal(calculateTicksPerSecond(newFlywheelSpeed, Math.toDegrees(newHoodAngle))).schedule();
+        Shooter.INSTANCE.setHoodPos(angleToServoPower(Math.toDegrees(newHoodAngle))).schedule();
+        Shooter.INSTANCE.setGoal(calculateTicksPerSecond(newFlywheelSpeed)).schedule();
 
-        double turretVelCompOff = Math.atan(perpendicularComponent / ivr);*/
-        double coordinateTheta = robotVel.getTheta() - robotToGoalVector.getTheta();
-        double perpendicularComponent = Math.sin(coordinateTheta) * robotVel.getMagnitude();
+        double turretVelCompOff = Math.atan(perpendicularComponent / ivr);
 
-        double shooterPower = Shooter.INSTANCE.calcShooterPower(robotToGoalVector.getMagnitude());
-        double hoodPower = Shooter.INSTANCE.calcHoodPower(robotToGoalVector.getMagnitude());
-        hoodPower = hoodPower - (Shooter.INSTANCE.controller.getGoal().getVelocity() - Shooter.INSTANCE.shooters.getVelocity()) * hP;
+        targetYaw = // get yaw angle using trig, targetYaw = arctan(opposite/adjacent)
+                Math.atan(Math.abs(targetPose.getY() - currentPose.getY()) / Math.abs(targetPose.getX() - currentPose.getX()));
+        if (isRed) targetYaw = Math.toDegrees(targetYaw - currentPose.getHeading());
+        else targetYaw = Math.toDegrees(Math.PI - targetYaw - currentPose.getHeading());
 
-        Shooter.INSTANCE.setHoodPos(hoodPower).schedule();
-        Shooter.INSTANCE.setGoal(shooterPower).schedule();
-
-        robotHeading = Math.toDegrees(turretPose.getHeading());
-        if (robotHeading < 0) robotHeading = robotHeading + 360;
-
-        if (isRed) targetYaw = Math.toDegrees(robotToGoalVector.getTheta() - Math.toRadians(robotHeading));
-        else targetYaw = Math.toDegrees(robotToGoalVector.getTheta() - Math.toRadians(robotHeading));
-
-        if (runVComp) targetYaw = targetYaw - perpendicularComponent * vP;
+        targetYaw = targetYaw - Math.toDegrees(turretVelCompOff);
 
         setTurretPos(targetYaw);
     }
@@ -279,7 +274,7 @@ public class Turret implements IRRoboticsSubsystem {
     }
 
     public Command resetHood() {
-        return Shooter.INSTANCE.setHoodPos(0);
+        return Shooter.INSTANCE.setHoodPos(1);
     }
 
 

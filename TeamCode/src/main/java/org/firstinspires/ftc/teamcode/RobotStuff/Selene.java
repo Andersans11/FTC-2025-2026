@@ -36,14 +36,12 @@ public class Selene extends RRoboticsSubsystemGroup {
     public static Follower follower;
     boolean isShooting = false;
     public boolean isMotifShooting = false;
-    public ServoImplEx indicator;
     public Timer distTimer;
     public Timer ballTimer;
     public static Pose currentPose;
     public Pose currentLLPose = new Pose(9, 9, 0);
     public boolean noLLPose = true;
     public boolean threshold = false;
-    public LimelightWrapper limelight;
     public int indCycle = 0;
     public double shootTime = 0.5;
     public ColorRangeSensor dist;
@@ -78,11 +76,8 @@ public class Selene extends RRoboticsSubsystemGroup {
     @Override
     public void initSystem() {
         super.initSystem();
-        limelight = LimelightWrapper.instance; limelight.init();
         distTimer = new Timer();
         ballTimer = new Timer();
-        indicator.setPwmRange(new PwmControl.PwmRange(500, 2500));
-        indicator.setPwmEnable();
     }
 
     public void initFollower(HardwareMap hardwareMap) {
@@ -124,8 +119,6 @@ public class Selene extends RRoboticsSubsystemGroup {
     @Override
     public void preStart() {
         super.preStart();
-
-        limelight.start();
     }
 
     @Override
@@ -153,20 +146,13 @@ public class Selene extends RRoboticsSubsystemGroup {
 
     public void runIndicator() {}
 
-    public void setIndicator(double PWM) {
-        if (PWM != currentPWM) {
-            indicator.setPosition(PWMToPower(PWM));
-            currentPWM = PWM;
-        }
-    }
-
     public double PWMToPower(double PWM) {
         return (PWM - 500) / 2000;
     }
 
     public Command resetFollower() {
         return new InstantCommand(() -> {
-            Pose newPose = Turret.INSTANCE.isRed() ? new Pose(9, 7.5, Math.toRadians(90)) : new Pose(135, 7.5, Math.toRadians(90));
+            Pose newPose = Turret.INSTANCE.isRed() ? new Pose(9, 7.5, Math.toRadians(90)) : new Pose(192 - 9, 7.5, Math.toRadians(90));
             follower.setPose(newPose);
         });
     }
@@ -204,16 +190,20 @@ public class Selene extends RRoboticsSubsystemGroup {
     }
 
     public Command shoot() {
+        if (Turret.INSTANCE.targetPose.getX() == 184 || Turret.INSTANCE.targetPose.getX() == 8) return new SequentialGroup(
+                Shooter.INSTANCE.StopperOpen(),
+                Intake.INSTANCE.start()
+        );
         return new SequentialGroup(
                 Shooter.INSTANCE.StopperOpen(),
-                intakeOn()
+                Intake.INSTANCE.startSlow()
         );
     }
 
     public Command stopShoot() {
         return new SequentialGroup(
                 Shooter.INSTANCE.StopperClose(),
-                intakeOff()
+                Intake.INSTANCE.stop()
         );
     }
 
@@ -249,7 +239,7 @@ public class Selene extends RRoboticsSubsystemGroup {
 
     public Command start() {
         return new SequentialGroupFixed(
-                Intake.INSTANCE.start(),
+                Intake.INSTANCE.stop(),
                 Intake.INSTANCE.off(),
                 Shooter.INSTANCE.StopperClose(),
                 Turret.INSTANCE.resetHood()

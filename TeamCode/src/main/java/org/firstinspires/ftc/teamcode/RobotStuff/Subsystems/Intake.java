@@ -23,13 +23,14 @@ public class Intake implements IRRoboticsSubsystem {
 
     // ---------------------------- CONFIG -------------------------- //
     public static double intakeSpeed = 1;
+    public static double intakeSpeedSlow = 0.5;
     public static double reverseSpeed = -0.75;
 
-    public static double active1 = 0.525;
+    public static double active1 = 0.475;
     public static double active2 = 0.475;
-    public static double off1 = 0.475;
+    public static double off1 = 0.525;
     public static double off2 = 0.525;
-    public static double gate1 = 0.55;
+    public static double gate1 = 0.45;
     public static double gate2 = 0.45;
 
 
@@ -54,6 +55,15 @@ public class Intake implements IRRoboticsSubsystem {
                 new SetPower(intake2, intakeSpeed)
         );
     }
+
+    public Command startSlow() {
+        return new ParallelGroup(
+                new SetPower(intake1, intakeSpeedSlow),
+                new SetPower(intake2, intakeSpeedSlow)
+        );
+    }
+
+
     public Command active() {
         return new ParallelGroup(
                 new SetPosition(winch1, active1),
