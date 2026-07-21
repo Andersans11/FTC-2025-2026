@@ -40,11 +40,14 @@ public class Turret implements IRRoboticsSubsystem {
     public boolean hasSetAlliance = false;
     public boolean hasGotMotif = false;
     public boolean isLookingForMotif = false;
-    Pose redPose = new Pose(184, 184);
-    Pose bluePose = new Pose(8, 184);
+    public static double goalY = 180;
+    public static double blueX = 12;
+    public static double redX = 180;
+    Pose redPose = new Pose(redX, goalY);
+    Pose bluePose = new Pose(blueX, goalY);
     Pose redPrism = new Pose(104, 184);
     Pose bluePrism = new Pose(88, 184);
-    public Pose targetPose = new Pose(184, 184);
+    public Pose targetPose = new Pose(180, 180);
     Pose motifPose = new Pose(144, 72);
     public double targetYaw = 0;
     public double targetPitch = 0.0;
@@ -90,7 +93,7 @@ public class Turret implements IRRoboticsSubsystem {
     public static double vP = 0.25;
     public static double hP = 0.0004;
 
-    public static double turretOff = 10;
+    public static double turretOff = 5;
 
     // --------------------- OPMODE --------------------------------- //
 
@@ -101,6 +104,8 @@ public class Turret implements IRRoboticsSubsystem {
                 .posPid(kP, kI, kD)
                 .build();
         timer = new Timer();
+        redPose = new Pose(redX, goalY);
+        bluePose = new Pose(blueX, goalY);
     }
 
     @Override
@@ -171,13 +176,13 @@ public class Turret implements IRRoboticsSubsystem {
 
     public void switchTargets() {
         switch ((int) targetPose.getX()) {
-            case 8:
+            case 12:
                 targetPose = bluePrism;
                 break;
             case 88:
                 targetPose = bluePose;
                 break;
-            case 184:
+            case 180:
                 targetPose = redPrism;
                 break;
             case 104:
@@ -186,19 +191,24 @@ public class Turret implements IRRoboticsSubsystem {
         }
     }
 
-    public void calcTurretPositions(Pose currentPose, Vector robotVel) {
-        Pose turretPose = getTurretPose(currentPose);
-        robotToGoalVector = getrobotToGoalVector(getTurretPose(turretPose));
+    public void calcTurretPositions(Pose currentPose) {
 
-        Shooter.INSTANCE.setHoodPos(angleToServoPower(Shooter.INSTANCE.calcHoodPower(robotToGoalVector.getMagnitude()))).schedule();
-        Shooter.INSTANCE.setGoal(Shooter.INSTANCE.calcShooterPower(robotToGoalVector.getMagnitude())).schedule();
+        Vector goalVector = targetPose.getAsVector().minus(getTurretPose(currentPose).getAsVector());
 
-        targetYaw = // get yaw angle using trig, targetYaw = arctan(opposite/adjacent)
-                Math.atan(Math.abs(targetPose.getY() - currentPose.getY()) / Math.abs(targetPose.getX() - currentPose.getX()));
-        if (isRed) targetYaw = Math.toDegrees(targetYaw - currentPose.getHeading());
-        else targetYaw = Math.toDegrees(Math.PI - targetYaw - currentPose.getHeading());
+        Shooter.INSTANCE.setHoodPos(angleToServoPower(Shooter.INSTANCE.calcHoodPower(goalVector.getMagnitude()))).schedule();
+        Shooter.INSTANCE.setGoal(Shooter.INSTANCE.calcShooterPower(goalVector.getMagnitude())).schedule();
+
+        targetYaw = -Math.toDegrees(currentPose.getHeading() - goalVector.getTheta());
 
         setTurretPos(targetYaw + turretOff);
+    }
+
+    public void calcShooterPositions(Pose currentPose) {
+
+        Vector goalVector = targetPose.getAsVector().minus(getTurretPose(currentPose).getAsVector());
+
+        Shooter.INSTANCE.setHoodPos(angleToServoPower(Shooter.INSTANCE.calcHoodPower(goalVector.getMagnitude()))).schedule();
+        Shooter.INSTANCE.setGoal(Shooter.INSTANCE.calcShooterPower(goalVector.getMagnitude())).schedule();
     }
 
     public void calcTurretPositionsEq(Pose currentPose, Vector robotVel) {
@@ -364,7 +374,7 @@ public class Turret implements IRRoboticsSubsystem {
 
         switch (mode) {
             case POSE_TRACKING:
-                calcTurretPositions(currentPose, Selene.INSTANCE.follower.getVelocity());
+                calcTurretPositions(currentPose);
                 break;
             case NO_SHOOTER:
                 Pose turretPose = getTurretPose(currentPose);
@@ -386,8 +396,8 @@ public class Turret implements IRRoboticsSubsystem {
                 setTurretPos(targetYaw);
                 break;
             case IDLE:
-                double hoodPower = hoodAngle - (Shooter.INSTANCE.controller.getGoal().getVelocity() - Shooter.INSTANCE.shooters.getVelocity()) * hP;
-                Shooter.INSTANCE.setHoodPos(hoodPower).schedule();
+                calcShooterPositions(currentPose);
+                setTurretPos(targetYaw);
                 break;
         }
 

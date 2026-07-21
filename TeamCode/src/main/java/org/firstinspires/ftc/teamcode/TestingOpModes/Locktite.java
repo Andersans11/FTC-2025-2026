@@ -28,6 +28,7 @@ public class Locktite extends NextFTCOpMode {
 
     @Override
     public void onInit() {
+        super.onInit();
         servo = new ServoExFullRange(() -> {
             return hardwareMap.get(ServoImplEx.class, servoName);
         });

@@ -152,7 +152,7 @@ public class Selene extends RRoboticsSubsystemGroup {
 
     public Command resetFollower() {
         return new InstantCommand(() -> {
-            Pose newPose = Turret.INSTANCE.isRed() ? new Pose(9, 7.5, Math.toRadians(90)) : new Pose(192 - 9, 7.5, Math.toRadians(90));
+            Pose newPose = Turret.INSTANCE.isRed() ? new Pose(9, 9, Math.toRadians(90)) : new Pose(192 - 9, 9, Math.toRadians(90));
             follower.setPose(newPose);
         });
     }
@@ -170,7 +170,7 @@ public class Selene extends RRoboticsSubsystemGroup {
     public Command stopIntake() {
         return new SequentialGroupFixed(
                 Intake.INSTANCE.off(),
-                Intake.INSTANCE.stop()
+                Intake.INSTANCE.idle()
         );
     }
 
@@ -190,7 +190,7 @@ public class Selene extends RRoboticsSubsystemGroup {
     }
 
     public Command shoot() {
-        if (Turret.INSTANCE.targetPose.getX() == 184 || Turret.INSTANCE.targetPose.getX() == 8) return new SequentialGroup(
+        if (Turret.INSTANCE.targetPose.getX() == 180 || Turret.INSTANCE.targetPose.getX() == 12) return new SequentialGroup(
                 Shooter.INSTANCE.StopperOpen(),
                 Intake.INSTANCE.start()
         );
@@ -214,9 +214,9 @@ public class Selene extends RRoboticsSubsystemGroup {
     public Command shootMotif() { // TODO: Airsort
             return new SequentialGroupFixed(
                     new InstantCommand(() -> this.isMotifShooting = true),
-                    Shooter.INSTANCE.StopperOpen(),
+                    shoot(),
                     new Delay(shootTime),
-                    Shooter.INSTANCE.StopperClose(),
+                    stopShoot(),
                     new InstantCommand(() -> this.isMotifShooting = false)
             );
     }

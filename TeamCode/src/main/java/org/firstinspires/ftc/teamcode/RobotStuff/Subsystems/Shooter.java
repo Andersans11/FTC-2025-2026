@@ -25,7 +25,8 @@ public class Shooter implements IRRoboticsSubsystem {
     public MotorGroup shooters;
     public ServoExFullRange stopper;
 
-    public static double powerMod;
+    public static double powerMod = 0;
+    public static double hoodMod = 0;
 
     // ------------------------ CONFIG ------------------------ //
     public static double shootPower = 1950;
@@ -102,7 +103,7 @@ public class Shooter implements IRRoboticsSubsystem {
             double t2 = table[i+1][2];
 
             if (dist <= d2) {
-                return t1 + (dist - d1) * (t2 - t1) / (d2 - d1);
+                return t1 + (dist - d1) * (t2 - t1) / (d2 - d1) + hoodMod;
             }
         }
 

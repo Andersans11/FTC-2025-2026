@@ -20,26 +20,26 @@ public class Constants {
 
     public static FollowerConstants followerConstants = new FollowerConstants()
             .mass(12.247)
-            .forwardZeroPowerAcceleration(-28.4571)
-            .lateralZeroPowerAcceleration(-70.8437)
+            .forwardZeroPowerAcceleration(-33.8080)
+            .lateralZeroPowerAcceleration(-73.9265)
             .useSecondaryHeadingPIDF(true)
             .centripetalScaling(0.0)
             .headingPIDFCoefficients(new PIDFCoefficients(2.5,0,0.1,0))
             .secondaryHeadingPIDFCoefficients(new PIDFCoefficients(2,0,0.1,0))
-            .predictiveBrakingCoefficients(new PredictiveBrakingCoefficients(0.1, 0.16096089, 0.00152637));
+            .predictiveBrakingCoefficients(new PredictiveBrakingCoefficients(0.1, 0.148384, 0.00140037));
 
     public static MecanumConstants driveConstants = new MecanumConstants()
-            .leftFrontMotorName("BR")
-            .leftRearMotorName("FR")
-            .rightFrontMotorName("BL")
-            .rightRearMotorName("FL")
+            .leftFrontMotorName("FL")
+            .leftRearMotorName("BL")
+            .rightFrontMotorName("FR")
+            .rightRearMotorName("BR")
             .leftFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
             .leftRearMotorDirection(DcMotorSimple.Direction.FORWARD)
             .rightFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
             .rightRearMotorDirection(DcMotorSimple.Direction.REVERSE)
             .maxPower(1)
-            .xVelocity(80.2034)
-            .yVelocity(62.8311);
+            .xVelocity(70.3068)
+            .yVelocity(54.5263);
 
     public static PinpointConstants localizerConstants = new PinpointConstants()
             .hardwareMapName("PINPOINT")

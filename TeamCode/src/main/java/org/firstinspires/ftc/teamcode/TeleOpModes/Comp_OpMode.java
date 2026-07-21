@@ -72,13 +72,16 @@ public class Comp_OpMode extends RRoboticsOpMode {
     @Override
     public void onUpdate() {
         super.onUpdate();
+        addData("poseX", Turret.INSTANCE.getTurretPose(Selene.currentPose).getX());
+        addData("poseY", Turret.INSTANCE.getTurretPose(Selene.currentPose).getY());
+        addData("poseHeading", Turret.INSTANCE.getTurretPose(Selene.currentPose).getHeading());
+        addData("targX", Turret.INSTANCE.targetPose.getX());
+        addData("targY", Turret.INSTANCE.targetPose.getY());
+        addData("targHeading", Turret.INSTANCE.targetPose.getHeading());
         addData("speed", Shooter.INSTANCE.shooters.getVelocity());
         addData("Power Mod", Shooter.powerMod);
         addData("stopperPos", Shooter.INSTANCE.stopper.getPosition());
         addData("turretPos", Turret.INSTANCE.targetYaw);
-        addData("posex", Selene.INSTANCE.getCurrentPose().getX());
-        addData("posex", Selene.INSTANCE.getCurrentPose().getY());
-        addData("posex", Math.toDegrees(Selene.INSTANCE.getCurrentPose().getHeading()));
-        addData("target", Turret.INSTANCE.targetPose.getX());
+        addData("targetDist", Turret.INSTANCE.getrobotToGoalVector(Turret.INSTANCE.getTurretPose(Selene.currentPose)));
     }
 }

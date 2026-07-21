@@ -50,7 +50,24 @@ public class RRoboticsOpMode extends NextFTCOpMode {
         for (RRoboticsSubsystemComponent sys : this.subsystems) {
             sys.initSubsystem();
         }
+        Init();
     }
+
+    public void Init() {}
+
+    @Override
+    public void onWaitForStart() {
+        InitLoop();
+    }
+
+    public void InitLoop() {}
+
+    @Override
+    public void onStartButtonPressed() {
+        Start();
+    }
+
+    public void Start() {}
 
     public void addData(String key, Object value) {
         if (isUpdating) {
@@ -72,5 +89,8 @@ public class RRoboticsOpMode extends NextFTCOpMode {
             telemetryManager.update(telemetry);
             isUpdating = false;
         } else isUpdating = true;
+        Update();
     }
+
+    public void Update() {}
 }
