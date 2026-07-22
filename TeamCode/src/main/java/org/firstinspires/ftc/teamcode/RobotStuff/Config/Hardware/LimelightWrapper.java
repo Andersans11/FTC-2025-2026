@@ -17,12 +17,11 @@ public class LimelightWrapper {
     public static final LimelightWrapper instance = new LimelightWrapper();
 
     public void init() {
-        //limelight = RobotConfig.Limelight;
+        limelight = RobotConfig.limelight3A;
     }
 
-
     public void start() {
-        limelight.pipelineSwitch(0); // apriltag pipeline
+        limelight.pipelineSwitch(7); // apriltag pipeline
         limelight.setPollRateHz(pollRate);
         limelight.start();
     }
@@ -31,8 +30,12 @@ public class LimelightWrapper {
         limelight.stop();
     }
 
-    public void setYaw(double yaw) {
-        limelight.updateRobotOrientation(yaw);
+    public void updatePython(double[] inputs) {
+        limelight.updatePythonInputs(inputs);
+    }
+
+    public double[] getPython() {
+        return limelight.getLatestResult().getPythonOutput();
     }
 
     public @Nullable Pose getPose() {
@@ -44,8 +47,6 @@ public class LimelightWrapper {
         return null;
     }
 
-    public PoseResult getPoseResult() {
-        return PoseResult.fromLL(limelight.getLatestResult());
-    }
+
 
 }

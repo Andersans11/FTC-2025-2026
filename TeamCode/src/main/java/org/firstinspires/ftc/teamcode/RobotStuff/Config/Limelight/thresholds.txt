@@ -1,0 +1,13 @@
+jacks house
+
+purple_lower: tuple[int, int, int] = (122, 150, 125)
+purple_upper: tuple[int, int, int] = (150, 255, 255)
+green_lower: tuple[int, int, int] = (58, 216, 206)
+green_upper: tuple[int, int, int] = (96, 255, 255)
+
+anders house
+
+purple_lower: tuple[int, int, int] = (89, 68, 51)
+purple_upper: tuple[int, int, int] = (173, 239, 255)
+green_lower: tuple[int, int, int] = (48, 102, 64)
+green_upper: tuple[int, int, int] = (128, 255, 255)

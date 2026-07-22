@@ -40,11 +40,14 @@ public class RobotConfig {
 
     public static GoBildaPinpointDriver Pinpoint;
 
+    public static Limelight3A limelight3A;
+
     static HardwareMap hardwareMap;
     static RRoboticsOpMode opMode;
     static DeltaTimer deltaTimer;
     static GamepadEx p1;
     static GamepadEx p2;
+
 
     public static boolean isRedAlliance = false;
 
@@ -85,6 +88,7 @@ public class RobotConfig {
      * initialize ALL hardware in the opMode's hardwareMap
      */
     private static void initHardware() {
+        limelight3A = hardwareMap.get(Limelight3A.class, "limelight");
 
         VoltageSensor = hardwareMap.get(VoltageSensor.class, "Control Hub");
 
