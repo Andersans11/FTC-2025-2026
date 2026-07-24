@@ -15,23 +15,29 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.Utils;
 import org.firstinspires.ftc.teamcode.RobotStuff.Selene;
 import org.firstinspires.ftc.teamcode.RobotStuff.Subsystems.DriveModes.RobotCentricDrive;
 
-@Disabled
+import java.util.Arrays;
+
+//@Disabled
 @TeleOp(name = "Test Limelight", group = Utils.TESTING)
 public class LimelightTestMode extends RRoboticsOpMode {
 
     public LimelightTestMode() {
         super();
         addSubsystemComponents(
-                new RRoboticsSubsystemComponent(RobotCentricDrive.INSTANCE),
-                new RRoboticsSubsystemComponent(Selene.INSTANCE)
+                new RRoboticsSubsystemComponent(RobotCentricDrive.INSTANCE)
         );
     }
+
+    double[] boxes = {
+            0, 320,
+            320, 640,
+            640, 960,
+            960, 1280
+    };
 
     @Override
     public void onInit() {
         super.onInit();
-        Selene.INSTANCE.initFollower(hardwareMap);
-
         LimelightWrapper.instance.init();
     }
 
@@ -40,21 +46,15 @@ public class LimelightTestMode extends RRoboticsOpMode {
         super.onStartButtonPressed();
 
         LimelightWrapper.instance.start();
+
+        LimelightWrapper.instance.updatePython(boxes);
     }
 
     @Override
     public void onUpdate() {
         super.onUpdate();
-        LimelightWrapper.instance.setYaw(Selene.INSTANCE.getCurrentPose().getHeading());
 
-        Pose llPose = LimelightWrapper.instance.getPose();
-        if (llPose != null)
-            addData("LIMELIGHT POSE", llPose);
-        else
-            addData("LIMELIGHT POSE", "NONE");
-
-
-        addData("PINPOINT POSE", Selene.INSTANCE.getCurrentPose());
+        addData("results", Arrays.toString(LimelightWrapper.instance.getPython()));
     }
 
     @Override
