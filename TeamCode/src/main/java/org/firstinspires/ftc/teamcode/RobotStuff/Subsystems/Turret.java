@@ -95,6 +95,8 @@ public class Turret implements IRRoboticsSubsystem {
 
     public static double turretOff = 5;
 
+    public static double servoOffset = 0.01;
+
     // --------------------- OPMODE --------------------------------- //
 
 
@@ -353,8 +355,8 @@ public class Turret implements IRRoboticsSubsystem {
 
     public void setTurretPos(double pos) {
         if (pos != oldTurretPos) {
-            servos[0].setPosition(degreesToTicks(Math.max(minLim, Math.min(maxLim, pos))));
-            servos[1].setPosition(degreesToTicks(Math.max(minLim, Math.min(maxLim, pos))) + 0.01);
+            servos[0].setPosition(degreesToTicks(Math.max(minLim, Math.min(maxLim, pos))) - 0.03);
+            servos[1].setPosition(degreesToTicks(Math.max(minLim, Math.min(maxLim, pos))) + 0.03);
             oldTurretPos = pos;
         }
     }

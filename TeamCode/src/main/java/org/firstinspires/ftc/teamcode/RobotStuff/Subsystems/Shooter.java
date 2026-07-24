@@ -40,6 +40,8 @@ public class Shooter implements IRRoboticsSubsystem {
     public static double kV = 0.001;
     public static double kA = 0.0;
 
+    public static double powerThreshold = 150;
+
     public boolean isFar = false;
 
     // --------------------- OPMODE -------------------------- //
@@ -63,15 +65,17 @@ public class Shooter implements IRRoboticsSubsystem {
 
     @Override
     public void periodic() {
-        shooters.setPower(-Math.max(controller.calculate(shooters.getLeader().getState()), 0));
+        if (shooters.getLeader().getState().getVelocity() <= controller.getGoal().getVelocity() - powerThreshold) shooters.setPower(-1);
+        else shooters.setPower(-Math.max(controller.calculate(shooters.getLeader().getState()), 0));
     }
 
     double[][] table = {
-            {30.6, 600, 62.5},
-            {47.5, 650, 57.5},
-            {65.2, 750, 57.5},
-            {83.2, 800, 50},
-            {101.5, 925, 55},
+            {32.9, 1300, 62.5},
+            {46.6, 1400, 62.5},
+            {79.4, 1600, 55},
+            {93.4, 1650, 50},
+            {107.4, 1775, 50},
+            {121.5, 1850, 50},
     };
 
     public double calcShooterPower(double dist) {
